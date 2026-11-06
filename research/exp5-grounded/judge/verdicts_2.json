@@ -1,0 +1,101 @@
+[
+  {
+    "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "looser",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks exact dimensions (1099x730), grayscale structure similarity, and value bounds while requiring both mean chroma increase and >=8% mean HSV saturation increase over the starting image, closing official's hole where an imperceptible >0 saturation uptick or darkening passes.",
+    "notes_Y": "Checks only canvas size, alpha preservation, and mean_hsv_saturation > before in must, delegating scene and structure preservation entirely to fuzzy whereas official enforces SSIM(H) >= 0.9 and SSIM(V) >= 0.9."
+  },
+  {
+    "id": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+    "verdict_X": "equivalent",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Verifies all 28 exact cleaned titles in C2:C29 (allowing both hyphen-capitalization variants for row 27), preserves B1:C1 and B2:B29, and restricts nonempty cells to B1:C29 on Sheet1, matching official sheet_data.",
+    "notes_Y": "Requires all_cell_styles == before across the entire workbook (rejecting valid paste/formula default style changes on C2:C29 that official sheet_data ignores) and queries header 'Garbage Movie Titles' whereas B1 is 'Garbage Movie titles'."
+  },
+  {
+    "id": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+    "verdict_X": "equivalent",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks the exact monthly totals ([4852, 4587, 3943, 3857, 4677, 4243]) in B12:G12, Feb-Jun growth values in C13:G13 with B13 blank, and the Total bar/column and 5-point Growth line charts, matching official sheet_data and chart checks.",
+    "notes_Y": "Requires number_formats('Feb','Jun').all_display_percent == true on the Growth row and explicit month category bindings on both charts, rejecting valid solutions with unformatted growth fractions that official sheet_data accepts."
+  },
+  {
+    "id": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks the Sheet2 product-revenue pivot table and preservation of existing data like official, while also directly verifying each row's computed revenue in the new Sheet1 column.",
+    "notes_Y": "Verifies all 35 exact row revenues in Sheet1!G2:G36 and all 15 exact product totals in the Sheet2 pivot table while preserving Sheet1!A1:F36 and Retail Price, and accepts any G1 header containing 'revenue'."
+  },
+  {
+    "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "tie",
+    "official_uses_reference_file": true,
+    "notes_X": "Verifies the exact column sums (867786 and 411686) under 'Total Revenue' and 'Total Expenses' in Sheet2!A1:B2 with no extra populated cells and Sheet1 preserved, matching official sheet_data and preserve_cells.",
+    "notes_Y": "Checks the same 'Total Revenue' and 'Total Expenses' headers and sums in Sheet2!A1:B2 while preserving Sheet1, matching the official evaluator."
+  },
+  {
+    "id": "1273e544-688f-496b-8d89-3e0f40aa0606",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "tie",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that Sheet2 column A contains the exact header and 19 values of Sheet1's Revenue column while Sheet1 is unchanged, matching official sheet_data and preserve_cells.",
+    "notes_Y": "Checks that Sheet2!A1:A20 equals before(Sheet1!A1:A20) with no other populated cells on Sheet2 and Sheet1 preserved, matching the official evaluator."
+  },
+  {
+    "id": "6054afcb-5bab-4702-90a0-b259b5d3217c",
+    "verdict_X": "different_official_better",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Misinterprets the instruction as making cell text 'N/A' invisible while keeping all rows visible (row_and_column_structure == before), whereas the cells contain =NA() (#N/A) and official expects hiding those 13 rows via Hide Rows.",
+    "notes_Y": "Verifies that the exact 13 rows with =NA() ([3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]) are hidden with all values and formulas preserved, and also enforces autofilter == null and hidden_columns == []."
+  },
+  {
+    "id": "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks both that AutoSave is enabled and that its interval is 3 minutes while treating UserAutoSave as optional in footprint, closing official's hole of checking AutoSaveTimeIntervall == 3 without verifying AutoSave is enabled.",
+    "notes_Y": "Requires save_original_document_automatically.value_if_supported == true (UserAutoSave) in must, which rejects standard solutions that only enable AutoRecovery every 3 minutes as checked by official."
+  },
+  {
+    "id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that the slide's non-empty body paragraph has a visible bullet while preserving all text and slide count, matching the official gold comparison.",
+    "notes_Y": "Explicitly targets slide 1 PlaceHolder 2 paragraph 1, verifies its bullet type changed from buNone to an unordered bullet (['char', 'picture']), and preserves PlaceHolder 1 and paragraph text."
+  },
+  {
+    "id": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+    "verdict_X": "different_official_better",
+    "verdict_Y": "stricter_overstrict",
+    "better": "tie",
+    "official_uses_reference_file": true,
+    "notes_X": "Correctly targets the pictures on slides 4 (30cm) and 6 (25cm), but on slide 3 targets the seven 1.1cm PICTURE (13) bullet icons (450..456) and freezes non_picture_shapes, missing that slide 3's 26.8cm photograph is Google Shape;446;p18 (a FREEFORM (5) shape with blipFill, checked via shape_type == 5 in slides.py).",
+    "notes_Y": "Requires slide(3).picture_shapes.all_heights_cm within(0.05) 20 and non_picture_shapes == before, which rejects valid solutions because slide 3 has seven 1.1cm PICTURE bullet icons that must stay 1.1cm while the main 26.8cm photo is a FREEFORM (5) shape."
+  },
+  {
+    "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that the first two logical lines of the active slide's to-do body have strikethrough applied while remaining lines, text, and other slides are unchanged, matching the official gold comparison.",
+    "notes_Y": "Explicitly grounds slide 5 PlaceHolder 2 paragraphs 1 ('Finance Meetings:') and 2 ('Providing another perspective...') as having strikethrough while paragraphs 3..9 have strike == 'none' and all other shapes and slides are preserved."
+  }
+]

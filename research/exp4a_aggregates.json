@@ -1,0 +1,807 @@
+{
+ "n_funcs": 120,
+ "n_tasks": 368,
+ "func_expr": {
+  "yes": 93,
+  "partial": 3,
+  "yes_with_new_reader": 24
+ },
+ "slot_weight_expr": {
+  "yes": 286,
+  "partial": 22,
+  "yes_with_new_reader": 53
+ },
+ "n_infeasible_tasks": 26,
+ "task_expr": {
+  "yes": 269,
+  "yes_with_new_reader": 64,
+  "partial": 9
+ },
+ "task_orig": 13,
+ "func_orig": 12,
+ "task_gold": 172,
+ "task_gold_or_orig": 183,
+ "task_graded": 25,
+ "task_fuzzy": 1,
+ "task_oracle": {
+  "oracle.web_live": 3,
+  "oracle.clock": 8
+ },
+ "task_any_oracle": 11,
+ "multi": {
+  "or": 28,
+  "and": 23
+ },
+ "or_same_func": 28,
+ "preserve_cells_tasks": 13,
+ "text_guard_tasks": 6,
+ "postconfig_mutating": 200,
+ "readers": [
+  [
+   "xlsx.cells",
+   4,
+   62
+  ],
+  [
+   "pptx.slide_props",
+   7,
+   41
+  ],
+  [
+   "pptx.text_format",
+   5,
+   39
+  ],
+  [
+   "pptx.shapes",
+   4,
+   38
+  ],
+  [
+   "file.text",
+   12,
+   28
+  ],
+  [
+   "image.pixels",
+   16,
+   26
+  ],
+  [
+   "browser.active_tab",
+   7,
+   24
+  ],
+  [
+   "docx.text",
+   11,
+   24
+  ],
+  [
+   "config.key",
+   14,
+   20
+  ],
+  [
+   "xlsx.format",
+   1,
+   16
+  ],
+  [
+   "json.path",
+   4,
+   15
+  ],
+  [
+   "pdf.text",
+   4,
+   14
+  ],
+  [
+   "browser.page",
+   4,
+   10
+  ],
+  [
+   "os.settings",
+   5,
+   10
+  ],
+  [
+   "xlsx.objects",
+   1,
+   10
+  ],
+  [
+   "docx.format",
+   8,
+   9
+  ],
+  [
+   "browser.prefs",
+   3,
+   8
+  ],
+  [
+   "cloud.drive",
+   4,
+   7
+  ],
+  [
+   "cmd.opaque_script",
+   1,
+   7
+  ],
+  [
+   "exec.result",
+   4,
+   6
+  ],
+  [
+   "csv.rows",
+   2,
+   5
+  ],
+  [
+   "docx.tables",
+   2,
+   5
+  ],
+  [
+   "image.size",
+   2,
+   5
+  ],
+  [
+   "a11y.tree",
+   3,
+   5
+  ],
+  [
+   "dir.listing",
+   4,
+   5
+  ],
+  [
+   "app.extensions",
+   1,
+   4
+  ],
+  [
+   "shell.history",
+   1,
+   4
+  ],
+  [
+   "archive.members",
+   2,
+   4
+  ],
+  [
+   "pptx.media",
+   3,
+   4
+  ],
+  [
+   "file.exists",
+   3,
+   4
+  ],
+  [
+   "file.meta",
+   3,
+   3
+  ],
+  [
+   "audio.samples",
+   1,
+   3
+  ],
+  [
+   "docx.layout",
+   3,
+   3
+  ],
+  [
+   "browser.extensions",
+   2,
+   3
+  ],
+  [
+   "browser.tabs",
+   1,
+   3
+  ],
+  [
+   "browser.bookmarks",
+   1,
+   3
+  ],
+  [
+   "terminal.buffer",
+   1,
+   2
+  ],
+  [
+   "mail.messages",
+   1,
+   2
+  ],
+  [
+   "mail.filters",
+   1,
+   2
+  ],
+  [
+   "media.player_status",
+   1,
+   2
+  ],
+  [
+   "docx.media",
+   1,
+   2
+  ],
+  [
+   "app.internal_state",
+   1,
+   2
+  ],
+  [
+   "sqlite.query",
+   1,
+   1
+  ],
+  [
+   "vcs.log",
+   1,
+   1
+  ],
+  [
+   "clipboard",
+   1,
+   1
+  ],
+  [
+   "window.geometry",
+   1,
+   1
+  ],
+  [
+   "process.list",
+   1,
+   1
+  ],
+  [
+   "audio.tags",
+   1,
+   1
+  ],
+  [
+   "pdf.pages",
+   1,
+   1
+  ],
+  [
+   "pdf.images",
+   1,
+   1
+  ],
+  [
+   "file.bytes",
+   1,
+   1
+  ],
+  [
+   "browser.cookies",
+   1,
+   1
+  ],
+  [
+   "browser.history",
+   1,
+   1
+  ],
+  [
+   "html.dom",
+   1,
+   1
+  ],
+  [
+   "video.frames",
+   1,
+   1
+  ],
+  [
+   "epub.content",
+   1,
+   1
+  ],
+  [
+   "pdf.form_fields",
+   1,
+   1
+  ]
+ ],
+ "derived": [
+  [
+   "string_similarity",
+   10,
+   35
+  ],
+  [
+   "image_ssim",
+   9,
+   17
+  ],
+  [
+   "audio_mfcc_dtw",
+   1,
+   3
+  ],
+  [
+   "color_family",
+   3,
+   3
+  ],
+  [
+   "image_brightness",
+   1,
+   2
+  ],
+  [
+   "image_mse",
+   1,
+   2
+  ],
+  [
+   "image_phash",
+   2,
+   2
+  ],
+  [
+   "image_contrast",
+   1,
+   1
+  ],
+  [
+   "pixel_mask",
+   1,
+   1
+  ],
+  [
+   "image_transform",
+   1,
+   1
+  ],
+  [
+   "image_saturation",
+   1,
+   1
+  ],
+  [
+   "pixel_scan",
+   1,
+   1
+  ],
+  [
+   "object_detector",
+   1,
+   1
+  ],
+  [
+   "ocr",
+   1,
+   1
+  ],
+  [
+   "color_distance",
+   1,
+   1
+  ]
+ ],
+ "pred": [
+  [
+   "reference_file_compare",
+   33,
+   173
+  ],
+  [
+   "literal_equal",
+   42,
+   153
+  ],
+  [
+   "similarity_threshold",
+   23,
+   115
+  ],
+  [
+   "numeric_tolerance",
+   13,
+   106
+  ],
+  [
+   "regex",
+   11,
+   88
+  ],
+  [
+   "contains_exclude",
+   17,
+   68
+  ],
+  [
+   "set_list_equal",
+   13,
+   22
+  ],
+  [
+   "custom_logic",
+   12,
+   12
+  ],
+  [
+   "structural_property",
+   6,
+   7
+  ],
+  [
+   "range_ordering",
+   6,
+   6
+  ]
+ ],
+ "greedy_curve": [
+  [
+   "xlsx.cells",
+   35
+  ],
+  [
+   "config.key",
+   55
+  ],
+  [
+   "file.text",
+   74
+  ],
+  [
+   "browser.active_tab",
+   92
+  ],
+  [
+   "image.pixels",
+   107
+  ],
+  [
+   "xlsx.format",
+   122
+  ],
+  [
+   "docx.text",
+   135
+  ],
+  [
+   "json.path",
+   148
+  ],
+  [
+   "browser.page",
+   158
+  ],
+  [
+   "os.settings",
+   168
+  ],
+  [
+   "xlsx.objects",
+   178
+  ],
+  [
+   "browser.prefs",
+   186
+  ],
+  [
+   "docx.format",
+   194
+  ],
+  [
+   "exec.result",
+   200
+  ],
+  [
+   "a11y.tree",
+   205
+  ],
+  [
+   "docx.tables",
+   210
+  ],
+  [
+   "dir.listing",
+   215
+  ],
+  [
+   "image.size",
+   219
+  ],
+  [
+   "file.exists",
+   223
+  ],
+  [
+   "app.extensions",
+   227
+  ],
+  [
+   "pdf.text",
+   231
+  ],
+  [
+   "cloud.drive",
+   236
+  ],
+  [
+   "pptx.slide_props",
+   239
+  ],
+  [
+   "file.meta",
+   242
+  ],
+  [
+   "docx.layout",
+   245
+  ],
+  [
+   "csv.rows",
+   248
+  ],
+  [
+   "browser.extensions",
+   251
+  ],
+  [
+   "browser.tabs",
+   254
+  ],
+  [
+   "browser.bookmarks",
+   257
+  ],
+  [
+   "shell.history",
+   259
+  ],
+  [
+   "archive.members",
+   262
+  ],
+  [
+   "terminal.buffer",
+   264
+  ],
+  [
+   "mail.messages",
+   266
+  ],
+  [
+   "pptx.text_format",
+   268
+  ],
+  [
+   "pptx.shapes",
+   305
+  ],
+  [
+   "mail.filters",
+   307
+  ],
+  [
+   "docx.media",
+   309
+  ],
+  [
+   "media.player_status",
+   311
+  ],
+  [
+   "pptx.media",
+   313
+  ],
+  [
+   "audio.samples",
+   316
+  ],
+  [
+   "app.internal_state",
+   318
+  ],
+  [
+   "file.bytes",
+   319
+  ],
+  [
+   "sqlite.query",
+   320
+  ],
+  [
+   "browser.cookies",
+   321
+  ],
+  [
+   "pdf.pages",
+   322
+  ],
+  [
+   "browser.history",
+   323
+  ],
+  [
+   "window.geometry",
+   324
+  ],
+  [
+   "vcs.log",
+   325
+  ],
+  [
+   "pdf.images",
+   326
+  ],
+  [
+   "html.dom",
+   327
+  ],
+  [
+   "pdf.form_fields",
+   328
+  ],
+  [
+   "clipboard",
+   329
+  ],
+  [
+   "audio.tags",
+   330
+  ],
+  [
+   "process.list",
+   331
+  ],
+  [
+   "video.frames",
+   332
+  ],
+  [
+   "epub.content",
+   333
+  ]
+ ],
+ "n_expr_tasks": 333,
+ "nonexpr_tasks": [
+  [
+   "multi_apps",
+   "2c1ebcd7-9c6d-4c9a-afad-900e381ecd5e",
+   [
+    "compare_references_gain"
+   ],
+   "partial"
+  ],
+  [
+   "multi_apps",
+   "b337d106-053f-4d37-8da0-7f9c4043a66b",
+   [
+    "check_include_exclude"
+   ],
+   "partial"
+  ],
+  [
+   "multi_apps",
+   "236833a3-5704-47fc-888c-4f298f09f799",
+   [
+    "compare_docx_paper_records"
+   ],
+   "partial"
+  ],
+  [
+   "os",
+   "5812b315-e7bd-4265-b51f-863c02174c28",
+   [
+    "check_include_exclude"
+   ],
+   "partial"
+  ],
+  [
+   "os",
+   "5c1075ca-bb34-46a3-a7a0-029bd7463e79",
+   [
+    "check_include_exclude"
+   ],
+   "partial"
+  ],
+  [
+   "os",
+   "5ced85fc-fa1a-4217-95fd-0fb530545ce2",
+   [
+    "check_include_exclude"
+   ],
+   "partial"
+  ],
+  [
+   "os",
+   "37887e8c-da15-4192-923c-08fa390a176d",
+   [
+    "check_include_exclude"
+   ],
+   "partial"
+  ],
+  [
+   "os",
+   "4d117223-a354-47fb-8b45-62ab1390a95f",
+   [
+    "check_include_exclude"
+   ],
+   "partial"
+  ],
+  [
+   "os",
+   "6f56bf42-85b8-4fbb-8e06-6c44960184ba",
+   [
+    "check_include_exclude"
+   ],
+   "partial"
+  ]
+ ],
+ "domain_expr": {
+  "chrome": {
+   "yes": 28,
+   "_n": 42,
+   "yes_with_new_reader": 14
+  },
+  "gimp": {
+   "yes_with_new_reader": 11,
+   "_n": 17,
+   "yes": 6
+  },
+  "libreoffice_calc": {
+   "yes": 36,
+   "_n": 46,
+   "yes_with_new_reader": 10
+  },
+  "libreoffice_impress": {
+   "yes": 45,
+   "_n": 47,
+   "yes_with_new_reader": 2
+  },
+  "libreoffice_writer": {
+   "yes": 22,
+   "_n": 22
+  },
+  "multi_apps": {
+   "yes": 78,
+   "_n": 100,
+   "yes_with_new_reader": 19,
+   "partial": 3
+  },
+  "os": {
+   "yes": 13,
+   "_n": 19,
+   "partial": 6
+  },
+  "thunderbird": {
+   "yes": 15,
+   "_n": 15
+  },
+  "vlc": {
+   "yes_with_new_reader": 6,
+   "_n": 15,
+   "yes": 9
+  },
+  "vs_code": {
+   "yes": 17,
+   "_n": 19,
+   "yes_with_new_reader": 2
+  }
+ }
+}

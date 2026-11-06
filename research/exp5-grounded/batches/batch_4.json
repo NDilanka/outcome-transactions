@@ -1,0 +1,549 @@
+[
+ {
+  "id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+  "domain": "multi_apps",
+  "instruction": "Divide my image vertically into three equal sections with command line. Reorder the original sections from warmest to coolest from left to right, without changing the colors or applying any tint/filter, and save the result as \"rearranged.png\".",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/d68204bf-11c1-4b13-b48b-d303c73d4bf6/tilearray.png",
+       "path": "/home/user/Desktop/tilearray.png"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.hotkey(\"ctrl\", \"alt\", \"t\"); time.sleep(0.5);"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "gimp",
+   "os"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/d68204bf-11c1-4b13-b48b-d303c73d4bf6.md"
+ },
+ {
+  "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+  "domain": "multi_apps",
+  "instruction": "I have developed a new Chrome extension myself, so it needs to be installed manually. Please help me install the extension located in the Desktop directory into the Chrome browser.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a/Hello%20Extension.zip",
+       "path": "/home/user/Desktop/helloExtension.zip"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "echo {CLIENT_PASSWORD} | sudo -S apt-get update -y && echo {CLIENT_PASSWORD} | sudo -S apt-get install unzip -y && unzip /home/user/Desktop/helloExtension.zip -d /home/user/Desktop/ && rm /home/user/Desktop/helloExtension.zip",
+     "shell": true
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "chrome",
+   "os"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a.md"
+ },
+ {
+  "id": "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+  "domain": "multi_apps",
+  "instruction": "So, I've been dabbling with coding a Snake game in Python, and I finally got it up and running. It's pretty cool, but it's not without its quirks. The biggest issue I'm facing right now is that the snake can't seem to eat the food, no matter what. Could you help me tweak the code so the snake can actually eat the food? Thanks a bunch!",
+  "starting_state_setup": [
+   {
+    "type": "command",
+    "parameters": {
+     "command": [
+      "mkdir",
+      "-p",
+      "/home/user/Desktop/snake"
+     ]
+    }
+   },
+   {
+    "type": "command",
+    "parameters": {
+     "command": [
+      "pip",
+      "install",
+      "pygame"
+     ]
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "path": "/home/user/Desktop/snake/food.py",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/food.py"
+      },
+      {
+       "path": "/home/user/Desktop/snake/main.py",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/main.py"
+      },
+      {
+       "path": "/home/user/Desktop/snake/settings.py",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/settings.py"
+      },
+      {
+       "path": "/home/user/Desktop/snake/snake.py",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/26150609-0da3-4a7d-8868-0faf9c5f01bb/snake.py"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "code",
+      "/home/user/Desktop/snake"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "vs_code",
+   "os"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/26150609-0da3-4a7d-8868-0faf9c5f01bb.md"
+ },
+ {
+  "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+  "domain": "multi_apps",
+  "instruction": "Please update my bookkeeping sheet with the recent transactions from the provided folder, detailing my expenses over the past few days.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "path": "/home/user/Desktop/my_bookkeeping.xlsx",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/my_bookkeeping.xlsx"
+      },
+      {
+       "path": "/home/user/Desktop/receipt_0.jpeg",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_0.jpeg"
+      },
+      {
+       "path": "/home/user/Desktop/receipt_1.jpg",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_1.jpg"
+      },
+      {
+       "path": "/home/user/Desktop/receipt_2.jpg",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_2.jpg"
+      },
+      {
+       "path": "/home/user/Desktop/receipt_3.pdf",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_3.pdf"
+      },
+      {
+       "path": "/home/user/Desktop/receipt_4.jpg",
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/8e116af7-7db7-4e35-a68b-b0939c066c78/receipt_4.jpg"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/my_bookkeeping.xlsx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_calc",
+   "os",
+   "image",
+   "pdf"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/8e116af7-7db7-4e35-a68b-b0939c066c78.md"
+ },
+ {
+  "id": "f8cfa149-d1c1-4215-8dac-4a0932bad3c2",
+  "domain": "multi_apps",
+  "instruction": "Could you help me copy the data in Cell B6 in this Libreoffice Calc file and search it in the Chrome browser.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/f8cfa149-d1c1-4215-8dac-4a0932bad3c2/file.xls",
+       "path": "/home/user/cell_search.xls"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   },
+   {
+    "type": "chrome_open_tabs",
+    "parameters": {
+     "urls_to_open": [
+      "https://en.wikipedia.org/wiki/Main_Page",
+      "https://pytorch.org/tutorials/",
+      "https://releases.ubuntu.com/"
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/cell_search.xls"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_calc",
+   "chrome"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/f8cfa149-d1c1-4215-8dac-4a0932bad3c2.md"
+ },
+ {
+  "id": "69acbb55-d945-4927-a87b-8480e1a5bb7e",
+  "domain": "multi_apps",
+  "instruction": "I'm working on word embedding tasks and require assistance in configuring the environment for the project located at \"https://github.com/xlang-ai/instructor-embedding\" in the directory /home/user. Please guide me through the process, and refer to this provided Colab script at https://colab.research.google.com/drive/1P7ivNLMosHyG7XOHmoh7CoqpXryKy3Qt?usp=sharing for reference.",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "os",
+   "chrome",
+   "vscode"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "b52b40a5-ad70-4c53-b5b0-5650a8387052",
+  "domain": "multi_apps",
+  "instruction": "Could you help me merge all PDF files in the \"Paper Recommendation\" email attachment in Thunderbird into one file and upload it to attachment_full.pdf in Google Drive?",
+  "starting_state_setup": [
+   {
+    "type": "googledrive",
+    "parameters": {
+     "settings_file": "evaluation_examples/settings/googledrive/settings.yml",
+     "operation": [
+      "delete"
+     ],
+     "args": [
+      {
+       "query": "title = 'attachment_full.pdf' and 'root' in parents",
+       "trash": false
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   },
+   {
+    "type": "chrome_open_tabs",
+    "parameters": {
+     "urls_to_open": [
+      "https://news.google.com",
+      "https://x.com",
+      "https://www.deepl.com"
+     ]
+    }
+   },
+   {
+    "type": "login",
+    "parameters": {
+     "settings_file": "evaluation_examples/settings/google/settings.json",
+     "platform": "googledrive"
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/b52b40a5-ad70-4c53-b5b0-5650a8387052/thunderbird.profile.tar.gz",
+       "path": "/home/user/thunderbird-profile.tar.gz"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "tar",
+      "-xz",
+      "--recursive-unlink",
+      "-f",
+      "/home/user/thunderbird-profile.tar.gz",
+      "-C",
+      "/home/user/"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "/usr/bin/thunderbird"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "thunderbird",
+   "chrome"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/b52b40a5-ad70-4c53-b5b0-5650a8387052.md"
+ },
+ {
+  "id": "937087b6-f668-4ba6-9110-60682ee33441",
+  "domain": "multi_apps",
+  "instruction": "I am currently using a ubuntu system. Could you help me set the default video player as VLC?",
+  "starting_state_setup": [],
+  "related_apps": [
+   "vlc",
+   "os"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "5bc63fb9-276a-4439-a7c1-9dc76401737f",
+  "domain": "multi_apps",
+  "instruction": "I have a JSON-formatted data file opened now that stores the responses of several large language models on a specific dataset. Now, I want to filter out all the responses from Gemini and specifically look at the sentences in the responses that contain \"Iliad\". Please copy all of Gemini's responses(values) from the JSON file, paste them into a Word document named \"gemini_results.docx\" under Desktop. Each response should be a new paragraph and sepreated by a new line. Highlight the all the \"Iliad\" word.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/5bc63fb9-276a-4439-a7c1-9dc76401737f/LLM%20results.json",
+       "path": "/home/user/Desktop/llm_answers.json"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/llm_answers.json"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/5bc63fb9-276a-4439-a7c1-9dc76401737f.md"
+ },
+ {
+  "id": "f9be0997-4b7c-45c5-b05c-4612b44a6118",
+  "domain": "os",
+  "instruction": "I am currently working on a ubuntu system but I do not want the notifications to bother me. Can you help me to switch to 'Do not disturb mode'?",
+  "starting_state_setup": [
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "gsettings set org.gnome.desktop.notifications show-banners true",
+     "shell": true
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "os"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "23393935-50c7-4a86-aeea-2b78fd089c5c",
+  "domain": "os",
+  "instruction": "Recursively go through the folders of the 'photos' directory and copy any .jpg files found into another directory named 'cpjpg'.",
+  "starting_state_setup": [
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "mkdir -p ~/Desktop/photos && mkdir -p ~/Desktop/cpjpg",
+     "shell": true
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "mkdir -p ~/Desktop/photos/vacation && mkdir -p ~/Desktop/photos/family && mkdir -p ~/Desktop/photos/events",
+     "shell": true
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "mkdir -p ~/Desktop/photos/vacation/thailand && mkdir -p ~/Desktop/photos/vacation/hk",
+     "shell": true
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/23393935-50c7-4a86-aeea-2b78fd089c5c/monk252520thailand252520wat252520arun252520scaled25255B225255D.jpg",
+       "path": "/home/user/Desktop/photos/vacation/thailand/monk252520thailand252520wat252520arun252520scaled25255B225255D.jpg"
+      }
+     ]
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/23393935-50c7-4a86-aeea-2b78fd089c5c/hong-kong-china.jpg",
+       "path": "/home/user/Desktop/photos/vacation/hk/hong-kong-china.jpg"
+      }
+     ]
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/23393935-50c7-4a86-aeea-2b78fd089c5c/hk_group_photo.jpg",
+       "path": "/home/user/Desktop/photos/vacation/hk/hk_group_photo.jpg"
+      }
+     ]
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/23393935-50c7-4a86-aeea-2b78fd089c5c/us_3.png",
+       "path": "/home/user/Desktop/photos/family/us_3.png"
+      }
+     ]
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/23393935-50c7-4a86-aeea-2b78fd089c5c/emnlp2023.jpg",
+       "path": "/home/user/Desktop/photos/events/emnlp2023.jpg"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "os"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/23393935-50c7-4a86-aeea-2b78fd089c5c.md"
+ }
+]

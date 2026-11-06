@@ -1,0 +1,221 @@
+- id: 554785e9-4523-4e7a-b8e1-8016f565f56a
+  must:
+    - 'gimp.document(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').size == [1099, 730]'
+    - 'gimp.document(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').composite.hsv_mean_saturation >= 1.08 * before(image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').hsv_mean_saturation)  # before = 96.9 (0-255 scale), so final >= 104.6'
+    - 'gimp.document(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').composite.mean_chroma > before(image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').mean_chroma)  # before = 24.7'
+    - 'gimp.document(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').composite.hsv_mean_value within(25) before(image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').hsv_mean_value)  # before = 84.6; no drastic brightening/darkening'
+    - 'gimp.document(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').composite.grayscale similarity>= 0.85 before(image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').grayscale)  # same picture, no crop/resize/distortion'
+    - 'if exists(image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'')) and image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'') != before(image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'')): image.file(''/home/user/Desktop/woman_sitting_by_the_tree2.png'') similarity>= 0.98 gimp.document(''/home/user/Desktop/woman_sitting_by_the_tree2.png'').composite'
+  footprint:
+    - 'gimp.document(''/home/user/Desktop/woman_sitting_by_the_tree2.png'') pixel content, layers/undo history for the color adjustment'
+    - 'optionally /home/user/Desktop/woman_sitting_by_the_tree2.png overwritten, or a new exported copy in /home/user/Desktop with the same edit'
+    - 'runtime(gimp).housekeeping'
+  fuzzy:
+    - 'The result looks more vibrant/saturated while remaining a natural-looking version of the same photo (no posterization, hue shift, or garish clipping).'
+  assumptions:
+    - 'Vibrancy = saturation/chroma increase; any GIMP tool (Hue-Saturation, Saturation, Curves, Color Enhance) is acceptable.'
+    - 'No save location was requested, so the live GIMP image is the primary object; saving/exporting over the original or a copy is permitted but not required.'
+    - 'A 8% relative mean-saturation gain is the minimum a deliberate user adjustment would produce; the image is dark (mean V 84.6), so the brightness tolerance is generous.'
+  grounding_used: 'Starting image is 1099x730, dark and muted (mean HSV saturation 96.9/255, mean chroma 24.7, mean value 84.6); thresholds set relative to these.'
+  confidence: medium
+
+- id: a9f325aa-8c05-4e4f-8341-9e4358565f4f
+  must:
+    - 'libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').range(''C2:C29'').values == ["Minions In Black", "The Dragon With The Girl Tattoo", "Hairy Potter", "Enemy Of The Stuke", "Silence Of Thf Fans", "21 Pump Street", "The Longest Yard", "The Bune Collector", "Dump Fiction", "Eternal Sunshine Of The Mindless Spot", "Fifty Shaucks Of Black", "Star Shrek", "Lord Of The Cringe", "Thf Godfathr", "Buck From The Future", "Hug Club", "Planet Of The Grades", "Top Bun", "Gone With The Wink", "The Good, The Better And The Best", "Doodlefuls", "I Am Batmun", "Doctor Norrml", "Bud Would Hunting", "If Yesterday", <one of ["Edge Of Puip-Fre Fiction", "Edge Of Puip-fre Fiction"]>, "Funkirk", "Dumblodore: Dumb And Dumber"]'
+    - 'libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').range(''C2:C29'').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').range(''B2:B29'').values))))  # equivalent statement; hyphenated second part may be either case'
+    - 'libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').range(''B1:B29'').values == before(libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').range(''B1:B29'').values)'
+    - 'libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').cell(''C1'').value == "Clean Movie Titles"'
+    - 'libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').nonempty_cells subset_of range(''B1:C29'')  # no helper columns or stray cells left anywhere'
+    - 'libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet_names == ["Sheet1"]'
+  footprint:
+    - 'libreoffice.calc.file(''/home/user/Movie_title_garbage_clean.xlsx'').sheet(''Sheet1'').range(''C2:C29'') values (constants or formulas whose computed values match); cell formatting of C2:C29 may follow paste defaults'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'Result must be saved to the same xlsx path; values may be literal text or formulas (e.g. =PROPER(TRIM(B2))) as long as computed values match.'
+    - 'Header text in B1 is "Garbage Movie titles" (lowercase t); the instruction refers to it.'
+    - 'Leading/trailing whitespace is removed and internal runs collapse to one space; punctuation (",", ":", "-") is kept.'
+    - 'For "PUIp-FRE" both "Puip-Fre" (LibreOffice PROPER) and "Puip-fre" (word = space-delimited token) are accepted.'
+    - 'Typos in titles (Thf, Godfathr, Norrml) are kept; the user asked only for whitespace and case cleanup.'
+    - 'Temporary helper columns are allowed during work but must be removed ("don''t touch irrelevant regions").'
+  grounding_used: 'Read all 28 garbage titles in B2:B29 and computed exact expected cleaned strings for C2:C29; header is in C1 and data spans rows 2-29.'
+  confidence: high
+
+- id: 0326d92d-d218-48a8-9ca1-981cd6d064c7
+  must:
+    - 'libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').cell(''A12'').value == "Total"'
+    - 'libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').range(''B12:G12'').values within(0.001) [4852, 4587, 3943, 3857, 4677, 4243]'
+    - 'libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').cell(''A13'').value == "Growth"'
+    - 'libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').range(''C13:G13'').values within(0.0005) [-0.054617, -0.140397, -0.021811, 0.212600, -0.092795] or libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').range(''C13:G13'').values within(0.05) [-5.4617, -14.0397, -2.1811, 21.2600, -9.2795]'
+    - 'libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').cell(''B13'').value in [null, ""]  # Jan has no month-on-month growth'
+    - 'libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').range(''A1:G11'').values == before(libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').range(''A1:G11'').values)'
+    - 'count(libreoffice.calc.file(''/home/user/SalesRep.xlsx'').charts) == 2'
+    - 'exists chart c in libreoffice.calc.file(''/home/user/SalesRep.xlsx'').charts: c.type in ["bar", "column"] and c.title == "Total" and len(c.series) == 1 and c.series[0].values within(0.001) [4852, 4587, 3943, 3857, 4677, 4243]'
+    - 'exists chart c in libreoffice.calc.file(''/home/user/SalesRep.xlsx'').charts: c.type == "line" and c.title == "Growth" and len(c.series) == 1 and c.series[0].values == libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').range(''C13:G13'').values  # 5 points, Jan excluded'
+  footprint:
+    - 'libreoffice.calc.file(''/home/user/SalesRep.xlsx'').sheet(''Sheet1'').range(''A12:G13'') values, formulas and number formats (e.g. percent format on row 13)'
+    - 'two new chart objects on Sheet1 (bar/column "Total", line "Growth"), with any category labels, legend, axis and placement defaults'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File is saved in place as xlsx. "Underneath row" = row 12, directly below the last sales rep (row 11); "another row" = row 13 directly below Total.'
+    - 'Growth = (this month total - previous month total) / previous month total, stored either as a fraction (optionally percent-formatted) or as a number of percent.'
+    - 'Vertical columns and horizontal bars both count as "bars". Category labels (month names) on the charts are allowed but not required.'
+    - 'Chart titles must be exactly the row headers "Total" and "Growth".'
+  grounding_used: 'Data is 10 reps in A2:G11 with months Jan-Jun in B1:G1; computed monthly totals [4852,4587,3943,3857,4677,4243] and growth for Feb-Jun.'
+  confidence: medium
+
+- id: 51719eea-10bc-4246-a428-ac7c433dd4b3
+  must:
+    - 'lower(libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet1'').cell(''G1'').value) contains "revenue"'
+    - 'libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet1'').range(''G2:G36'').values within(0.01) [604.8323, 590.3675, 73.575, 1222.47, 579.785, 1000, 100, 1278.75, 560.0, 129, 2011.2428, 127.5, 162.9568, 294.3, 64.5988, 1286.3578, 10, 155.585, 10, 122.2176, 147.0, 117.72, 129, 565.08, 66, 24, 23.225, 1105.0, 20, 10, 75, 21.95, 220.95, 4.905, 71.8]  # = RetailPrice(Product) * Quantity * (1 - Discount)'
+    - 'libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet1'').range(''A1:F36'').values == before(libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet1'').range(''A1:F36'').values)'
+    - 'libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Retail Price'').values == before(libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Retail Price'').values)'
+    - '"Sheet2" in libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet_names'
+    - 'count(libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet2'').pivot_tables) == 1'
+    - 'libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet2'').pivot_tables[0].row_fields == ["Product"]'
+    - 'libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet2'').pivot_tables[0].data_fields == [{source: libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet1'').cell(''G1'').value, function: "sum"}]'
+    - 'libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet2'').pivot_tables[0].result_map within(0.01) {"Aspen": 2262.9133, "Bellen": 173.575, "Bower Aussie Round": 258.0, "Carlota Doublers": 590.25, "Crested Beaut": 651.585, "Fire Aspen": 1344.75, "Fun Fly": 508.215, "GelFast": 24.0, "Manu LD": 1000.0, "Manu MTA": 117.72, "Quad": 3233.7128, "Sunset": 1105.0, "Sunshine": 565.08, "Sunspot": 560.0, "Yanaki": 590.3675}  # grand total, if shown, 12985.1686'
+  footprint:
+    - 'libreoffice.calc.file(''/home/user/BoomerangSales.xlsx'').sheet(''Sheet1'').range(''G1:G36'') values/formulas/number formats'
+    - 'new sheet Sheet2 containing only the pivot table output (and its default header/grand-total cells)'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File saved in place as xlsx. The new column is G, the first empty column right of Discount, with a header containing "Revenue" (e.g. "Revenue").'
+    - 'Revenue = retail price looked up by Product from the Retail Price sheet x Quantity x (1 - Discount); Discount values are fractions (0-0.594). Formulas (VLOOKUP etc.) or constants are both fine.'
+    - 'Pivot table: Product as row field, Sum of the revenue column as data; placement within Sheet2 and grand total display are free. Sorting of products is free.'
+    - 'Sheet2 does not exist initially; it is created by the user (pivot dialog "new sheet" plus rename, or created first).'
+  grounding_used: 'Every Product in Sheet1 C2:C36 has an exact match in Retail Price A2:A23; computed per-row revenue and per-product sums (total 12985.17).'
+  confidence: medium
+
+- id: 42e0a640-4f19-4b28-973d-729602b5a4a7
+  must:
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet_names == ["Sheet1", "Sheet2"]'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet2'').cell(''A1'').value == "Total Revenue"'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet2'').cell(''B1'').value == "Total Expenses"'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet2'').cell(''A2'').value within(0.001) 867786'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet2'').cell(''B2'').value within(0.001) 411686'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet2'').nonempty_cells set_equal ["A1", "B1", "A2", "B2"]'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet1'').values == before(libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet1'').values)'
+  footprint:
+    - 'new sheet Sheet2 with A1:B2 (values or formulas such as =SUM($Sheet1.A2:A20), default formats)'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File saved in place as xlsx; Sheet2 is new and placed after Sheet1.'
+    - 'The two columns are A and B with headers in row 1 and the single sum in row 2.'
+  grounding_used: 'Sheet1 has Revenue in A2:A20 and Total Expenses in B2:B20 (19 rows); sums are 867786 and 411686. Only Sheet1 exists initially.'
+  confidence: high
+
+- id: 1273e544-688f-496b-8d89-3e0f40aa0606
+  must:
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet_names == ["Sheet1", "Sheet2"]'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet2'').range(''A1:A20'').values == before(libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet1'').range(''A1:A20'').values)  # "Revenue", 39929, 55389, ..., 58782'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet2'').nonempty_cells subset_of range(''A1:A20'')'
+    - 'libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet1'').values == before(libreoffice.calc.file(''/home/user/NetIncome.xlsx'').sheet(''Sheet1'').values)'
+  footprint:
+    - 'new sheet Sheet2 with A1:A20 (pasted values and the source cell formats/column width)'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File saved in place as xlsx. The copied column lands in column A of Sheet2 at the same rows (A1:A20), the natural paste target.'
+    - 'Copy, not move: Sheet1 stays unchanged.'
+  grounding_used: 'Revenue is column A of Sheet1 (A1 header, A2:A20 data); Sheet2 does not exist initially.'
+  confidence: high
+
+- id: 6054afcb-5bab-4702-90a0-b259b5d3217c
+  must:
+    - 'libreoffice.calc.file(''/home/user/Date_Budget_Variance_HideNA.xlsx'').sheet(''Sheet1'').hidden_rows set_equal [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]  # exactly the rows whose Actual is =NA()'
+    - 'libreoffice.calc.file(''/home/user/Date_Budget_Variance_HideNA.xlsx'').sheet(''Sheet1'').values == before(libreoffice.calc.file(''/home/user/Date_Budget_Variance_HideNA.xlsx'').sheet(''Sheet1'').values)'
+    - 'libreoffice.calc.file(''/home/user/Date_Budget_Variance_HideNA.xlsx'').sheet(''Sheet1'').formulas == before(libreoffice.calc.file(''/home/user/Date_Budget_Variance_HideNA.xlsx'').sheet(''Sheet1'').formulas)'
+    - 'libreoffice.calc.file(''/home/user/Date_Budget_Variance_HideNA.xlsx'').sheet(''Sheet1'').autofilter == null'
+    - 'libreoffice.calc.file(''/home/user/Date_Budget_Variance_HideNA.xlsx'').sheet(''Sheet1'').hidden_columns == []'
+  footprint:
+    - 'row visibility (hidden flag) of Sheet1 rows 3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File saved in place as xlsx. "Hide them" with "do not delete cells, filter not needed" means hiding the rows that contain N/A, without AutoFilter/Standard Filter.'
+    - 'N/A rows are those where Actual (column D) is =NA() and therefore Difference (E) is #N/A as well; no other cells contain N/A.'
+  grounding_used: 'Located the 13 rows (3,6,8,9,12,14,18,19,20,24,27,32,33) whose D cell is =NA(); all other data rows have numeric Actual values.'
+  confidence: medium
+
+- id: 2cd43775-7085-45d8-89fa-9e35c0a915cf
+  must:
+    - 'libreoffice.config(''/org.openoffice.Office.Recovery/AutoSave/Enabled'') == true'
+    - 'libreoffice.config(''/org.openoffice.Office.Recovery/AutoSave/TimeIntervall'') == 3'
+  footprint:
+    - 'libreoffice.config(''/org.openoffice.Office.Recovery/AutoSave/Enabled'')'
+    - 'libreoffice.config(''/org.openoffice.Office.Recovery/AutoSave/TimeIntervall'')'
+    - 'libreoffice.config(''/org.openoffice.Office.Recovery/AutoSave/UserAutoSave'') (the "Automatically save the document too" option may be turned on)'
+    - 'libreoffice.config dialog-state bookkeeping (last-opened Options page, window geometry)'
+    - 'runtime(libreoffice).housekeeping (the untitled Impress document may stay open or be closed unsaved)'
+  fuzzy: []
+  assumptions:
+    - 'Implemented through Tools > Options > Load/Save > General > "Save AutoRecovery information every 3 minutes"; enabling "Automatically save the document too" is permitted but not required.'
+    - 'If the LibreOffice version stores this in the legacy key org.openoffice.Office.Common/Save/Document/AutoSave and AutoSaveTimeIntervall, those keys are equivalent.'
+  grounding_used: 'none'
+  confidence: high
+
+- id: f23acfd2-c485-4b7c-a1e7-d4303ddfe864
+  must:
+    - 'count(libreoffice.impress.file(''/home/user/Desktop/69_4.pptx'').slides) == 1'
+    - 'libreoffice.impress.file(''/home/user/Desktop/69_4.pptx'').slide(1).shape(''PlaceHolder 2'').paragraphs.texts == before(libreoffice.impress.file(''/home/user/Desktop/69_4.pptx'').slide(1).shape(''PlaceHolder 2'').paragraphs.texts)'
+    - 'libreoffice.impress.file(''/home/user/Desktop/69_4.pptx'').slide(1).shape(''PlaceHolder 2'').paragraph(1).bullet.type in ["char", "picture"]  # was buNone'
+    - 'libreoffice.impress.file(''/home/user/Desktop/69_4.pptx'').slide(1).shape(''PlaceHolder 1'') == before(libreoffice.impress.file(''/home/user/Desktop/69_4.pptx'').slide(1).shape(''PlaceHolder 1''))'
+  footprint:
+    - 'bullet properties (type, character, indent/hanging-indent defaults that come with toggling bullets) of slide 1 PlaceHolder 2 paragraph 1'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File saved in place as pptx (Keep Current Format).'
+    - '"Add a bullet point to the content" means turning the single content paragraph (currently buNone) into a bulleted item, not writing new text.'
+    - 'Any unordered bullet glyph is acceptable; numbering is not a "bullet point".'
+  grounding_used: 'Slide 1 has a title and one content placeholder with a single unbulleted paragraph (buNone), so the bullet must go on that paragraph.'
+  confidence: medium
+
+- id: 7ae48c60-f143-4119-b659-15b8f485eb9a
+  must:
+    - 'all p in libreoffice.impress.file(''/home/user/Desktop/30_1.pptx'').slide(3).pictures: p.height_cm within(0.05) 20  # 7 icon pictures Google Shape;450..456;p18'
+    - 'libreoffice.impress.file(''/home/user/Desktop/30_1.pptx'').slide(4).shape(''Google Shape;466;p19'').height_cm within(0.05) 30'
+    - 'libreoffice.impress.file(''/home/user/Desktop/30_1.pptx'').slide(6).shape(''Google Shape;684;p22'').height_cm within(0.05) 25'
+    - 'all p in [slide(3).pictures, slide(4).shape(''Google Shape;466;p19''), slide(6).shape(''Google Shape;684;p22'')] of libreoffice.impress.file(''/home/user/Desktop/30_1.pptx''): p.width_cm within(0.05) before(p.width_cm) or p.width_cm within(0.1) before(p.width_cm) * p.height_cm / before(p.height_cm)  # width unchanged or proportionally scaled'
+    - 'count(libreoffice.impress.file(''/home/user/Desktop/30_1.pptx'').slides) == 6'
+  footprint:
+    - 'size (height, and width if Keep ratio is used) and position of the picture shapes on slides 3, 4 and 6 listed above'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File saved in place as pptx. Heights in centimetres via Position and Size (F4) or equivalent; position may shift depending on base point.'
+    - 'Slide 3 has seven identical 1.14x1.13cm bullet-icon pictures and no other picture; "picture''s height" on slide 3 is applied to all of them.'
+    - 'Slides 4 and 6 each contain exactly one picture, which are the targets.'
+  grounding_used: 'Identified picture shapes: slide 3 has 7 small icons (shapes 450-456), slide 4 has Google Shape;466;p19 (h 28.57cm), slide 6 has Google Shape;684;p22 (h 26.03cm).'
+  confidence: low
+
+- id: 550ce7e7-747b-495f-b122-acdc4d0b8e54
+  must:
+    - 'all r in libreoffice.impress.file(''/home/user/Desktop/New_Club_Spring_2018_Training.pptx'').slide(5).shape(''PlaceHolder 2'').paragraph(1).runs where r.text != "": r.strike in ["single", "double"]  # "Finance Meetings:"'
+    - 'all r in libreoffice.impress.file(''/home/user/Desktop/New_Club_Spring_2018_Training.pptx'').slide(5).shape(''PlaceHolder 2'').paragraph(2).runs where r.text != "": r.strike in ["single", "double"]  # "Providing another perspective for the clubs and organizations."'
+    - 'all i in 3..9: all r in libreoffice.impress.file(''/home/user/Desktop/New_Club_Spring_2018_Training.pptx'').slide(5).shape(''PlaceHolder 2'').paragraph(i).runs: r.strike == "none"'
+    - 'libreoffice.impress.file(''/home/user/Desktop/New_Club_Spring_2018_Training.pptx'').slide(5).shape(''PlaceHolder 2'').paragraphs.texts == before(libreoffice.impress.file(''/home/user/Desktop/New_Club_Spring_2018_Training.pptx'').slide(5).shape(''PlaceHolder 2'').paragraphs.texts)'
+    - 'all s in [1,2,3,4,6,7]: libreoffice.impress.file(''/home/user/Desktop/New_Club_Spring_2018_Training.pptx'').slide(s) == before(libreoffice.impress.file(''/home/user/Desktop/New_Club_Spring_2018_Training.pptx'').slide(s))'
+  footprint:
+    - 'strikethrough attribute of runs in slide 5 PlaceHolder 2 paragraphs 1 and 2 (run splitting that this causes is fine)'
+    - 'serialization_metadata'
+    - 'runtime(libreoffice).housekeeping'
+  fuzzy: []
+  assumptions:
+    - 'File saved in place as pptx (Keep Current Format).'
+    - 'The setup clicks the first slide thumbnail and presses Down four times, landing on slide 5 ("What I do:"), the only list of activities; "first and second line" are its first two content paragraphs, not the title.'
+    - 'Single strikethrough is what the toolbar/Format > Text > Strikethrough produces; double is tolerated.'
+  grounding_used: 'Setup navigation (click + 4x Down) points to slide 5, whose content placeholder has 9 paragraphs starting "Finance Meetings:" and "Providing another perspective..."; no slide literally titled to-do list exists.'
+  confidence: low

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "4d117223-a354-47fb-8b45-62ab1390a95f",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks 0644 permissions on all regular files under /home/user/testDir like eval.sh, while closing official holes where deleting files vacuously passes or chmod -R 644 breaks directory execute bits. All concrete file and directory paths match setup.sh.",
+    "notes_Y": "Checks 0644 permissions on all regular files under the active shell's cwd while preserving file contents, owners, and directory metadata. Slightly more brittle than X if directory traversal updates directory atime inside metadata."
+  },
+  {
+    "id": "3ce045a0-877b-42aa-8d2c-b4a863336ab8",
+    "verdict_X": "stricter_overstrict",
+    "verdict_Y": "looser",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Requires text-scaling-factor >= 1.25 (matching GNOME's Large Text toggle) and forbids display scaling or screen magnification. This is overstrict because it rejects text-scaling-factor = 1.2, global display scaling, and GNOME zoom, which official or a reasonable user would accept.",
+    "notes_Y": "Only requires text-scaling-factor > before (or display scaling > before) with no meaningful minimum threshold, which is looser than official's >= 1.2 check and would accept an imperceptible change like 1.01. It also rejects the screen magnifier branch that official accepts."
+  },
+  {
+    "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+    "verdict_X": "different_spec_better",
+    "verdict_Y": "different_spec_better",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Official only checks su login, passwd home directory /home/test1, and owner write permission without checking sshd or folder confinement at all, which is incompatible with OpenSSH ChrootDirectory (requiring root ownership of /home/test1) and SFTP-only accounts. Spec X is more faithful to the instruction by verifying actual SSH login and confinement to /home/test1, though its can_list('/home/test1') probe mixes host and chroot-relative paths.",
+    "notes_Y": "Official only checks su login and passwd home=/home/test1 with owner write bits, ignoring SSH and folder confinement and conflicting with OpenSSH ChrootDirectory root-ownership rules. Spec Y is more faithful to the instruction and avoids X's chroot-path ambiguity by checking sshd effective chroot_realpath == '/home/test1' and no accessible host user data outside it."
+  },
+  {
+    "id": "94d95f96-9699-4208-98ba-3c3119edf9c2",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Verifies that Spotify is installed via an official package channel (snap, apt spotify-client, or flatpak com.spotify.Client) and launches without error, closing the official evaluator's 'which spotify' dummy-binary hole and supporting Flatpak.",
+    "notes_Y": "Verifies that the Spotify application is installed, its desktop launcher resolves, and an isolated launch probe succeeds without dependency errors. Slightly less concrete than X because Ubuntu package managers do not expose a uniform publisher='Spotify' field."
+  },
+  {
+    "id": "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "equivalent",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that effective auto_quote is false for the active identity (id1) and that a reply preview contains no quoted body, while bounding side effects to auto_quote preferences. Unlike official and Y, it also accepts disabling mail.identity.default.auto_quote via Config Editor.",
+    "notes_Y": "Checks the exact same preference (mail.identity.id1.auto_quote == false in t5q2a5hp.default-release/prefs.js) as the official evaluator, while bounding the footprint to that preference."
+  },
+  {
+    "id": "9b7bc335-06b5-4cd3-9119-1a649c478509",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks the exact msgFilterRules.dat file for an enabled match-all Forward rule to anonym-x2024@gmail.com like official, while also requiring incoming-mail trigger bits (type & 1 or 32), forbidding destructive co-actions, and verifying the remote account and sent mail were untouched.",
+    "notes_Y": "Checks for an enabled local incoming match-all forward filter to anonym-x2024@gmail.com, untouched remote settings, and no newly sent messages. Less concrete than X because it relies on a filter simulation oracle and does not explicitly forbid destructive co-actions alongside forwarding."
+  },
+  {
+    "id": "d38192b0-17dc-4e1d-99c3-786d0117de77",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Verifies that the 'New-month AWS Bill' compose window remains open with ~/aws-bill.pdf attached like official, while also verifying the file's SHA-256, attachment count == 1, preserved sender/recipients/body, and no sent mail. Concrete subject, sender, and recipient values match the setup command.",
+    "notes_Y": "Verifies that the open compose window has ~/aws-bill.pdf attached with matching SHA-256, preserved sender/recipients/subject/body, and zero sent or queued messages. Slightly less resilient than X because exact body equality does not normalize incidental editor whitespace."
+  },
+  {
+    "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Verifies that the Thunderbird account setup tab remains at the initial form with email 'anonym-x2024@outlook.com' and password 'password' filled in and no accounts/servers/logins persisted in 6ex3j72p.default-release. Closes a major official evaluator bug where the password XPath only matches the field label (@name contains 'Password') even when the password box is empty.",
+    "notes_Y": "Verifies that the account setup page is visible with email 'anonym-x2024@outlook.com' and secret password value 'password', closing official's empty-password XPath bug. Slightly less precise than X because 'completed == false' may not reject advancing past the initial form into autoconfig lookup."
+  },
+  {
+    "id": "dd84e895-72fd-4023-a336-97689ded257c",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that the 2 messages in mailbox://nobody@Local%20Folders/Bills are flagged without extra messages added, bodies/tags altered, or messages in other folders (such as the decoy IMAP Bills folder) starred. Both concrete subject strings and count == 2 match the starting mbox file.",
+    "notes_Y": "Checks that the message IDs in Local Folders/Bills are unchanged, all are starred, and their contents and other flags are preserved (both messages start already read with X-Mozilla-Status 0001). Less explicit than X in must about stars in decoy Bills folders."
+  },
+  {
+    "id": "08c73485-7c6d-4681-999d-919f5c32dcfa",
+    "verdict_X": "looser",
+    "verdict_Y": "looser",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that applyIncomingFilters is enabled in prefs.js and existing filter rules are unchanged, but misses mail.imap.use_status_for_biff == false (and autosync_offline_stores != false) which the official evaluator enforces so IMAP subfolders are polled for filtering. Its footprint also omits mail.imap.use_status_for_biff.",
+    "notes_Y": "Checks mail.server.default.applyIncomingFilters == true, omits official's mail.imap.use_status_for_biff == false requirement from must and footprint, and relies on a filter simulation over existing incoming rules even though msgFilterRules.dat starts with zero rules."
+  },
+  {
+    "id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that a non-empty, uncommented global play/pause hotkey is set in vlcrc, does not collide with existing shortcuts, and toggles VLC playback while lecture.pdf remains open and focused. Closes official's vlcrc parser bug (which matches commented lines or 'Unset') and verifies the shortcut actually works without disturbing the PDF reader.",
+    "notes_Y": "Checks that a non-conflicting VLC global play-pause hotkey is persisted and toggles playback in an isolated probe while keeping a PDF reader focused. Slightly less grounded than X because it does not explicitly check in must that the existing lecture.pdf window remained open."
+  }
+]

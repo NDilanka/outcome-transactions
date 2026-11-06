@@ -1,0 +1,368 @@
+[
+ {
+  "id": "cabb3bae-cccb-41bd-9f5d-0f3a9fecd825",
+  "domain": "chrome",
+  "instruction": "Browse spider-man toys for kids and sort by lowest price.",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   },
+   {
+    "type": "chrome_open_tabs",
+    "parameters": {
+     "urls_to_open": [
+      "https://www.kohls.com/"
+     ]
+    }
+   },
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "Google Chrome"
+    }
+   }
+  ],
+  "related_apps": [
+   "chrome"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "2ae9ba84-3a0d-4d4c-8338-3a1478dc5fe3",
+  "domain": "chrome",
+  "instruction": "Lately I have changed my English name to Thomas. I want to update my username. Could you help me change the username in chrome profiles to Thomas?",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "chrome"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3",
+  "domain": "chrome",
+  "instruction": "Can you help me clean up my computer by getting rid of all the tracking things that Amazon might have saved? I want to make sure my browsing is private and those sites don't remember me.",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   },
+   {
+    "type": "chrome_open_tabs",
+    "parameters": {
+     "urls_to_open": [
+      "https://www.amazon.com",
+      "https://www.amazon.com/s?k=huggingface+transformers+book"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "chrome"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "a96b564e-dbe9-42c3-9ccf-b4498073438a",
+  "domain": "chrome",
+  "instruction": "In the FlightAware Discussions forum, navigate to the FlightAware > General category and open the topic with the most posts or replies.",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   },
+   {
+    "type": "chrome_open_tabs",
+    "parameters": {
+     "urls_to_open": [
+      "https://www.flightaware.com/"
+     ]
+    }
+   },
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "Google Chrome"
+    }
+   }
+  ],
+  "related_apps": [
+   "chrome"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "9656a811-9b5b-4ddf-99c7-5117bcef0626",
+  "domain": "chrome",
+  "instruction": "I want Chrome to warn me whenever I visit a potentially harmful or unsafe website. Can you enable this safety feature?",
+  "starting_state_setup": [
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "echo {CLIENT_PASSWORD} | sudo -S apt update -y && echo {CLIENT_PASSWORD} | sudo -S apt install jq -y",
+     "shell": true
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "mkdir -p /home/user/.config/google-chrome/Default && if [ ! -f /home/user/.config/google-chrome/Default/Preferences ]; then echo '{}' > /home/user/.config/google-chrome/Default/Preferences; fi && cd /home/user/.config/google-chrome/Default && jq '. + {\"safebrowsing\":{\"enabled\":false,\"enhanced\":false}}' Preferences > temp && mv temp Preferences",
+     "shell": true
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "chrome"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "030eeff7-b492-4218-b312-701ec99ee0cc",
+  "domain": "chrome",
+  "instruction": "Can you enable the 'Do Not Track' feature in Chrome to enhance my online privacy?",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "chrome"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "d52d6308-ec58-42b7-a2c9-de80e4837b2b",
+  "domain": "gimp",
+  "instruction": "Could you help me remove the dock on the left side of the screen in the GIMP?",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "gimp"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "gimp"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce",
+  "domain": "gimp",
+  "instruction": "Help me choose the yellow triangle and positioning it at the center of my picture.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce/Triangle_On_The_Side.png",
+       "path": "/home/user/Desktop/Triangle_On_The_Side.png"
+      },
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce/Triangle_On_The_Side.xcf",
+       "path": "/home/user/Desktop/Triangle_On_The_Side.xcf"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "gimp",
+      "/home/user/Desktop/Triangle_On_The_Side.xcf"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "gimp"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce.md"
+ },
+ {
+  "id": "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+  "domain": "gimp",
+  "instruction": "Could you help me set the image to Palette-Based?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/06ca5602-62ca-47f6-ad4f-da151cde54cc/computer.png",
+       "path": "/home/user/Desktop/computer.png"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "gimp",
+      "/home/user/Desktop/computer.png"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "gimp"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/06ca5602-62ca-47f6-ad4f-da151cde54cc.md"
+ },
+ {
+  "id": "e2dd0213-26db-4349-abe5-d5667bfd725c",
+  "domain": "gimp",
+  "instruction": "Can you assist me in moving the text box to the left side? I keep accidentally selecting the image layer beneath it.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/e2dd0213-26db-4349-abe5-d5667bfd725c/orange_background.xcf",
+       "path": "/home/user/Desktop/orange_background.xcf"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "gimp",
+      "/home/user/Desktop/orange_background.xcf"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "gimp"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/e2dd0213-26db-4349-abe5-d5667bfd725c.md"
+ },
+ {
+  "id": "7b7617bd-57cc-468e-9c91-40c4ec2bcb3d",
+  "domain": "gimp",
+  "instruction": "Set the minimum number of undo steps to 100.",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "gimp"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "gimp"
+  ],
+  "inspection_report": null
+ }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "fba2c100-79e8-42df-ae74-b592418d54f4",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks actual PNG format, reasonable dimensions (>=640x360), source MP4 preservation, and similarity >=0.80 against any frame in the paused 120.4-121.2s scene. Also properly permits intermediate vlcsnap files in ~/Pictures in the footprint.",
+    "notes_Y": "Overstrictly requires exact native frame dimensions and >=0.99 pixel similarity to a single before frame, which can reject valid snapshots due to minor timing or color-conversion differences. Its filesystem footprint also omits default vlcsnap files in ~/Pictures."
+  },
+  {
+    "id": "d06f0d4d-2cd5-4ede-8de9-598629438c6e",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Directly checks qt-slider-colours in vlcrc has all 12 RGB values (closing official's partial-tuple hole) with channels <=80 (slightly tighter than official's <100) and preserves other vlcrc keys.",
+    "notes_Y": "Requires vlc.ui.volume_slider.fill_palette_matches_persisted == true in the live UI, which rejects valid solutions where the user saved the preference in VLC without restarting the player. Also uses ungrounded config key names and delegates core judgment to fuzzy prose."
+  },
+  {
+    "id": "9195653c-f4aa-453d-aa95-787f6ccfaae9",
+    "verdict_X": "stricter_overstrict",
+    "verdict_Y": "equivalent",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Requires vlc.ui.volume_slider.maximum_percent == 200 in the running UI, but VLC only updates the Qt volume slider limit after a restart (which official performs in postconfig and the instruction does not request).",
+    "notes_Y": "Matches the official evaluator by checking qt-max-volume == 200 in /home/user/.config/vlc/vlcrc while ensuring unrelated vlcrc keys remain unchanged."
+  },
+  {
+    "id": "efcf0d81-0835-4880-b2fd-d866e8bc2294",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks the active GNOME background URI (accounting for color-scheme), verifies picture-options != 'none' and similarity >=0.80 to any frame in the 120.4-121.2s scene, and preserves the source video.",
+    "notes_Y": "Overstrictly demands >=0.99 pixel similarity to a single before frame and restricts the /home/user footprint to a single new image file, which fails when GNOME copies the snapshot into ~/.local/share/backgrounds."
+  },
+  {
+    "id": "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks persisted minimal-view configuration (qt-minimal-view in vlcrc or MainWindow/minimal-view in vlc-qt-interface.conf) plus an isolated restart probe verifying windowed (non-fullscreen) minimal view with hidden controls.",
+    "notes_Y": "In addition to a restart probe, requires the pre-restart live VLC window to remain open and already in minimal view, rejecting valid solutions that save 'Start in minimal view mode' in Preferences without restarting VLC."
+  },
+  {
+    "id": "9439a27b-18ae-42d8-9778-5f68f891805e",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that debug.focusEditorOnBreak is persisted and effective as false, though it adds an unnecessary abstract debug_probe despite no debuggable workspace being open.",
+    "notes_Y": "Directly and concretely checks that debug.focusEditorOnBreak is false in /home/user/.config/Code/User/settings.json with no extraneous changes."
+  },
+  {
+    "id": "eabc805a-bfcf-4460-b250-ac92135819f6",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "tie",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that exact extension ID 'ms-python.python' is installed and enabled, and explicitly accounts for its auto-installed companion extensions in /home/user/.vscode/extensions.",
+    "notes_Y": "Checks that exact extension ID 'ms-python.python' is installed and enabled in the current profile while allowing automatically installed dependencies in the footprint."
+  },
+  {
+    "id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Closes official's folder-name substring hole by verifying an open VS Code window has exact workspace_folders ['/home/user/project'] and that all files in /home/user/project remain unmodified.",
+    "notes_Y": "Also verifies the canonical path '/home/user/project' and file preservation, but unnecessarily restricts the check to active_window and Explorer root_paths rather than any open VS Code window."
+  },
+  {
+    "id": "ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that /home/user/.config/Code/User/keybindings.json contains a ctrl+f -> -list.find removal rule, that ctrl+f no longer resolves to list.find in Explorer focus, and that editor ctrl+f remains intact.",
+    "notes_Y": "Checks the same effective keybinding resolution in Explorer and editor contexts, but uses informal prose context descriptions instead of concrete VS Code context keys and file paths."
+  },
+  {
+    "id": "6ed0a554-cbee-4b44-84ea-fd6c042f4fe1",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Verifies that /home/user/project.code-workspace and the active VS Code window contain the resolved paths for project, data1, and data2 while preserving other workspace keys, though set_equal in must does not rule out duplicate folder entries.",
+    "notes_Y": "Concretely verifies the 3 resolved folder paths ['/home/user/project', '/home/user/data1', '/home/user/data2'], enforces len(folders) == 3 against duplicates, preserves workspace settings, and checks the open VS Code window."
+  },
+  {
+    "id": "4e60007a-f5be-4bfc-9723-c39affa0a6d3",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "tie",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that exact extension ID 'njpwerner.autodocstring' is installed and enabled, with footprint scoped to its folder and extensions.json entry under /home/user/.vscode/extensions.",
+    "notes_Y": "Checks that exact extension ID 'njpwerner.autodocstring' is installed and enabled in the current profile, with footprint scoped to the extension and registry."
+  }
+]

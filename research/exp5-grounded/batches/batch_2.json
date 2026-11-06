@@ -1,0 +1,321 @@
+[
+ {
+  "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+  "domain": "gimp",
+  "instruction": "Could you assist me in enhancing the color vibrancy of my photo?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/gimp/554785e9-4523-4e7a-b8e1-8016f565f56a/woman_sitting_by_the_tree2.png",
+       "path": "/home/user/Desktop/woman_sitting_by_the_tree2.png"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "gimp",
+      "/home/user/Desktop/woman_sitting_by_the_tree2.png"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "gimp"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/554785e9-4523-4e7a-b8e1-8016f565f56a.md"
+ },
+ {
+  "id": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+  "domain": "libreoffice_calc",
+  "instruction": "I want to copy the movie titles in 'Garbage Movie Titles' column to the 'Clean Movie Titles' column. But please remove the adundant whitespaces and canonicalize the letter cases by capitalizing the first letter of each words and leave other letters as lower case. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/a9f325aa-8c05-4e4f-8341-9e4358565f4f/Movie_titles_garbage_clean.xlsx",
+       "path": "/home/user/Movie_title_garbage_clean.xlsx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Movie_title_garbage_clean.xlsx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice calc"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/a9f325aa-8c05-4e4f-8341-9e4358565f4f.md"
+ },
+ {
+  "id": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+  "domain": "libreoffice_calc",
+  "instruction": "Calculate the total sales in an underneath row called \"Total\" and display the total of each month as bars. Then calculate the month-on-month growth percentage for Feb to Jun in another row called \"Growth\" and show them in a line chart (Jan should be omitted in the chart as well). Set the chart titles as the two row headers respectively.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/0326d92d-d218-48a8-9ca1-981cd6d064c7/SalesRep.xlsx",
+       "path": "/home/user/SalesRep.xlsx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/SalesRep.xlsx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_calc"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/0326d92d-d218-48a8-9ca1-981cd6d064c7.md"
+ },
+ {
+  "id": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+  "domain": "libreoffice_calc",
+  "instruction": "Calculate revenue in a new column according to the Retail Price sheet (consider product price and quantity and discount), and generate a Pivot Table in a new sheet (Sheet2) that summarizes the revenue of each product.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/51719eea-10bc-4246-a428-ac7c433dd4b3/BoomerangSales.xlsx",
+       "path": "/home/user/BoomerangSales.xlsx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/BoomerangSales.xlsx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_calc"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/51719eea-10bc-4246-a428-ac7c433dd4b3.md"
+ },
+ {
+  "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+  "domain": "libreoffice_calc",
+  "instruction": "Compute the sum of \"Revenue\" and \"Total Expenses\" and put the results under two columns named \"Total Revenue\" and \"Total Expenses\" of a new sheet (Sheet2)",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/1273e544-688f-496b-8d89-3e0f40aa0606/NetIncome.xlsx",
+       "path": "/home/user/NetIncome.xlsx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/NetIncome.xlsx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_calc"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/42e0a640-4f19-4b28-973d-729602b5a4a7.md"
+ },
+ {
+  "id": "1273e544-688f-496b-8d89-3e0f40aa0606",
+  "domain": "libreoffice_calc",
+  "instruction": "Copy the \"Revenue\" column along with the header to a new sheet named \"Sheet2\".",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/1273e544-688f-496b-8d89-3e0f40aa0606/NetIncome.xlsx",
+       "path": "/home/user/NetIncome.xlsx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/NetIncome.xlsx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_calc"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/1273e544-688f-496b-8d89-3e0f40aa0606.md"
+ },
+ {
+  "id": "6054afcb-5bab-4702-90a0-b259b5d3217c",
+  "domain": "libreoffice_calc",
+  "instruction": "Some data are missed by now and are filled by 'N/A' temporarily. Please hide them in the table for now. Do not delete any cells and filter is not needed.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_calc/6054afcb-5bab-4702-90a0-b259b5d3217c/Date_Budget_Variance_HideNA.xlsx",
+       "path": "/home/user/Date_Budget_Variance_HideNA.xlsx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Date_Budget_Variance_HideNA.xlsx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice calc"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/6054afcb-5bab-4702-90a0-b259b5d3217c.md"
+ },
+ {
+  "id": "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+  "domain": "libreoffice_impress",
+  "instruction": "Enable auto-save every 3min for me, so that I don't need to hit \"ctrl-s\" that much",
+  "starting_state_setup": [
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "libreoffice",
+      "--impress"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_impress"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+  "domain": "libreoffice_impress",
+  "instruction": "Add a bullet point to the content of this slide.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/f23acfd2-c485-4b7c-a1e7-d4303ddfe864/69_4.pptx",
+       "path": "/home/user/Desktop/69_4.pptx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/69_4.pptx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_impress"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/f23acfd2-c485-4b7c-a1e7-d4303ddfe864.md"
+ },
+ {
+  "id": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+  "domain": "libreoffice_impress",
+  "instruction": "Change picture's height to 20, 30, 25cm on slide 3, 4, 6 respectively.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/7ae48c60-f143-4119-b659-15b8f485eb9a/30_1.pptx",
+       "path": "/home/user/Desktop/30_1.pptx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/30_1.pptx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_impress"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/7ae48c60-f143-4119-b659-15b8f485eb9a.md"
+ },
+ {
+  "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+  "domain": "libreoffice_impress",
+  "instruction": "I am checking our soccer club's to-do list for the last semester and adding strike-through sign on the line we have already accomplished. Could you help me add a strike-through on the first and second line?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/550ce7e7-747b-495f-b122-acdc4d0b8e54/New_Club_Spring_2018_Training.data",
+       "path": "/home/user/Desktop/New_Club_Spring_2018_Training.pptx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/New_Club_Spring_2018_Training.pptx"
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time;  time.sleep(4); pyautogui.click(170, 250); time.sleep(1);pyautogui.press('down'); time.sleep(1); pyautogui.press('down'); time.sleep(1); pyautogui.press('down'); time.sleep(1); pyautogui.press('down'); time.sleep(1); "
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_impress"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/550ce7e7-747b-495f-b122-acdc4d0b8e54.md"
+ }
+]

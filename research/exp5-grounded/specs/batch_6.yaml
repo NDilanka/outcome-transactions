@@ -1,0 +1,178 @@
+- id: fba2c100-79e8-42df-ae74-b592418d54f4
+  must:
+    - "fs.file('/home/user/Desktop/interstellar.png').exists == true"
+    - "image.file('/home/user/Desktop/interstellar.png').format == 'PNG'"
+    - "image.file('/home/user/Desktop/interstellar.png').width >= 640 and image.file('/home/user/Desktop/interstellar.png').height >= 360"
+    - "max(similarity(image.file('/home/user/Desktop/interstellar.png').content_region, video.file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').stream(1).frame_at(t)) for t in range(120.4, 121.2, step=1/23.976)) >= 0.80"
+    - "image.file('/home/user/Desktop/interstellar.png').content_region.aspect_ratio within(0.05) 16/9"
+    - "fs.file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256 == before(fs.file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256)"
+  footprint:
+    - "fs.file('/home/user/Desktop/interstellar.png') (new file)"
+    - "optional intermediate VLC snapshot files vlcsnap-*.png/jpg in the default snapshot directory /home/user/Pictures (or /home/user) created by VLC's Take Snapshot"
+    - "vlc.config('/home/user/.config/vlc/vlcrc') keys snapshot-path, snapshot-prefix, snapshot-format, snapshot-sequential only"
+    - "vlc playback position/pause state of the already-open trailer"
+    - "runtime(vlc).housekeeping, runtime(file_manager).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "The 'current video scene' is the frame VLC is paused on after playing 120.5s to 121s; ffprobe shows that span lies inside one shot (cuts at ~118.9s, ~120.25s, ~122.1s), so any frame from 120.4-121.2s is the same scene and a tolerance window is used."
+    - "content_region means the image cropped to the video area if the user captured the screen instead of using VLC snapshot; a VLC snapshot (1920x1080) is the expected path but a screen capture cropped to the video is also accepted."
+    - "The file must be real PNG data, not just a .png name on JPEG data."
+  grounding_used: "Video is 1920x1080 at 23.976 fps; scene-cut analysis shows 120.5-121s is a single stable shot, so the reference frame is well defined."
+  confidence: high
+
+- id: d06f0d4d-2cd5-4ede-8de9-598629438c6e
+  must:
+    - "len(vlc.config('/home/user/.config/vlc/vlcrc').get('qt-slider-colours').split(';')) == 12"
+    - "all(int(c) <= 80 for c in vlc.config('/home/user/.config/vlc/vlcrc').get('qt-slider-colours').split(';'))"
+    - "vlc.config('/home/user/.config/vlc/vlcrc').get('qt-slider-colours') != '153;210;153;20;210;20;255;199;15;245;39;29'"
+  footprint:
+    - "vlc.config('/home/user/.config/vlc/vlcrc').key('qt-slider-colours')"
+    - "vlc preferences view state (Show settings: All) in /home/user/.config/vlc/vlc-qt-interface.conf"
+    - "serialization_metadata of vlcrc (VLC rewrites the file on Save; all other key values must equal before)"
+    - "runtime(vlc).housekeeping (restart of VLC allowed)"
+  fuzzy: []
+  assumptions:
+    - "The volume slider color is the Qt interface option 'Define the colors of the volume slider' (qt-slider-colours), four RGB stops (12 values); 'black-ish' means every stop is near black, operationalised as every channel <= 80."
+    - "The setting must be saved (persisted in vlcrc), since a preference that is not saved does not change anything for the user."
+    - "Switching the whole VLC skin/theme is not what was asked and is not accepted."
+  grounding_used: "none"
+  confidence: medium
+
+- id: 9195653c-f4aa-453d-aa95-787f6ccfaae9
+  must:
+    - "int(vlc.config('/home/user/.config/vlc/vlcrc').get('qt-max-volume')) == 200"
+  footprint:
+    - "vlc.config('/home/user/.config/vlc/vlcrc').key('qt-max-volume')"
+    - "current volume level of the running player / saved volume in vlc-qt-interface.conf"
+    - "vlc preferences view state in /home/user/.config/vlc/vlc-qt-interface.conf"
+    - "serialization_metadata of vlcrc (all other key values must equal before)"
+    - "runtime(vlc).housekeeping (restart of VLC allowed)"
+  fuzzy: []
+  assumptions:
+    - "The user refers to the 125% ceiling of the volume control, so the request is to raise the Qt 'Maximum volume displayed' option (qt-max-volume, default 125) to 200, saved persistently."
+    - "Changing audio gain instead (which would make the ceiling 250% of original) is a different outcome and is not accepted."
+  grounding_used: "none"
+  confidence: medium
+
+- id: efcf0d81-0835-4880-b2fd-d866e8bc2294
+  must:
+    - "let uri = (gnome.gsettings('org.gnome.desktop.interface','color-scheme') == 'prefer-dark' ? gnome.gsettings('org.gnome.desktop.background','picture-uri-dark') : gnome.gsettings('org.gnome.desktop.background','picture-uri'))"
+    - "uri != before(gnome.gsettings('org.gnome.desktop.background','picture-uri'))"
+    - "fs.file(uri_to_path(uri)).exists == true and image.file(uri_to_path(uri)).is_decodable == true"
+    - "max(similarity(image.file(uri_to_path(uri)).content_region, video.file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').stream(1).frame_at(t)) for t in range(120.4, 121.2, step=1/23.976)) >= 0.80"
+    - "gnome.gsettings('org.gnome.desktop.background','picture-options') != 'none'"
+    - "fs.file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256 == before(fs.file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256)"
+  footprint:
+    - "gnome.gsettings('org.gnome.desktop.background') keys picture-uri, picture-uri-dark, picture-options"
+    - "new image file(s) for the captured frame under /home/user (e.g. vlcsnap-*.png in /home/user/Pictures, a copy in /home/user/.local/share/backgrounds)"
+    - "vlc.config('/home/user/.config/vlc/vlcrc') keys snapshot-path, snapshot-prefix, snapshot-format only"
+    - "vlc playback position/pause state of the already-open trailer"
+    - "runtime(vlc).housekeeping, runtime(file_manager).housekeeping, runtime(gnome-control-center).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "'This part of the video' is the frame VLC is paused on after playing 120.5-121s; this lies inside one shot (cuts at ~120.25s and ~122.1s), so frames 120.4-121.2s are all accepted."
+    - "The effective wallpaper key depends on the color scheme (picture-uri-dark in dark mode), so the check targets whichever key GNOME actually displays; setting both is allowed."
+    - "picture-options is left free (zoom, scaled, etc.) as long as the image is shown."
+  grounding_used: "Scene-cut analysis of the trailer (1920x1080, 23.976 fps) confirmed 120.5-121s is a single shot, so the expected wallpaper frame is well defined."
+  confidence: high
+
+- id: a5bbbcd5-b398-4c91-83d4-55e1e31bbb81
+  must:
+    - "vlc.probe_restart(config_from='/home/user/.config/vlc').main_window.minimal_view == true"
+    - "vlc.probe_restart(config_from='/home/user/.config/vlc').main_window.playback_controls_visible == false"
+    - "vlc.probe_restart(config_from='/home/user/.config/vlc').main_window.fullscreen == false"
+    - "vlc.config('/home/user/.config/vlc/vlcrc').get('qt-minimal-view') in ['1', 1, true] or vlc.qt_settings('/home/user/.config/vlc/vlc-qt-interface.conf').get('MainWindow/minimal-view') == true"
+  footprint:
+    - "vlc.config('/home/user/.config/vlc/vlcrc').key('qt-minimal-view')"
+    - "/home/user/.config/vlc/vlc-qt-interface.conf keys under [MainWindow] (minimal-view, geometry/state saved on exit)"
+    - "serialization_metadata of vlcrc (all other key values must equal before)"
+    - "runtime(vlc).housekeeping (closing and restarting VLC allowed)"
+  fuzzy: []
+  assumptions:
+    - "'Minimal Interface' is VLC's View > Minimal Interface (Ctrl+H) / 'Start in minimal view' option; the decisive check is a restart probe on a copy of the final config, so either persistence mechanism (qt-minimal-view in vlcrc or MainWindow/minimal-view in the Qt settings file) is accepted."
+    - "'In window mode' means VLC must not be put into fullscreen; removing controls via the toolbar editor is not the requested feature and is not accepted."
+  grounding_used: "none"
+  confidence: medium
+
+- id: 9439a27b-18ae-42d8-9778-5f68f891805e
+  must:
+    - "vscode.user_settings('/home/user/.config/Code/User/settings.json').get('debug.focusEditorOnBreak') == false"
+  footprint:
+    - "vscode.user_settings('/home/user/.config/Code/User/settings.json').key('debug.focusEditorOnBreak') (file may be created if absent)"
+    - "runtime(vscode).housekeeping (settings editor tabs, recent searches, window state)"
+  fuzzy: []
+  assumptions:
+    - "The VS Code option controlling whether focus jumps back to the editor when the debugger breaks is debug.focusEditorOnBreak (default true); setting it to false in user settings (UI or JSON) satisfies the request."
+  grounding_used: "none"
+  confidence: high
+
+- id: eabc805a-bfcf-4460-b250-ac92135819f6
+  must:
+    - "'ms-python.python' in vscode.extensions(installed=true, enabled=true).ids"
+  footprint:
+    - "new extension folders in /home/user/.vscode/extensions for ms-python.python and the extensions it installs automatically as dependencies/pack members (ms-python.vscode-pylance, ms-python.debugpy, ms-python.vscode-python-envs)"
+    - "/home/user/.vscode/extensions/extensions.json registry entries for those extensions"
+    - "runtime(vscode).housekeeping (marketplace caches, extension view state, welcome/walkthrough pages)"
+  fuzzy: []
+  assumptions:
+    - "'the extension Python' is Microsoft's ms-python.python; its auto-installed companion extensions are allowed."
+  grounding_used: "none"
+  confidence: high
+
+- id: 53ad5833-3455-407b-bbc6-45b4c79ab8fb
+  must:
+    - "any(w.workspace_folders == ['/home/user/project'] for w in vscode.windows())"
+    - "fs.tree('/home/user/project').content == before(fs.tree('/home/user/project').content)"
+  footprint:
+    - "VS Code window/workspace state: opened folder, recently-opened list, workspace storage, workspace-trust decision for /home/user/project"
+    - "runtime(vscode).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Opening 'project' means opening the folder /home/user/project as the VS Code workspace (File > Open Folder or equivalent), not just opening one file from it; replacing the current empty window or opening a new window are both fine."
+    - "The project files (main.py, README.md, .vscode/settings.json) must not be edited."
+  grounding_used: "Report shows /home/user/project contains main.py, README.md and .vscode/settings.json, which the footprint protects byte-for-byte."
+  confidence: high
+
+- id: ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae
+  must:
+    - "vscode.keybindings.resolve(key='ctrl+f', context={'explorerViewletFocus': true, 'filesExplorerFocus': true, 'listFocus': true, 'listSupportsFind': true, 'treeFindOpen': false}).command != 'list.find'"
+    - "any(k.key == 'ctrl+f' and k.command == '-list.find' for k in vscode.user_keybindings('/home/user/.config/Code/User/keybindings.json'))"
+    - "vscode.keybindings.resolve(key='ctrl+f', context={'editorFocus': true, 'editorTextFocus': true}).command == before(vscode.keybindings.resolve(key='ctrl+f', context={'editorFocus': true, 'editorTextFocus': true}).command)"
+  footprint:
+    - "vscode.user_keybindings('/home/user/.config/Code/User/keybindings.json'): added removal entries for ctrl+f -> list.find only (file may be created)"
+    - "runtime(vscode).housekeeping (Keyboard Shortcuts editor tab, search history)"
+  fuzzy: []
+  assumptions:
+    - "'Tree view Find (Explorer search)' is the list/tree find command list.find, whose default bindings include ctrl+f when a find-capable list is focused; the GUI 'Remove Keybinding' writes {key: ctrl+f, command: -list.find, when: ...}. A removal entry with or without the when clause is accepted."
+    - "Other bindings (ctrl+f for editor Find, ctrl+alt+f for list.find) must stay intact."
+  grounding_used: "none"
+  confidence: medium
+
+- id: 6ed0a554-cbee-4b44-84ea-fd6c042f4fe1
+  must:
+    - "set_equal([resolve_path('/home/user', f.path) for f in json.file('/home/user/project.code-workspace').folders], ['/home/user/project', '/home/user/data1', '/home/user/data2'])"
+    - "len(json.file('/home/user/project.code-workspace').folders) == 3"
+    - "json.file('/home/user/project.code-workspace').settings == before(json.file('/home/user/project.code-workspace').settings)"
+    - "set_equal(vscode.window(workspace='/home/user/project.code-workspace').workspace_folders, ['/home/user/project', '/home/user/data1', '/home/user/data2'])"
+  footprint:
+    - "json.file('/home/user/project.code-workspace').folders (entries added; relative or absolute path forms allowed; optional 'name' fields)"
+    - "VS Code workspace storage/state for the open workspace"
+    - "runtime(vscode).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "The 'current workspace' is the saved multi-root workspace /home/user/project.code-workspace opened at setup; adding folders updates that file, so both the file and the live window are checked."
+    - "Folder order and whether paths are stored relative ('data1') or absolute are free."
+  grounding_used: "Report shows the workspace file initially has one folder 'project' (relative to /home/user) and empty settings, so the expected resolved folder set is {project, data1, data2} with settings unchanged."
+  confidence: high
+
+- id: 4e60007a-f5be-4bfc-9723-c39affa0a6d3
+  must:
+    - "'njpwerner.autodocstring' in vscode.extensions(installed=true, enabled=true).ids"
+  footprint:
+    - "new extension folder for njpwerner.autodocstring in /home/user/.vscode/extensions and its extensions.json registry entry"
+    - "runtime(vscode).housekeeping (marketplace caches, extension view state)"
+  fuzzy: []
+  assumptions:
+    - "autoDocstring is the marketplace extension njpwerner.autodocstring (autoDocstring - Python Docstring Generator)."
+  grounding_used: "none"
+  confidence: high

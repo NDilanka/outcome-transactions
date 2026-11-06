@@ -1,0 +1,6 @@
+# Third-party clone (re-clone from https://github.com/xlang-ai/OSWorld)
+research/OSWorld/
+# Downloaded task starting files (rebuild with research/exp5-grounded/fetch.py)
+research/exp5-grounded/snapshots/
+__pycache__/
+*.pyc

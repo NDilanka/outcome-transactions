@@ -1,0 +1,563 @@
+[
+ {
+  "id": "4d117223-a354-47fb-8b45-62ab1390a95f",
+  "domain": "os",
+  "instruction": "Change the permission of all regular files under current directory tree to 644",
+  "inspection_report": "research/exp5-grounded/inspections/4d117223-a354-47fb-8b45-62ab1390a95f.md",
+  "spec_X": {
+   "id": "4d117223-a354-47fb-8b45-62ab1390a95f",
+   "must": [
+    "os.file('/home/user/testDir/file1.txt').mode == 0o644",
+    "os.file('/home/user/testDir/subDir1/file2.txt').mode == 0o644",
+    "os.file('/home/user/testDir/subDir2/file3.txt').mode == 0o644",
+    "all(f.mode == 0o644 for f in os.tree('/home/user/testDir').regular_files)",
+    "os.tree('/home/user/testDir').paths set_equal before(os.tree('/home/user/testDir').paths)",
+    "os.file('/home/user/testDir').mode == before(os.file('/home/user/testDir').mode)",
+    "os.file('/home/user/testDir/subDir1').mode == before(os.file('/home/user/testDir/subDir1').mode)",
+    "os.file('/home/user/testDir/subDir2').mode == before(os.file('/home/user/testDir/subDir2').mode)"
+   ],
+   "footprint": [
+    "os.file('/home/user/testDir/file1.txt').mode",
+    "os.file('/home/user/testDir/subDir2/file3.txt').mode",
+    "os.file(<regular files under /home/user/testDir>).ctime/atime",
+    "terminal session history and scrollback",
+    "runtime(gnome-terminal).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Current directory' is /home/user/testDir, where setup leaves the terminal (cd testDir).",
+    "Only regular files change; directory modes must stay as they were (directories need the execute bit, so changing them to 644 would be collateral damage).",
+    "Owners and file contents must stay the same, and no files may be added or removed."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "4d117223-a354-47fb-8b45-62ab1390a95f",
+   "must": [
+    "fs(before(terminal.active_shell.cwd)).regular_files(recursive=true, follow_symlinks=false).permission_modes set_equal ['0644']",
+    "fs(before(terminal.active_shell.cwd)).regular_files(recursive=true, follow_symlinks=false).relative_paths_sha256_and_owner == before(fs(terminal.active_shell.cwd).regular_files(recursive=true, follow_symlinks=false).relative_paths_sha256_and_owner)",
+    "fs(before(terminal.active_shell.cwd)).directories_and_symlinks.metadata == before(fs(terminal.active_shell.cwd).directories_and_symlinks.metadata)"
+   ],
+   "footprint": [
+    "fs(before(terminal.active_shell.cwd)).regular_files(recursive=true, follow_symlinks=false).permission_mode_and_ctime",
+    "terminal.history_and_scrollback",
+    "runtime('terminal').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Current directory is the active terminal's testDir after setup, not the home directory. Set permission bits to octal 0644 for every regular file, including hidden files; do not follow symlinks or change directory permissions, ownership, or contents.",
+    "Ignore unavoidable access-time changes from inspection and ctime changes from chmod."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "3ce045a0-877b-42aa-8d2c-b4a863336ab8",
+  "domain": "os",
+  "instruction": "My glasses are broken, and I'm having trouble seeing small things clearly. Could you help me enlarge the text on my screen so it's easier to read?",
+  "inspection_report": null,
+  "spec_X": {
+   "id": "3ce045a0-877b-42aa-8d2c-b4a863336ab8",
+   "must": [
+    "gsettings('org.gnome.desktop.interface', 'text-scaling-factor') > before(gsettings('org.gnome.desktop.interface', 'text-scaling-factor'))",
+    "gsettings('org.gnome.desktop.interface', 'text-scaling-factor') >= 1.25",
+    "desktop.display_resolution_and_monitor_scale == before(desktop.display_resolution_and_monitor_scale)"
+   ],
+   "footprint": [
+    "gsettings('org.gnome.desktop.interface','text-scaling-factor')",
+    "os.ui.accessibility_settings_navigation",
+    "runtime('settings').housekeeping",
+    "runtime('gnome-shell').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Enable system-wide Large Text or an equivalent increased text scaling, not browser-only zoom, screen magnification, or lower screen resolution. GNOME Large Text's usual 1.25 factor is a sufficient minimum; the input gives no exact size."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "3ce045a0-877b-42aa-8d2c-b4a863336ab8",
+   "must": [
+    "gsettings('org.gnome.desktop.interface','text-scaling-factor') > before(gsettings('org.gnome.desktop.interface','text-scaling-factor')) or display.logical_scale(primary) > before(display.logical_scale(primary)) or gsettings('org.gnome.desktop.interface','scaling-factor') > before(gsettings('org.gnome.desktop.interface','scaling-factor'))",
+    "gsettings('org.gnome.desktop.interface','text-scaling-factor') <= 3.0",
+    "session.desktop_usable == true"
+   ],
+   "footprint": [
+    "gsettings('org.gnome.desktop.interface','text-scaling-factor')",
+    "gsettings('org.gnome.desktop.a11y.interface', *) only if toggled via the 'Large Text' accessibility switch",
+    "gsettings('org.gnome.desktop.interface','scaling-factor') or monitors.xml display scale (only if display scaling was used)",
+    "Settings app navigation and window state",
+    "runtime(gnome-control-center).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The standard way is Settings > Accessibility > Large Text (text-scaling-factor 1.0 -> 1.25) or any larger text-scaling-factor. Increasing the global display scale also enlarges on-screen text, so it is accepted.",
+    "The screen magnifier (zoom) is not accepted, because it does not enlarge the text itself and changes how the whole screen behaves.",
+    "The upper bound of 3.0 rejects absurd values that would make the desktop unusable."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+  "domain": "os",
+  "instruction": "Please create an SSH user named \"charles\" with password \"Ex@mpleP@55w0rd!\" on Ubuntu who is only allowed to access the folder \"/home/test1\".",
+  "inspection_report": null,
+  "spec_X": {
+   "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+   "must": [
+    "os.user('charles').exists == true",
+    "os.user('charles').password_verifies('Ex@mpleP@55w0rd!') == true",
+    "os.user('charles').locked == false",
+    "os.service('ssh').active == true",
+    "run('sshd -t').exit_code == 0",
+    "probe.ssh(host='localhost', user='charles', password='Ex@mpleP@55w0rd!').login_succeeds == true",
+    "probe.ssh(host='localhost', user='charles', password='Ex@mpleP@55w0rd!').can_list('/home/test1') == true",
+    "probe.ssh(host='localhost', user='charles', password='Ex@mpleP@55w0rd!').accessible_root == '/home/test1'",
+    "probe.ssh(host='localhost', user='charles', password='Ex@mpleP@55w0rd!').can_read_outside('/home/test1') == false",
+    "probe.ssh(host='localhost', user='user').login_behavior == before(probe.ssh(host='localhost', user='user').login_behavior)"
+   ],
+   "footprint": [
+    "/etc/passwd, /etc/shadow, /etc/group, /etc/gshadow: entries for user/group 'charles' (and an optional dedicated group such as 'sftponly' containing charles) only",
+    "home directory for charles if one is created",
+    "/etc/ssh/sshd_config and /etc/ssh/sshd_config.d/*: a Match block for charles (or its group) only, e.g. ChrootDirectory /home/test1, ForceCommand internal-sftp, password authentication for that match",
+    "os.file('/home/test1') owner/group/mode (chroot requires root ownership and no group/other write) and new subdirectories inside /home/test1",
+    "openssh-server package and its dependencies, if not already installed",
+    "ssh service enabled/active state and restarts",
+    "apt caches and logs"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Only allowed to access /home/test1' means an SSH/SFTP session for charles is confined to /home/test1 (typically a chroot via a Match User block). Any mechanism is accepted if the probe shows charles can log in, sees /home/test1 as its accessible root, and cannot read files elsewhere such as /etc/passwd or /home/user.",
+    "SFTP-only (internal-sftp) and a chrooted shell are both acceptable.",
+    "Other users' SSH access must not change."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+   "must": [
+    "unix_user('charles').exists == true",
+    "unix_user('charles').password_verifies('Ex@mpleP@55w0rd!') == true",
+    "sshd.effective_config(user='charles').password_authentication == true",
+    "sshd.effective_config(user='charles').chroot_realpath == '/home/test1'",
+    "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).authentication_success == true",
+    "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).at_least_one_shell_or_sftp_session_usable == true",
+    "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).accessible_host_user_data_outside('/home/test1') == []",
+    "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).can_escape_chroot_via_parent_symlink_or_command == false",
+    "unix_user('charles').has_sudo_or_equivalent_host_privileges == false",
+    "sshd.effective_config(users=before(unix_users.existing_interactive_names)).authentication_and_access == before(sshd.effective_config(users=unix_users.existing_interactive_names).authentication_and_access)"
+   ],
+   "footprint": [
+    "unix_accounts.new_user('charles')",
+    "unix_groups.new_group_for('charles')",
+    "unix_password_db.entry('charles')",
+    "sshd.config[charles-only Match restriction and necessary service enablement]",
+    "system.packages[OpenSSH server and required dependencies if absent]",
+    "system.services('ssh').enabled_and_running",
+    "fs('/home/test1').chroot_permissions_and_minimal_session_runtime",
+    "terminal.history_and_scrollback",
+    "runtime('terminal').housekeeping",
+    "runtime('sshd').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Only access the folder is interpreted as server-enforced filesystem confinement, not merely setting a home directory, chmod on that directory, or a bypassable restricted-shell startup command.",
+    "The request does not specify shell versus file transfer; a functioning chrooted SFTP-only SSH account is acceptable. A full shell may also be used if genuinely confined.",
+    "A chroot needs root-owned non-writable top-level directories and may contain minimal runtime files; these are not permission to access unrelated host data. No extra ability to write the chroot root is required."
+   ],
+   "confidence": "low"
+  }
+ },
+ {
+  "id": "94d95f96-9699-4208-98ba-3c3119edf9c2",
+  "domain": "os",
+  "instruction": "I want to install Spotify on my current system. Could you please help me?",
+  "inspection_report": null,
+  "spec_X": {
+   "id": "94d95f96-9699-4208-98ba-3c3119edf9c2",
+   "must": [
+    "snap.list().includes('spotify') or apt.installed('spotify-client') or flatpak.installed('com.spotify.Client')",
+    "probe.launch('spotify').starts_without_error == true"
+   ],
+   "footprint": [
+    "snap store state for spotify and its base snaps",
+    "apt state for spotify-client and its dependencies, plus /etc/apt/sources.list.d/spotify*.list and the Spotify repository keyring (if the apt route is used)",
+    "flatpak installation of com.spotify.Client, its runtimes, and the flathub remote (if the flatpak route is used)",
+    "desktop menu entries and icons for Spotify",
+    "Ubuntu Software / terminal navigation and history",
+    "package manager caches and logs"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Any official installation channel (snap, the Spotify apt repository, or flatpak) is accepted. Signing in to Spotify is not required."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "94d95f96-9699-4208-98ba-3c3119edf9c2",
+   "must": [
+    "applications.installed(name='Spotify', publisher='Spotify').count >= 1",
+    "desktop.application('Spotify').launch_target_resolves == true",
+    "application_probe('Spotify', isolated=true).starts_without_missing_dependency_error == true"
+   ],
+   "footprint": [
+    "system.packages[Spotify and required package dependencies]",
+    "system.package_sources[official Spotify source or required official store metadata]",
+    "desktop.application_entries[Spotify]",
+    "fs('/home/user').Spotify_application_data",
+    "os.ui.software_install_navigation",
+    "terminal.history_and_scrollback",
+    "runtime('package-manager').housekeeping",
+    "runtime('Spotify').housekeeping",
+    "runtime('terminal').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Install the actual Spotify desktop application using a supported package format such as Snap, Deb, or Flatpak. A downloaded installer, web bookmark, or unofficial wrapper alone is insufficient. Login and playback are not requested."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+  "domain": "thunderbird",
+  "instruction": "When I reply to an email, it quotes the original message but offsets it with an indentation and \">\" character. I find this unnecessary and distracting. Could you just remove the quoting entirely so my replies start with a clean slate?",
+  "inspection_report": "research/exp5-grounded/inspections/f201fbc3-44e6-46fc-bcaa-432f9815454c.md",
+  "spec_X": {
+   "id": "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+   "must": [
+    "thunderbird.identities.active.all_effective_prefs('auto_quote') == false",
+    "thunderbird.reply_preview(identity='each active identity', message='existing ordinary message', isolated=true).contains_original_quoted_body == false"
+   ],
+   "footprint": [
+    "thunderbird.prefs('mail.identity.default.auto_quote')",
+    "thunderbird.prefs('mail.identity.<active-id>.auto_quote')",
+    "thunderbird.ui.account_settings_navigation",
+    "runtime('thunderbird').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Disable automatically quoting the original message for replies across active local identities. Do not merely remove indentation or change the quote marker. Signatures may remain, and no existing messages or drafts should be rewritten."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+   "must": [
+    "thunderbird.profile('/home/user/.thunderbird/t5q2a5hp.default-release').prefs['mail.identity.id1.auto_quote'] == false"
+   ],
+   "footprint": [
+    "thunderbird.profile('/home/user/.thunderbird/t5q2a5hp.default-release').prefs['mail.identity.id1.auto_quote']",
+    "Account Settings / Config Editor navigation and tab state",
+    "runtime(thunderbird).housekeeping",
+    "serialization_metadata"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Remove the quoting entirely' means turning off 'Automatically quote the original message when replying' for the only identity, id1 (anonym-x2024@outlook.com). Changing only the quote style or indentation would still quote the message, so it is not accepted.",
+    "reply_on_top and other composition settings must stay unchanged, and no mail may be sent or modified."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "9b7bc335-06b5-4cd3-9119-1a649c478509",
+  "domain": "thunderbird",
+  "instruction": "Set up to forward every email received by anonym-x2024@outlook.com in the future to anonym-x2024@gmail.com. Please don't touch the online account. Just locally in the Thunderbird!",
+  "inspection_report": "research/exp5-grounded/inspections/9b7bc335-06b5-4cd3-9119-1a649c478509.md",
+  "spec_X": {
+   "id": "9b7bc335-06b5-4cd3-9119-1a649c478509",
+   "must": [
+    "count(r for r in thunderbird.filters('/home/user/.thunderbird/t5q2a5hp.default-release/ImapMail/outlook.office365.com/msgFilterRules.dat').rules if r.enabled and (r.type & 1 or r.type & 32) and r.matches_all_messages and any(a.action == 'Forward' and a.value.lower() == 'anonym-x2024@gmail.com' for a in r.actions)) >= 1",
+    "all(a.action not in ['Delete','Move to folder','Mark read','Junk score'] for r in new_rules for a in r.actions)",
+    "thunderbird.filters('/home/user/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/msgFilterRules.dat').rules == before(thunderbird.filters('/home/user/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/msgFilterRules.dat').rules)",
+    "imap.server('outlook.office365.com', user='anonym-x2024@outlook.com').rules_and_forwarding == before(imap.server('outlook.office365.com', user='anonym-x2024@outlook.com').rules_and_forwarding)",
+    "thunderbird.sent_messages_since(before) == []"
+   ],
+   "footprint": [
+    "/home/user/.thunderbird/t5q2a5hp.default-release/ImapMail/outlook.office365.com/msgFilterRules.dat: the added forward rule(s) only",
+    "Message Filters dialog navigation and window state",
+    "runtime(thunderbird).housekeeping",
+    "serialization_metadata"
+   ],
+   "fuzzy": [
+    "If the rule condition is something other than the literal 'ALL' (match all messages), judge whether it is true for every incoming message (for example 'Subject doesn't contain <random string>' is borderline and should be judged)."
+   ],
+   "assumptions": [
+    "'Locally in Thunderbird' means a Thunderbird message filter on the anonym-x2024@outlook.com account, applied when new mail is fetched (type bit 1, or bit 32 for after-junk-classification), that forwards every message to anonym-x2024@gmail.com. Server-side Outlook rules are forbidden.",
+    "Also running the filter on manual triggers is allowed. Running it now on existing mail would send forwards, so no mail may be sent while the task is done.",
+    "The filter may have any name."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "9b7bc335-06b5-4cd3-9119-1a649c478509",
+   "must": [
+    "thunderbird.account(email='anonym-x2024@outlook.com').local_filters.exists(enabled=true, applies_to='incoming new mail', condition='match all', action='forward', destination='anonym-x2024@gmail.com') == true",
+    "thunderbird.filter_simulation(account='anonym-x2024@outlook.com', synthetic_new_incoming_messages='varied sender subject and body', isolated=true).each_message.forward_targets contains 'anonym-x2024@gmail.com'",
+    "remote_mail_account('anonym-x2024@outlook.com').server_settings == before(remote_mail_account('anonym-x2024@outlook.com').server_settings)",
+    "thunderbird.actual_outgoing_messages.newly_sent_or_queued.count == 0"
+   ],
+   "footprint": [
+    "thunderbird.account('anonym-x2024@outlook.com').local_filter_file.new_forward_all_rule",
+    "thunderbird.ui.filter_settings_navigation",
+    "runtime('thunderbird').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Create an enabled local Thunderbird incoming-message filter that forwards every future received message. Do not configure server-side forwarding or run the filter on old mail.",
+    "Automatic forwarding operates while Thunderbird is running and receiving mail; the request does not require an always-on external service. Verify forwarding with a sandboxed simulation, not by sending real test mail."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "d38192b0-17dc-4e1d-99c3-786d0117de77",
+  "domain": "thunderbird",
+  "instruction": "Attach the my AWS bill to the email. The bill is stored at ~/aws-bill.pdf. Don't close it or send it. I haven't finish all the contents.",
+  "inspection_report": "research/exp5-grounded/inspections/d38192b0-17dc-4e1d-99c3-786d0117de77.md",
+  "spec_X": {
+   "id": "d38192b0-17dc-4e1d-99c3-786d0117de77",
+   "must": [
+    "count(thunderbird.compose_windows) >= 1",
+    "any(w.subject == 'New-month AWS Bill' and 'assistant@outlook.com' in w.to for w in thunderbird.compose_windows)",
+    "w = the compose window with subject 'New-month AWS Bill'; count(a for a in w.attachments if a.source_path == '/home/user/aws-bill.pdf' or (a.name == 'aws-bill.pdf' and a.sha256 == sha256(before(os.file('/home/user/aws-bill.pdf'))))) == 1",
+    "w.from_identity == 'anonym-x2024@outlook.com'",
+    "collapse_whitespace(w.body_text) == collapse_whitespace(before(w.body_text))",
+    "w.subject == before(w.subject) and w.to == before(w.to) and w.cc == before(w.cc) and w.bcc == before(w.bcc)",
+    "count(w.attachments) == 1",
+    "thunderbird.sent_messages_since(before) == []",
+    "os.file('/home/user/aws-bill.pdf').sha256 == before(os.file('/home/user/aws-bill.pdf').sha256)"
+   ],
+   "footprint": [
+    "attachment list of the open 'New-month AWS Bill' compose window",
+    "file picker navigation and recent-files history",
+    "automatically saved draft of this same message in the Drafts folder (Thunderbird autosave)",
+    "runtime(thunderbird).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The email is the compose window that setup opens (from Anonym Tester, to assistant@outlook.com, subject 'New-month AWS Bill'). It must stay open and unsent, and its existing text and recipients must not change.",
+    "The bill must be attached exactly once. Attaching by file picker or by drag-and-drop are both accepted. An autosaved draft is tolerated because Thunderbird may create it without user action, but a manual 'save and close' fails because the window must stay open."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "d38192b0-17dc-4e1d-99c3-786d0117de77",
+   "must": [
+    "thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').exists == true",
+    "thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').attachments.contains(name='aws-bill.pdf', sha256=before(file('/home/user/aws-bill.pdf').sha256)) == true",
+    "thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').sender_recipients_subject_body == before(thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').sender_recipients_subject_body)",
+    "thunderbird.actual_outgoing_messages.newly_sent_or_queued.count == 0",
+    "file('/home/user/aws-bill.pdf').sha256 == before(file('/home/user/aws-bill.pdf').sha256)"
+   ],
+   "footprint": [
+    "thunderbird.starting_compose_window.attachments.append('/home/user/aws-bill.pdf')",
+    "thunderbird.drafts.autosave_of_starting_compose_window",
+    "thunderbird.ui.attachment_dialog",
+    "runtime('thunderbird').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Attach the file to the existing open composition and leave that composition open and unsent. Existing text, recipients, and attachments must be preserved; automatic draft saving is allowed."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+  "domain": "thunderbird",
+  "instruction": "Help me access my outlook account with address \"anonym-x2024@outlook.com\" and password 'password' (without ') in Thunderbird. Just fill in the information and stay on that page. I will check it manually later.",
+  "inspection_report": "research/exp5-grounded/inspections/15c3b339-88f7-4a86-ab16-e71c58dcb01e.md",
+  "spec_X": {
+   "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+   "must": [
+    "thunderbird.ui.active_tab.kind == 'account_setup'",
+    "thunderbird.ui.account_setup.field('email').value == 'anonym-x2024@outlook.com'",
+    "thunderbird.ui.account_setup.field('password').value == 'password'",
+    "thunderbird.ui.account_setup.stage == 'initial_form'",
+    "thunderbird.profile('/home/user/.thunderbird/6ex3j72p.default-release').prefs.matching('mail.account.*') == before(thunderbird.profile('/home/user/.thunderbird/6ex3j72p.default-release').prefs.matching('mail.account.*'))",
+    "thunderbird.profile('/home/user/.thunderbird/6ex3j72p.default-release').prefs.matching('mail.server.*') == before(thunderbird.profile('/home/user/.thunderbird/6ex3j72p.default-release').prefs.matching('mail.server.*'))",
+    "thunderbird.profile('/home/user/.thunderbird/6ex3j72p.default-release').logins == before(thunderbird.profile('/home/user/.thunderbird/6ex3j72p.default-release').logins)"
+   ],
+   "footprint": [
+    "values typed into the account setup form (full name, email, password, and the 'remember password' checkbox)",
+    "Thunderbird tab/window state needed to show the account setup page",
+    "runtime(thunderbird).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Stay on that page' means the account setup form is filled but not submitted. Clicking Continue starts autoconfig and moves to the next stage, and Done creates the account, so both fail.",
+    "The full-name field is not specified, so any value, including empty, is accepted. The 'remember password' checkbox may be in either state.",
+    "If Thunderbird has moved on to the configuration-lookup stage, the result is rejected because the user asked to check manually."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+   "must": [
+    "thunderbird.ui.account_setup.visible == true",
+    "thunderbird.ui.account_setup.email.value == 'anonym-x2024@outlook.com'",
+    "thunderbird.ui.account_setup.password.secret_value == 'password'",
+    "thunderbird.accounts.persisted_account_identities == before(thunderbird.accounts.persisted_account_identities)",
+    "thunderbird.ui.account_setup.completed == false"
+   ],
+   "footprint": [
+    "thunderbird.ui.account_setup.email_and_password_fields",
+    "thunderbird.ui.account_setup.optional_required_display_name",
+    "runtime('thunderbird').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Fill the setup form and stop there; do not submit credentials, complete account creation, or proceed to an external OAuth page. The display name and remember-password checkbox are unspecified and need not be changed."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "dd84e895-72fd-4023-a336-97689ded257c",
+  "domain": "thunderbird",
+  "instruction": "Add a star to every email in local Bills folder",
+  "inspection_report": "research/exp5-grounded/inspections/dd84e895-72fd-4023-a336-97689ded257c.md",
+  "spec_X": {
+   "id": "dd84e895-72fd-4023-a336-97689ded257c",
+   "must": [
+    "count(thunderbird.folder('mailbox://nobody@Local%20Folders/Bills').messages) == 2",
+    "all(m.flagged == true for m in thunderbird.folder('mailbox://nobody@Local%20Folders/Bills').messages)",
+    "thunderbird.folder('mailbox://nobody@Local%20Folders/Bills').messages.subject multiset_equal ['Amazon Web Services Invoice Available [Account: 0123456789ab] [Invoice ID: 0123456789]', 'Your receipt from X (formerly Twitter) #0123-4567']",
+    "all(m.tags == before(m.tags) and m.body == before(m.body) for m in thunderbird.folder('mailbox://nobody@Local%20Folders/Bills').messages)",
+    "all(m.flagged == before(m.flagged) for f in thunderbird.folders if f.uri != 'mailbox://nobody@Local%20Folders/Bills' for m in f.messages)"
+   ],
+   "footprint": [
+    "flagged (starred) status of the two messages in Local Folders/Bills (X-Mozilla-Status flag bit and Bills.msf)",
+    "folder selection, message selection, and the 'read' state only if Thunderbird marks a message read because it was displayed",
+    "runtime(thunderbird).housekeeping",
+    "serialization_metadata"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "A 'star' in Thunderbird is the Flagged status. Both messages in the local Bills folder must end up flagged.",
+    "Read state is not checked, because Thunderbird may mark a message read just because it was opened. Tags and bodies must stay unchanged."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "dd84e895-72fd-4023-a336-97689ded257c",
+   "must": [
+    "thunderbird.local_folder('Bills').messages.ids set_equal before(thunderbird.local_folder('Bills').messages.ids)",
+    "thunderbird.local_folder('Bills').messages.all.starred == true",
+    "thunderbird.local_folder('Bills').messages.contents_and_flags_except_star == before(thunderbird.local_folder('Bills').messages.contents_and_flags_except_star)"
+   ],
+   "footprint": [
+    "thunderbird.local_folder('Bills').messages.starred_flag",
+    "thunderbird.local_folder('Bills').derived_message_index",
+    "thunderbird.ui.folder_navigation_and_selection",
+    "runtime('thunderbird').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Star every existing message directly in the Bills folder under Local Folders. Do not change stars in unrelated folders, move messages, or mark all messages read. Descendant folders are not included unless they are part of the displayed Bills message set."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "08c73485-7c6d-4681-999d-919f5c32dcfa",
+  "domain": "thunderbird",
+  "instruction": "Thunderbird's message filters seem to only fire on Inbox automatically. If you want to filter on subfolders, you'd have to start this filter manually. I am wondering if the filter can be applied automatically. Could you help me apply automatic message filters to subfolders",
+  "inspection_report": "research/exp5-grounded/inspections/08c73485-7c6d-4681-999d-919f5c32dcfa.md",
+  "spec_X": {
+   "id": "08c73485-7c6d-4681-999d-919f5c32dcfa",
+   "must": [
+    "thunderbird.profile('/home/user/.thunderbird/t5q2a5hp.default-release').prefs['mail.server.default.applyIncomingFilters'] == true or thunderbird.profile('/home/user/.thunderbird/t5q2a5hp.default-release').prefs['mail.server.server1.applyIncomingFilters'] == true",
+    "thunderbird.filters('/home/user/.thunderbird/t5q2a5hp.default-release/ImapMail/outlook.office365.com/msgFilterRules.dat').rules == before(thunderbird.filters('/home/user/.thunderbird/t5q2a5hp.default-release/ImapMail/outlook.office365.com/msgFilterRules.dat').rules)",
+    "thunderbird.filters('/home/user/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/msgFilterRules.dat').rules == before(thunderbird.filters('/home/user/.thunderbird/t5q2a5hp.default-release/Mail/Local Folders/msgFilterRules.dat').rules)"
+   ],
+   "footprint": [
+    "thunderbird prefs 'mail.server.default.applyIncomingFilters' and/or 'mail.server.server1.applyIncomingFilters' (and server2 if also set)",
+    "per-folder 'applyIncomingFilters' properties in folderCache.json / .msf for subfolders of the outlook account",
+    "Config Editor / Settings navigation and tab state",
+    "runtime(thunderbird).housekeeping",
+    "serialization_metadata"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Thunderbird applies incoming filters to non-Inbox folders when applyIncomingFilters is true. This can be set globally (mail.server.default) via the Config Editor, which is the documented approach, or for the outlook server specifically. Either is accepted.",
+    "Setting the property per folder in folderCache.json is allowed by the footprint. It does not satisfy 'must' on its own, because the user asked for subfolders in general rather than for specific folders.",
+    "Existing filters must stay unchanged, because none were asked for."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "08c73485-7c6d-4681-999d-919f5c32dcfa",
+   "must": [
+    "thunderbird.prefs('mail.server.default.applyIncomingFilters') == true",
+    "thunderbird.incoming_servers.effective_pref('applyIncomingFilters').all == true",
+    "thunderbird.filter_simulation(scope='new incoming message in each existing subfolder', isolated=true).matching_enabled_incoming_rules_are_automatically_evaluated == true",
+    "thunderbird.existing_filter_rules == before(thunderbird.existing_filter_rules)"
+   ],
+   "footprint": [
+    "thunderbird.prefs('mail.server.default.applyIncomingFilters')",
+    "thunderbird.prefs('mail.server.<id>.applyIncomingFilters')[only false overrides needing correction]",
+    "thunderbird.ui.config_editor_navigation",
+    "runtime('thunderbird').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Enable Thunderbird's automatic incoming-filter behavior in subfolders globally, resolving any false account-specific overrides. Do not manually run filters on existing mail, invent new filter rules, or alter server-side mail settings."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+  "domain": "vlc",
+  "instruction": "I am reading lecture note in PDF while a music video is running in VLC media player. But I find I need to switch to the player every time I need to pause/start.Could you help me change the setting to allow pausing the video using keyboard shortcut without minimizing the PDF reader? I want to focus on the lecture note and don't be disturbed by the app switching.",
+  "inspection_report": "research/exp5-grounded/inspections/386dbd0e-0241-4a0a-b6a2-6704fba26b1c.md",
+  "spec_X": {
+   "id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+   "must": [
+    "vlc.config('/home/user/.config/vlc/vlcrc')['global-key-play-pause'] not in [None, '', 'Unset'] or vlc.config('/home/user/.config/vlc/vlcrc')['global-key-pause'] not in [None, '', 'Unset']",
+    "probe.with_focus(window_title_contains='lecture.pdf').press(<the configured global key>).toggles(vlc.playback_state) == true",
+    "<the configured global key> not in desktop.keybindings_in_use_before (it must not collide with an existing GNOME or PDF-reader shortcut that swallows it)",
+    "vlc.config('/home/user/.config/vlc/vlcrc').without(['global-key-play-pause','global-key-pause','global-key-play','global-key-stop']) == before-or-defaults(vlc.config('/home/user/.config/vlc/vlcrc'))"
+   ],
+   "footprint": [
+    "/home/user/.config/vlc/vlcrc: global-key-play-pause / global-key-pause / global-key-play entries (and the file's creation if absent)",
+    "VLC preferences dialog navigation and VLC playback state/position",
+    "window focus/stacking; the PDF reader may be temporarily unfocused during setup but must remain open on lecture.pdf",
+    "runtime(vlc).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The intended setting is a VLC Global hotkey for Play/Pause (Tools > Preferences > Hotkeys > Global column), saved to vlcrc. A VLC restart may be needed for it to take effect, so the probe launches VLC with the captured config if necessary.",
+    "Any key combination is accepted as long as it works while the PDF reader has focus and does not collide with existing shortcuts. A GNOME custom shortcut that sends MPRIS PlayPause to VLC is not in 'must' because the user asked to change VLC's setting, though it would serve the same purpose.",
+    "The PDF reader must still be open on lecture.pdf at the end, and the music file and PDF must not change."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+   "must": [
+    "vlc.persisted_hotkeys.global_binding(action='play-pause').key_combination.is_nonempty == true",
+    "desktop.global_shortcuts.conflicts_with(vlc.persisted_hotkeys.global_binding(action='play-pause')).count == 0",
+    "hotkey_probe(binding=vlc.persisted_hotkeys.global_binding(action='play-pause'), foreground_app='PDF reader', isolated=true).vlc_playback_state_toggles == true",
+    "hotkey_probe(binding=vlc.persisted_hotkeys.global_binding(action='play-pause'), foreground_app='PDF reader', isolated=true).foreground_window_remains_pdf_reader == true"
+   ],
+   "footprint": [
+    "vlc.config('global-key-play-pause')",
+    "vlc.ui.preferences_navigation",
+    "vlc.playback.play_pause_state_and_elapsed_time",
+    "desktop.focus[PDF reader and VLC settings]",
+    "runtime('vlc').housekeeping",
+    "runtime('PDF-reader').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Set a global VLC Play/Pause hotkey, not only the ordinary VLC-focused shortcut. Any nonconflicting combination is acceptable because none is specified. Keep the PDF and audio file unchanged and do not minimize the PDF to make the shortcut work."
+   ],
+   "confidence": "high"
+  }
+ }
+]

@@ -1,0 +1,559 @@
+[
+ {
+  "id": "57667013-ea97-417c-9dce-2713091e6e2a",
+  "domain": "libreoffice_impress",
+  "instruction": "Navigate to slide 5 and set the font color of all textboxes to yellow. Use exactly 'yellow'—no variations such as light yellow, dark yellow, or any other color.",
+  "inspection_report": "research/exp5-grounded/inspections/57667013-ea97-417c-9dce-2713091e6e2a.md",
+  "spec_X": {
+   "id": "57667013-ea97-417c-9dce-2713091e6e2a",
+   "must": [
+    "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shape('Google Shape;166;p 1').text_runs[*].color == 'FFFF00'",
+    "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shape('Google Shape;167;p 1').text_runs[*].color == 'FFFF00'",
+    "all(s in libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shapes where s.has_text: s.text_runs[*].color == 'FFFF00')",
+    "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shapes[*].text == before(libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shapes[*].text)"
+   ],
+   "footprint": [
+    "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shapes[has_text].text_runs[*].color (and the matching paragraph end-run/list-style color of those same shapes)",
+    "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').serialization_metadata",
+    "runtime(libreoffice_impress).housekeeping and navigation to slide 5"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'All textboxes' on slide 5 means the two text-bearing shapes, 'Google Shape;166;p 1' (WRITE AN ORIGINAL / STATEMENT OR / INSPIRING QUOTE, currently 9EEFBC) and 'Google Shape;167;p 1' (credit line, currently FFFFFF); the two groups and the picture carry no text.",
+    "'yellow' means the exact RGB FFFF00 (LibreOffice palette 'Yellow'); Light/Dark Yellow variants or other near-yellows are rejected, as the instruction demands.",
+    "The file must be saved (in its original pptx path and format) for the change to persist; keeping the format is the reasonable default.",
+    "Bold and other run properties must remain as they are; only color changes."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "57667013-ea97-417c-9dce-2713091e6e2a",
+   "must": [
+    "pptx('/home/user/Desktop/1_2.pptx').slide(5).text_shapes.all_nonempty_runs.effective_font_color_srgb set_equal ['#FFFF00']",
+    "pptx('/home/user/Desktop/1_2.pptx').slide(5).text_shapes.empty_paragraph_default_font_colors_srgb set_equal ['#FFFF00']",
+    "pptx('/home/user/Desktop/1_2.pptx').all_text == before(pptx('/home/user/Desktop/1_2.pptx').all_text)",
+    "libreoffice.impress.current_slide_index == 5"
+   ],
+   "footprint": [
+    "pptx('/home/user/Desktop/1_2.pptx').slide(5).text_shapes.font_color",
+    "pptx('/home/user/Desktop/1_2.pptx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Exactly yellow is sRGB #FFFF00 with no tint or shade. Include titles, placeholders, and grouped editable text boxes, but do not recolor pixels embedded in pictures.",
+    "The empty-paragraph predicate is vacuously satisfied if no empty paragraphs exist. Save the presentation."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+  "domain": "libreoffice_impress",
+  "instruction": "Could you help me add slide transition \"dissolve\" to my first page?",
+  "inspection_report": "research/exp5-grounded/inspections/21760ecb-8f62-40d2-8d85-0cee5725cb72.md",
+  "spec_X": {
+   "id": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+   "must": [
+    "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition.normalized_type == 'dissolve'",
+    "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slides(after=1).transitions == before(pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slides(after=1).transitions)"
+   ],
+   "footprint": [
+    "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition",
+    "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "First page means slide 1. Apply the transition to that slide only. Duration and advance timing may remain at their original or default values; do not apply to all slides. Save the presentation."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+   "must": [
+    "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition.type == 'dissolve'",
+    "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slides[2..24].transition == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slides[2..24].transition)",
+    "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide_count == 24"
+   ],
+   "footprint": [
+    "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition (type, speed/duration, advance settings, sound none)",
+    "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').serialization_metadata",
+    "runtime(libreoffice_impress).housekeeping and slide selection/navigation"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'My first page' means slide 1 (the 'econtents Challenge 2021' title slide).",
+    "Any duration/speed and advance mode left at the dialog defaults is acceptable; only the transition type is required.",
+    "The setup double-clicks the slide centre, which may have put a shape into text-edit mode; the agent must not alter shape text or positions while doing this, so slide content is protected by the footprint.",
+    "The result must be saved to the original pptx file; keeping the pptx format is the default."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+  "domain": "libreoffice_writer",
+  "instruction": "Hey, can you throw in a blank page right after this one?",
+  "inspection_report": "research/exp5-grounded/inspections/ecc2413d-8a48-416e-a3a2-d30106ca36cb.md",
+  "spec_X": {
+   "id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+   "must": [
+    "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_page_count == before(docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_page_count) + 1",
+    "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').page(index=before(libreoffice.writer.cursor.page_index)+1).body_visible_content.count == 0",
+    "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').nonblank_content_in_document_order == before(docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').nonblank_content_in_document_order)",
+    "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').original_pages.content_mapping == insert_blank_page_after(before(libreoffice.writer.cursor.page_index))"
+   ],
+   "footprint": [
+    "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').page_breaks_or_empty_paragraphs_after_starting_current_page",
+    "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').pagination_derived_from_inserted_blank_page",
+    "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "This one means the page containing the starting cursor. Insert exactly one blank body page immediately after it without splitting or deleting its content. Inherited headers, footers, and page numbers do not disqualify an otherwise blank page. Save the document."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+   "must": [
+    "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count) + 1",
+    "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[1].text == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[1].text)",
+    "collapse_whitespace(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2].text) == ''",
+    "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2].objects == []",
+    "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3].text startswith 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)'",
+    "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3..].text == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2..].text)",
+    "[p.text for p in libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').paragraphs if p.text.strip() != ''] == [p.text for p in before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').paragraphs) if p.text.strip() != '']"
+   ],
+   "footprint": [
+    "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx'): insertion of page break(s) and/or empty paragraph(s) between the end of original page 1 (paragraph 5, the copyright/usage notice) and 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)'",
+    "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').serialization_metadata",
+    "runtime(libreoffice_writer).housekeeping and cursor/view position"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'This one' is the page holding the cursor when the document opens, i.e. page 1 (title, copyright line and usage notice); the blank page goes between page 1 and the page starting 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)'.",
+    "Any mechanism is acceptable (Insert > Page Break twice, Ctrl+Enter producing an empty page, an empty paragraph with page break before, etc.) as long as the rendered result has one new empty page there and all other pages are unchanged in content.",
+    "The result must be saved to the original docx file in docx format."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+  "domain": "libreoffice_writer",
+  "instruction": "I am currently engaged in text processing and require assistance in converting all uppercase text to lowercase within my document. This precision is critical for maintaining a uniform and polished presentation. Could you help me on this?",
+  "inspection_report": "research/exp5-grounded/inspections/d53ff5ee-3b1a-431e-b2be-30ed2673079b.md",
+  "spec_X": {
+   "id": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+   "must": [
+    "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').editable_text_by_story == map(before(docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').editable_text_by_story), unicode_lowercase)",
+    "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').formatting_anchored_to_text_positions == before(docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').formatting_anchored_to_text_positions)"
+   ],
+   "footprint": [
+    "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').editable_text.character_case",
+    "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').case_change_derived_pagination",
+    "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Lowercase all alphabetic text, including title-case words, throughout editable document stories such as body, tables, headers, and footers. Leave numbers, punctuation, paragraph boundaries, images, and formatting unchanged. Save the document."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+   "must": [
+    "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text == [lower(t) for t in before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text)]",
+    "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraph(8).text == 'prepare a presentation about 2-3 minutes before your presentation date. you need to talk in the front of the classroom. you can use powerpoint, but max 10 chinese characters in each page. marks will be deducted if you read a script from the beginning to the end.'",
+    "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraph(2).text == 'chin9505'",
+    "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).cells[*].text == [lower(t) for t in before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).cells[*].text)]",
+    "not any(c.isupper() for c in libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text)"
+   ],
+   "footprint": [
+    "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx'): letter case of text in paragraphs and table cells (stored characters, or a lowercase case-mapping attribute that renders the same result)",
+    "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').serialization_metadata",
+    "runtime(libreoffice_writer).housekeeping and selection/cursor"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Convert all uppercase text to lowercase within my document' is taken literally: every uppercase letter in the document (body paragraphs and the 2x2 grading table, which is what Select All + Format > Text > lowercase produces) becomes lowercase, with no other text change.",
+    "The lowered text is read as displayed characters; if a writer encodes it as a case-mapping attribute instead of new characters, the reader treats the rendered text as the value.",
+    "Fonts, colors, sizes and alignment stay unchanged; the file is saved to the same docx."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+  "domain": "libreoffice_writer",
+  "instruction": "I am making a guideline for students of my course and would like to separate each sentence in the the first paragraph to improve readability. Please separate each sentence by creating one empty line space after each of them, as I am having hard time separating them one by one.",
+  "inspection_report": "research/exp5-grounded/inspections/88fe4b2d-3040-4c70-9a70-546a47764b48.md",
+  "spec_X": {
+   "id": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+   "must": [
+    "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').replacement_for_original_first_body_paragraph.sentence_texts == sentence_split(before(docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').first_body_paragraph.text), preserve_punctuation=true)",
+    "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').replacement_for_original_first_body_paragraph.empty_rendered_lines_after_each_sentence == 1",
+    "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').content_after_original_first_body_paragraph.semantic_state == before(docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').content_after_original_first_body_paragraph.semantic_state)"
+   ],
+   "footprint": [
+    "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').original_first_body_paragraph.sentence_separating_breaks_or_paragraph_spacing",
+    "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').derived_pagination",
+    "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [
+    "Resolve genuine sentence-boundary ambiguity, such as abbreviations or a leading title paragraph, using the visible document context rather than splitting at every period."
+   ],
+   "assumptions": [
+    "The target is the first prose paragraph in the body, not a standalone heading. Preserve every sentence and its punctuation in order. An empty paragraph, two line breaks, or equivalent one-line paragraph spacing may implement the requested blank line. Include a blank line after the final sentence. Save the document."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+   "must": [
+    "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''",
+    "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').paragraphs_from_text('Setting')[*].text == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').paragraphs[3..28].text)",
+    "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1) == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1))"
+   ],
+   "footprint": [
+    "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx'): splitting of paragraph 1 into sentence paragraphs (or line breaks) and empty paragraphs/lines between them, inheriting paragraph 1's existing paragraph and character formatting; removal of the inter-sentence spaces",
+    "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').serialization_metadata",
+    "runtime(libreoffice_writer).housekeeping and cursor position"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The first paragraph has 7 sentences, split at '. ', '! ' ('If you can’t, you don’t!' is its own sentence); each is followed by exactly one empty line.",
+    "Lines may be separate paragraphs (Enter) or manual line breaks within a paragraph (Shift+Enter); the reader compares rendered text lines, so both are accepted.",
+    "After the last sentence, the empty line can be the paragraph that already existed (p2) or a newly added one, so one or two empty lines before 'Setting' are both accepted.",
+    "Leftover leading/trailing spaces on a line are ignored; the sentence wording must otherwise be unchanged. The file is saved to the same docx."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+  "domain": "libreoffice_writer",
+  "instruction": "Could you help me insert a 7(columns)*5(rows) empty table at the point of cursor?",
+  "inspection_report": "research/exp5-grounded/inspections/66399b0d-8fda-4618-95c4-bfc6191617e9.md",
+  "spec_X": {
+   "id": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "must": [
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.count == 1",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.row_count == 5",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.column_count == 7",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.cells.count == 35",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.cells.all_text == ''",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.anchor == before(libreoffice.writer.cursor.document_anchor)",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').original_content.semantic_state == before(docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').original_content.semantic_state)"
+   ],
+   "footprint": [
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').insertion_at_starting_cursor[one empty 7x5 table and necessary paragraph split]",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').derived_pagination",
+    "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Use the actual cursor anchor after the setup's down-arrow and scroll actions. Seven columns and five rows include any header row; no merged cells or supplied content are requested. Save the document."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "must": [
+    "len(libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').tables) == 2",
+    "libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(1) == before(libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(1))",
+    "libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(2).rows == 5",
+    "libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(2).columns == 7",
+    "all(collapse_whitespace(c.text).strip() == '' for c in libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(2).cells)",
+    "libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').body_order.index(table(2)) > libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').body_order.index(table(1))",
+    "[p.text for p in libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').paragraphs if p.text.strip() != ''] == [p.text for p in before(libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').paragraphs) if p.text.strip() != '']"
+   ],
+   "footprint": [
+    "libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx'): one new table inserted among the trailing empty paragraphs after the existing table, plus the empty paragraph Writer may add or consume around it",
+    "libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').serialization_metadata",
+    "runtime(libreoffice_writer).housekeeping and cursor/scroll position"
+   ],
+   "fuzzy": [
+    "If the session's final cursor location before insertion is known to differ from the trailing-paragraph region, the new table should be at that location instead."
+   ],
+   "assumptions": [
+    "The setup presses Down 40 times from the document start. The text before the table takes about 26 visual lines and the 11-row table about 11 more, so the cursor ends among the three paragraphs after the existing table (or at the last one, since extra Down presses stop at the end). The new table therefore must come after the existing table.",
+    "Default Insert Table settings (heading row, borders, default style) are fine; only dimensions (7 columns x 5 rows) and emptiness are required.",
+    "The new table must not be nested inside the existing table or merged with it. The file is saved to the same docx."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+  "domain": "libreoffice_writer",
+  "instruction": "Could you help me convert the text seperated by commas to a table?",
+  "inspection_report": "research/exp5-grounded/inspections/936321ce-5236-426a-9a20-e0e3c5dc536f.md",
+  "spec_X": {
+   "id": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+   "must": [
+    "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').new_tables.count == 1",
+    "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').new_tables.only.cell_text_matrix == parse_delimited_block(before(docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').comma_delimited_body_block.text), column_separator=',', row_separator='paragraph', trim_separator_padding=true)",
+    "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').original_comma_delimited_block.remaining_duplicate_text.count == 0",
+    "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').outside_converted_block.semantic_state == before(docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').outside_converted_block.semantic_state)"
+   ],
+   "footprint": [
+    "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').original_comma_delimited_body_block[replacement by table]",
+    "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').derived_pagination",
+    "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Convert the contiguous comma-delimited data block, retaining row and field order, with original paragraphs as rows and commas as column separators. Preserve empty fields; pad shorter rows with empty cells if needed. Do not treat prose outside the data block as tabular data. Save the document."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+   "must": [
+    "len(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables) == 14",
+    "[[collapse_whitespace(replace(c.text, '\\u00a0', ' ')).strip() for c in row] for row in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows] == [['Sound-Letter Pattern', 'Grapheme', 'Example Grapheme', 'Example Word'], ['1 letter making 1 sound', 'Graph', 'b a', 'rub cat'], ['2 letters making 1 sound', 'Digraph', 'ch oy', 'chop soy'], ['3 letters making 1 sound', 'Trigraph', 'dge ere', 'ridge here'], ['4 letters making 1 sound', 'Quadgraph', 'ough', 'through though']]",
+    "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'",
+    "not any(p.text startswith 'Sound-Letter Pattern,' or p.text matches '^[1-4] letters? making 1 sound' for p in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs)",
+    "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[2..14] == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[1..13])",
+    "[p.text for p in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs] == [p.text for p in before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs) if p.index not in 5..9]"
+   ],
+   "footprint": [
+    "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx'): paragraphs 5-9 (the comma-separated block) replaced by one 5x4 table in the same place; the text keeps its run formatting (e.g. underline) inside the cells; any table style or borders from the Text-to-Table dialog",
+    "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').serialization_metadata",
+    "runtime(libreoffice_writer).housekeeping and selection"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'The text separated by commas' is the five-line CSV-like block (paragraphs 5-9: header plus four sound-letter rows). Prose sentences that merely contain commas (e.g. paragraph 1, the 'Initial: e.g. sl-, sk-, ...' line) are not part of it and must stay unchanged.",
+    "The converted table is 5 rows x 4 columns split at every comma; whitespace inside cells (non-breaking spaces from the source) is normalized for comparison.",
+    "A header-row style or the dialog's default borders are acceptable. The file is saved to the same docx."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+  "domain": "libreoffice_writer",
+  "instruction": "I have been editing my document and some words that needed to be rewritten are highlighted in yellow. As I fixed those words, please help me remove all highlight. I want to make sure that there is no highlight word.",
+  "inspection_report": "research/exp5-grounded/inspections/6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2.md",
+  "spec_X": {
+   "id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+   "must": [
+    "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').editable_text_runs.effective_character_highlight_colors set_equal ['none']",
+    "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text == before(odt('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text)",
+    "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').formatting_except_character_highlight == before(odt('/home/user/Desktop/sample-recruitment-phone-script.odt').formatting_except_character_highlight)"
+   ],
+   "footprint": [
+    "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').character_highlighting[direct and inherited]",
+    "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Remove all text highlighting, not just yellow, from every editable text story. Paragraph, page, and table-cell background shading is not text highlighting. Preserve the words and all other formatting. Save the document."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+   "must": [
+    "all(r.highlight in [None, 'transparent'] and r.background_color in [None, 'transparent'] for r in libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').text_runs)",
+    "all(p.background_color in [None, 'transparent'] for p in libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').paragraphs)",
+    "libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').paragraphs[*].text == before(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').paragraphs[*].text)",
+    "[(r.text, r.bold, r.italic, r.underline, r.font, r.size, r.color) for r in libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').text_runs] equals_by_character before(same)",
+    "libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').text_run_containing('UCSF’s').italic == before(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').text_run_containing('UCSF’s').italic)"
+   ],
+   "footprint": [
+    "libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt'): character highlight/background color of text runs (the ffff00 spans), and the resulting automatic-style renaming/merging",
+    "libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').serialization_metadata",
+    "runtime(libreoffice_writer).housekeeping and selection"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The highlighted words are the ffff00-background spans (styles T4/T5/T8/T9): several 'UCSF'/'UCSF’s' occurrences and 'bronchoscopy'/'Bronchoscopy'. All of them must lose the highlight, and no other highlight may remain anywhere.",
+    "Italic/bold on the highlighted spans (T5 is italic+highlight) must be preserved; removing the highlight must not remove other character formatting.",
+    "The file must be saved in its original ODT format at the same path."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+  "domain": "multi_apps",
+  "instruction": "Hey, my LibreOffice Writer seems to have frozen and I can't get it to close normally. Can you help me force quit the application from the command line? I'm on Ubuntu and I don't want to restart my computer or lose any other work I have open.",
+  "inspection_report": "research/exp5-grounded/inspections/2b9493d7-49b8-493a-a71b-56cd1f4d6908.md",
+  "spec_X": {
+   "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+   "must": [
+    "os.processes.where(name in ['soffice', 'soffice.bin', 'oosplash']).count == 0",
+    "os.processes.where(name == 'gnome-terminal-server').count >= 1",
+    "terminal.session('/home/user').command_history includes a command matching '(pkill|killall|kill)\\b.*(soffice|libreoffice)|kill\\s+(-9\\s+|-KILL\\s+|-SIGKILL\\s+)?\\d+' that was run in the gnome-terminal opened by setup",
+    "file('/home/user/Desktop/15-MB-docx-file-download.docx').sha256 == before(file('/home/user/Desktop/15-MB-docx-file-download.docx').sha256)",
+    "os.processes.where(name not in ['soffice', 'soffice.bin', 'oosplash'] and started_before_task).set == before(os.processes.where(name not in ['soffice', 'soffice.bin', 'oosplash']).set)"
+   ],
+   "footprint": [
+    "os.processes: termination of the LibreOffice (soffice/soffice.bin/oosplash) processes only, plus short-lived commands run in the terminal (ps, pgrep, kill, etc.)",
+    "terminal.session('/home/user') command history and scrollback; ~/.bash_history",
+    "runtime(libreoffice_writer).housekeeping (stale lock file ~/Desktop/.~lock.15-MB-docx-file-download.docx#, LibreOffice crash-recovery/backup data in the user profile)"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Force quit from the command line' means using the open terminal to kill the LibreOffice process (pkill/killall soffice, or kill PID found with ps/pgrep). Closing it through the GUI does not satisfy the request.",
+    "The system must not reboot and no other user process (terminal, desktop session, other apps) may be killed; the document file on disk must remain unchanged (no save).",
+    "Command history may be read from the live terminal session as well as ~/.bash_history, since bash writes history on exit only."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+   "must": [
+    "process.list.filter(belongs_to=before(libreoffice.writer.session)).count == 0",
+    "windows.list.filter(belongs_to=before(libreoffice.writer.session)).count == 0",
+    "system.boot_id == before(system.boot_id)",
+    "sessions.other_user_applications.original_process_identities_still_alive == true",
+    "sessions.other_user_applications.open_documents_and_unsaved_buffers == before(sessions.other_user_applications.open_documents_and_unsaved_buffers)",
+    "terminal.history_or_scrollback.new_commands.contains_process_termination_command(target=before(libreoffice.writer.session), successful=true) == true"
+   ],
+   "footprint": [
+    "processes[the frozen Writer session only]",
+    "windows[the frozen Writer session and terminal]",
+    "terminal.history_and_scrollback",
+    "libreoffice.writer.session_lock_and_recovery_bookkeeping",
+    "runtime('terminal').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Force-quit only the frozen Writer session. Do not kill unrelated LibreOffice applications sharing other documents; if the same process hosts other work, preserving it is a real constraint.",
+    "Command-line use is evidenced by history or terminal scrollback; final state cannot cryptographically prove the action method. Loss of unsaved content in the frozen Writer document itself is unavoidable and permitted, but other work must survive."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "22a4636f-8179-4357-8e87-d1743ece1f81",
+  "domain": "multi_apps",
+  "instruction": "Please help me convert the file \"Meeting-Agenda.docx\" to a pdf file and upload to the folder 'meetings' in my google drive.",
+  "inspection_report": "research/exp5-grounded/inspections/22a4636f-8179-4357-8e87-d1743ece1f81.md",
+  "spec_X": {
+   "id": "22a4636f-8179-4357-8e87-d1743ece1f81",
+   "must": [
+    "drive.current_user.folder(path='/meetings').files.filter(name='Meeting-Agenda.pdf', trashed=false).count == 1",
+    "drive.current_user.file(path='/meetings/Meeting-Agenda.pdf').mime_type == 'application/pdf'",
+    "pdf(drive.current_user.file(path='/meetings/Meeting-Agenda.pdf').bytes).normalized_text == before(docx('/home/user/Desktop/Meeting-Agenda.docx').normalized_text)",
+    "pdf(drive.current_user.file(path='/meetings/Meeting-Agenda.pdf').bytes).page_renders similarity>=0.99 before(docx('/home/user/Desktop/Meeting-Agenda.docx').rendered_pages)",
+    "file('/home/user/Desktop/Meeting-Agenda.docx').sha256 == before(file('/home/user/Desktop/Meeting-Agenda.docx').sha256)"
+   ],
+   "footprint": [
+    "drive.current_user.folder('/meetings').new_file('Meeting-Agenda.pdf')",
+    "file('/home/user/Desktop/Meeting-Agenda.pdf')",
+    "chrome.tabs.drive_navigation",
+    "chrome.history.task_entries",
+    "chrome.site_storage[Google Drive session]",
+    "libreoffice.ui.export_dialogs",
+    "runtime('chrome').housekeeping",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Upload the converted PDF into the existing meetings folder of the logged-in Google Drive account. Preserve the document content and layout; uploading the DOCX or a Drive shortcut alone is insufficient.",
+    "A local Desktop PDF export is allowed but the uploaded file is the required artifact. PDF render similarity is measured with aligned page sizes and a fixed renderer, ignoring antialiasing differences."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "22a4636f-8179-4357-8e87-d1743ece1f81",
+   "must": [
+    "googledrive.folder('meetings').files.where(name == 'Meeting-Agenda.pdf').count == 1",
+    "googledrive.folder('meetings').file('Meeting-Agenda.pdf').mime_type == 'application/pdf'",
+    "collapse_whitespace(googledrive.folder('meetings').file('Meeting-Agenda.pdf').pdf_text) similarity>= 0.95 collapse_whitespace(join(before(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').paragraphs[*].text), ' '))",
+    "googledrive.folder('meetings').file('Meeting-Agenda.pdf').pdf_text includes 'Location: Conference Room B' and 'Lisa Green' and 'Proposal for Remote Work Policy (Presenter: Michael Brown)'",
+    "file('/home/user/Desktop/Meeting-Agenda.docx').sha256 == before(file('/home/user/Desktop/Meeting-Agenda.docx').sha256)"
+   ],
+   "footprint": [
+    "googledrive.folder('meetings'): addition of the file Meeting-Agenda.pdf",
+    "file('/home/user/Desktop/Meeting-Agenda.pdf') (or another local PDF export of the docx in /home/user) may be created",
+    "chrome: navigation/tabs used to reach Google Drive and upload; file-picker history",
+    "runtime(libreoffice_writer).housekeeping; runtime(chrome).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The PDF keeps the default export name Meeting-Agenda.pdf; this is what Export as PDF produces by default and matches the docx name.",
+    "The 'meetings' folder is the one setup created at the Drive root; the PDF goes directly inside it, not in a subfolder, and is uploaded exactly once.",
+    "Any PDF export route (LibreOffice Export as PDF, Print to file, Drive conversion) is acceptable as long as the content is the agenda's text; the original docx must stay unmodified and should not itself be uploaded.",
+    "Already-open tabs (news.google.com, x.com, deepl.com) need not be preserved exactly; navigation footprint allows task-related browsing but not closing them for no reason."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "f918266a-b3e0-4914-865d-4faa564f1aef",
+  "domain": "multi_apps",
+  "instruction": "Please complete the code and retrieve the output from the Python script 'calculator.py' located on the desktop and save it as 'log.txt' in the same directory as the Python file.",
+  "inspection_report": "research/exp5-grounded/inspections/f918266a-b3e0-4914-865d-4faa564f1aef.md",
+  "spec_X": {
+   "id": "f918266a-b3e0-4914-865d-4faa564f1aef",
+   "must": [
+    "[l.strip() for l in file('/home/user/Desktop/log.txt').text.splitlines() if l.strip() != ''] == ['5', '6', '11', '12', '13']",
+    "[l.strip() for l in run('python3 /home/user/Desktop/calculator.py', cwd='/home/user/Desktop').stdout.splitlines() if l.strip() != ''] == ['5', '6', '11', '12', '13']",
+    "run('python3 /home/user/Desktop/calculator.py', cwd='/home/user/Desktop').exit_code == 0",
+    "python_ast(file('/home/user/Desktop/calculator.py')).function('insertionSort').while_body includes assignment 'arr[j+1] = arr[j]' (or an equivalent element shift such as arr[j + 1] = arr[j]) before 'j -= 1'",
+    "python_ast(file('/home/user/Desktop/calculator.py')).module_body_except('insertionSort') == before(python_ast(file('/home/user/Desktop/calculator.py')).module_body_except('insertionSort'))"
+   ],
+   "footprint": [
+    "file('/home/user/Desktop/calculator.py'): only the TODO line region inside the while loop of insertionSort (adding the shift statement; the TODO comment may be removed)",
+    "file('/home/user/Desktop/log.txt') created",
+    "/home/user/Desktop/__pycache__ and runtime(vscode|terminal).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Complete the code' means filling in the TODO with the insertion-sort shift arr[j+1] = arr[j]; the result must still be the insertion sort, not a replacement like sorted().",
+    "The output is what the completed script prints for arr = [12, 11, 13, 5, 6]: 5, 6, 11, 12, 13, one per line. The commented 'Sorted array is:' header stays commented (it was not asked for), so it must not be in log.txt.",
+    "log.txt may have a trailing newline or trailing whitespace; it lives in /home/user/Desktop next to calculator.py."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "f918266a-b3e0-4914-865d-4faa564f1aef",
+   "must": [
+    "python_ast(fs('/home/user/Desktop').unique_descendant(name='calculator.py')).parse_errors.count == 0",
+    "python_ast(fs('/home/user/Desktop').unique_descendant(name='calculator.py')).unfinished_code_markers_at_original_completion_sites.count == 0",
+    "python_run(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), working_directory='script_parent', supplied_inputs='original embedded examples or documented inputs', isolated=true).exit_code == 0",
+    "file(sibling(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), 'log.txt')).exists == true",
+    "file(sibling(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), 'log.txt')).bytes == python_run(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), working_directory='script_parent', supplied_inputs='original embedded examples or documented inputs', isolated=true).stdout_bytes"
+   ],
+   "footprint": [
+    "file(fs('/home/user/Desktop').unique_descendant(name='calculator.py')).original_incomplete_code_regions_and_necessary_imports",
+    "file(sibling(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), 'log.txt'))",
+    "fs(script_parent).generated_python_cache",
+    "vscode.ui.task_workspace",
+    "terminal.history_and_scrollback",
+    "runtime('vscode').housekeeping",
+    "runtime('terminal').housekeeping"
+   ],
+   "fuzzy": [
+    "The completed functions implement the calculator behavior intended by the original comments, call sites, and examples. Removing the program, bypassing computations, or printing fabricated output is not completion."
+   ],
+   "assumptions": [
+    "The archive may extract the script directly on Desktop or into a subfolder; identify the unique calculator.py recursively and place log.txt beside it.",
+    "Capture the actual standard output of a normal successful script run, preserving line endings. The input exposes neither the incomplete code nor required stdin, so no particular arithmetic operations, literals, or exact output can be asserted independently."
+   ],
+   "confidence": "low"
+  }
+ }
+]

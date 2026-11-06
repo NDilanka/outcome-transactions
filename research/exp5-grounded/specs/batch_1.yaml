@@ -1,0 +1,196 @@
+- id: cabb3bae-cccb-41bd-9f5d-0f3a9fecd825
+  must:
+    - "chrome.active_tab.url.host endswith 'kohls.com'"
+    - "chrome.active_tab.page.kind == 'product_listing'"
+    - "chrome.active_tab.page.search_or_category matches /spider[- ]?man/i"
+    - "chrome.active_tab.page.search_or_category_or_filters matches /toy/i"
+    - "chrome.active_tab.page.applied_filters_or_category includes_any ['Kids', 'Boys', 'Girls', 'Kids Toys', 'Toys > Kids'] or chrome.active_tab.page.search_terms matches /kid/i"
+    - "chrome.active_tab.page.sort_selection in ['Price Low-High', 'Price: Low to High', 'Lowest Price']"
+    - "chrome.active_tab.page.listed_products.price ordered_by ascending"
+  footprint:
+    - "chrome.tabs/navigation within the Kohl's tab (task-related navigation and history)"
+    - "chrome cookies/site data/cache created by browsing kohls.com"
+    - "runtime(chrome).housekeeping"
+  fuzzy:
+    - "Listed products are Spider-Man toys aimed at children (not, e.g., Spider-Man adult apparel)."
+  assumptions:
+    - "Either a search (e.g. 'spider-man toys kids') or category navigation (Toys > Kids, filtered by Spider-Man character) is acceptable, as long as the results are Spider-Man toys for kids."
+    - "Sorting means Kohl's own sort control set to price ascending (on kohls.com this is the S=4 'Price Low-High' option); sponsored tiles excluded from the ordering check."
+    - "Opening the results in the existing tab or a new tab are both acceptable; the active tab is checked."
+  grounding_used: "none"
+  confidence: medium
+
+- id: 2ae9ba84-3a0d-4d4c-8338-3a1478dc5fe3
+  must:
+    - "chrome.local_state.profile.info_cache[chrome.current_profile].name == 'Thomas'"
+    - "chrome.profile(chrome.current_profile).preferences.profile.name == 'Thomas'"
+    - "chrome.local_state.profile.info_cache[chrome.current_profile].is_using_default_name == false"
+  footprint:
+    - "chrome.profile(current).name and its derived name flags (is_using_default_name, gaia-name usage flags)"
+    - "chrome settings-page navigation and history"
+    - "runtime(chrome).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "The 'username in chrome profiles' is the local Chrome profile name of the profile in use (Default); no Google account is signed in, so no account-level name change is expected."
+    - "Exact value 'Thomas' (case-sensitive, trimmed); profile avatar/theme must not change."
+    - "No new profile should be created; renaming the existing one is the request."
+  grounding_used: "none"
+  confidence: high
+
+- id: 7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3
+  must:
+    - "count(chrome.cookies where host matches /(^|\\.)amazon\\.[a-z.]+$|(^|\\.)amazon-adsystem\\.com$|(^|\\.)media-amazon\\.com$|(^|\\.)ssl-images-amazon\\.com$/) == 0"
+    - "count(chrome.site_storage(origin matches /amazon/) where kind in ['local_storage','indexeddb','service_worker','cache_storage','session_storage']) == 0"
+    - "chrome.cookies where host does_not_match /amazon/ multiset_equal before(chrome.cookies where host does_not_match /amazon/) restricted_to persistent cookies existing before"
+  footprint:
+    - "deletion of cookies and site data for Amazon-owned domains"
+    - "closing or navigating away from the two Amazon tabs (needed so Amazon pages do not re-set cookies)"
+    - "chrome settings-page navigation and history"
+    - "runtime(chrome).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "'Tracking things Amazon might have saved' = cookies and other site data stored for Amazon domains (amazon.com and its tracking/CDN domains)."
+    - "Final state is checked, so Amazon tabs left open that re-create cookies would fail; closing them is allowed."
+    - "Clearing all cookies/site data for every site is treated as collateral damage, because the user only named Amazon; browsing history, passwords and settings must stay unchanged."
+    - "Blocking Amazon cookies via a site exception is not required; if added it is tolerated only as a cookie-content-setting for Amazon domains."
+  grounding_used: "none"
+  confidence: medium
+
+- id: a96b564e-dbe9-42c3-9ccf-b4498073438a
+  must:
+    - "chrome.active_tab.url matches '^https://discussions\\.flightaware\\.com/t/[^/]+/\\d+'"
+    - "topic_id(chrome.active_tab.url) == argmax(forum('discussions.flightaware.com').category('FlightAware/General').topics, posts_count).id"
+  footprint:
+    - "chrome tab navigation and history (opening the forum in the current or a new tab)"
+    - "chrome cookies/cache from browsing flightaware.com"
+    - "runtime(chrome).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "'Most posts or replies' is the topic in the FlightAware > General category with the highest post count (replies + 1, equivalently highest reply count) at check time, taken over all topics listed in that category including pinned ones."
+    - "Ties: any topic sharing the maximum count is accepted."
+    - "The user does not need to sign in, post, or like anything; any forum account state must be unchanged."
+  grounding_used: "none"
+  confidence: medium
+
+- id: 9656a811-9b5b-4ddf-99c7-5117bcef0626
+  must:
+    - "chrome.profile('Default').preferences.safebrowsing.enabled == true"
+  footprint:
+    - "chrome.profile('Default').preferences.safebrowsing.* (enabled, and enhanced if the user picks Enhanced protection)"
+    - "chrome settings-page navigation and history"
+    - "runtime(chrome).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Either Standard protection or Enhanced protection satisfies 'warn me about harmful websites'; enhanced is not required."
+    - "Setup set safebrowsing.enabled=false and enhanced=false, so the change must flip enabled to true."
+  grounding_used: "none"
+  confidence: high
+
+- id: 030eeff7-b492-4218-b312-701ec99ee0cc
+  must:
+    - "chrome.profile('Default').preferences.enable_do_not_track == true"
+  footprint:
+    - "chrome.profile('Default').preferences.enable_do_not_track"
+    - "chrome settings-page navigation and history"
+    - "runtime(chrome).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Enabling the 'Send a Do Not Track request with your browsing traffic' setting is the whole request; no other privacy settings should change."
+  grounding_used: "none"
+  confidence: high
+
+- id: d52d6308-ec58-42b7-a2c9-de80e4837b2b
+  must:
+    - "gimp.ui.left_dock.visible == false"
+    - "gimp.ui.main_window.open == true"
+  footprint:
+    - "gimp dock/toolbox visibility and session layout (sessionrc, hide-docks setting)"
+    - "gimp.ui.right_dock.visible (only if the user uses Windows > Hide Docks, which hides both)"
+    - "runtime(gimp).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "The left dock is the toolbox/tool-options dock in GIMP's default single-window layout; closing it (e.g. toggling Windows > Toolbox off or closing the dock) or using Windows > Hide Docks are both accepted, so hiding the right dock as a side effect of Hide Docks is tolerated."
+    - "GIMP should still be running; quitting GIMP is not removing the dock."
+    - "Other preferences (single-window mode, theme, tools) must not change."
+  grounding_used: "none"
+  confidence: medium
+
+- id: f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce
+  must:
+    - "gimp.live_document('/home/user/Desktop/Triangle_On_The_Side.xcf').size == [800, 800]"
+    - "bbox(gimp.live_document('/home/user/Desktop/Triangle_On_The_Side.xcf').composite.pixels where color near [255,192,0] tol 40).center within(10) [400, 400]"
+    - "bbox(gimp.live_document('/home/user/Desktop/Triangle_On_The_Side.xcf').composite.pixels where color near [255,192,0] tol 40).size within(4) [341, 199]"
+    - "count(gimp.live_document('/home/user/Desktop/Triangle_On_The_Side.xcf').composite.pixels where color near [255,192,0] tol 40) / 640000 within(0.006) 0.053"
+    - "count(gimp.live_document('/home/user/Desktop/Triangle_On_The_Side.xcf').composite.pixels where color not near [255,255,255] tol 30 and outside bbox(yellow triangle) dilated by 6) == 0"
+    - "gimp.live_document('/home/user/Desktop/Triangle_On_The_Side.xcf').layer('背景').pixels == before(gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').layer('背景').pixels)"
+  footprint:
+    - "gimp.live_document('/home/user/Desktop/Triangle_On_The_Side.xcf').layer('被粘贴的图层').offsets"
+    - "gimp live selection/active tool state and undo history"
+    - "optional save of /home/user/Desktop/Triangle_On_The_Side.xcf and/or export to /home/user/Desktop/Triangle_On_The_Side.png with exactly the same composite change"
+    - "runtime(gimp).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Starting state: triangle is layer '被粘贴的图层' (348x203 at offset 28,72) over a white 800x800 background layer '背景'; the yellow pixels span x=32..372, y=75..273 (dark outline 29..374, 73..274), so centered means that box centered at (400,400), i.e. layer offset about (226,298)."
+    - "'Center' is the bounding-box center (what the Align tool or a careful drag produces), with a 10 px tolerance for hand dragging; the triangle must not be scaled, recolored, duplicated, or leave a copy at the old spot."
+    - "Moving via the Move tool, Align tool, Layer offsets, or select-and-move-then-anchor are all accepted since only the composite is checked; the background must stay pure white."
+    - "Saving is not requested; the live document is checked and any save/export must match it."
+  grounding_used: "Parsed XCF layers and PNG color stats: triangle layer offset/size and yellow bbox gave the exact target position (bbox center 400,400) and size/pixel-count invariants."
+  confidence: high
+
+- id: 06ca5602-62ca-47f6-ad4f-da151cde54cc
+  must:
+    - "gimp.live_document('/home/user/Desktop/computer.png').base_type == 'INDEXED'"
+    - "len(gimp.live_document('/home/user/Desktop/computer.png').colormap) <= 256 and len(gimp.live_document('/home/user/Desktop/computer.png').colormap) >= 2"
+    - "gimp.live_document('/home/user/Desktop/computer.png').size == [5184, 3888]"
+    - "gimp.live_document('/home/user/Desktop/computer.png').composite similarity>= 0.80 before(image('/home/user/Desktop/computer.png'))"
+  footprint:
+    - "gimp.live_document('/home/user/Desktop/computer.png').base_type and colormap (and the pixel quantization they imply)"
+    - "gimp undo history and dialog state"
+    - "optional export/save of the indexed image to /home/user/Desktop/computer.png or a new .xcf next to it, with the same indexed content"
+    - "runtime(gimp).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "'Palette-Based' is Image > Mode > Indexed; any palette option in the default dialog (generate optimum palette, max 256 colors by default, any dithering) is accepted."
+    - "The image is a 5184x3888 RGB photo (JPEG data with a .png name), so quantization will change pixels; a loose similarity threshold (0.80) accepts the default optimum or web palette, with or without dithering, but should reject a conversion that destroys the image, such as the black-and-white (1-bit) palette."
+    - "Saving/exporting is not requested; the live document mode is checked."
+  grounding_used: "Report shows a large RGB photo (5184x3888), so dimensions and a lossy-tolerant similarity bound were fixed rather than exact pixel equality."
+  confidence: high
+
+- id: e2dd0213-26db-4349-abe5-d5667bfd725c
+  must:
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').offset_x >= 0"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').offset_x + gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').width <= 1096"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').offset_y >= 0 and gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').offset_y + gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').height <= 1118"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').text == 'Thanks World'"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').size == [422, 77]"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('orange_background.png').offsets == [0, 0]"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('orange_background.png').pixels == before(gimp.document('/home/user/Desktop/orange_background.xcf').layer('orange_background.png').pixels)"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layers.names ordered_by stack == ['Thanks World', 'orange_background.png']"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').size == [2192, 1118]"
+  footprint:
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('Thanks World').offsets"
+    - "gimp.live_document('/home/user/Desktop/orange_background.xcf').layer('orange_background.png').lock_position / lock flags (locking the background to avoid selecting it is a reasonable aid)"
+    - "gimp active layer, move-tool mode (e.g. 'Move the active layer'), undo history"
+    - "optional save of /home/user/Desktop/orange_background.xcf with exactly the same permitted change"
+    - "runtime(gimp).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Starting state: text layer 'Thanks World' (422x77) at offset (976,702) on a 2192x1118 canvas, over full-canvas layer 'orange_background.png'; 'left side' is taken as the text box lying entirely in the left half (offset_x <= 674) and fully on canvas."
+    - "Vertical position may change a little from hand dragging; only staying on canvas is required."
+    - "The text must stay an editable text layer with the same content, font, size and color; the background must not move or change."
+  grounding_used: "Parsed XCF: text layer name/size/offset and canvas width gave the concrete left-half bound (offset_x + 422 <= 1096) and the background layer to protect."
+  confidence: medium
+
+- id: 7b7617bd-57cc-468e-9c91-40c4ec2bcb3d
+  must:
+    - "gimp.preferences.undo_levels == 100"
+  footprint:
+    - "gimp.preferences.undo_levels (gimprc '(undo-levels 100)')"
+    - "gimp preferences dialog state and session layout"
+    - "runtime(gimp).housekeeping"
+  fuzzy: []
+  assumptions:
+    - "'Minimum number of undo steps' is GIMP Preferences > System Resources > 'Minimal number of undo levels'; the value must be applied (OK pressed) and persisted, not just typed."
+    - "Maximum undo memory and other resource settings must not change."
+  grounding_used: "none"
+  confidence: high

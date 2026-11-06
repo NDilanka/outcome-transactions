@@ -1,0 +1,25 @@
+Reader contract: readers return typed semantic machine state, not screenshots alone.
+before(expr) evaluates the whole reader expression against the exact starting snapshot.
+Paths inside readers are Ubuntu paths; slide/paragraph/row indices are one-based.
+sheet/header/object selectors refer to starting identities unless a new object is named.
+Value comparisons preserve source row order and types unless a set/multiset operator is used.
+proper_case capitalizes alphabetic words; collapse_whitespace replaces whitespace runs by one space.
+within(tolerance) compares matching numeric scalars/maps elementwise; similarity uses aligned SSIM.
+set_equal ignores duplicates; multiset_equal preserves multiplicity; subset_of tests membership.
+in/includes/subset_of/>=/<= are conventional typed membership and comparison operators.
+Empty universal conditions and empty-set style/color checks are satisfied vacuously.
+Semantic readers normalize equivalent Office XML encodings, theme colors, and formula caches.
+serialization_metadata permits only package bookkeeping, producer metadata, ZIP ordering/timestamps,
+derived relationship IDs, and correct recalculation caches; it never permits other user edits.
+runtime(app).housekeeping permits app process/window lifecycle, caches, logs, lockfiles, and temporary
+bookkeeping caused by the task; it does not permit unrelated files, settings, mail, or user data.
+Footprints name the ONLY allowed semantic changes; all other user-controlled state must equal before.
+Navigation footprints permit task-related views and history, not closing or changing unrelated work.
+Optional saved GIMP edits must have exactly the same permitted semantic change as the live document.
+Probes/run/test readers execute on isolated copies with captured final-state configuration and source;
+they must not send mail, mutate live documents, change user settings, or contact external accounts.
+Network-backed forum/Drive/account readers inspect the final service state or a consistent captured
+snapshot; they are not instructions to perform the requested action during evaluation.
+receipt readers extract visible fields using OCR/PDF text; ambiguous OCR and categorization remain fuzzy.
+Object recognition selectors locate the named object in the starting state; they are not aesthetic oracles.
+Fuzzy criteria require separate judgment. Confidence records specification ambiguity, not task difficulty.

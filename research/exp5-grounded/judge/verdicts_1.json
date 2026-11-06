@@ -1,0 +1,101 @@
+[
+  {
+    "id": "cabb3bae-cccb-41bd-9f5d-0f3a9fecd825",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Closes official's substring hole (where unselected dropdown text 'Price Low-High' in body can pass) by checking active sort order and ascending displayed prices. Slightly narrower than Y by requiring search terms rather than also permitting category/filter navigation.",
+    "notes_Y": "Closes official's body-text substring hole by verifying both the active sort control and ascending product prices while bounding side effects. Properly allows either search queries or category/filter browsing for kids' Spider-Man toys."
+  },
+  {
+    "id": "2ae9ba84-3a0d-4d4c-8338-3a1478dc5fe3",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks the exact Chrome Preferences profile.name and corresponding Local State info_cache entries set when renaming the profile to 'Thomas'. More concrete than Y by naming the actual Chrome config keys.",
+    "notes_Y": "Checks the same local profile display name change to 'Thomas' as the official evaluator, using an abstract property name."
+  },
+  {
+    "id": "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Closes major holes in official (which only checks .amazon.com via compare_urls, missing subdomains, site storage, and collateral deletion of all other sites' cookies). Uses concrete Amazon domain regexes and restricts non-Amazon cookie preservation to pre-existing persistent cookies.",
+    "notes_Y": "Closes official's holes by checking Amazon cookies, site storage, and preservation of non-Amazon cookies. Less concrete than X because it relies on undefined origin corporate-ownership metadata and compares all non-Amazon cookie records without allowances for session cookies."
+  },
+  {
+    "id": "a96b564e-dbe9-42c3-9ccf-b4498073438a",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Identifies the same maximum-reply topic in FlightAware > General as official while evaluating dynamically and allowing tie sets. Omits an explicit check on the discussions.flightaware.com hostname in must.",
+    "notes_Y": "Identifies the same maximum-post topic in FlightAware > General as official while matching the discussions.flightaware.com/t/<slug>/<id> URL pattern cleanly (including Discourse post-number suffixes)."
+  },
+  {
+    "id": "9656a811-9b5b-4ddf-99c7-5117bcef0626",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "tie",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks safebrowsing.enabled == true on the Default profile and permits either Standard or Enhanced protection, matching official.",
+    "notes_Y": "Checks safebrowsing.enabled == true with effective mode in ['standard', 'enhanced'], matching official."
+  },
+  {
+    "id": "030eeff7-b492-4218-b312-701ec99ee0cc",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "tie",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks enable_do_not_track == true in Chrome preferences with minimal settings-navigation footprint, matching official.",
+    "notes_Y": "Checks enable_do_not_track == true in the Default profile preferences with minimal settings-navigation footprint, matching official."
+  },
+  {
+    "id": "d52d6308-ec58-42b7-a2c9-de80e4837b2b",
+    "verdict_X": "different_spec_better",
+    "verdict_Y": "different_spec_better",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Requires the left dock to be hidden while preserving the right dock, which is more faithful to the instruction than official's hide-docks=yes check (which hides all docks and rejects closing only the left dock). However, disallowing Hide Docks is restrictive in GIMP single-window mode where the left toolbox has no close button.",
+    "notes_Y": "Checks left_dock.visible == false while keeping the main window open and tolerating Hide Docks in footprint, accepting both actually closing the left dock (which official rejects) and Windows > Hide Docks."
+  },
+  {
+    "id": "f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce",
+    "verdict_X": "stricter_overstrict",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Accurately grounds canvas size ([800, 800]), yellow triangle bbox size ([341, 199]), pixel ratio (0.053), and layer names against the starting files, while checking background preservation. However, requiring bbox center within(10) of [400, 400] rejects valid hand-dragged placements and centroid-centered placements (where centroid is 33px below bbox center, which official's 40px centroid tolerance accepts).",
+    "notes_Y": "Preserves canvas size, object pixels, and background, but requiring visible_bounds.center_xy within(1 pixel) of canvas center rejects virtually all manual Move-tool placements and centroid-based centering."
+  },
+  {
+    "id": "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Matches official's palette-mode and SSIM structure check by verifying INDEXED base type, colormap length in 2..256, exact [5184, 3888] size, and composite similarity >= 0.80 to the starting image.",
+    "notes_Y": "Checks indexed color mode, palette size <= 256, and preserved canvas dimensions with footprint limited to indexed conversion, but omits an explicit visual similarity threshold in must and allows color_count == 1."
+  },
+  {
+    "id": "e2dd0213-26db-4349-abe5-d5667bfd725c",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "looser",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Accurately grounds layer names ('Thanks World' 422x77 at (976, 702) and 'orange_background.png' 2192x1118 at (0, 0)) and requires the entire text box to lie in the left half (offset_x + width <= 1096, i.e. offset_x <= 674) while verifying the background layer did not move.",
+    "notes_Y": "In the starting 2192x1118 XCF, the 422px-wide text box starts at offset_x=976 (center_x=1187), so must (center_x < canvas.width / 2 = 1096) accepts shifting left by just 92px to offset_x=884 (still straddling the middle of the canvas, which official's left_most_dark_pixel < 767 rejects), delegating actually being on the left side to fuzzy."
+  },
+  {
+    "id": "7b7617bd-57cc-468e-9c91-40c4ec2bcb3d",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "tie",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that GIMP's persistent undo-levels preference is 100 with no unrelated setting changes, matching official.",
+    "notes_Y": "Checks gimp.config('undo-levels') == 100 with minimal dialog footprint, matching official."
+  }
+]

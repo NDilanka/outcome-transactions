@@ -1,0 +1,473 @@
+[
+ {
+  "id": "4d117223-a354-47fb-8b45-62ab1390a95f",
+  "domain": "os",
+  "instruction": "Change the permission of all regular files under current directory tree to 644",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/os/4d117223-a354-47fb-8b45-62ab1390a95f/setup.sh",
+       "path": "setup.sh"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "chmod +x setup.sh",
+     "shell": true
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "./setup.sh",
+     "shell": true
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; time.sleep(0.5); pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5); pyautogui.hotkey('ctrl', 'alt', 't'); time.sleep(0.5)"
+     ]
+    }
+   },
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "Terminal"
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; time.sleep(0.5); pyautogui.write('cd testDir'); time.sleep(0.5); pyautogui.press('enter'); time.sleep(0.5); pyautogui.write('clear'); time.sleep(0.5); pyautogui.press('enter')"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "os"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/4d117223-a354-47fb-8b45-62ab1390a95f.md"
+ },
+ {
+  "id": "3ce045a0-877b-42aa-8d2c-b4a863336ab8",
+  "domain": "os",
+  "instruction": "My glasses are broken, and I'm having trouble seeing small things clearly. Could you help me enlarge the text on my screen so it's easier to read?",
+  "starting_state_setup": [
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "os"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+  "domain": "os",
+  "instruction": "Please create an SSH user named \"charles\" with password \"Ex@mpleP@55w0rd!\" on Ubuntu who is only allowed to access the folder \"/home/test1\".",
+  "starting_state_setup": [
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "mkdir /home/test1",
+     "shell": true
+    }
+   }
+  ],
+  "related_apps": [
+   "os"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "94d95f96-9699-4208-98ba-3c3119edf9c2",
+  "domain": "os",
+  "instruction": "I want to install Spotify on my current system. Could you please help me?",
+  "starting_state_setup": [
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "os"
+  ],
+  "inspection_report": null
+ },
+ {
+  "id": "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+  "domain": "thunderbird",
+  "instruction": "When I reply to an email, it quotes the original message but offsets it with an indentation and \">\" character. I find this unnecessary and distracting. Could you just remove the quoting entirely so my replies start with a clean slate?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz",
+       "path": "/home/user/thunderbird-profile.tar.gz"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "tar",
+      "-xzv",
+      "--recursive-unlink",
+      "-f",
+      "/home/user/thunderbird-profile.tar.gz",
+      "-C",
+      "/home/user/"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "/usr/bin/thunderbird"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "thunderbird"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/f201fbc3-44e6-46fc-bcaa-432f9815454c.md"
+ },
+ {
+  "id": "9b7bc335-06b5-4cd3-9119-1a649c478509",
+  "domain": "thunderbird",
+  "instruction": "Set up to forward every email received by anonym-x2024@outlook.com in the future to anonym-x2024@gmail.com. Please don't touch the online account. Just locally in the Thunderbird!",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz",
+       "path": "/home/user/thunderbird-profile.tar.gz"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "tar",
+      "-xzv",
+      "--recursive-unlink",
+      "-f",
+      "/home/user/thunderbird-profile.tar.gz",
+      "-C",
+      "/home/user/"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "/usr/bin/thunderbird"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "thunderbird"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/9b7bc335-06b5-4cd3-9119-1a649c478509.md"
+ },
+ {
+  "id": "d38192b0-17dc-4e1d-99c3-786d0117de77",
+  "domain": "thunderbird",
+  "instruction": "Attach the my AWS bill to the email. The bill is stored at ~/aws-bill.pdf. Don't close it or send it. I haven't finish all the contents.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/d38192b0-17dc-4e1d-99c3-786d0117de77/invoice0123456789.pdf",
+       "path": "/home/user/aws-bill.pdf"
+      },
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz",
+       "path": "/home/user/thunderbird-profile.tar.gz"
+      },
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/d38192b0-17dc-4e1d-99c3-786d0117de77/New-month%20AWS%20Bill.html",
+       "path": "/home/user/.aws-bill-mail-body.html"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "tar",
+      "-xzv",
+      "--recursive-unlink",
+      "-f",
+      "/home/user/thunderbird-profile.tar.gz",
+      "-C",
+      "/home/user/"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": "/usr/bin/thunderbird -compose \"from='Anonym Tester <anonym-x2024@outlook.com>',to=assistant@outlook.com,subject='New-month AWS Bill',body='$(cat /home/user/.aws-bill-mail-body.html)'\"",
+     "shell": true
+    }
+   }
+  ],
+  "related_apps": [
+   "thunderbird"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/d38192b0-17dc-4e1d-99c3-786d0117de77.md"
+ },
+ {
+  "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+  "domain": "thunderbird",
+  "instruction": "Help me access my outlook account with address \"anonym-x2024@outlook.com\" and password 'password' (without ') in Thunderbird. Just fill in the information and stay on that page. I will check it manually later.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/15c3b339-88f7-4a86-ab16-e71c58dcb01e/thunderbird-profile-blank.tar.gz",
+       "path": "/home/user/Desktop/thunderbird-profile-blank.tar.gz"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "tar",
+      "-xzv",
+      "-f",
+      "/home/user/Desktop/thunderbird-profile-blank.tar.gz",
+      "-C",
+      "/home/user/"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "/usr/bin/thunderbird"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "thunderbird"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/15c3b339-88f7-4a86-ab16-e71c58dcb01e.md"
+ },
+ {
+  "id": "dd84e895-72fd-4023-a336-97689ded257c",
+  "domain": "thunderbird",
+  "instruction": "Add a star to every email in local Bills folder",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz",
+       "path": "/home/user/thunderbird-profile.tar.gz"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "tar",
+      "-xzv",
+      "--recursive-unlink",
+      "-f",
+      "/home/user/thunderbird-profile.tar.gz",
+      "-C",
+      "/home/user/"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "/usr/bin/thunderbird"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "thunderbird"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/dd84e895-72fd-4023-a336-97689ded257c.md"
+ },
+ {
+  "id": "08c73485-7c6d-4681-999d-919f5c32dcfa",
+  "domain": "thunderbird",
+  "instruction": "Thunderbird's message filters seem to only fire on Inbox automatically. If you want to filter on subfolders, you'd have to start this filter manually. I am wondering if the filter can be applied automatically. Could you help me apply automatic message filters to subfolders",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/thunderbird/dd84e895-72fd-4023-a336-97689ded257c/thunderbird-profile.tar.gz",
+       "path": "/home/user/thunderbird-profile.tar.gz"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "tar",
+      "-xzv",
+      "--recursive-unlink",
+      "-f",
+      "/home/user/thunderbird-profile.tar.gz",
+      "-C",
+      "/home/user/"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "/usr/bin/thunderbird"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "thunderbird"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/08c73485-7c6d-4681-999d-919f5c32dcfa.md"
+ },
+ {
+  "id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+  "domain": "vlc",
+  "instruction": "I am reading lecture note in PDF while a music video is running in VLC media player. But I find I need to switch to the player every time I need to pause/start.Could you help me change the setting to allow pausing the video using keyboard shortcut without minimizing the PDF reader? I want to focus on the lecture note and don't be disturbed by the app switching.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vlc/386dbd0e-0241-4a0a-b6a2-6704fba26b1c/lecture_pdf.pdf",
+       "path": "/home/user/Desktop/lecture.pdf"
+      }
+     ]
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/vlc/386dbd0e-0241-4a0a-b6a2-6704fba26b1c/Colorful-Flowers%28chosic.com%29.mp3",
+       "path": "/home/user/Desktop/Colorful-Flowers.mp3"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": "VLC_VERBOSE=-1 vlc --no-audio --no-video-title-show --start-time=10 /home/user/Desktop/Colorful-Flowers.mp3",
+     "shell": true
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/lecture.pdf"
+    }
+   },
+   {
+    "type": "activate_window",
+    "parameters": {
+     "window_name": "lecture.pdf — 6.006 Introduction to Algorithms, Lecture 2: Data Structures",
+     "strict": true
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; pyautogui.press('f11');"
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.click({SCREEN_WIDTH_HALF}, {SCREEN_HEIGHT_HALF}); time.sleep(0.5);"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "vlc"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/386dbd0e-0241-4a0a-b6a2-6704fba26b1c.md"
+ }
+]

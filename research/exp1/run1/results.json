@@ -1,0 +1,175 @@
+{
+ "T1_edit_one_cell": {
+  "timing": {
+   "wall_to_settle_s": 0.532,
+   "driver_s": 0.107,
+   "cpu_s": 0.16,
+   "all_asleep_sample_share": 0.94
+  },
+  "memory": {
+   "dirty_pages": 2008,
+   "new_pages": 371,
+   "changed_bytes": 2001568,
+   "delta_compressed": 691911,
+   "fullpage_compressed": 1321882,
+   "zero_pages": 3,
+   "unique_dirty": 1651,
+   "resident_pages_before": 19043,
+   "changed_bytes_hist": {
+    "<=16": 424,
+    "17-256": 679,
+    "257-2048": 490,
+    ">2048": 415
+   },
+   "dirty_bytes_naive_cow": 8224768,
+   "resident_bytes_before": 78000128
+  },
+  "active_window_after": "budget.ods \u2014 LibreOffice Calc"
+ },
+ "T2_type_50_values": {
+  "timing": {
+   "wall_to_settle_s": 4.154,
+   "driver_s": 3.833,
+   "cpu_s": 2.48,
+   "all_asleep_sample_share": 0.948
+  },
+  "memory": {
+   "dirty_pages": 4767,
+   "new_pages": 42,
+   "changed_bytes": 1503778,
+   "delta_compressed": 1250266,
+   "fullpage_compressed": 1719769,
+   "zero_pages": 4,
+   "unique_dirty": 4598,
+   "resident_pages_before": 19414,
+   "changed_bytes_hist": {
+    "<=16": 952,
+    "17-256": 2564,
+    "257-2048": 1068,
+    ">2048": 183
+   },
+   "dirty_bytes_naive_cow": 19525632,
+   "resident_bytes_before": 79519744
+  },
+  "active_window_after": "budget.ods \u2014 LibreOffice Calc"
+ },
+ "T3_open_close_format_dialog": {
+  "timing": {
+   "wall_to_settle_s": 1.536,
+   "driver_s": 1.519,
+   "cpu_s": 0.56,
+   "all_asleep_sample_share": 0.97
+  },
+  "memory": {
+   "dirty_pages": 14602,
+   "new_pages": 12013,
+   "changed_bytes": 54011213,
+   "delta_compressed": 6671076,
+   "fullpage_compressed": 7320873,
+   "zero_pages": 442,
+   "unique_dirty": 13791,
+   "resident_pages_before": 19456,
+   "changed_bytes_hist": {
+    "<=16": 486,
+    "17-256": 419,
+    "257-2048": 467,
+    ">2048": 13230
+   },
+   "dirty_bytes_naive_cow": 59809792,
+   "resident_bytes_before": 79691776
+  },
+  "active_window_after": "budget.ods \u2014 LibreOffice Calc"
+ },
+ "T4_bold_column": {
+  "timing": {
+   "wall_to_settle_s": 0.362,
+   "driver_s": 0.042,
+   "cpu_s": 0.08,
+   "all_asleep_sample_share": 0.96
+  },
+  "memory": {
+   "dirty_pages": 5156,
+   "new_pages": 4,
+   "changed_bytes": 3639592,
+   "delta_compressed": 1342713,
+   "fullpage_compressed": 2262771,
+   "zero_pages": 2,
+   "unique_dirty": 4989,
+   "resident_pages_before": 31469,
+   "changed_bytes_hist": {
+    "<=16": 1145,
+    "17-256": 1875,
+    "257-2048": 1337,
+    ">2048": 799
+   },
+   "dirty_bytes_naive_cow": 21118976,
+   "resident_bytes_before": 128897024
+  },
+  "active_window_after": "budget.ods \u2014 LibreOffice Calc"
+ },
+ "T5_sort_like_scroll_1000_rows": {
+  "timing": {
+   "wall_to_settle_s": 0.164,
+   "driver_s": 0.129,
+   "cpu_s": 0.25,
+   "all_asleep_sample_share": 0.947
+  },
+  "memory": {
+   "dirty_pages": 5433,
+   "new_pages": 197,
+   "changed_bytes": 2709411,
+   "delta_compressed": 1686289,
+   "fullpage_compressed": 2333473,
+   "zero_pages": 0,
+   "unique_dirty": 5375,
+   "resident_pages_before": 31473,
+   "changed_bytes_hist": {
+    "<=16": 589,
+    "17-256": 2185,
+    "257-2048": 2342,
+    ">2048": 317
+   },
+   "dirty_bytes_naive_cow": 22253568,
+   "resident_bytes_before": 128913408
+  },
+  "active_window_after": "budget.ods \u2014 LibreOffice Calc"
+ },
+ "T6_save": {
+  "timing": {
+   "wall_to_settle_s": 0.674,
+   "driver_s": 0.008,
+   "cpu_s": 0.48,
+   "all_asleep_sample_share": 0.611
+  },
+  "memory": {
+   "dirty_pages": 10088,
+   "new_pages": 7057,
+   "changed_bytes": 30636537,
+   "delta_compressed": 3325949,
+   "fullpage_compressed": 4586502,
+   "zero_pages": 246,
+   "unique_dirty": 7367,
+   "resident_pages_before": 31670,
+   "changed_bytes_hist": {
+    "<=16": 705,
+    "17-256": 1050,
+    "257-2048": 989,
+    ">2048": 7344
+   },
+   "dirty_bytes_naive_cow": 41320448,
+   "resident_bytes_before": 129720320
+  },
+  "active_window_after": "budget.ods \u2014 LibreOffice Calc"
+ },
+ "verification": {
+  "saved": true,
+  "B2": "5000",
+  "F2_to_F6": [
+   "1001",
+   "1002",
+   "1003",
+   "1004",
+   "1005"
+  ]
+ }
+}

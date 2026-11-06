@@ -1,0 +1,560 @@
+[
+ {
+  "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+  "domain": "gimp",
+  "instruction": "Could you assist me in enhancing the color vibrancy of my photo?",
+  "inspection_report": "research/exp5-grounded/inspections/554785e9-4523-4e7a-b8e1-8016f565f56a.md",
+  "spec_X": {
+   "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+   "must": [
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').size == [1099, 730]",
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').composite.hsv_mean_saturation >= 1.08 * before(image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png').hsv_mean_saturation)  # before = 96.9 (0-255 scale), so final >= 104.6",
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').composite.mean_chroma > before(image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png').mean_chroma)  # before = 24.7",
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').composite.hsv_mean_value within(25) before(image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png').hsv_mean_value)  # before = 84.6; no drastic brightening/darkening",
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').composite.grayscale similarity>= 0.85 before(image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png').grayscale)  # same picture, no crop/resize/distortion",
+    "if exists(image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png')) and image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png') != before(image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png')): image.file('/home/user/Desktop/woman_sitting_by_the_tree2.png') similarity>= 0.98 gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').composite"
+   ],
+   "footprint": [
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png') pixel content, layers/undo history for the color adjustment",
+    "optionally /home/user/Desktop/woman_sitting_by_the_tree2.png overwritten, or a new exported copy in /home/user/Desktop with the same edit",
+    "runtime(gimp).housekeeping"
+   ],
+   "fuzzy": [
+    "The result looks more vibrant/saturated while remaining a natural-looking version of the same photo (no posterization, hue shift, or garish clipping)."
+   ],
+   "assumptions": [
+    "Vibrancy = saturation/chroma increase; any GIMP tool (Hue-Saturation, Saturation, Curves, Color Enhance) is acceptable.",
+    "No save location was requested, so the live GIMP image is the primary object; saving/exporting over the original or a copy is permitted but not required.",
+    "A 8% relative mean-saturation gain is the minimum a deliberate user adjustment would produce; the image is dark (mean V 84.6), so the brightness tolerance is generous."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+   "must": [
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').canvas.size == before(gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').canvas.size)",
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.mean_hsv_saturation > before(gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.mean_hsv_saturation)",
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.alpha_channel == before(gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.alpha_channel)"
+   ],
+   "footprint": [
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').color_adjustments",
+    "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').nondestructive_color_adjustment_layers",
+    "file('/home/user/Desktop/woman_sitting_by_the_tree2.png').corresponding_optional_export",
+    "runtime('gimp').housekeeping"
+   ],
+   "fuzzy": [
+    "Colors are perceptibly more vibrant while the original scene, geometry, and subject remain intact; avoid unnatural skin colors, severe clipping, or excessive saturation."
+   ],
+   "assumptions": [
+    "No amount or particular adjustment tool is specified. Increased saturation is a necessary measurable proxy, not a sufficient aesthetic test. An edit in the open image is sufficient."
+   ],
+   "confidence": "low"
+  }
+ },
+ {
+  "id": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+  "domain": "libreoffice_calc",
+  "instruction": "I want to copy the movie titles in 'Garbage Movie Titles' column to the 'Clean Movie Titles' column. But please remove the adundant whitespaces and canonicalize the letter cases by capitalizing the first letter of each words and leave other letters as lower case. Finish the work and don't touch irrelevant regions, even if they are blank.",
+  "inspection_report": "research/exp5-grounded/inspections/a9f325aa-8c05-4e4f-8341-9e4358565f4f.md",
+  "spec_X": {
+   "id": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+   "must": [
+    "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == [\"Minions In Black\", \"The Dragon With The Girl Tattoo\", \"Hairy Potter\", \"Enemy Of The Stuke\", \"Silence Of Thf Fans\", \"21 Pump Street\", \"The Longest Yard\", \"The Bune Collector\", \"Dump Fiction\", \"Eternal Sunshine Of The Mindless Spot\", \"Fifty Shaucks Of Black\", \"Star Shrek\", \"Lord Of The Cringe\", \"Thf Godfathr\", \"Buck From The Future\", \"Hug Club\", \"Planet Of The Grades\", \"Top Bun\", \"Gone With The Wink\", \"The Good, The Better And The Best\", \"Doodlefuls\", \"I Am Batmun\", \"Doctor Norrml\", \"Bud Would Hunting\", \"If Yesterday\", <one of [\"Edge Of Puip-Fre Fiction\", \"Edge Of Puip-fre Fiction\"]>, \"Funkirk\", \"Dumblodore: Dumb And Dumber\"]",
+    "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))  # equivalent statement; hyphenated second part may be either case",
+    "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:B29').values == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:B29').values)",
+    "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').cell('C1').value == \"Clean Movie Titles\"",
+    "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').nonempty_cells subset_of range('B1:C29')  # no helper columns or stray cells left anywhere",
+    "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet_names == [\"Sheet1\"]"
+   ],
+   "footprint": [
+    "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29') values (constants or formulas whose computed values match); cell formatting of C2:C29 may follow paste defaults",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Result must be saved to the same xlsx path; values may be literal text or formulas (e.g. =PROPER(TRIM(B2))) as long as computed values match.",
+    "Header text in B1 is \"Garbage Movie titles\" (lowercase t); the instruction refers to it.",
+    "Leading/trailing whitespace is removed and internal runs collapse to one space; punctuation (\",\", \":\", \"-\") is kept.",
+    "For \"PUIp-FRE\" both \"Puip-Fre\" (LibreOffice PROPER) and \"Puip-fre\" (word = space-delimited token) are accepted.",
+    "Typos in titles (Thf, Godfathr, Norrml) are kept; the user asked only for whitespace and case cleanup.",
+    "Temporary helper columns are allowed during work but must be removed (\"don't touch irrelevant regions\")."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+   "must": [
+    "xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Clean Movie Titles').data_values == map(before(xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Garbage Movie Titles').data_values), proper_case(collapse_whitespace(trim(value))))",
+    "xlsx('/home/user/Movie_title_garbage_clean.xlsx').semantic_diff(before).changed_cell_addresses subset_of before(xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Clean Movie Titles').rows_corresponding_to_source_titles)",
+    "xlsx('/home/user/Movie_title_garbage_clean.xlsx').all_cell_styles == before(xlsx('/home/user/Movie_title_garbage_clean.xlsx').all_cell_styles)"
+   ],
+   "footprint": [
+    "xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Clean Movie Titles').source_corresponding_cells.value_and_formula",
+    "xlsx('/home/user/Movie_title_garbage_clean.xlsx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Keep each result on the same row as its source title. Trim leading/trailing whitespace, collapse redundant internal whitespace to one space, and capitalize the initial letter of each alphabetic word while lowercasing the rest.",
+    "Save the edited workbook to its original path. Leave headers, source titles, formatting, and even irrelevant blank cells unchanged."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+  "domain": "libreoffice_calc",
+  "instruction": "Calculate the total sales in an underneath row called \"Total\" and display the total of each month as bars. Then calculate the month-on-month growth percentage for Feb to Jun in another row called \"Growth\" and show them in a line chart (Jan should be omitted in the chart as well). Set the chart titles as the two row headers respectively.",
+  "inspection_report": "research/exp5-grounded/inspections/0326d92d-d218-48a8-9ca1-981cd6d064c7.md",
+  "spec_X": {
+   "id": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+   "must": [
+    "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').cell('A12').value == \"Total\"",
+    "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('B12:G12').values within(0.001) [4852, 4587, 3943, 3857, 4677, 4243]",
+    "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').cell('A13').value == \"Growth\"",
+    "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('C13:G13').values within(0.0005) [-0.054617, -0.140397, -0.021811, 0.212600, -0.092795] or libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('C13:G13').values within(0.05) [-5.4617, -14.0397, -2.1811, 21.2600, -9.2795]",
+    "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').cell('B13').value in [null, \"\"]  # Jan has no month-on-month growth",
+    "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').values == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').values)",
+    "count(libreoffice.calc.file('/home/user/SalesRep.xlsx').charts) == 2",
+    "exists chart c in libreoffice.calc.file('/home/user/SalesRep.xlsx').charts: c.type in [\"bar\", \"column\"] and c.title == \"Total\" and len(c.series) == 1 and c.series[0].values within(0.001) [4852, 4587, 3943, 3857, 4677, 4243]",
+    "exists chart c in libreoffice.calc.file('/home/user/SalesRep.xlsx').charts: c.type == \"line\" and c.title == \"Growth\" and len(c.series) == 1 and c.series[0].values == libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('C13:G13').values  # 5 points, Jan excluded"
+   ],
+   "footprint": [
+    "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A12:G13') values, formulas and number formats (e.g. percent format on row 13)",
+    "two new chart objects on Sheet1 (bar/column \"Total\", line \"Growth\"), with any category labels, legend, axis and placement defaults",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File is saved in place as xlsx. \"Underneath row\" = row 12, directly below the last sales rep (row 11); \"another row\" = row 13 directly below Total.",
+    "Growth = (this month total - previous month total) / previous month total, stored either as a fraction (optionally percent-formatted) or as a number of percent.",
+    "Vertical columns and horizontal bars both count as \"bars\". Category labels (month names) on the charts are allowed but not required.",
+    "Chart titles must be exactly the row headers \"Total\" and \"Growth\"."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+   "must": [
+    "xlsx('/home/user/SalesRep.xlsx').sales_table.row_after_original_data.header == 'Total'",
+    "xlsx('/home/user/SalesRep.xlsx').sales_table.row(header='Total').values_by_month == map(months('Jan','Jun'), sum(before(xlsx('/home/user/SalesRep.xlsx').sales_table.original_numeric_sales(month))))",
+    "xlsx('/home/user/SalesRep.xlsx').sales_table.row(header='Growth').values_by_month('Feb','Jun') within(0.000001) map(months('Feb','Jun'), (total(month)-total(previous_month(month)))/total(previous_month(month)))",
+    "xlsx('/home/user/SalesRep.xlsx').sales_table.row(header='Growth').number_formats('Feb','Jun').all_display_percent == true",
+    "xlsx('/home/user/SalesRep.xlsx').charts.exists(type_in=['bar','column'], title='Total', categories=months('Jan','Jun'), series_values=total(months('Jan','Jun'))) == true",
+    "xlsx('/home/user/SalesRep.xlsx').charts.exists(type='line', title='Growth', categories=months('Feb','Jun'), series_values=growth(months('Feb','Jun'))) == true",
+    "xlsx('/home/user/SalesRep.xlsx').charts.match(title='Growth').source_categories not_contains 'Jan'"
+   ],
+   "footprint": [
+    "xlsx('/home/user/SalesRep.xlsx').sales_table.new_Total_and_Growth_rows",
+    "xlsx('/home/user/SalesRep.xlsx').charts.new_Total_and_Growth_charts",
+    "xlsx('/home/user/SalesRep.xlsx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Totals sum the original sales entries for each month. Growth is (current minus previous)/previous, not percentage-point difference.",
+    "Place Total immediately below the original table and Growth below Total. A horizontal bar or vertical column chart is acceptable for the unspecified bar orientation.",
+    "January growth may be blank or undefined, but must not appear in the Growth chart. If a previous total is zero, use a blank or explicit undefined result, never invent a finite growth rate. Save the workbook."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+  "domain": "libreoffice_calc",
+  "instruction": "Calculate revenue in a new column according to the Retail Price sheet (consider product price and quantity and discount), and generate a Pivot Table in a new sheet (Sheet2) that summarizes the revenue of each product.",
+  "inspection_report": "research/exp5-grounded/inspections/51719eea-10bc-4246-a428-ac7c433dd4b3.md",
+  "spec_X": {
+   "id": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+   "must": [
+    "xlsx('/home/user/BoomerangSales.xlsx').sales_table.column(header_casefold='revenue').data_values within(0.005) map(before(xlsx('/home/user/BoomerangSales.xlsx').sales_table.rows), lookup(before(xlsx('/home/user/BoomerangSales.xlsx').sheet('Retail Price').product_prices), row.product).unit_price * row.quantity * (1-row.discount_fraction))",
+    "xlsx('/home/user/BoomerangSales.xlsx').sheet_names contains 'Sheet2'",
+    "xlsx('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables.count >= 1",
+    "xlsx('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables.match(row_field='product', data_field='revenue', aggregation='sum').product_totals within(0.005) group_sum(xlsx('/home/user/BoomerangSales.xlsx').sales_table.rows, key=product, value=revenue)",
+    "xlsx('/home/user/BoomerangSales.xlsx').sheet('Retail Price').semantic_state == before(xlsx('/home/user/BoomerangSales.xlsx').sheet('Retail Price').semantic_state)"
+   ],
+   "footprint": [
+    "xlsx('/home/user/BoomerangSales.xlsx').sales_table.new_Revenue_column",
+    "xlsx('/home/user/BoomerangSales.xlsx').new_sheet('Sheet2')",
+    "xlsx('/home/user/BoomerangSales.xlsx').pivot_definitions_and_caches_for_Sheet2",
+    "xlsx('/home/user/BoomerangSales.xlsx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Match products by their source identifiers. Revenue is retail unit price times quantity times one minus the applicable discount fraction, interpreting percentage-formatted source discounts correctly.",
+    "Use the discount associated with each sale or its product lookup, according to the source schema. A real pivot table is required, not a visually similar hand-typed summary. Save the workbook."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+   "must": [
+    "lower(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').cell('G1').value) contains \"revenue\"",
+    "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('G2:G36').values within(0.01) [604.8323, 590.3675, 73.575, 1222.47, 579.785, 1000, 100, 1278.75, 560.0, 129, 2011.2428, 127.5, 162.9568, 294.3, 64.5988, 1286.3578, 10, 155.585, 10, 122.2176, 147.0, 117.72, 129, 565.08, 66, 24, 23.225, 1105.0, 20, 10, 75, 21.95, 220.95, 4.905, 71.8]  # = RetailPrice(Product) * Quantity * (1 - Discount)",
+    "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').values == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').values)",
+    "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').values == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').values)",
+    "\"Sheet2\" in libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet_names",
+    "count(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables) == 1",
+    "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables[0].row_fields == [\"Product\"]",
+    "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables[0].data_fields == [{source: libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').cell('G1').value, function: \"sum\"}]",
+    "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables[0].result_map within(0.01) {\"Aspen\": 2262.9133, \"Bellen\": 173.575, \"Bower Aussie Round\": 258.0, \"Carlota Doublers\": 590.25, \"Crested Beaut\": 651.585, \"Fire Aspen\": 1344.75, \"Fun Fly\": 508.215, \"GelFast\": 24.0, \"Manu LD\": 1000.0, \"Manu MTA\": 117.72, \"Quad\": 3233.7128, \"Sunset\": 1105.0, \"Sunshine\": 565.08, \"Sunspot\": 560.0, \"Yanaki\": 590.3675}  # grand total, if shown, 12985.1686"
+   ],
+   "footprint": [
+    "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('G1:G36') values/formulas/number formats",
+    "new sheet Sheet2 containing only the pivot table output (and its default header/grand-total cells)",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File saved in place as xlsx. The new column is G, the first empty column right of Discount, with a header containing \"Revenue\" (e.g. \"Revenue\").",
+    "Revenue = retail price looked up by Product from the Retail Price sheet x Quantity x (1 - Discount); Discount values are fractions (0-0.594). Formulas (VLOOKUP etc.) or constants are both fine.",
+    "Pivot table: Product as row field, Sum of the revenue column as data; placement within Sheet2 and grand total display are free. Sorting of products is free.",
+    "Sheet2 does not exist initially; it is created by the user (pivot dialog \"new sheet\" plus rename, or created first)."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+  "domain": "libreoffice_calc",
+  "instruction": "Compute the sum of \"Revenue\" and \"Total Expenses\" and put the results under two columns named \"Total Revenue\" and \"Total Expenses\" of a new sheet (Sheet2)",
+  "inspection_report": "research/exp5-grounded/inspections/42e0a640-4f19-4b28-973d-729602b5a4a7.md",
+  "spec_X": {
+   "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+   "must": [
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A1').value == \"Total Revenue\"",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B1').value == \"Total Expenses\"",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A2').value within(0.001) 867786",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B2').value within(0.001) 411686",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').nonempty_cells set_equal [\"A1\", \"B1\", \"A2\", \"B2\"]",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values)"
+   ],
+   "footprint": [
+    "new sheet Sheet2 with A1:B2 (values or formulas such as =SUM($Sheet1.A2:A20), default formats)",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File saved in place as xlsx; Sheet2 is new and placed after Sheet1.",
+    "The two columns are A and B with headers in row 1 and the single sum in row 2."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+   "must": [
+    "xlsx('/home/user/NetIncome.xlsx').sheet_names contains 'Sheet2'",
+    "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A1').value == 'Total Revenue'",
+    "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B1').value == 'Total Expenses'",
+    "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A2').numeric_value within(0.005) sum(before(xlsx('/home/user/NetIncome.xlsx').original_sheet.column(header='Revenue').numeric_data_values))",
+    "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B2').numeric_value within(0.005) sum(before(xlsx('/home/user/NetIncome.xlsx').original_sheet.column(header='Total Expenses').numeric_data_values))",
+    "xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state == before(xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state)"
+   ],
+   "footprint": [
+    "xlsx('/home/user/NetIncome.xlsx').new_sheet('Sheet2')",
+    "xlsx('/home/user/NetIncome.xlsx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Produce two scalar column sums, not their sum together and not net income. Headers occupy A1:B1 and the single totals row A2:B2. Exclude pre-existing subtotal or total rows from double-counting. Save the workbook."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "1273e544-688f-496b-8d89-3e0f40aa0606",
+  "domain": "libreoffice_calc",
+  "instruction": "Copy the \"Revenue\" column along with the header to a new sheet named \"Sheet2\".",
+  "inspection_report": "research/exp5-grounded/inspections/1273e544-688f-496b-8d89-3e0f40aa0606.md",
+  "spec_X": {
+   "id": "1273e544-688f-496b-8d89-3e0f40aa0606",
+   "must": [
+    "xlsx('/home/user/NetIncome.xlsx').sheet_names contains 'Sheet2'",
+    "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').column('A').populated_extent.values == before(xlsx('/home/user/NetIncome.xlsx').original_sheet.column(header='Revenue').header_and_data_values)",
+    "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A1').value == 'Revenue'",
+    "xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state == before(xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state)"
+   ],
+   "footprint": [
+    "xlsx('/home/user/NetIncome.xlsx').new_sheet('Sheet2').column('A')",
+    "xlsx('/home/user/NetIncome.xlsx').sheet_list.append('Sheet2')",
+    "xlsx('/home/user/NetIncome.xlsx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Place the copied header at A1 of the new sheet and retain source row order, blank entries within the source extent, and numeric values. Copy rather than move. Formulas or pasted values are acceptable if resulting values agree. Save the workbook."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "1273e544-688f-496b-8d89-3e0f40aa0606",
+   "must": [
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').range('A1:A20').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:A20').values)  # \"Revenue\", 39929, 55389, ..., 58782",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').nonempty_cells subset_of range('A1:A20')",
+    "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values)"
+   ],
+   "footprint": [
+    "new sheet Sheet2 with A1:A20 (pasted values and the source cell formats/column width)",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File saved in place as xlsx. The copied column lands in column A of Sheet2 at the same rows (A1:A20), the natural paste target.",
+    "Copy, not move: Sheet1 stays unchanged."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "6054afcb-5bab-4702-90a0-b259b5d3217c",
+  "domain": "libreoffice_calc",
+  "instruction": "Some data are missed by now and are filled by 'N/A' temporarily. Please hide them in the table for now. Do not delete any cells and filter is not needed.",
+  "inspection_report": "research/exp5-grounded/inspections/6054afcb-5bab-4702-90a0-b259b5d3217c.md",
+  "spec_X": {
+   "id": "6054afcb-5bab-4702-90a0-b259b5d3217c",
+   "must": [
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').all_cell_values_and_formulas == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').all_cell_values_and_formulas)",
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').cells(addresses=before_cells_with_display_value('N/A')).rendered_text_is_invisible == true",
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').cells(excluding=before_cells_with_display_value('N/A')).rendered_text_and_visibility == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').cells(excluding=before_cells_with_display_value('N/A')).rendered_text_and_visibility)",
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').filter_definitions_and_state == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').filter_definitions_and_state)",
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').row_and_column_structure == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').row_and_column_structure)"
+   ],
+   "footprint": [
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').before_NA_cells.display_format_or_font_color",
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').conditional_formats[suppressing only N/A]",
+    "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Hide the N/A placeholders visually at cell level while retaining their underlying values and the visibility of other data. Do not hide entire rows with valid data, erase placeholders, delete cells, or add a filter. Save the workbook."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "6054afcb-5bab-4702-90a0-b259b5d3217c",
+   "must": [
+    "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows set_equal [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]  # exactly the rows whose Actual is =NA()",
+    "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').values == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').values)",
+    "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').formulas == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').formulas)",
+    "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').autofilter == null",
+    "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_columns == []"
+   ],
+   "footprint": [
+    "row visibility (hidden flag) of Sheet1 rows 3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File saved in place as xlsx. \"Hide them\" with \"do not delete cells, filter not needed\" means hiding the rows that contain N/A, without AutoFilter/Standard Filter.",
+    "N/A rows are those where Actual (column D) is =NA() and therefore Difference (E) is #N/A as well; no other cells contain N/A."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+  "domain": "libreoffice_impress",
+  "instruction": "Enable auto-save every 3min for me, so that I don't need to hit \"ctrl-s\" that much",
+  "inspection_report": null,
+  "spec_X": {
+   "id": "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+   "must": [
+    "libreoffice.config('/org.openoffice.Office.Recovery/AutoSave/Enabled') == true",
+    "libreoffice.config('/org.openoffice.Office.Recovery/AutoSave/TimeIntervall') == 3"
+   ],
+   "footprint": [
+    "libreoffice.config('/org.openoffice.Office.Recovery/AutoSave/Enabled')",
+    "libreoffice.config('/org.openoffice.Office.Recovery/AutoSave/TimeIntervall')",
+    "libreoffice.config('/org.openoffice.Office.Recovery/AutoSave/UserAutoSave') (the \"Automatically save the document too\" option may be turned on)",
+    "libreoffice.config dialog-state bookkeeping (last-opened Options page, window geometry)",
+    "runtime(libreoffice).housekeeping (the untitled Impress document may stay open or be closed unsaved)"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Implemented through Tools > Options > Load/Save > General > \"Save AutoRecovery information every 3 minutes\"; enabling \"Automatically save the document too\" is permitted but not required.",
+    "If the LibreOffice version stores this in the legacy key org.openoffice.Office.Common/Save/Document/AutoSave and AutoSaveTimeIntervall, those keys are equivalent."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+   "must": [
+    "libreoffice.config('recovery.auto_save.enabled') == true",
+    "libreoffice.config('recovery.auto_save.interval_minutes') == 3",
+    "libreoffice.config('save_original_document_automatically').value_if_supported == true"
+   ],
+   "footprint": [
+    "libreoffice.config('recovery.auto_save.enabled')",
+    "libreoffice.config('recovery.auto_save.interval_minutes')",
+    "libreoffice.config('save_original_document_automatically')",
+    "libreoffice.ui.preferences_dialog",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Enable the persistent three-minute AutoRecovery setting. Also enable automatic saving of the original document if the installed version exposes that option, because the user wants fewer manual saves. The value_if_supported reader returns true when the option does not exist."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+  "domain": "libreoffice_impress",
+  "instruction": "Add a bullet point to the content of this slide.",
+  "inspection_report": "research/exp5-grounded/inspections/f23acfd2-c485-4b7c-a1e7-d4303ddfe864.md",
+  "spec_X": {
+   "id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+   "must": [
+    "pptx('/home/user/Desktop/69_4.pptx').slide(index=before(libreoffice.impress.current_slide_index)).body_paragraphs.nonempty.count > 0",
+    "pptx('/home/user/Desktop/69_4.pptx').slide(index=before(libreoffice.impress.current_slide_index)).body_paragraphs.nonempty.all_have_visible_bullet == true",
+    "pptx('/home/user/Desktop/69_4.pptx').all_text == before(pptx('/home/user/Desktop/69_4.pptx').all_text)",
+    "pptx('/home/user/Desktop/69_4.pptx').slide_count == before(pptx('/home/user/Desktop/69_4.pptx').slide_count)"
+   ],
+   "footprint": [
+    "pptx('/home/user/Desktop/69_4.pptx').starting_current_slide.body_paragraphs.bullet_formatting",
+    "pptx('/home/user/Desktop/69_4.pptx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Interpret add a bullet point as applying bullet-list formatting to the existing slide body, not inventing an unspecified new textual item. Exclude the slide title. Use the slide current in the starting state and save the presentation."
+   ],
+   "confidence": "low"
+  },
+  "spec_Y": {
+   "id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+   "must": [
+    "count(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slides) == 1",
+    "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraphs.texts == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraphs.texts)",
+    "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraph(1).bullet.type in [\"char\", \"picture\"]  # was buNone",
+    "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   ],
+   "footprint": [
+    "bullet properties (type, character, indent/hanging-indent defaults that come with toggling bullets) of slide 1 PlaceHolder 2 paragraph 1",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File saved in place as pptx (Keep Current Format).",
+    "\"Add a bullet point to the content\" means turning the single content paragraph (currently buNone) into a bulleted item, not writing new text.",
+    "Any unordered bullet glyph is acceptable; numbering is not a \"bullet point\"."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+  "domain": "libreoffice_impress",
+  "instruction": "Change picture's height to 20, 30, 25cm on slide 3, 4, 6 respectively.",
+  "inspection_report": "research/exp5-grounded/inspections/7ae48c60-f143-4119-b659-15b8f485eb9a.md",
+  "spec_X": {
+   "id": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+   "must": [
+    "pptx('/home/user/Desktop/30_1.pptx').slide(3).pictures.target.height_cm within(0.01) 20",
+    "pptx('/home/user/Desktop/30_1.pptx').slide(4).pictures.target.height_cm within(0.01) 30",
+    "pptx('/home/user/Desktop/30_1.pptx').slide(6).pictures.target.height_cm within(0.01) 25",
+    "pptx('/home/user/Desktop/30_1.pptx').slides([3,4,6]).pictures.target.image_payload_hashes == before(pptx('/home/user/Desktop/30_1.pptx').slides([3,4,6]).pictures.target.image_payload_hashes)"
+   ],
+   "footprint": [
+    "pptx('/home/user/Desktop/30_1.pptx').slides([3,4,6]).target_picture.height_and_optionally_proportional_width",
+    "pptx('/home/user/Desktop/30_1.pptx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Slide numbers are one-based. The target is the unique content picture on each specified slide, excluding master backgrounds and logos; if several such pictures exist the target is ambiguous.",
+    "Preserve picture content, position, rotation, and cropping. Width may stay unchanged or scale proportionally; the requested heights take precedence even if they exceed slide bounds. Save the presentation."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+   "must": [
+    "all p in libreoffice.impress.file('/home/user/Desktop/30_1.pptx').slide(3).pictures: p.height_cm within(0.05) 20  # 7 icon pictures Google Shape;450..456;p18",
+    "libreoffice.impress.file('/home/user/Desktop/30_1.pptx').slide(4).shape('Google Shape;466;p19').height_cm within(0.05) 30",
+    "libreoffice.impress.file('/home/user/Desktop/30_1.pptx').slide(6).shape('Google Shape;684;p22').height_cm within(0.05) 25",
+    "all p in [slide(3).pictures, slide(4).shape('Google Shape;466;p19'), slide(6).shape('Google Shape;684;p22')] of libreoffice.impress.file('/home/user/Desktop/30_1.pptx'): p.width_cm within(0.05) before(p.width_cm) or p.width_cm within(0.1) before(p.width_cm) * p.height_cm / before(p.height_cm)  # width unchanged or proportionally scaled",
+    "count(libreoffice.impress.file('/home/user/Desktop/30_1.pptx').slides) == 6"
+   ],
+   "footprint": [
+    "size (height, and width if Keep ratio is used) and position of the picture shapes on slides 3, 4 and 6 listed above",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File saved in place as pptx. Heights in centimetres via Position and Size (F4) or equivalent; position may shift depending on base point.",
+    "Slide 3 has seven identical 1.14x1.13cm bullet-icon pictures and no other picture; \"picture's height\" on slide 3 is applied to all of them.",
+    "Slides 4 and 6 each contain exactly one picture, which are the targets."
+   ],
+   "confidence": "low"
+  }
+ },
+ {
+  "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+  "domain": "libreoffice_impress",
+  "instruction": "I am checking our soccer club's to-do list for the last semester and adding strike-through sign on the line we have already accomplished. Could you help me add a strike-through on the first and second line?",
+  "inspection_report": "research/exp5-grounded/inspections/550ce7e7-747b-495f-b122-acdc4d0b8e54.md",
+  "spec_X": {
+   "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+   "must": [
+    "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(index=before(libreoffice.impress.current_slide_index)).todo_body.logical_lines([1,2]).all_text_runs.effective_strikethrough == 'single'",
+    "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').all_text == before(pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').all_text)",
+    "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').starting_current_slide.todo_body.logical_lines(after=2).formatting == before(pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').starting_current_slide.todo_body.logical_lines(after=2).formatting)"
+   ],
+   "footprint": [
+    "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').starting_current_slide.todo_body.logical_lines([1,2]).strikethrough",
+    "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Use the to-do-list slide selected after the setup navigation, rather than assuming slide 1. First and second line means the first two list entries, excluding the title and visual wraps within an entry. Save the presentation."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+   "must": [
+    "all r in libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(5).shape('PlaceHolder 2').paragraph(1).runs where r.text != \"\": r.strike in [\"single\", \"double\"]  # \"Finance Meetings:\"",
+    "all r in libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(5).shape('PlaceHolder 2').paragraph(2).runs where r.text != \"\": r.strike in [\"single\", \"double\"]  # \"Providing another perspective for the clubs and organizations.\"",
+    "all i in 3..9: all r in libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(5).shape('PlaceHolder 2').paragraph(i).runs: r.strike == \"none\"",
+    "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(5).shape('PlaceHolder 2').paragraphs.texts == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(5).shape('PlaceHolder 2').paragraphs.texts)",
+    "all s in [1,2,3,4,6,7]: libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(s) == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(s))"
+   ],
+   "footprint": [
+    "strikethrough attribute of runs in slide 5 PlaceHolder 2 paragraphs 1 and 2 (run splitting that this causes is fine)",
+    "serialization_metadata",
+    "runtime(libreoffice).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "File saved in place as pptx (Keep Current Format).",
+    "The setup clicks the first slide thumbnail and presses Down four times, landing on slide 5 (\"What I do:\"), the only list of activities; \"first and second line\" are its first two content paragraphs, not the title.",
+    "Single strikethrough is what the toolbar/Format > Text > Strikethrough produces; double is tolerated."
+   ],
+   "confidence": "low"
+  }
+ }
+]

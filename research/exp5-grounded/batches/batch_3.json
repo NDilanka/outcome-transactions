@@ -1,0 +1,424 @@
+[
+ {
+  "id": "57667013-ea97-417c-9dce-2713091e6e2a",
+  "domain": "libreoffice_impress",
+  "instruction": "Navigate to slide 5 and set the font color of all textboxes to yellow. Use exactly 'yellow'—no variations such as light yellow, dark yellow, or any other color.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/57667013-ea97-417c-9dce-2713091e6e2a/1_2.pptx",
+       "path": "/home/user/Desktop/1_2.pptx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/1_2.pptx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_impress"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/57667013-ea97-417c-9dce-2713091e6e2a.md"
+ },
+ {
+  "id": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+  "domain": "libreoffice_impress",
+  "instruction": "Could you help me add slide transition \"dissolve\" to my first page?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_impress/21760ecb-8f62-40d2-8d85-0cee5725cb72/Ch4%20Video%20Effect.pptx",
+       "path": "/home/user/Desktop/Ch4 Video Effect.pptx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/Ch4 Video Effect.pptx"
+    }
+   },
+   {
+    "type": "sleep",
+    "parameters": {
+     "seconds": 0.5
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time;  time.sleep(4); pyautogui.doubleClick(x={SCREEN_WIDTH_HALF}, y={SCREEN_HEIGHT_HALF}); time.sleep(0.5);pyautogui.mouseDown(); pyautogui.mouseUp(); time.sleep(0.5);"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_impress"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/21760ecb-8f62-40d2-8d85-0cee5725cb72.md"
+ },
+ {
+  "id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+  "domain": "libreoffice_writer",
+  "instruction": "Hey, can you throw in a blank page right after this one?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/ecc2413d-8a48-416e-a3a2-d30106ca36cb/Sample_Statutory_Declaration.docx",
+       "path": "/home/user/Desktop/Sample_Statutory_Declaration.docx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/Sample_Statutory_Declaration.docx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/ecc2413d-8a48-416e-a3a2-d30106ca36cb.md"
+ },
+ {
+  "id": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+  "domain": "libreoffice_writer",
+  "instruction": "I am currently engaged in text processing and require assistance in converting all uppercase text to lowercase within my document. This precision is critical for maintaining a uniform and polished presentation. Could you help me on this?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/d53ff5ee-3b1a-431e-b2be-30ed2673079b/presentation_instruction_2023_Feb.docx",
+       "path": "/home/user/Desktop/presentation_instruction_2023_Feb.docx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/presentation_instruction_2023_Feb.docx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/d53ff5ee-3b1a-431e-b2be-30ed2673079b.md"
+ },
+ {
+  "id": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+  "domain": "libreoffice_writer",
+  "instruction": "I am making a guideline for students of my course and would like to separate each sentence in the the first paragraph to improve readability. Please separate each sentence by creating one empty line space after each of them, as I am having hard time separating them one by one.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/88fe4b2d-3040-4c70-9a70-546a47764b48/CCCH9003_Tutorial_guidelines.docx",
+       "path": "/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/88fe4b2d-3040-4c70-9a70-546a47764b48.md"
+ },
+ {
+  "id": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+  "domain": "libreoffice_writer",
+  "instruction": "Could you help me insert a 7(columns)*5(rows) empty table at the point of cursor?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/66399b0d-8fda-4618-95c4-bfc6191617e9/Table_Of_Work_Effort_Instructions.docx",
+       "path": "/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx"
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "python",
+      "-c",
+      "import pyautogui; import time; pyautogui.press(\"down\", presses=40, interval=0.01); time.sleep(1); pyautogui.scroll(-2)"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/66399b0d-8fda-4618-95c4-bfc6191617e9.md"
+ },
+ {
+  "id": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+  "domain": "libreoffice_writer",
+  "instruction": "Could you help me convert the text seperated by commas to a table?",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/936321ce-5236-426a-9a20-e0e3c5dc536f/Graphemes_Sound_Letter_Patterns.docx",
+       "path": "/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/936321ce-5236-426a-9a20-e0e3c5dc536f.md"
+ },
+ {
+  "id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+  "domain": "libreoffice_writer",
+  "instruction": "I have been editing my document and some words that needed to be rewritten are highlighted in yellow. As I fixed those words, please help me remove all highlight. I want to make sure that there is no highlight word.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/libreoffice_writer/6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2/sample-recruitment-phone-script.odt",
+       "path": "/home/user/Desktop/sample-recruitment-phone-script.odt"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/sample-recruitment-phone-script.odt"
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2.md"
+ },
+ {
+  "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+  "domain": "multi_apps",
+  "instruction": "Hey, my LibreOffice Writer seems to have frozen and I can't get it to close normally. Can you help me force quit the application from the command line? I'm on Ubuntu and I don't want to restart my computer or lose any other work I have open.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/2b9493d7-49b8-493a-a71b-56cd1f4d6908/15-MB-docx-file-download.docx",
+       "path": "/home/user/Desktop/15-MB-docx-file-download.docx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "open",
+    "parameters": {
+     "path": "/home/user/Desktop/15-MB-docx-file-download.docx"
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "/bin/bash",
+      "-c",
+      "history -c && echo > ~/.bash_history && sleep 3"
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": "export DBUS_SESSION_BUS_ADDRESS='unix:path=/run/user/1000/bus'\ngnome-terminal --maximize --working-directory=/home/user/",
+     "shell": true
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer",
+   "terminal"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/2b9493d7-49b8-493a-a71b-56cd1f4d6908.md"
+ },
+ {
+  "id": "22a4636f-8179-4357-8e87-d1743ece1f81",
+  "domain": "multi_apps",
+  "instruction": "Please help me convert the file \"Meeting-Agenda.docx\" to a pdf file and upload to the folder 'meetings' in my google drive.",
+  "starting_state_setup": [
+   {
+    "type": "googledrive",
+    "parameters": {
+     "settings_file": "evaluation_examples/settings/googledrive/settings.yml",
+     "operation": [
+      "reset_task_folder",
+      "mkdirs"
+     ],
+     "args": [
+      {
+       "folder": "meetings",
+       "artifacts": [
+        "Meeting-Agenda.docx",
+        "Meeting-Agenda.pdf"
+       ]
+      },
+      {
+       "path": [
+        "meetings"
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "google-chrome",
+      "--remote-debugging-port=1337"
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "socat",
+      "tcp-listen:9222,fork",
+      "tcp:localhost:1337"
+     ]
+    }
+   },
+   {
+    "type": "chrome_open_tabs",
+    "parameters": {
+     "urls_to_open": [
+      "https://news.google.com",
+      "https://x.com",
+      "https://www.deepl.com"
+     ]
+    }
+   },
+   {
+    "type": "login",
+    "parameters": {
+     "settings_file": "evaluation_examples/settings/google/settings.json",
+     "platform": "googledrive"
+    }
+   },
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/22a4636f-8179-4357-8e87-d1743ece1f81/Meeting-Agenda.docx",
+       "path": "/home/user/Desktop/Meeting-Agenda.docx"
+      }
+     ]
+    }
+   },
+   {
+    "type": "launch",
+    "parameters": {
+     "command": [
+      "libreoffice",
+      "--writer",
+      "/home/user/Desktop/Meeting-Agenda.docx"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "libreoffice_writer",
+   "chrome"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/22a4636f-8179-4357-8e87-d1743ece1f81.md"
+ },
+ {
+  "id": "f918266a-b3e0-4914-865d-4faa564f1aef",
+  "domain": "multi_apps",
+  "instruction": "Please complete the code and retrieve the output from the Python script 'calculator.py' located on the desktop and save it as 'log.txt' in the same directory as the Python file.",
+  "starting_state_setup": [
+   {
+    "type": "download",
+    "parameters": {
+     "files": [
+      {
+       "url": "https://huggingface.co/datasets/xlangai/ubuntu_osworld_file_cache/resolve/main/multi_apps/f918266a-b3e0-4914-865d-4faa564f1aef/calculator.zip",
+       "path": "/home/user/Desktop/calculator.zip"
+      }
+     ]
+    }
+   },
+   {
+    "type": "execute",
+    "parameters": {
+     "command": [
+      "/bin/bash",
+      "-c",
+      "unzip /home/user/Desktop/calculator.zip -d /home/user/Desktop/ && rm -rf /home/user/Desktop/calculator.zip"
+     ]
+    }
+   }
+  ],
+  "related_apps": [
+   "vscode",
+   "os"
+  ],
+  "inspection_report": "research/exp5-grounded/inspections/f918266a-b3e0-4914-865d-4faa564f1aef.md"
+ }
+]

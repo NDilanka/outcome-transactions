@@ -1,0 +1,1173 @@
+# Blind outcome specifications. Only blind_tasks.json was consulted.
+# Reader contract: readers return typed semantic machine state, not screenshots alone.
+# before(expr) evaluates the whole reader expression against the exact starting snapshot.
+# Paths inside readers are Ubuntu paths; slide/paragraph/row indices are one-based.
+# sheet/header/object selectors refer to starting identities unless a new object is named.
+# Value comparisons preserve source row order and types unless a set/multiset operator is used.
+# proper_case capitalizes alphabetic words; collapse_whitespace replaces whitespace runs by one space.
+# within(tolerance) compares matching numeric scalars/maps elementwise; similarity uses aligned SSIM.
+# set_equal ignores duplicates; multiset_equal preserves multiplicity; subset_of tests membership.
+# in/includes/subset_of/>=/<= are conventional typed membership and comparison operators.
+# Empty universal conditions and empty-set style/color checks are satisfied vacuously.
+# Semantic readers normalize equivalent Office XML encodings, theme colors, and formula caches.
+# serialization_metadata permits only package bookkeeping, producer metadata, ZIP ordering/timestamps,
+# derived relationship IDs, and correct recalculation caches; it never permits other user edits.
+# runtime(app).housekeeping permits app process/window lifecycle, caches, logs, lockfiles, and temporary
+# bookkeeping caused by the task; it does not permit unrelated files, settings, mail, or user data.
+# Footprints name the ONLY allowed semantic changes; all other user-controlled state must equal before.
+# Navigation footprints permit task-related views and history, not closing or changing unrelated work.
+# Optional saved GIMP edits must have exactly the same permitted semantic change as the live document.
+# Probes/run/test readers execute on isolated copies with captured final-state configuration and source;
+# they must not send mail, mutate live documents, change user settings, or contact external accounts.
+# Network-backed forum/Drive/account readers inspect the final service state or a consistent captured
+# snapshot; they are not instructions to perform the requested action during evaluation.
+# receipt readers extract visible fields using OCR/PDF text; ambiguous OCR and categorization remain fuzzy.
+# Object recognition selectors locate the named object in the starting state; they are not aesthetic oracles.
+# Fuzzy criteria require separate judgment. Confidence records specification ambiguity, not task difficulty.
+
+- id: cabb3bae-cccb-41bd-9f5d-0f3a9fecd825
+  must:
+    - "chrome.active_tab.url.host matches '(^|\\.)kohls\\.com$'"
+    - "chrome.active_tab.page.kind == 'product_search_results'"
+    - "chrome.active_tab.page.search_terms.normalized contains 'spider man'"
+    - "chrome.active_tab.page.product_scope includes 'toys for children'"
+    - "chrome.active_tab.page.sort.effective_order == 'price_ascending'"
+    - "chrome.active_tab.page.results.displayed_current_prices ordered_by(ascending)"
+  footprint:
+    - "chrome.tabs.task_navigation"
+    - "chrome.history.task_entries"
+    - "chrome.site_storage('kohls.com')"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Use the initially opened Kohl's store. A Spider-Man toy search in a toys or kids category satisfies the audience requirement; no particular age bracket is specified."
+    - "Compare current selling prices, excluding sponsored placements and products without comparable prices; the actual selected sort must also be lowest price."
+  confidence: medium
+
+- id: 2ae9ba84-3a0d-4d4c-8338-3a1478dc5fe3
+  must:
+    - "chrome.profile.current.local_display_name == 'Thomas'"
+  footprint:
+    - "chrome.profile.current.local_display_name"
+    - "chrome.profile.current.local_name_customization_flags"
+    - "chrome.local_state.profile_info_cache.current.name"
+    - "chrome.tabs.settings_navigation"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Change the local Chrome profile name, not the Google account name, email address, operating-system username, or other Chrome profiles."
+  confidence: high
+
+- id: 7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3
+  must:
+    - "chrome.cookies.filter(domain_or_partition_owner_is_amazon).count == 0"
+    - "chrome.site_data.filter(origin_or_owner_is_amazon).persistent_storage_bytes == 0"
+    - "chrome.site_data.filter(origin_or_owner_is_amazon).session_storage_entries.count == 0"
+    - "chrome.site_data.filter(origin_or_owner_is_amazon).service_workers.count == 0"
+    - "chrome.site_data.filter(origin_or_owner_is_amazon).cache_storage_entries.count == 0"
+    - "chrome.cookies.filter(not_domain_or_partition_owner_is_amazon).semantic_records == before(chrome.cookies.filter(not_domain_or_partition_owner_is_amazon).semantic_records)"
+  footprint:
+    - "chrome.cookies[amazon-owned domains or Amazon-owned partitioned storage]"
+    - "chrome.site_data[amazon-owned origins]"
+    - "chrome.http_cache[amazon-owned origins]"
+    - "chrome.tabs.amazon_or_settings_navigation"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Amazon includes amazon.com, its subdomains, and other Amazon-owned storefront or tracking origins present in the starting profile; identify ownership from stored origin metadata, not a substring match."
+    - "Remove cookies and all site storage rather than deleting unrelated browsing history, saved passwords, bookmarks, or other sites' data. Future tracker blocking is not requested."
+    - "Evaluate after deletion without revisiting Amazon and recreating its cookies."
+  confidence: medium
+
+- id: a96b564e-dbe9-42c3-9ccf-b4498073438a
+  must:
+    - "chrome.active_tab.page.kind == 'forum_topic'"
+    - "chrome.active_tab.page.forum_name == 'FlightAware Discussions'"
+    - "chrome.active_tab.page.category_path == ['FlightAware', 'General']"
+    - "chrome.active_tab.page.topic.id in forum_snapshot('FlightAware Discussions', category=['FlightAware','General'], at='evaluation').topics_with_maximum_reply_count"
+  footprint:
+    - "chrome.tabs.task_navigation"
+    - "chrome.history.task_entries"
+    - "chrome.site_storage[flightaware.com and its discussion-forum host]"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Most posts or replies means the highest lifetime reply count among all topics in General, not most views, newest activity, or only the first listing page."
+    - "Include pinned topics if they are actual General discussions; accept any tied maximum. The listing and topic counts must come from one consistent evaluation-time forum snapshot."
+  confidence: medium
+
+- id: 9656a811-9b5b-4ddf-99c7-5117bcef0626
+  must:
+    - "chrome.prefs('safebrowsing.enabled') == true"
+    - "chrome.effective_safe_browsing_mode in ['standard', 'enhanced']"
+  footprint:
+    - "chrome.prefs('safebrowsing.enabled')"
+    - "chrome.prefs('safebrowsing.enhanced')"
+    - "chrome.tabs.settings_navigation"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Standard Safe Browsing is sufficient; enhanced protection is acceptable but not required. Do not weaken other safety settings."
+  confidence: high
+
+- id: 030eeff7-b492-4218-b312-701ec99ee0cc
+  must:
+    - "chrome.prefs('enable_do_not_track') == true"
+  footprint:
+    - "chrome.prefs('enable_do_not_track')"
+    - "chrome.tabs.settings_navigation"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Enable the browser's Do Not Track request preference; this does not imply that websites must honor it."
+  confidence: high
+
+- id: d52d6308-ec58-42b7-a2c9-de80e4837b2b
+  must:
+    - "gimp.ui.docks(side='left').visible_count == 0"
+    - "gimp.ui.image_workspace.visible == true"
+    - "gimp.ui.docks(side='right').semantic_state == before(gimp.ui.docks(side='right').semantic_state)"
+  footprint:
+    - "gimp.ui.docks(side='left')"
+    - "gimp.ui.workspace_layout"
+    - "gimp.persisted_window_layout.left_docks"
+    - "runtime('gimp').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "The left dock means GIMP's toolbox or left dock, not Ubuntu's launcher. Remove or hide that dock only; hiding every dock with Tab is insufficient when a right dock was visible."
+  confidence: medium
+
+- id: f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce
+  must:
+    - "gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').canvas.size == before(gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').canvas.size)"
+    - "gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').object(match_before='yellow triangle').visible_bounds.center_xy within(1 pixel) before(gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').canvas.center_xy)"
+    - "gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').object(match_before='yellow triangle').pixels_relative_to_object == before(gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').object(match_before='yellow triangle').pixels_relative_to_object)"
+    - "gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').other_objects.semantic_state == before(gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').other_objects.semantic_state)"
+  footprint:
+    - "gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').yellow_triangle.position"
+    - "gimp.document('/home/user/Desktop/Triangle_On_The_Side.xcf').selection_and_active_layer"
+    - "file('/home/user/Desktop/Triangle_On_The_Side.xcf').corresponding_optional_saved_edit"
+    - "runtime('gimp').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Identify the yellow triangle in the starting image and center its visible bounding box both horizontally and vertically. Move it without scaling or recoloring."
+    - "The request concerns the open editable image. Saving the XCF is allowed but exporting or overwriting the separate PNG is not required."
+  confidence: medium
+
+- id: 06ca5602-62ca-47f6-ad4f-da151cde54cc
+  must:
+    - "gimp.document('/home/user/Desktop/computer.png').base_color_mode == 'indexed'"
+    - "gimp.document('/home/user/Desktop/computer.png').palette.color_count > 0"
+    - "gimp.document('/home/user/Desktop/computer.png').palette.color_count <= 256"
+    - "gimp.document('/home/user/Desktop/computer.png').canvas.size == before(gimp.document('/home/user/Desktop/computer.png').canvas.size)"
+  footprint:
+    - "gimp.document('/home/user/Desktop/computer.png').indexed_color_conversion"
+    - "file('/home/user/Desktop/computer.png').optional_indexed_export"
+    - "runtime('gimp').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Palette-Based means GIMP Indexed color mode. No specific palette, color count, or dithering algorithm is requested; preserve the image content and dimensions aside from quantization."
+  confidence: high
+
+- id: e2dd0213-26db-4349-abe5-d5667bfd725c
+  must:
+    - "gimp.document('/home/user/Desktop/orange_background.xcf').starting_text_layer.offset_x < before(gimp.document('/home/user/Desktop/orange_background.xcf').starting_text_layer.offset_x)"
+    - "gimp.document('/home/user/Desktop/orange_background.xcf').starting_text_layer.visible_bounds.center_x < gimp.document('/home/user/Desktop/orange_background.xcf').canvas.width / 2"
+    - "gimp.document('/home/user/Desktop/orange_background.xcf').starting_text_layer.visible_bounds.is_inside_canvas == true"
+    - "gimp.document('/home/user/Desktop/orange_background.xcf').starting_text_layer.text_and_style == before(gimp.document('/home/user/Desktop/orange_background.xcf').starting_text_layer.text_and_style)"
+    - "gimp.document('/home/user/Desktop/orange_background.xcf').nontext_layers.semantic_state == before(gimp.document('/home/user/Desktop/orange_background.xcf').nontext_layers.semantic_state)"
+  footprint:
+    - "gimp.document('/home/user/Desktop/orange_background.xcf').starting_text_layer.position"
+    - "gimp.document('/home/user/Desktop/orange_background.xcf').selection_and_active_layer"
+    - "gimp.ui.move_tool.target_mode"
+    - "file('/home/user/Desktop/orange_background.xcf').corresponding_optional_saved_edit"
+    - "runtime('gimp').housekeeping"
+  fuzzy:
+    - "The relocated text box should read as being on the left side with sensible spacing, rather than merely crossing the midpoint by an imperceptible amount."
+  assumptions:
+    - "Move the existing text layer, not the image beneath it. No exact left margin or vertical position is supplied; retain the original vertical position where possible."
+  confidence: low
+
+- id: 7b7617bd-57cc-468e-9c91-40c4ec2bcb3d
+  must:
+    - "gimp.config('undo-levels') == 100"
+  footprint:
+    - "gimp.config('undo-levels')"
+    - "gimp.ui.preferences_dialog"
+    - "runtime('gimp').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Set the persistent Minimum number of undo levels preference, not undo memory size."
+  confidence: high
+
+- id: 554785e9-4523-4e7a-b8e1-8016f565f56a
+  must:
+    - "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').canvas.size == before(gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').canvas.size)"
+    - "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.mean_hsv_saturation > before(gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.mean_hsv_saturation)"
+    - "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.alpha_channel == before(gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').render.alpha_channel)"
+  footprint:
+    - "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').color_adjustments"
+    - "gimp.document('/home/user/Desktop/woman_sitting_by_the_tree2.png').nondestructive_color_adjustment_layers"
+    - "file('/home/user/Desktop/woman_sitting_by_the_tree2.png').corresponding_optional_export"
+    - "runtime('gimp').housekeeping"
+  fuzzy:
+    - "Colors are perceptibly more vibrant while the original scene, geometry, and subject remain intact; avoid unnatural skin colors, severe clipping, or excessive saturation."
+  assumptions:
+    - "No amount or particular adjustment tool is specified. Increased saturation is a necessary measurable proxy, not a sufficient aesthetic test. An edit in the open image is sufficient."
+  confidence: low
+
+- id: a9f325aa-8c05-4e4f-8341-9e4358565f4f
+  must:
+    - "xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Clean Movie Titles').data_values == map(before(xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Garbage Movie Titles').data_values), proper_case(collapse_whitespace(trim(value))))"
+    - "xlsx('/home/user/Movie_title_garbage_clean.xlsx').semantic_diff(before).changed_cell_addresses subset_of before(xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Clean Movie Titles').rows_corresponding_to_source_titles)"
+    - "xlsx('/home/user/Movie_title_garbage_clean.xlsx').all_cell_styles == before(xlsx('/home/user/Movie_title_garbage_clean.xlsx').all_cell_styles)"
+  footprint:
+    - "xlsx('/home/user/Movie_title_garbage_clean.xlsx').column(header='Clean Movie Titles').source_corresponding_cells.value_and_formula"
+    - "xlsx('/home/user/Movie_title_garbage_clean.xlsx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Keep each result on the same row as its source title. Trim leading/trailing whitespace, collapse redundant internal whitespace to one space, and capitalize the initial letter of each alphabetic word while lowercasing the rest."
+    - "Save the edited workbook to its original path. Leave headers, source titles, formatting, and even irrelevant blank cells unchanged."
+  confidence: high
+
+- id: 0326d92d-d218-48a8-9ca1-981cd6d064c7
+  must:
+    - "xlsx('/home/user/SalesRep.xlsx').sales_table.row_after_original_data.header == 'Total'"
+    - "xlsx('/home/user/SalesRep.xlsx').sales_table.row(header='Total').values_by_month == map(months('Jan','Jun'), sum(before(xlsx('/home/user/SalesRep.xlsx').sales_table.original_numeric_sales(month))))"
+    - "xlsx('/home/user/SalesRep.xlsx').sales_table.row(header='Growth').values_by_month('Feb','Jun') within(0.000001) map(months('Feb','Jun'), (total(month)-total(previous_month(month)))/total(previous_month(month)))"
+    - "xlsx('/home/user/SalesRep.xlsx').sales_table.row(header='Growth').number_formats('Feb','Jun').all_display_percent == true"
+    - "xlsx('/home/user/SalesRep.xlsx').charts.exists(type_in=['bar','column'], title='Total', categories=months('Jan','Jun'), series_values=total(months('Jan','Jun'))) == true"
+    - "xlsx('/home/user/SalesRep.xlsx').charts.exists(type='line', title='Growth', categories=months('Feb','Jun'), series_values=growth(months('Feb','Jun'))) == true"
+    - "xlsx('/home/user/SalesRep.xlsx').charts.match(title='Growth').source_categories not_contains 'Jan'"
+  footprint:
+    - "xlsx('/home/user/SalesRep.xlsx').sales_table.new_Total_and_Growth_rows"
+    - "xlsx('/home/user/SalesRep.xlsx').charts.new_Total_and_Growth_charts"
+    - "xlsx('/home/user/SalesRep.xlsx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Totals sum the original sales entries for each month. Growth is (current minus previous)/previous, not percentage-point difference."
+    - "Place Total immediately below the original table and Growth below Total. A horizontal bar or vertical column chart is acceptable for the unspecified bar orientation."
+    - "January growth may be blank or undefined, but must not appear in the Growth chart. If a previous total is zero, use a blank or explicit undefined result, never invent a finite growth rate. Save the workbook."
+  confidence: medium
+
+- id: 51719eea-10bc-4246-a428-ac7c433dd4b3
+  must:
+    - "xlsx('/home/user/BoomerangSales.xlsx').sales_table.column(header_casefold='revenue').data_values within(0.005) map(before(xlsx('/home/user/BoomerangSales.xlsx').sales_table.rows), lookup(before(xlsx('/home/user/BoomerangSales.xlsx').sheet('Retail Price').product_prices), row.product).unit_price * row.quantity * (1-row.discount_fraction))"
+    - "xlsx('/home/user/BoomerangSales.xlsx').sheet_names contains 'Sheet2'"
+    - "xlsx('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables.count >= 1"
+    - "xlsx('/home/user/BoomerangSales.xlsx').sheet('Sheet2').pivot_tables.match(row_field='product', data_field='revenue', aggregation='sum').product_totals within(0.005) group_sum(xlsx('/home/user/BoomerangSales.xlsx').sales_table.rows, key=product, value=revenue)"
+    - "xlsx('/home/user/BoomerangSales.xlsx').sheet('Retail Price').semantic_state == before(xlsx('/home/user/BoomerangSales.xlsx').sheet('Retail Price').semantic_state)"
+  footprint:
+    - "xlsx('/home/user/BoomerangSales.xlsx').sales_table.new_Revenue_column"
+    - "xlsx('/home/user/BoomerangSales.xlsx').new_sheet('Sheet2')"
+    - "xlsx('/home/user/BoomerangSales.xlsx').pivot_definitions_and_caches_for_Sheet2"
+    - "xlsx('/home/user/BoomerangSales.xlsx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Match products by their source identifiers. Revenue is retail unit price times quantity times one minus the applicable discount fraction, interpreting percentage-formatted source discounts correctly."
+    - "Use the discount associated with each sale or its product lookup, according to the source schema. A real pivot table is required, not a visually similar hand-typed summary. Save the workbook."
+  confidence: medium
+
+- id: 42e0a640-4f19-4b28-973d-729602b5a4a7
+  must:
+    - "xlsx('/home/user/NetIncome.xlsx').sheet_names contains 'Sheet2'"
+    - "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A1').value == 'Total Revenue'"
+    - "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B1').value == 'Total Expenses'"
+    - "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A2').numeric_value within(0.005) sum(before(xlsx('/home/user/NetIncome.xlsx').original_sheet.column(header='Revenue').numeric_data_values))"
+    - "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B2').numeric_value within(0.005) sum(before(xlsx('/home/user/NetIncome.xlsx').original_sheet.column(header='Total Expenses').numeric_data_values))"
+    - "xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state == before(xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state)"
+  footprint:
+    - "xlsx('/home/user/NetIncome.xlsx').new_sheet('Sheet2')"
+    - "xlsx('/home/user/NetIncome.xlsx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Produce two scalar column sums, not their sum together and not net income. Headers occupy A1:B1 and the single totals row A2:B2. Exclude pre-existing subtotal or total rows from double-counting. Save the workbook."
+  confidence: high
+
+- id: 1273e544-688f-496b-8d89-3e0f40aa0606
+  must:
+    - "xlsx('/home/user/NetIncome.xlsx').sheet_names contains 'Sheet2'"
+    - "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').column('A').populated_extent.values == before(xlsx('/home/user/NetIncome.xlsx').original_sheet.column(header='Revenue').header_and_data_values)"
+    - "xlsx('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A1').value == 'Revenue'"
+    - "xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state == before(xlsx('/home/user/NetIncome.xlsx').original_sheets.semantic_state)"
+  footprint:
+    - "xlsx('/home/user/NetIncome.xlsx').new_sheet('Sheet2').column('A')"
+    - "xlsx('/home/user/NetIncome.xlsx').sheet_list.append('Sheet2')"
+    - "xlsx('/home/user/NetIncome.xlsx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Place the copied header at A1 of the new sheet and retain source row order, blank entries within the source extent, and numeric values. Copy rather than move. Formulas or pasted values are acceptable if resulting values agree. Save the workbook."
+  confidence: high
+
+- id: 6054afcb-5bab-4702-90a0-b259b5d3217c
+  must:
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').all_cell_values_and_formulas == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').all_cell_values_and_formulas)"
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').cells(addresses=before_cells_with_display_value('N/A')).rendered_text_is_invisible == true"
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').cells(excluding=before_cells_with_display_value('N/A')).rendered_text_and_visibility == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').cells(excluding=before_cells_with_display_value('N/A')).rendered_text_and_visibility)"
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').filter_definitions_and_state == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').filter_definitions_and_state)"
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').row_and_column_structure == before(xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').row_and_column_structure)"
+  footprint:
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').before_NA_cells.display_format_or_font_color"
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').conditional_formats[suppressing only N/A]"
+    - "xlsx('/home/user/Date_Budget_Variance_HideNA.xlsx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Hide the N/A placeholders visually at cell level while retaining their underlying values and the visibility of other data. Do not hide entire rows with valid data, erase placeholders, delete cells, or add a filter. Save the workbook."
+  confidence: medium
+
+- id: 2cd43775-7085-45d8-89fa-9e35c0a915cf
+  must:
+    - "libreoffice.config('recovery.auto_save.enabled') == true"
+    - "libreoffice.config('recovery.auto_save.interval_minutes') == 3"
+    - "libreoffice.config('save_original_document_automatically').value_if_supported == true"
+  footprint:
+    - "libreoffice.config('recovery.auto_save.enabled')"
+    - "libreoffice.config('recovery.auto_save.interval_minutes')"
+    - "libreoffice.config('save_original_document_automatically')"
+    - "libreoffice.ui.preferences_dialog"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Enable the persistent three-minute AutoRecovery setting. Also enable automatic saving of the original document if the installed version exposes that option, because the user wants fewer manual saves. The value_if_supported reader returns true when the option does not exist."
+  confidence: medium
+
+- id: f23acfd2-c485-4b7c-a1e7-d4303ddfe864
+  must:
+    - "pptx('/home/user/Desktop/69_4.pptx').slide(index=before(libreoffice.impress.current_slide_index)).body_paragraphs.nonempty.count > 0"
+    - "pptx('/home/user/Desktop/69_4.pptx').slide(index=before(libreoffice.impress.current_slide_index)).body_paragraphs.nonempty.all_have_visible_bullet == true"
+    - "pptx('/home/user/Desktop/69_4.pptx').all_text == before(pptx('/home/user/Desktop/69_4.pptx').all_text)"
+    - "pptx('/home/user/Desktop/69_4.pptx').slide_count == before(pptx('/home/user/Desktop/69_4.pptx').slide_count)"
+  footprint:
+    - "pptx('/home/user/Desktop/69_4.pptx').starting_current_slide.body_paragraphs.bullet_formatting"
+    - "pptx('/home/user/Desktop/69_4.pptx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Interpret add a bullet point as applying bullet-list formatting to the existing slide body, not inventing an unspecified new textual item. Exclude the slide title. Use the slide current in the starting state and save the presentation."
+  confidence: low
+
+- id: 7ae48c60-f143-4119-b659-15b8f485eb9a
+  must:
+    - "pptx('/home/user/Desktop/30_1.pptx').slide(3).pictures.target.height_cm within(0.01) 20"
+    - "pptx('/home/user/Desktop/30_1.pptx').slide(4).pictures.target.height_cm within(0.01) 30"
+    - "pptx('/home/user/Desktop/30_1.pptx').slide(6).pictures.target.height_cm within(0.01) 25"
+    - "pptx('/home/user/Desktop/30_1.pptx').slides([3,4,6]).pictures.target.image_payload_hashes == before(pptx('/home/user/Desktop/30_1.pptx').slides([3,4,6]).pictures.target.image_payload_hashes)"
+  footprint:
+    - "pptx('/home/user/Desktop/30_1.pptx').slides([3,4,6]).target_picture.height_and_optionally_proportional_width"
+    - "pptx('/home/user/Desktop/30_1.pptx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Slide numbers are one-based. The target is the unique content picture on each specified slide, excluding master backgrounds and logos; if several such pictures exist the target is ambiguous."
+    - "Preserve picture content, position, rotation, and cropping. Width may stay unchanged or scale proportionally; the requested heights take precedence even if they exceed slide bounds. Save the presentation."
+  confidence: medium
+
+- id: 550ce7e7-747b-495f-b122-acdc4d0b8e54
+  must:
+    - "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(index=before(libreoffice.impress.current_slide_index)).todo_body.logical_lines([1,2]).all_text_runs.effective_strikethrough == 'single'"
+    - "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').all_text == before(pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').all_text)"
+    - "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').starting_current_slide.todo_body.logical_lines(after=2).formatting == before(pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').starting_current_slide.todo_body.logical_lines(after=2).formatting)"
+  footprint:
+    - "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').starting_current_slide.todo_body.logical_lines([1,2]).strikethrough"
+    - "pptx('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Use the to-do-list slide selected after the setup navigation, rather than assuming slide 1. First and second line means the first two list entries, excluding the title and visual wraps within an entry. Save the presentation."
+  confidence: medium
+
+- id: 57667013-ea97-417c-9dce-2713091e6e2a
+  must:
+    - "pptx('/home/user/Desktop/1_2.pptx').slide(5).text_shapes.all_nonempty_runs.effective_font_color_srgb set_equal ['#FFFF00']"
+    - "pptx('/home/user/Desktop/1_2.pptx').slide(5).text_shapes.empty_paragraph_default_font_colors_srgb set_equal ['#FFFF00']"
+    - "pptx('/home/user/Desktop/1_2.pptx').all_text == before(pptx('/home/user/Desktop/1_2.pptx').all_text)"
+    - "libreoffice.impress.current_slide_index == 5"
+  footprint:
+    - "pptx('/home/user/Desktop/1_2.pptx').slide(5).text_shapes.font_color"
+    - "pptx('/home/user/Desktop/1_2.pptx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Exactly yellow is sRGB #FFFF00 with no tint or shade. Include titles, placeholders, and grouped editable text boxes, but do not recolor pixels embedded in pictures."
+    - "The empty-paragraph predicate is vacuously satisfied if no empty paragraphs exist. Save the presentation."
+  confidence: high
+
+- id: 21760ecb-8f62-40d2-8d85-0cee5725cb72
+  must:
+    - "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition.normalized_type == 'dissolve'"
+    - "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slides(after=1).transitions == before(pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slides(after=1).transitions)"
+  footprint:
+    - "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition"
+    - "pptx('/home/user/Desktop/Ch4 Video Effect.pptx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "First page means slide 1. Apply the transition to that slide only. Duration and advance timing may remain at their original or default values; do not apply to all slides. Save the presentation."
+  confidence: high
+
+- id: ecc2413d-8a48-416e-a3a2-d30106ca36cb
+  must:
+    - "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_page_count == before(docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_page_count) + 1"
+    - "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').page(index=before(libreoffice.writer.cursor.page_index)+1).body_visible_content.count == 0"
+    - "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').nonblank_content_in_document_order == before(docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').nonblank_content_in_document_order)"
+    - "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').original_pages.content_mapping == insert_blank_page_after(before(libreoffice.writer.cursor.page_index))"
+  footprint:
+    - "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').page_breaks_or_empty_paragraphs_after_starting_current_page"
+    - "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').pagination_derived_from_inserted_blank_page"
+    - "docx('/home/user/Desktop/Sample_Statutory_Declaration.docx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "This one means the page containing the starting cursor. Insert exactly one blank body page immediately after it without splitting or deleting its content. Inherited headers, footers, and page numbers do not disqualify an otherwise blank page. Save the document."
+  confidence: medium
+
+- id: d53ff5ee-3b1a-431e-b2be-30ed2673079b
+  must:
+    - "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').editable_text_by_story == map(before(docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').editable_text_by_story), unicode_lowercase)"
+    - "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').formatting_anchored_to_text_positions == before(docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').formatting_anchored_to_text_positions)"
+  footprint:
+    - "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').editable_text.character_case"
+    - "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').case_change_derived_pagination"
+    - "docx('/home/user/Desktop/presentation_instruction_2023_Feb.docx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Lowercase all alphabetic text, including title-case words, throughout editable document stories such as body, tables, headers, and footers. Leave numbers, punctuation, paragraph boundaries, images, and formatting unchanged. Save the document."
+  confidence: high
+
+- id: 88fe4b2d-3040-4c70-9a70-546a47764b48
+  must:
+    - "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').replacement_for_original_first_body_paragraph.sentence_texts == sentence_split(before(docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').first_body_paragraph.text), preserve_punctuation=true)"
+    - "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').replacement_for_original_first_body_paragraph.empty_rendered_lines_after_each_sentence == 1"
+    - "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').content_after_original_first_body_paragraph.semantic_state == before(docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').content_after_original_first_body_paragraph.semantic_state)"
+  footprint:
+    - "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').original_first_body_paragraph.sentence_separating_breaks_or_paragraph_spacing"
+    - "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').derived_pagination"
+    - "docx('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy:
+    - "Resolve genuine sentence-boundary ambiguity, such as abbreviations or a leading title paragraph, using the visible document context rather than splitting at every period."
+  assumptions:
+    - "The target is the first prose paragraph in the body, not a standalone heading. Preserve every sentence and its punctuation in order. An empty paragraph, two line breaks, or equivalent one-line paragraph spacing may implement the requested blank line. Include a blank line after the final sentence. Save the document."
+  confidence: medium
+
+- id: 66399b0d-8fda-4618-95c4-bfc6191617e9
+  must:
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.count == 1"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.row_count == 5"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.column_count == 7"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.cells.count == 35"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.cells.all_text == ''"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').new_tables.only.anchor == before(libreoffice.writer.cursor.document_anchor)"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').original_content.semantic_state == before(docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').original_content.semantic_state)"
+  footprint:
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').insertion_at_starting_cursor[one empty 7x5 table and necessary paragraph split]"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').derived_pagination"
+    - "docx('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Use the actual cursor anchor after the setup's down-arrow and scroll actions. Seven columns and five rows include any header row; no merged cells or supplied content are requested. Save the document."
+  confidence: high
+
+- id: 936321ce-5236-426a-9a20-e0e3c5dc536f
+  must:
+    - "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').new_tables.count == 1"
+    - "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').new_tables.only.cell_text_matrix == parse_delimited_block(before(docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').comma_delimited_body_block.text), column_separator=',', row_separator='paragraph', trim_separator_padding=true)"
+    - "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').original_comma_delimited_block.remaining_duplicate_text.count == 0"
+    - "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').outside_converted_block.semantic_state == before(docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').outside_converted_block.semantic_state)"
+  footprint:
+    - "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').original_comma_delimited_body_block[replacement by table]"
+    - "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').derived_pagination"
+    - "docx('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Convert the contiguous comma-delimited data block, retaining row and field order, with original paragraphs as rows and commas as column separators. Preserve empty fields; pad shorter rows with empty cells if needed. Do not treat prose outside the data block as tabular data. Save the document."
+  confidence: medium
+
+- id: 6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2
+  must:
+    - "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').editable_text_runs.effective_character_highlight_colors set_equal ['none']"
+    - "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text == before(odt('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text)"
+    - "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').formatting_except_character_highlight == before(odt('/home/user/Desktop/sample-recruitment-phone-script.odt').formatting_except_character_highlight)"
+  footprint:
+    - "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').character_highlighting[direct and inherited]"
+    - "odt('/home/user/Desktop/sample-recruitment-phone-script.odt').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Remove all text highlighting, not just yellow, from every editable text story. Paragraph, page, and table-cell background shading is not text highlighting. Preserve the words and all other formatting. Save the document."
+  confidence: high
+
+- id: 2b9493d7-49b8-493a-a71b-56cd1f4d6908
+  must:
+    - "process.list.filter(belongs_to=before(libreoffice.writer.session)).count == 0"
+    - "windows.list.filter(belongs_to=before(libreoffice.writer.session)).count == 0"
+    - "system.boot_id == before(system.boot_id)"
+    - "sessions.other_user_applications.original_process_identities_still_alive == true"
+    - "sessions.other_user_applications.open_documents_and_unsaved_buffers == before(sessions.other_user_applications.open_documents_and_unsaved_buffers)"
+    - "terminal.history_or_scrollback.new_commands.contains_process_termination_command(target=before(libreoffice.writer.session), successful=true) == true"
+  footprint:
+    - "processes[the frozen Writer session only]"
+    - "windows[the frozen Writer session and terminal]"
+    - "terminal.history_and_scrollback"
+    - "libreoffice.writer.session_lock_and_recovery_bookkeeping"
+    - "runtime('terminal').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Force-quit only the frozen Writer session. Do not kill unrelated LibreOffice applications sharing other documents; if the same process hosts other work, preserving it is a real constraint."
+    - "Command-line use is evidenced by history or terminal scrollback; final state cannot cryptographically prove the action method. Loss of unsaved content in the frozen Writer document itself is unavoidable and permitted, but other work must survive."
+  confidence: medium
+
+- id: 22a4636f-8179-4357-8e87-d1743ece1f81
+  must:
+    - "drive.current_user.folder(path='/meetings').files.filter(name='Meeting-Agenda.pdf', trashed=false).count == 1"
+    - "drive.current_user.file(path='/meetings/Meeting-Agenda.pdf').mime_type == 'application/pdf'"
+    - "pdf(drive.current_user.file(path='/meetings/Meeting-Agenda.pdf').bytes).normalized_text == before(docx('/home/user/Desktop/Meeting-Agenda.docx').normalized_text)"
+    - "pdf(drive.current_user.file(path='/meetings/Meeting-Agenda.pdf').bytes).page_renders similarity>=0.99 before(docx('/home/user/Desktop/Meeting-Agenda.docx').rendered_pages)"
+    - "file('/home/user/Desktop/Meeting-Agenda.docx').sha256 == before(file('/home/user/Desktop/Meeting-Agenda.docx').sha256)"
+  footprint:
+    - "drive.current_user.folder('/meetings').new_file('Meeting-Agenda.pdf')"
+    - "file('/home/user/Desktop/Meeting-Agenda.pdf')"
+    - "chrome.tabs.drive_navigation"
+    - "chrome.history.task_entries"
+    - "chrome.site_storage[Google Drive session]"
+    - "libreoffice.ui.export_dialogs"
+    - "runtime('chrome').housekeeping"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Upload the converted PDF into the existing meetings folder of the logged-in Google Drive account. Preserve the document content and layout; uploading the DOCX or a Drive shortcut alone is insufficient."
+    - "A local Desktop PDF export is allowed but the uploaded file is the required artifact. PDF render similarity is measured with aligned page sizes and a fixed renderer, ignoring antialiasing differences."
+  confidence: high
+
+- id: f918266a-b3e0-4914-865d-4faa564f1aef
+  must:
+    - "python_ast(fs('/home/user/Desktop').unique_descendant(name='calculator.py')).parse_errors.count == 0"
+    - "python_ast(fs('/home/user/Desktop').unique_descendant(name='calculator.py')).unfinished_code_markers_at_original_completion_sites.count == 0"
+    - "python_run(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), working_directory='script_parent', supplied_inputs='original embedded examples or documented inputs', isolated=true).exit_code == 0"
+    - "file(sibling(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), 'log.txt')).exists == true"
+    - "file(sibling(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), 'log.txt')).bytes == python_run(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), working_directory='script_parent', supplied_inputs='original embedded examples or documented inputs', isolated=true).stdout_bytes"
+  footprint:
+    - "file(fs('/home/user/Desktop').unique_descendant(name='calculator.py')).original_incomplete_code_regions_and_necessary_imports"
+    - "file(sibling(fs('/home/user/Desktop').unique_descendant(name='calculator.py'), 'log.txt'))"
+    - "fs(script_parent).generated_python_cache"
+    - "vscode.ui.task_workspace"
+    - "terminal.history_and_scrollback"
+    - "runtime('vscode').housekeeping"
+    - "runtime('terminal').housekeeping"
+  fuzzy:
+    - "The completed functions implement the calculator behavior intended by the original comments, call sites, and examples. Removing the program, bypassing computations, or printing fabricated output is not completion."
+  assumptions:
+    - "The archive may extract the script directly on Desktop or into a subfolder; identify the unique calculator.py recursively and place log.txt beside it."
+    - "Capture the actual standard output of a normal successful script run, preserving line endings. The input exposes neither the incomplete code nor required stdin, so no particular arithmetic operations, literals, or exact output can be asserted independently."
+  confidence: low
+
+- id: d68204bf-11c1-4b13-b48b-d303c73d4bf6
+  must:
+    - "file('/home/user/Desktop/rearranged.png').exists == true"
+    - "image('/home/user/Desktop/rearranged.png').format == 'PNG'"
+    - "image('/home/user/Desktop/rearranged.png').dimensions == before(image('/home/user/Desktop/tilearray.png').dimensions)"
+    - "image('/home/user/Desktop/rearranged.png').pixels in concatenate_horizontal_permutations(before(image('/home/user/Desktop/tilearray.png').three_vertical_equal_strips), preserve_each_strip_pixels=true)"
+    - "file('/home/user/Desktop/tilearray.png').sha256 == before(file('/home/user/Desktop/tilearray.png').sha256)"
+    - "terminal.history_or_scrollback.new_commands.contains_image_split_and_reorder_invocation == true"
+  footprint:
+    - "file('/home/user/Desktop/rearranged.png')"
+    - "fs('/home/user/Desktop').task_temporary_strip_images"
+    - "terminal.history_and_scrollback"
+    - "runtime('terminal').housekeeping"
+  fuzzy:
+    - "The three original strips are ordered perceptually from warmest to coolest, left to right. Color warmth is a relative visual judgment; there is no universally correct numerical temperature for arbitrary colored tiles."
+  assumptions:
+    - "Vertical division means three full-height side-by-side strips, with no within-strip reordering. If the source width is not divisible by three, place any unavoidable one-pixel remainder at a boundary and preserve every original pixel."
+    - "Use the source image directory for rearranged.png. Command-line evidence is recoverable history or scrollback, not proof of an unobserved action trace."
+  confidence: low
+
+- id: a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a
+  must:
+    - "chrome.extensions.filter(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).count == 1"
+    - "chrome.extensions.match(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).enabled == true"
+    - "chrome.extensions.match(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).install_type == 'unpacked'"
+    - "chrome.extensions.match(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).source_realpath == parent(before(fs('/home/user/Desktop').unique_extension_manifest.path))"
+    - "chrome.extensions.developer_mode == true"
+    - "fs(parent(before(fs('/home/user/Desktop').unique_extension_manifest.path))).file_contents == before(fs(parent(fs('/home/user/Desktop').unique_extension_manifest.path)).file_contents)"
+  footprint:
+    - "chrome.extensions.developer_mode"
+    - "chrome.extensions[new unpacked Desktop extension registration and local runtime storage]"
+    - "chrome.tabs.extensions_navigation"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Load the extension extracted by setup as an unpacked extension in the current Chrome profile; it must be enabled and recognized, not merely leave its folder selected in a dialog. Do not modify its source."
+  confidence: high
+
+- id: 26150609-0da3-4a7d-8868-0faf9c5f01bb
+  must:
+    - "python_project('/home/user/Desktop/snake').syntax_errors.count == 0"
+    - "snake_test('/home/user/Desktop/snake', scenario='one legal head step onto food', deterministic_seed=0).food_consumption_events == 1"
+    - "snake_test('/home/user/Desktop/snake', scenario='one legal head step onto food', deterministic_seed=0).snake_length_delta == 1"
+    - "snake_test('/home/user/Desktop/snake', scenario='one legal head step onto food', deterministic_seed=0).replacement_food_on_grid_and_not_on_snake == true"
+    - "snake_test('/home/user/Desktop/snake', scenario='legal movement without touching food', deterministic_seed=0).food_consumption_events == 0"
+    - "snake_test('/home/user/Desktop/snake', scenario='legal movement without touching food', deterministic_seed=0).snake_length_delta == 0"
+    - "python_project('/home/user/Desktop/snake').headless_startup.runtime_errors.count == 0"
+  footprint:
+    - "fs('/home/user/Desktop/snake').files(['food.py','main.py','settings.py','snake.py']).food_alignment_collision_consumption_and_growth_code"
+    - "fs('/home/user/Desktop/snake').generated_python_cache"
+    - "vscode.ui.task_workspace"
+    - "terminal.history_and_scrollback"
+    - "processes[task Snake test runs]"
+    - "runtime('vscode').housekeeping"
+    - "runtime('terminal').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Use an isolated Pygame harness adapted to the actual classes and source grid constants; do not prescribe a particular implementation."
+    - "Eating means detecting head-food contact, growing by one segment, and relocating food; ordinary non-food movement must still work. Preserve unrelated gameplay, controls, and visual assets."
+  confidence: medium
+
+- id: 8e116af7-7db7-4e35-a68b-b0939c066c78
+  must:
+    - "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').new_transaction_rows.count == count(receipts(before(fs('/home/user/Desktop').files_matching('receipt_[0-4].*'))).distinct_transactions_not_already_in(before(xlsx('/home/user/Desktop/my_bookkeeping.xlsx'))))"
+    - "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').transactions.project_available_source_columns multiset_equal union_without_duplicate_transactions(before(xlsx('/home/user/Desktop/my_bookkeeping.xlsx').transactions.project_available_source_columns), receipts(before(fs('/home/user/Desktop').files_matching('receipt_[0-4].*'))).transactions.project_to_existing_bookkeeping_columns)"
+    - "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').original_transaction_rows.values_and_styles == before(xlsx('/home/user/Desktop/my_bookkeeping.xlsx').original_transaction_rows.values_and_styles)"
+    - "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').summary_formulas.cached_values == recompute_from_all_current_transactions(xlsx('/home/user/Desktop/my_bookkeeping.xlsx'))"
+  footprint:
+    - "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').transaction_table.appended_rows_and_matching_existing_row_styles"
+    - "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').existing_summaries.formula_range_extensions_and_recalculated_values"
+    - "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').serialization_metadata"
+    - "libreoffice.ui.navigation"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy:
+    - "Verify receipt OCR and field mapping, including transaction date, merchant, final paid amount, currency, and any category or description required by the existing ledger. Expense categories not printed on receipts must be sensible and consistent with existing conventions."
+  assumptions:
+    - "Use all five provided receipts, including the PDF. Record one expense per distinct receipt transaction in the existing workbook schema; do not double-count line items, tax, tips, or an already-recorded transaction."
+    - "Receipt fields are derived from the actual starting files using OCR/PDF text, never invented literals. Preserve existing ledger content and extend dependent totals where necessary. Save the workbook."
+  confidence: medium
+
+- id: f8cfa149-d1c1-4215-8dac-4a0932bad3c2
+  must:
+    - "chrome.active_tab.page.kind == 'web_search_results'"
+    - "chrome.active_tab.page.search_query.decoded == before(xls('/home/user/cell_search.xls').sheet(index=before(libreoffice.calc.current_sheet_index)).cell('B6').display_text)"
+    - "file('/home/user/cell_search.xls').sha256 == before(file('/home/user/cell_search.xls').sha256)"
+  footprint:
+    - "clipboard.text"
+    - "chrome.tabs.task_search_navigation"
+    - "chrome.history.task_entries"
+    - "chrome.site_storage[active search engine]"
+    - "libreoffice.ui.navigation"
+    - "runtime('chrome').housekeeping"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Search the cell's displayed content in the starting active sheet, not a formula expression or its formatting. Any functioning web search engine is acceptable. A results page, rather than unsubmitted text in the omnibox, is required."
+    - "The clipboard may contain the copied cell, but its final contents need not prove the copy operation."
+  confidence: high
+
+- id: 69acbb55-d945-4927-a87b-8480e1a5bb7e
+  must:
+    - "git('/home/user/instructor-embedding').is_worktree == true"
+    - "git('/home/user/instructor-embedding').origin.normalized_url == 'https://github.com/xlang-ai/instructor-embedding'"
+    - "git('/home/user/instructor-embedding').tracked_file_diff == []"
+    - "python_environment(project='/home/user/instructor-embedding').interpreter.executable.exists == true"
+    - "python_environment(project='/home/user/instructor-embedding').import('InstructorEmbedding').exported_names contains 'INSTRUCTOR'"
+    - "python_environment(project='/home/user/instructor-embedding').declared_project_requirements_unsatisfied == []"
+    - "python_environment(project='/home/user/instructor-embedding').pip_check.exit_code == 0"
+  footprint:
+    - "fs('/home/user/instructor-embedding')"
+    - "python_environment(project='/home/user/instructor-embedding').project_or_user_scoped_packages"
+    - "fs('/home/user/.cache/pip').task_downloads"
+    - "chrome.tabs.repository_or_reference_notebook_navigation"
+    - "chrome.history.task_entries"
+    - "chrome.site_storage[GitHub or Colab]"
+    - "vscode.ui.task_workspace"
+    - "terminal.history_and_scrollback"
+    - "runtime('chrome').housekeeping"
+    - "runtime('vscode').housekeeping"
+    - "runtime('terminal').housekeeping"
+  fuzzy:
+    - "The selected interpreter and dependency versions support the repository's intended embedding workflow and follow applicable setup guidance in the referenced Colab notebook. Explain the environment activation and setup commands in an accessible terminal transcript or editor view."
+  assumptions:
+    - "Create a usable local checkout at /home/user/instructor-embedding; the supplied input contains neither the Colab cells nor version pins, so exact package versions, model downloads, GPU/CUDA, and successful model inference cannot be independently specified."
+    - "Prefer a project virtual environment, but a working user-level environment is acceptable. Do not alter the remote repository, notebook, or global OS configuration. Colab reference: https://colab.research.google.com/drive/1P7ivNLMosHyG7XOHmoh7CoqpXryKy3Qt?usp=sharing."
+  confidence: low
+
+- id: b52b40a5-ad70-4c53-b5b0-5650a8387052
+  must:
+    - "drive.current_user.folder(path='/').files.filter(name='attachment_full.pdf', trashed=false).count == 1"
+    - "drive.current_user.file(path='/attachment_full.pdf').mime_type == 'application/pdf'"
+    - "pdf(drive.current_user.file(path='/attachment_full.pdf').bytes).page_count == sum(before(thunderbird.messages(subject='Paper Recommendation').selected_unique_message.attachments.filter(mime_type='application/pdf').pdf_page_counts))"
+    - "pdf(drive.current_user.file(path='/attachment_full.pdf').bytes).page_content_sequence in whole_document_concatenations(before(thunderbird.messages(subject='Paper Recommendation').selected_unique_message.attachments.filter(mime_type='application/pdf').ordered_page_content_sequences))"
+    - "thunderbird.messages(subject='Paper Recommendation').selected_unique_message.content_and_attachments == before(thunderbird.messages(subject='Paper Recommendation').selected_unique_message.content_and_attachments)"
+  footprint:
+    - "drive.current_user.folder('/').new_file('attachment_full.pdf')"
+    - "fs('/home/user/Downloads').task_PDF_attachments_and_merged_output"
+    - "file('/home/user/Desktop/attachment_full.pdf')"
+    - "thunderbird.ui.navigation_and_target_message_read_flag"
+    - "chrome.tabs.drive_navigation"
+    - "chrome.history.task_entries"
+    - "chrome.site_storage[Google Drive session]"
+    - "runtime('thunderbird').housekeeping"
+    - "runtime('chrome').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Use every PDF attachment from the email whose subject is Paper Recommendation, preserving each PDF's internal page order and including every page once."
+    - "The request does not prescribe attachment order, so any concatenation of whole PDFs is acceptable. Upload one actual PDF to Drive root with the exact requested name. Do not send mail or modify the attachment contents."
+  confidence: medium
+
+- id: 937087b6-f668-4ba6-9110-60682ee33441
+  must:
+    - "desktop.default_application_for_category('video') == 'VLC'"
+    - "mime_associations.video_types_previously_assigned_to_default_player.effective_handlers.all_desktop_ids == 'vlc.desktop'"
+    - "mime_association('video/mp4').effective_default == 'vlc.desktop'"
+  footprint:
+    - "desktop.default_applications.video"
+    - "mime_associations[video MIME types].default_and_added_associations"
+    - "os.ui.settings_navigation"
+    - "runtime('settings').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Set Ubuntu's default Video application to VLC and the video MIME associations managed by that choice, including MP4. Audio-only defaults and unrelated MIME types must remain unchanged."
+  confidence: high
+
+- id: 5bc63fb9-276a-4439-a7c1-9dc76401737f
+  must:
+    - "file('/home/user/Desktop/gemini_results.docx').exists == true"
+    - "docx('/home/user/Desktop/gemini_results.docx').nonempty_response_paragraphs.texts == before(json('/home/user/Desktop/llm_answers.json').response_values_for_model(casefold='gemini', recursive=true, preserve_source_order=true))"
+    - "docx('/home/user/Desktop/gemini_results.docx').between_response_paragraphs.empty_line_count == 1"
+    - "docx('/home/user/Desktop/gemini_results.docx').text.matches(regex='\\bIliad\\b', case_sensitive=true).all_effective_highlights_are_nonempty == true"
+    - "docx('/home/user/Desktop/gemini_results.docx').text.outside_matches(regex='\\bIliad\\b', case_sensitive=true).effective_highlight_colors set_equal ['none']"
+    - "file('/home/user/Desktop/llm_answers.json').sha256 == before(file('/home/user/Desktop/llm_answers.json').sha256)"
+  footprint:
+    - "file('/home/user/Desktop/gemini_results.docx')"
+    - "libreoffice.ui.task_document"
+    - "runtime('libreoffice').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "The explicit instruction to copy all Gemini response values takes precedence over the introductory mention of sentences containing Iliad: retain all Gemini responses, not only matching sentences."
+    - "Identify Gemini entries from the actual model keys or model metadata, including Gemini variant names, without including other models. Do not add keys, prompts, or JSON syntax."
+    - "Use one response paragraph per value with one blank line separating responses; embedded line breaks in a response may be soft breaks. Highlight every exact whole-word Iliad; yellow is acceptable, but no highlight color is specified."
+  confidence: medium
+
+- id: f9be0997-4b7c-45c5-b05c-4612b44a6118
+  must:
+    - "gsettings('org.gnome.desktop.notifications', 'show-banners') == false"
+    - "desktop.notifications.do_not_disturb == true"
+  footprint:
+    - "gsettings('org.gnome.desktop.notifications','show-banners')"
+    - "os.ui.notification_panel"
+    - "runtime('gnome-shell').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Enable GNOME Do Not Disturb by suppressing notification banners. Do not disable individual applications or erase notification history."
+  confidence: high
+
+- id: 23393935-50c7-4a86-aeea-2b78fd089c5c
+  must:
+    - "fs('/home/user/Desktop/cpjpg').exists == true"
+    - "fs('/home/user/Desktop/cpjpg').files(recursive=true).map(relative_path, sha256) set_equal map(before(fs('/home/user/Desktop/photos').regular_files(recursive=true, suffix='.jpg')), pair(basename(path), sha256))"
+    - "fs('/home/user/Desktop/photos').paths_and_file_bytes == before(fs('/home/user/Desktop/photos').paths_and_file_bytes)"
+  footprint:
+    - "fs('/home/user/Desktop/cpjpg').copied_jpg_files"
+    - "terminal.history_and_scrollback"
+    - "os.ui.file_manager_navigation"
+    - "runtime('terminal').housekeeping"
+    - "runtime('file-manager').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Use the two directories prepared on Desktop. Recursively collect lowercase .jpg regular files and copy them into the flat cpjpg directory with original basenames and bytes; the supplied filenames do not collide."
+    - "Do not move source files, copy PNGs, or require reproduction of the source directory hierarchy."
+  confidence: high
+
+- id: 4d117223-a354-47fb-8b45-62ab1390a95f
+  must:
+    - "fs(before(terminal.active_shell.cwd)).regular_files(recursive=true, follow_symlinks=false).permission_modes set_equal ['0644']"
+    - "fs(before(terminal.active_shell.cwd)).regular_files(recursive=true, follow_symlinks=false).relative_paths_sha256_and_owner == before(fs(terminal.active_shell.cwd).regular_files(recursive=true, follow_symlinks=false).relative_paths_sha256_and_owner)"
+    - "fs(before(terminal.active_shell.cwd)).directories_and_symlinks.metadata == before(fs(terminal.active_shell.cwd).directories_and_symlinks.metadata)"
+  footprint:
+    - "fs(before(terminal.active_shell.cwd)).regular_files(recursive=true, follow_symlinks=false).permission_mode_and_ctime"
+    - "terminal.history_and_scrollback"
+    - "runtime('terminal').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Current directory is the active terminal's testDir after setup, not the home directory. Set permission bits to octal 0644 for every regular file, including hidden files; do not follow symlinks or change directory permissions, ownership, or contents."
+    - "Ignore unavoidable access-time changes from inspection and ctime changes from chmod."
+  confidence: high
+
+- id: 3ce045a0-877b-42aa-8d2c-b4a863336ab8
+  must:
+    - "gsettings('org.gnome.desktop.interface', 'text-scaling-factor') > before(gsettings('org.gnome.desktop.interface', 'text-scaling-factor'))"
+    - "gsettings('org.gnome.desktop.interface', 'text-scaling-factor') >= 1.25"
+    - "desktop.display_resolution_and_monitor_scale == before(desktop.display_resolution_and_monitor_scale)"
+  footprint:
+    - "gsettings('org.gnome.desktop.interface','text-scaling-factor')"
+    - "os.ui.accessibility_settings_navigation"
+    - "runtime('settings').housekeeping"
+    - "runtime('gnome-shell').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Enable system-wide Large Text or an equivalent increased text scaling, not browser-only zoom, screen magnification, or lower screen resolution. GNOME Large Text's usual 1.25 factor is a sufficient minimum; the input gives no exact size."
+  confidence: medium
+
+- id: 5812b315-e7bd-4265-b51f-863c02174c28
+  must:
+    - "unix_user('charles').exists == true"
+    - "unix_user('charles').password_verifies('Ex@mpleP@55w0rd!') == true"
+    - "sshd.effective_config(user='charles').password_authentication == true"
+    - "sshd.effective_config(user='charles').chroot_realpath == '/home/test1'"
+    - "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).authentication_success == true"
+    - "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).at_least_one_shell_or_sftp_session_usable == true"
+    - "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).accessible_host_user_data_outside('/home/test1') == []"
+    - "ssh_probe(user='charles', password='Ex@mpleP@55w0rd!', isolated=true).can_escape_chroot_via_parent_symlink_or_command == false"
+    - "unix_user('charles').has_sudo_or_equivalent_host_privileges == false"
+    - "sshd.effective_config(users=before(unix_users.existing_interactive_names)).authentication_and_access == before(sshd.effective_config(users=unix_users.existing_interactive_names).authentication_and_access)"
+  footprint:
+    - "unix_accounts.new_user('charles')"
+    - "unix_groups.new_group_for('charles')"
+    - "unix_password_db.entry('charles')"
+    - "sshd.config[charles-only Match restriction and necessary service enablement]"
+    - "system.packages[OpenSSH server and required dependencies if absent]"
+    - "system.services('ssh').enabled_and_running"
+    - "fs('/home/test1').chroot_permissions_and_minimal_session_runtime"
+    - "terminal.history_and_scrollback"
+    - "runtime('terminal').housekeeping"
+    - "runtime('sshd').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Only access the folder is interpreted as server-enforced filesystem confinement, not merely setting a home directory, chmod on that directory, or a bypassable restricted-shell startup command."
+    - "The request does not specify shell versus file transfer; a functioning chrooted SFTP-only SSH account is acceptable. A full shell may also be used if genuinely confined."
+    - "A chroot needs root-owned non-writable top-level directories and may contain minimal runtime files; these are not permission to access unrelated host data. No extra ability to write the chroot root is required."
+  confidence: low
+
+- id: 94d95f96-9699-4208-98ba-3c3119edf9c2
+  must:
+    - "applications.installed(name='Spotify', publisher='Spotify').count >= 1"
+    - "desktop.application('Spotify').launch_target_resolves == true"
+    - "application_probe('Spotify', isolated=true).starts_without_missing_dependency_error == true"
+  footprint:
+    - "system.packages[Spotify and required package dependencies]"
+    - "system.package_sources[official Spotify source or required official store metadata]"
+    - "desktop.application_entries[Spotify]"
+    - "fs('/home/user').Spotify_application_data"
+    - "os.ui.software_install_navigation"
+    - "terminal.history_and_scrollback"
+    - "runtime('package-manager').housekeeping"
+    - "runtime('Spotify').housekeeping"
+    - "runtime('terminal').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Install the actual Spotify desktop application using a supported package format such as Snap, Deb, or Flatpak. A downloaded installer, web bookmark, or unofficial wrapper alone is insufficient. Login and playback are not requested."
+  confidence: high
+
+- id: f201fbc3-44e6-46fc-bcaa-432f9815454c
+  must:
+    - "thunderbird.identities.active.all_effective_prefs('auto_quote') == false"
+    - "thunderbird.reply_preview(identity='each active identity', message='existing ordinary message', isolated=true).contains_original_quoted_body == false"
+  footprint:
+    - "thunderbird.prefs('mail.identity.default.auto_quote')"
+    - "thunderbird.prefs('mail.identity.<active-id>.auto_quote')"
+    - "thunderbird.ui.account_settings_navigation"
+    - "runtime('thunderbird').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Disable automatically quoting the original message for replies across active local identities. Do not merely remove indentation or change the quote marker. Signatures may remain, and no existing messages or drafts should be rewritten."
+  confidence: high
+
+- id: 9b7bc335-06b5-4cd3-9119-1a649c478509
+  must:
+    - "thunderbird.account(email='anonym-x2024@outlook.com').local_filters.exists(enabled=true, applies_to='incoming new mail', condition='match all', action='forward', destination='anonym-x2024@gmail.com') == true"
+    - "thunderbird.filter_simulation(account='anonym-x2024@outlook.com', synthetic_new_incoming_messages='varied sender subject and body', isolated=true).each_message.forward_targets contains 'anonym-x2024@gmail.com'"
+    - "remote_mail_account('anonym-x2024@outlook.com').server_settings == before(remote_mail_account('anonym-x2024@outlook.com').server_settings)"
+    - "thunderbird.actual_outgoing_messages.newly_sent_or_queued.count == 0"
+  footprint:
+    - "thunderbird.account('anonym-x2024@outlook.com').local_filter_file.new_forward_all_rule"
+    - "thunderbird.ui.filter_settings_navigation"
+    - "runtime('thunderbird').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Create an enabled local Thunderbird incoming-message filter that forwards every future received message. Do not configure server-side forwarding or run the filter on old mail."
+    - "Automatic forwarding operates while Thunderbird is running and receiving mail; the request does not require an always-on external service. Verify forwarding with a sandboxed simulation, not by sending real test mail."
+  confidence: high
+
+- id: d38192b0-17dc-4e1d-99c3-786d0117de77
+  must:
+    - "thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').exists == true"
+    - "thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').attachments.contains(name='aws-bill.pdf', sha256=before(file('/home/user/aws-bill.pdf').sha256)) == true"
+    - "thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').sender_recipients_subject_body == before(thunderbird.compose_windows.match(subject='New-month AWS Bill', to='assistant@outlook.com').sender_recipients_subject_body)"
+    - "thunderbird.actual_outgoing_messages.newly_sent_or_queued.count == 0"
+    - "file('/home/user/aws-bill.pdf').sha256 == before(file('/home/user/aws-bill.pdf').sha256)"
+  footprint:
+    - "thunderbird.starting_compose_window.attachments.append('/home/user/aws-bill.pdf')"
+    - "thunderbird.drafts.autosave_of_starting_compose_window"
+    - "thunderbird.ui.attachment_dialog"
+    - "runtime('thunderbird').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Attach the file to the existing open composition and leave that composition open and unsent. Existing text, recipients, and attachments must be preserved; automatic draft saving is allowed."
+  confidence: high
+
+- id: 15c3b339-88f7-4a86-ab16-e71c58dcb01e
+  must:
+    - "thunderbird.ui.account_setup.visible == true"
+    - "thunderbird.ui.account_setup.email.value == 'anonym-x2024@outlook.com'"
+    - "thunderbird.ui.account_setup.password.secret_value == 'password'"
+    - "thunderbird.accounts.persisted_account_identities == before(thunderbird.accounts.persisted_account_identities)"
+    - "thunderbird.ui.account_setup.completed == false"
+  footprint:
+    - "thunderbird.ui.account_setup.email_and_password_fields"
+    - "thunderbird.ui.account_setup.optional_required_display_name"
+    - "runtime('thunderbird').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Fill the setup form and stop there; do not submit credentials, complete account creation, or proceed to an external OAuth page. The display name and remember-password checkbox are unspecified and need not be changed."
+  confidence: high
+
+- id: dd84e895-72fd-4023-a336-97689ded257c
+  must:
+    - "thunderbird.local_folder('Bills').messages.ids set_equal before(thunderbird.local_folder('Bills').messages.ids)"
+    - "thunderbird.local_folder('Bills').messages.all.starred == true"
+    - "thunderbird.local_folder('Bills').messages.contents_and_flags_except_star == before(thunderbird.local_folder('Bills').messages.contents_and_flags_except_star)"
+  footprint:
+    - "thunderbird.local_folder('Bills').messages.starred_flag"
+    - "thunderbird.local_folder('Bills').derived_message_index"
+    - "thunderbird.ui.folder_navigation_and_selection"
+    - "runtime('thunderbird').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Star every existing message directly in the Bills folder under Local Folders. Do not change stars in unrelated folders, move messages, or mark all messages read. Descendant folders are not included unless they are part of the displayed Bills message set."
+  confidence: high
+
+- id: 08c73485-7c6d-4681-999d-919f5c32dcfa
+  must:
+    - "thunderbird.prefs('mail.server.default.applyIncomingFilters') == true"
+    - "thunderbird.incoming_servers.effective_pref('applyIncomingFilters').all == true"
+    - "thunderbird.filter_simulation(scope='new incoming message in each existing subfolder', isolated=true).matching_enabled_incoming_rules_are_automatically_evaluated == true"
+    - "thunderbird.existing_filter_rules == before(thunderbird.existing_filter_rules)"
+  footprint:
+    - "thunderbird.prefs('mail.server.default.applyIncomingFilters')"
+    - "thunderbird.prefs('mail.server.<id>.applyIncomingFilters')[only false overrides needing correction]"
+    - "thunderbird.ui.config_editor_navigation"
+    - "runtime('thunderbird').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Enable Thunderbird's automatic incoming-filter behavior in subfolders globally, resolving any false account-specific overrides. Do not manually run filters on existing mail, invent new filter rules, or alter server-side mail settings."
+  confidence: medium
+
+- id: 386dbd0e-0241-4a0a-b6a2-6704fba26b1c
+  must:
+    - "vlc.persisted_hotkeys.global_binding(action='play-pause').key_combination.is_nonempty == true"
+    - "desktop.global_shortcuts.conflicts_with(vlc.persisted_hotkeys.global_binding(action='play-pause')).count == 0"
+    - "hotkey_probe(binding=vlc.persisted_hotkeys.global_binding(action='play-pause'), foreground_app='PDF reader', isolated=true).vlc_playback_state_toggles == true"
+    - "hotkey_probe(binding=vlc.persisted_hotkeys.global_binding(action='play-pause'), foreground_app='PDF reader', isolated=true).foreground_window_remains_pdf_reader == true"
+  footprint:
+    - "vlc.config('global-key-play-pause')"
+    - "vlc.ui.preferences_navigation"
+    - "vlc.playback.play_pause_state_and_elapsed_time"
+    - "desktop.focus[PDF reader and VLC settings]"
+    - "runtime('vlc').housekeeping"
+    - "runtime('PDF-reader').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Set a global VLC Play/Pause hotkey, not only the ordinary VLC-focused shortcut. Any nonconflicting combination is acceptable because none is specified. Keep the PDF and audio file unchanged and do not minimize the PDF to make the shortcut work."
+  confidence: high
+
+- id: fba2c100-79e8-42df-ae74-b592418d54f4
+  must:
+    - "file('/home/user/Desktop/interstellar.png').exists == true"
+    - "image('/home/user/Desktop/interstellar.png').format == 'PNG'"
+    - "image('/home/user/Desktop/interstellar.png').dimensions == before(vlc.playback.current_frame.native_dimensions)"
+    - "image('/home/user/Desktop/interstellar.png').pixels similarity>=0.99 before(vlc.playback.current_frame.pixels)"
+    - "file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256 == before(file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256)"
+  footprint:
+    - "file('/home/user/Desktop/interstellar.png')"
+    - "vlc.snapshot_preferences[path, format, prefix, numbering]"
+    - "vlc.playback.position_and_pause_state[only snapshot capture]"
+    - "vlc.ui.snapshot_feedback"
+    - "runtime('vlc').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Capture the video frame displayed in the starting paused scene around 120.5-121 seconds, not an arbitrary later frame or a screenshot containing VLC controls. Compare normalized native-resolution pixels using SSIM; tolerate video color-conversion differences."
+  confidence: high
+
+- id: d06f0d4d-2cd5-4ede-8de9-598629438c6e
+  must:
+    - "vlc.persisted_ui_palette('volume_slider_fill').maximum_relative_luminance < 0.08"
+    - "vlc.persisted_ui_palette('volume_slider_fill').maximum_oklab_chroma < 0.10"
+    - "vlc.ui.volume_slider.fill_palette_matches_persisted == true"
+    - "vlc.config('volume_slider_palette').value != before(vlc.config('volume_slider_palette').value)"
+  footprint:
+    - "vlc.config('qt-slider-colours')"
+    - "vlc.ui.volume_slider.fill_palette"
+    - "vlc.ui.preferences_navigation"
+    - "runtime('vlc').housekeeping"
+  fuzzy:
+    - "The slider fill is visibly black or near-black/charcoal in normal VLC use, not merely a different saturated color or an unrelated dark application skin. It remains identifiable and usable."
+  assumptions:
+    - "Black-ish has no exact RGB specification. The numerical luminance/chroma limits are conservative proxies for a dark neutral palette and do not replace the visual judgment."
+    - "Change the volume-slider fill colors across the represented volume range; borders and text labels need not be black. Keep unrelated theme, volume, and playback settings unchanged."
+  confidence: low
+
+- id: 9195653c-f4aa-453d-aa95-787f6ccfaae9
+  must:
+    - "vlc.config('qt-max-volume') == 200"
+    - "vlc.ui.volume_slider.maximum_percent == 200"
+  footprint:
+    - "vlc.config('qt-max-volume')"
+    - "vlc.ui.volume_slider.range"
+    - "vlc.ui.preferences_navigation"
+    - "runtime('vlc').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Increase the maximum volume displayed by VLC's interface to 200%, not the current playback volume or the operating system's output level. No need to play media at that loudness."
+  confidence: high
+
+- id: efcf0d81-0835-4880-b2fd-d866e8bc2294
+  must:
+    - "desktop.background.persisted_effective_image_uri.is_local_existing_file == true"
+    - "image(desktop.background.persisted_effective_image_uri).pixels similarity>=0.99 before(vlc.playback.current_frame.pixels)"
+    - "desktop.background.current_effective_image_uri == desktop.background.persisted_effective_image_uri"
+    - "file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256 == before(file('/home/user/Desktop/Interstellar Movie - Official Trailer.mp4').sha256)"
+  footprint:
+    - "gsettings('org.gnome.desktop.background','picture-uri')"
+    - "gsettings('org.gnome.desktop.background','picture-uri-dark')"
+    - "gsettings('org.gnome.desktop.background','picture-options')"
+    - "fs('/home/user').one_new_video_frame_wallpaper_image"
+    - "vlc.snapshot_preferences[path, format, prefix, numbering]"
+    - "vlc.playback.position_and_pause_state[only snapshot capture]"
+    - "os.ui.background_settings_navigation"
+    - "runtime('vlc').housekeeping"
+    - "runtime('settings').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Background picture means a static desktop wallpaper made from the starting displayed frame around 120.5-121 seconds, not VLC video-wallpaper playback or the lock-screen background."
+    - "No image filename is specified. Persist the snapshot at a stable local path and configure the active desktop color scheme to use it. Compare source images before any wallpaper scaling or cropping using SSIM."
+  confidence: high
+
+- id: a5bbbcd5-b398-4c91-83d4-55e1e31bbb81
+  must:
+    - "vlc.ui.window_mode == 'windowed'"
+    - "vlc.ui.minimal_interface == true"
+    - "vlc.ui.bottom_playback_controls.visible == false"
+    - "vlc.persisted_ui_state('minimal_interface') == true"
+    - "application_probe('VLC', profile='copy of final profile', isolated=true).initial_ui.minimal_interface == true"
+    - "application_probe('VLC', profile='copy of final profile', isolated=true).initial_ui.bottom_playback_controls.visible == false"
+  footprint:
+    - "vlc.config('qt-minimal-view')"
+    - "vlc.persisted_ui_state('minimal_interface')"
+    - "vlc.persisted_ui_state('window_geometry')"
+    - "vlc.ui.minimal_interface_and_window_mode"
+    - "runtime('vlc').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Enable the actual Minimal Interface in a non-fullscreen window and persist that state. Merely hiding fullscreen controls, maximizing a video, or temporarily toggling controls without persistence is insufficient."
+    - "Test restart behavior in an isolated copy of the final VLC profile so the check does not change the user's final session."
+  confidence: high
+
+- id: 9439a27b-18ae-42d8-9778-5f68f891805e
+  must:
+    - "vscode.settings('debug.focusEditorOnBreak').effective == false"
+    - "vscode.persisted_settings('debug.focusEditorOnBreak') == false"
+    - "vscode.debug_probe(initial_focus='debug console', event='breakpoint stop', isolated=true).final_focus == 'debug console'"
+  footprint:
+    - "vscode.user_settings('debug.focusEditorOnBreak')"
+    - "vscode.ui.settings_navigation"
+    - "runtime('vscode').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Disable automatic editor focus when debugging breaks. Do not change window-raising, console-opening, or unrelated debug options. Apply as a persistent user setting because no workspace was specified."
+  confidence: high
+
+- id: eabc805a-bfcf-4460-b250-ac92135819f6
+  must:
+    - "vscode.extensions.installed_ids contains 'ms-python.python'"
+    - "vscode.extensions('ms-python.python').enabled_in_current_profile == true"
+  footprint:
+    - "vscode.extensions['ms-python.python' and automatically required dependencies]"
+    - "vscode.extension_registry[added extension IDs]"
+    - "vscode.ui.extensions_navigation"
+    - "runtime('vscode').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Python means Microsoft's official Python extension, ID ms-python.python. Extension dependencies may be installed automatically; a search result or downloaded VSIX without installation is insufficient."
+  confidence: high
+
+- id: 53ad5833-3455-407b-bbc6-45b4c79ab8fb
+  must:
+    - "vscode.active_window.workspace_folders.canonical_paths == ['/home/user/project']"
+    - "vscode.active_window.explorer.root_paths contains '/home/user/project'"
+    - "fs('/home/user/project').all_file_bytes == before(fs('/home/user/project').all_file_bytes)"
+  footprint:
+    - "vscode.active_window.workspace_open_state"
+    - "vscode.recently_opened_entries[project]"
+    - "vscode.ui.explorer_navigation_and_workspace_trust_prompt"
+    - "runtime('vscode').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Open /home/user/project as a folder workspace, not merely one of its files or its parent directory. Leave the project files, including .vscode/settings.json, unchanged."
+  confidence: high
+
+- id: ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae
+  must:
+    - "vscode.keybindings.resolve(key='ctrl+f', context='Explorer tree focus, no input field focused').command != 'list.find'"
+    - "vscode.keybindings.effective_bindings(command='list.find', key='ctrl+f', context='Explorer tree focus').count == 0"
+    - "vscode.keybindings.resolve(key='ctrl+f', context='text editor focus').command == before(vscode.keybindings.resolve(key='ctrl+f', context='text editor focus').command)"
+  footprint:
+    - "vscode.user_keybindings[removal rule for ctrl+f list.find in tree-view contexts]"
+    - "vscode.ui.keyboard_shortcuts_navigation"
+    - "runtime('vscode').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Tree view Find is the list.find command. Remove its Ctrl+F assignment in Explorer/tree contexts without disabling editor Find or Ctrl+F in unrelated contexts. Removing the built-in shared tree binding is acceptable if Explorer inherits it."
+  confidence: high
+
+- id: 6ed0a554-cbee-4b44-84ea-fd6c042f4fe1
+  must:
+    - "json('/home/user/project.code-workspace').key('folders').resolved_paths set_equal union(before(json('/home/user/project.code-workspace').key('folders').resolved_paths), ['/home/user/data1','/home/user/data2'])"
+    - "vscode.active_window.workspace_file.canonical_path == '/home/user/project.code-workspace'"
+    - "vscode.active_window.workspace_folders.canonical_paths set_equal json('/home/user/project.code-workspace').key('folders').resolved_paths"
+    - "json('/home/user/project.code-workspace').keys_except('folders') == before(json('/home/user/project.code-workspace').keys_except('folders'))"
+  footprint:
+    - "json('/home/user/project.code-workspace').key('folders').append_entries_for_data1_and_data2"
+    - "vscode.active_window.workspace_folders"
+    - "vscode.ui.explorer_navigation"
+    - "runtime('vscode').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "Add both directories to the already open saved multi-root workspace and persist the changes. Keep all pre-existing folders and workspace settings, with no duplicate folder entries. Relative or absolute folder paths are acceptable after canonical resolution."
+  confidence: high
+
+- id: 4e60007a-f5be-4bfc-9723-c39affa0a6d3
+  must:
+    - "vscode.extensions.installed_ids contains 'njpwerner.autodocstring'"
+    - "vscode.extensions('njpwerner.autodocstring').enabled_in_current_profile == true"
+  footprint:
+    - "vscode.extensions['njpwerner.autodocstring' and automatically required dependencies]"
+    - "vscode.extension_registry[added extension IDs]"
+    - "vscode.ui.extensions_navigation"
+    - "runtime('vscode').housekeeping"
+  fuzzy: []
+  assumptions:
+    - "autoDocstring means the established Python Docstring Generator extension with ID njpwerner.autodocstring. Do not substitute a similarly named unrelated extension or alter project files."
+  confidence: high

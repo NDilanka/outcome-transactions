@@ -1,0 +1,101 @@
+[
+  {
+    "id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "unverifiable",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Correctly identifies the warmest-to-coolest strip order as right, middle, left ([T[3], T[2], T[1]]) and adds RGB color preservation and source-image preservation checks that the official grayscale SSIM check misses. It also sensibly allows a 2px width tolerance for splitting the 962px-wide image into three strips.",
+    "notes_Y": "Delegates the core warmest-to-coolest ordering requirement to fuzzy while must accepts any horizontal permutation of the three strips. It also requires exact pixel equality on three equal vertical strips despite the 962px source width not being divisible by 3."
+  },
+  {
+    "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks the concrete manifest name ('Hello Extensions') and version ('1.0') from /home/user/Desktop/helloExtension and verifies that the extension is enabled and existing extensions are preserved. Official only checks that the path string appears in Chrome Preferences.",
+    "notes_Y": "Checks that the unpacked extension from Desktop is installed, enabled, and has unmodified source files, closing official's hole of not checking enabled state or source integrity. Requiring developer_mode to remain true at the end is slightly less flexible than X."
+  },
+  {
+    "id": "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+    "verdict_X": "different_spec_better",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Official's test.py only tests whether Snake() and Food() reach exact coordinate equality in isolation without running main.py, rejecting valid collision-check fixes in main.py and ignoring growth/respawn. Spec X runs the actual game loop headlessly across 200 seeds to verify eating, length increase, and food respawn.",
+    "notes_Y": "Relies on an underspecified snake_test scenario and requires replacement_food_on_grid_and_not_on_snake == true, which rejects valid rectangle-overlap collision fixes in main.py and demands non-overlapping spawn logic not present in Food.respawn()."
+  },
+  {
+    "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+    "verdict_X": "different_spec_better",
+    "verdict_Y": "unverifiable",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Verifies the exact five receipt expense amounts ([-186.93, -3670, -5.70, -154.06, -8.10]) and running balance ending at -3234.79 in any row order, whereas official hardcodes the receipt_0..4 row order. It also requires non-empty Description and Category cells in A9:B13, which official ignores.",
+    "notes_Y": "Delegates receipt OCR and column mapping to an oracle reader (receipts(...).transactions.project_to_existing_bookkeeping_columns) that presupposes solving the task and to fuzzy prose."
+  },
+  {
+    "id": "f8cfa149-d1c1-4215-8dac-4a0932bad3c2",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that an open Chrome tab has search results for the concrete cell B6 value 'Nereida' while also verifying that cell_search.xls is unmodified and at least two pre-existing tabs remain open.",
+    "notes_Y": "Checks that the active Chrome tab shows search results for cell B6's display text and adds a check that cell_search.xls is unmodified, though X is more concrete and less brittle to page-kind classification."
+  },
+  {
+    "id": "69acbb55-d945-4927-a87b-8480e1a5bb7e",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that 'from InstructorEmbedding import INSTRUCTOR' succeeds like official, while closing official's hole by verifying that the repository is cleanly cloned at /home/user/instructor-embedding and its requirements.txt dependencies are satisfied.",
+    "notes_Y": "Checks the git clone at /home/user/instructor-embedding, INSTRUCTOR import, and project requirements, but requires global pip_check.exit_code == 0 which is slightly more brittle than X's project-scoped check if pre-installed packages have conflicts."
+  },
+  {
+    "id": "b52b40a5-ad70-4c53-b5b0-5650a8387052",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "looser",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Verifies that a unique attachment_full.pdf in Google Drive root has 75 pages matching attachment_part1.pdf, attachment_part2.pdf, and attachment_part3.pdf in order, while preserving Thunderbird messages and other Drive files.",
+    "notes_Y": "Accepts any concatenation order of the three PDF attachments even though they are numbered attachment_part1.pdf through attachment_part3.pdf, and assumes a unique Thunderbird message by subject when copies exist in two folders."
+  },
+  {
+    "id": "937087b6-f668-4ba6-9110-60682ee33441",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Requires VLC to be installed and set as the default handler across six common video MIME types while preserving non-video MIME types, closing official's hole of only checking the statistical mode across 43 video subtypes.",
+    "notes_Y": "Checks that the desktop default video player is VLC and that video/mp4 plus video types previously assigned to the default player resolve to vlc.desktop, though X's explicit list of common video MIME types and desktop IDs is more direct."
+  },
+  {
+    "id": "5bc63fb9-276a-4439-a7c1-9dc76401737f",
+    "verdict_X": "stricter_overstrict",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Closes official's hole of ignoring 'Iliad' highlighting, but requires each multi-paragraph Gemini response to be a single paragraph separated by exactly one empty line and fails if any adjacent whitespace or punctuation is highlighted.",
+    "notes_Y": "Verifies the exact 6 Gemini responses in document order and all 33 highlighted occurrences of 'Iliad' (which official's paragraph-text comparator completely omits), while accepting both literal \\n sequences from raw editor copy-paste and parsed paragraph breaks."
+  },
+  {
+    "id": "f9be0997-4b7c-45c5-b05c-4612b44a6118",
+    "verdict_X": "equivalent",
+    "verdict_Y": "equivalent",
+    "better": "tie",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks gsettings('org.gnome.desktop.notifications', 'show-banners') == false, which is the exact GNOME setting checked by the official evaluator.",
+    "notes_Y": "Checks gsettings('org.gnome.desktop.notifications', 'show-banners') == false, matching the official evaluator."
+  },
+  {
+    "id": "23393935-50c7-4a86-aeea-2b78fd089c5c",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "X",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that /home/user/Desktop/cpjpg contains flat copies of the four .jpg files matching both basename and sha256 and that /home/user/Desktop/photos is unchanged, closing official's filename-only and move-vs-copy holes.",
+    "notes_Y": "Accurately lists the four source .jpg files and checks sha256 equality and source-tree preservation, though its file-only check under recursive find would also accept leftover empty subdirectories inside cpjpg."
+  }
+]

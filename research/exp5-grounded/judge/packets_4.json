@@ -1,0 +1,580 @@
+[
+ {
+  "id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+  "domain": "multi_apps",
+  "instruction": "Divide my image vertically into three equal sections with command line. Reorder the original sections from warmest to coolest from left to right, without changing the colors or applying any tint/filter, and save the result as \"rearranged.png\".",
+  "inspection_report": "research/exp5-grounded/inspections/d68204bf-11c1-4b13-b48b-d303c73d4bf6.md",
+  "spec_X": {
+   "id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+   "must": [
+    "exactly_one_exists(['/home/user/Desktop/rearranged.png', '/home/user/rearranged.png']) as OUT",
+    "image.file(OUT).format == 'PNG'",
+    "image.file(OUT).height == 1280 and image.file(OUT).width within(2) 962",
+    "image.file(OUT).split_vertical(3, boundary_tolerance_px=2) as S; before(image.file('/home/user/Desktop/tilearray.png')).split_vertical(3) as T",
+    "similarity(S[1], T[3]) >= 0.95 and similarity(S[2], T[2]) >= 0.95 and similarity(S[3], T[1]) >= 0.95",
+    "image.mean_rgb(S[1]) within(3) image.mean_rgb(T[3]) and image.mean_rgb(S[2]) within(3) image.mean_rgb(T[2]) and image.mean_rgb(S[3]) within(3) image.mean_rgb(T[1])",
+    "[image.mean_rgb(s).R - image.mean_rgb(s).B for s in S] ordered_by descending",
+    "image.mean_rgb(image.file(OUT)) within(3) [134.8, 114.3, 93.7]",
+    "image.file('/home/user/Desktop/tilearray.png') == before(image.file('/home/user/Desktop/tilearray.png'))"
+   ],
+   "footprint": [
+    "filesystem: create OUT (rearranged.png in /home/user/Desktop or /home/user)",
+    "filesystem: temporary section files created by the agent under /tmp, or in the same directory as OUT if they are named as crops of tilearray (for example tile_*.png, part*.png)",
+    "runtime(gnome-terminal).housekeeping, runtime(gimp).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Dividing 'vertically' means vertical cuts, giving three column strips (left, middle, right) of the 962x1280 image; widths 320/321/321 or similar integer splits are accepted via a 2 px boundary tolerance.",
+    "Warmth is measured by the strip's mean color (mean R minus mean B; R/B ratio gives the same order). Original strip means: left [138,120,106] (R-B=32.1), middle [127,110,87] (R-B=40.3), right [139,113,88] (R-B=50.9). So warmest-to-coolest is right, middle, left: the output is the original strips in reversed order, each strip itself unflipped.",
+    "The output may be saved next to the source (Desktop) or in the terminal's working directory (home); both are accepted.",
+    "The source is JPEG data with a .png name, so pixel comparison uses SSIM and mean-color tolerances rather than exact equality."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+   "must": [
+    "file('/home/user/Desktop/rearranged.png').exists == true",
+    "image('/home/user/Desktop/rearranged.png').format == 'PNG'",
+    "image('/home/user/Desktop/rearranged.png').dimensions == before(image('/home/user/Desktop/tilearray.png').dimensions)",
+    "image('/home/user/Desktop/rearranged.png').pixels in concatenate_horizontal_permutations(before(image('/home/user/Desktop/tilearray.png').three_vertical_equal_strips), preserve_each_strip_pixels=true)",
+    "file('/home/user/Desktop/tilearray.png').sha256 == before(file('/home/user/Desktop/tilearray.png').sha256)",
+    "terminal.history_or_scrollback.new_commands.contains_image_split_and_reorder_invocation == true"
+   ],
+   "footprint": [
+    "file('/home/user/Desktop/rearranged.png')",
+    "fs('/home/user/Desktop').task_temporary_strip_images",
+    "terminal.history_and_scrollback",
+    "runtime('terminal').housekeeping"
+   ],
+   "fuzzy": [
+    "The three original strips are ordered perceptually from warmest to coolest, left to right. Color warmth is a relative visual judgment; there is no universally correct numerical temperature for arbitrary colored tiles."
+   ],
+   "assumptions": [
+    "Vertical division means three full-height side-by-side strips, with no within-strip reordering. If the source width is not divisible by three, place any unavoidable one-pixel remainder at a boundary and preserve every original pixel.",
+    "Use the source image directory for rearranged.png. Command-line evidence is recoverable history or scrollback, not proof of an unobserved action trace."
+   ],
+   "confidence": "low"
+  }
+ },
+ {
+  "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+  "domain": "multi_apps",
+  "instruction": "I have developed a new Chrome extension myself, so it needs to be installed manually. Please help me install the extension located in the Desktop directory into the Chrome browser.",
+  "inspection_report": "research/exp5-grounded/inspections/a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a.md",
+  "spec_X": {
+   "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+   "must": [
+    "exists e in chrome.extensions where e.manifest.name == 'Hello Extensions' and e.manifest.version == '1.0'",
+    "that extension e.enabled == true",
+    "that extension e.path == '/home/user/Desktop/helloExtension' or e.source_files_equal(before(filesystem.dir('/home/user/Desktop/helloExtension')))",
+    "set(chrome.extensions.ids) - {e.id} set_equal before(chrome.extensions.ids)"
+   ],
+   "footprint": [
+    "chrome.profile: the extension install entry for Hello Extensions (extensions.settings, Secure Preferences MACs)",
+    "chrome.profile: extensions.ui.developer_mode (needed for Load unpacked)",
+    "chrome navigation: chrome://extensions views and tab history",
+    "filesystem: an optional packed .crx/.pem created next to /home/user/Desktop/helloExtension",
+    "runtime(chrome).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The extension is the unzipped folder /home/user/Desktop/helloExtension (manifest v3, name 'Hello Extensions', version 1.0). Loading it unpacked from that folder is the expected method; installing a packed copy of the same files is also accepted.",
+    "Turning on Developer mode is a necessary side effect and is allowed to stay on."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+   "must": [
+    "chrome.extensions.filter(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).count == 1",
+    "chrome.extensions.match(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).enabled == true",
+    "chrome.extensions.match(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).install_type == 'unpacked'",
+    "chrome.extensions.match(manifest_matches=before(fs('/home/user/Desktop').unique_extension_manifest)).source_realpath == parent(before(fs('/home/user/Desktop').unique_extension_manifest.path))",
+    "chrome.extensions.developer_mode == true",
+    "fs(parent(before(fs('/home/user/Desktop').unique_extension_manifest.path))).file_contents == before(fs(parent(fs('/home/user/Desktop').unique_extension_manifest.path)).file_contents)"
+   ],
+   "footprint": [
+    "chrome.extensions.developer_mode",
+    "chrome.extensions[new unpacked Desktop extension registration and local runtime storage]",
+    "chrome.tabs.extensions_navigation",
+    "runtime('chrome').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Load the extension extracted by setup as an unpacked extension in the current Chrome profile; it must be enabled and recognized, not merely leave its folder selected in a dialog. Do not modify its source."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+  "domain": "multi_apps",
+  "instruction": "So, I've been dabbling with coding a Snake game in Python, and I finally got it up and running. It's pretty cool, but it's not without its quirks. The biggest issue I'm facing right now is that the snake can't seem to eat the food, no matter what. Could you help me tweak the code so the snake can actually eat the food? Thanks a bunch!",
+  "inspection_report": "research/exp5-grounded/inspections/26150609-0da3-4a7d-8868-0faf9c5f01bb.md",
+  "spec_X": {
+   "id": "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+   "must": [
+    "probe(headless SDL_VIDEODRIVER=dummy, cwd=/home/user/Desktop/snake): for 200 random seeds, start the game as main.py would (Snake(), Food()), feed scripted arrow-key events that steer the head toward food.position, and run the main loop; within 200 frames the snake eats: snake.length increases by 1 and food.position changes",
+    "probe: after each respawn the snake can eat the new food as well (at least 3 consecutive eats per seed under the steering script)",
+    "probe: python -c 'import main, snake, food, settings' in /home/user/Desktop/snake exits 0, and running main.py headless for 50 frames with no input raises no exception",
+    "probe: the head still moves exactly SNAKE_SIZE (10) pixels per frame in the current direction, and without food contact snake.length stays 1",
+    "settings.WIDTH == 600 and settings.HEIGHT == 400 and settings.FPS == 10 and settings.SNAKE_SIZE == 10 and settings.RED == (255,0,0) and settings.GREEN == (0,255,0) and settings.BLACK == (0,0,0)",
+    "probe: every food position produced by Food() or respawn() lies inside the window: 0 <= x <= WIDTH-SNAKE_SIZE and 0 <= y <= HEIGHT-SNAKE_SIZE"
+   ],
+   "footprint": [
+    "filesystem: edits to /home/user/Desktop/snake/food.py, main.py, snake.py",
+    "filesystem: /home/user/Desktop/snake/__pycache__/ and /home/user/Desktop/snake/.vscode/",
+    "runtime(vscode).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Root cause: Food.__init__ places food at random.randint(0, WIDTH-SNAKE_SIZE), which is not aligned to the 10 px grid the snake moves on (head starts at (300,200) and moves by 10), so the exact-equality check in main.py almost never matches. respawn() is already aligned.",
+    "Any fix is accepted that makes eating work: aligning the initial food to the grid (for example calling respawn() in __init__), or switching the collision check to rectangle overlap. The probe is behavioral so it accepts both.",
+    "Game parameters (window size, speed, colors, cell size) must not be changed to work around the bug."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+   "must": [
+    "python_project('/home/user/Desktop/snake').syntax_errors.count == 0",
+    "snake_test('/home/user/Desktop/snake', scenario='one legal head step onto food', deterministic_seed=0).food_consumption_events == 1",
+    "snake_test('/home/user/Desktop/snake', scenario='one legal head step onto food', deterministic_seed=0).snake_length_delta == 1",
+    "snake_test('/home/user/Desktop/snake', scenario='one legal head step onto food', deterministic_seed=0).replacement_food_on_grid_and_not_on_snake == true",
+    "snake_test('/home/user/Desktop/snake', scenario='legal movement without touching food', deterministic_seed=0).food_consumption_events == 0",
+    "snake_test('/home/user/Desktop/snake', scenario='legal movement without touching food', deterministic_seed=0).snake_length_delta == 0",
+    "python_project('/home/user/Desktop/snake').headless_startup.runtime_errors.count == 0"
+   ],
+   "footprint": [
+    "fs('/home/user/Desktop/snake').files(['food.py','main.py','settings.py','snake.py']).food_alignment_collision_consumption_and_growth_code",
+    "fs('/home/user/Desktop/snake').generated_python_cache",
+    "vscode.ui.task_workspace",
+    "terminal.history_and_scrollback",
+    "processes[task Snake test runs]",
+    "runtime('vscode').housekeeping",
+    "runtime('terminal').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Use an isolated Pygame harness adapted to the actual classes and source grid constants; do not prescribe a particular implementation.",
+    "Eating means detecting head-food contact, growing by one segment, and relocating food; ordinary non-food movement must still work. Preserve unrelated gameplay, controls, and visual assets."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+  "domain": "multi_apps",
+  "instruction": "Please update my bookkeeping sheet with the recent transactions from the provided folder, detailing my expenses over the past few days.",
+  "inspection_report": "research/exp5-grounded/inspections/8e116af7-7db7-4e35-a68b-b0939c066c78.md",
+  "spec_X": {
+   "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+   "must": [
+    "let S = libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1')",
+    "S.range('A1:E8').values == before(S.range('A1:E8').values) and S.range('E4:E8').formulas == before(S.range('E4:E8').formulas)",
+    "S.used_range == 'A1:E13'",
+    "multiset_equal(S.range('D9:D13').values, [-186.93, -3670, -5.70, -154.06, -8.10]) within(0.005)",
+    "all(S.cell('C'+r).value == 'Expense' for r in 9..13)",
+    "all(S.cell('A'+r).value is non-empty text and S.cell('B'+r).value is non-empty text for r in 9..13)",
+    "all(S.cell('E'+r).value within(0.005) S.cell('E'+(r-1)).value + S.cell('D'+r).value for r in 9..13)",
+    "S.cell('E13').value within(0.005) -3234.79"
+   ],
+   "footprint": [
+    "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A9:E13') (values, and formatting matching rows 3-8)",
+    "serialization_metadata of /home/user/Desktop/my_bookkeeping.xlsx",
+    "runtime(libreoffice).housekeeping, runtime(image viewer / pdf viewer).housekeeping"
+   ],
+   "fuzzy": [
+    "The Description and Category text for rows 9-13 sensibly describe each receipt (for example grocery purchase/Groceries, Cash App cash out to Bank of America/Transfer, Carrot & Ginger Soup/Food, East Repair Inc. brake cables and labor/Repairs, McDonald's/Food)."
+   ],
+   "assumptions": [
+    "Each of the five receipt files is one transaction, appended as rows 9-13 in the existing layout: receipt_0 grocery store debit total 186.93; receipt_1 Cash App 'Cash Out To Bank of America' 3,670.00; receipt_2 soup total 5.70; receipt_3 East Repair Inc. receipt total 154.06; receipt_4 McDonald's take-out total 8.10.",
+    "All five are recorded as expenses with negative amounts, following the sheet's sign convention (expenses are negative). The Cash Out is money leaving the tracked account, so it is also treated as -3670. The user framed the folder as 'my expenses'.",
+    "Totals including tax are used, not subtotals.",
+    "Row order among the five new rows is not constrained (receipt dates are partly unreadable). The Balance column must continue the running balance, either as =E(n-1)+D(n) formulas or as correct values. The final balance is 790 - 4024.79 = -3234.79."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+   "must": [
+    "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').new_transaction_rows.count == count(receipts(before(fs('/home/user/Desktop').files_matching('receipt_[0-4].*'))).distinct_transactions_not_already_in(before(xlsx('/home/user/Desktop/my_bookkeeping.xlsx'))))",
+    "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').transactions.project_available_source_columns multiset_equal union_without_duplicate_transactions(before(xlsx('/home/user/Desktop/my_bookkeeping.xlsx').transactions.project_available_source_columns), receipts(before(fs('/home/user/Desktop').files_matching('receipt_[0-4].*'))).transactions.project_to_existing_bookkeeping_columns)",
+    "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').original_transaction_rows.values_and_styles == before(xlsx('/home/user/Desktop/my_bookkeeping.xlsx').original_transaction_rows.values_and_styles)",
+    "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').summary_formulas.cached_values == recompute_from_all_current_transactions(xlsx('/home/user/Desktop/my_bookkeeping.xlsx'))"
+   ],
+   "footprint": [
+    "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').transaction_table.appended_rows_and_matching_existing_row_styles",
+    "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').existing_summaries.formula_range_extensions_and_recalculated_values",
+    "xlsx('/home/user/Desktop/my_bookkeeping.xlsx').serialization_metadata",
+    "libreoffice.ui.navigation",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [
+    "Verify receipt OCR and field mapping, including transaction date, merchant, final paid amount, currency, and any category or description required by the existing ledger. Expense categories not printed on receipts must be sensible and consistent with existing conventions."
+   ],
+   "assumptions": [
+    "Use all five provided receipts, including the PDF. Record one expense per distinct receipt transaction in the existing workbook schema; do not double-count line items, tax, tips, or an already-recorded transaction.",
+    "Receipt fields are derived from the actual starting files using OCR/PDF text, never invented literals. Preserve existing ledger content and extend dependent totals where necessary. Save the workbook."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "f8cfa149-d1c1-4215-8dac-4a0932bad3c2",
+  "domain": "multi_apps",
+  "instruction": "Could you help me copy the data in Cell B6 in this Libreoffice Calc file and search it in the Chrome browser.",
+  "inspection_report": "research/exp5-grounded/inspections/f8cfa149-d1c1-4215-8dac-4a0932bad3c2.md",
+  "spec_X": {
+   "id": "f8cfa149-d1c1-4215-8dac-4a0932bad3c2",
+   "must": [
+    "exists t in chrome.tabs where t.url is a search-results URL of a web search engine (Chrome default search or google.com/search, bing.com/search, duckduckgo.com) and urldecode(t.query_param('q')).strip() == 'Nereida'",
+    "count(u in ['https://en.wikipedia.org/wiki/Main_Page', 'https://pytorch.org/tutorials/', 'https://releases.ubuntu.com/'] where u in chrome.tabs.urls) >= 2",
+    "filesystem.file('/home/user/cell_search.xls').sha256 == before(filesystem.file('/home/user/cell_search.xls').sha256)"
+   ],
+   "footprint": [
+    "chrome navigation: one new tab, or reuse of the active tab, for the search; browsing history",
+    "system clipboard",
+    "runtime(libreoffice).housekeeping, runtime(chrome).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Cell B6 of Sheet1 contains 'Nereida' (a First Name). The search query must be exactly that text, ignoring surrounding whitespace.",
+    "Opening a new tab or typing into the currently active tab are both acceptable. At most one of the three pre-opened pages may be replaced, and the others must stay open.",
+    "The spreadsheet must not be modified or re-saved."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "f8cfa149-d1c1-4215-8dac-4a0932bad3c2",
+   "must": [
+    "chrome.active_tab.page.kind == 'web_search_results'",
+    "chrome.active_tab.page.search_query.decoded == before(xls('/home/user/cell_search.xls').sheet(index=before(libreoffice.calc.current_sheet_index)).cell('B6').display_text)",
+    "file('/home/user/cell_search.xls').sha256 == before(file('/home/user/cell_search.xls').sha256)"
+   ],
+   "footprint": [
+    "clipboard.text",
+    "chrome.tabs.task_search_navigation",
+    "chrome.history.task_entries",
+    "chrome.site_storage[active search engine]",
+    "libreoffice.ui.navigation",
+    "runtime('chrome').housekeeping",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Search the cell's displayed content in the starting active sheet, not a formula expression or its formatting. Any functioning web search engine is acceptable. A results page, rather than unsubmitted text in the omnibox, is required.",
+    "The clipboard may contain the copied cell, but its final contents need not prove the copy operation."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "69acbb55-d945-4927-a87b-8480e1a5bb7e",
+  "domain": "multi_apps",
+  "instruction": "I'm working on word embedding tasks and require assistance in configuring the environment for the project located at \"https://github.com/xlang-ai/instructor-embedding\" in the directory /home/user. Please guide me through the process, and refer to this provided Colab script at https://colab.research.google.com/drive/1P7ivNLMosHyG7XOHmoh7CoqpXryKy3Qt?usp=sharing for reference.",
+  "inspection_report": null,
+  "spec_X": {
+   "id": "69acbb55-d945-4927-a87b-8480e1a5bb7e",
+   "must": [
+    "filesystem.dir('/home/user/instructor-embedding').exists and git('/home/user/instructor-embedding').remote('origin').url in ['https://github.com/xlang-ai/instructor-embedding', 'https://github.com/xlang-ai/instructor-embedding.git', 'git@github.com:xlang-ai/instructor-embedding.git']",
+    "git('/home/user/instructor-embedding').status.clean_tracked == true",
+    "probe(default python3 / pip of user 'user', cwd=/home/user/instructor-embedding): every requirement listed in /home/user/instructor-embedding/requirements.txt is installed and satisfies its version specifier (pip check reports no broken requirements for them)",
+    "probe(default python3, cwd=/home/user, no network): python3 -c 'from InstructorEmbedding import INSTRUCTOR' exits 0"
+   ],
+   "footprint": [
+    "filesystem: create /home/user/instructor-embedding (git clone, plus build artifacts such as *.egg-info, build/)",
+    "python environment: packages installed by pip for the repository requirements and InstructorEmbedding (user site-packages, system site-packages via pip, or a virtualenv/conda env inside /home/user)",
+    "filesystem: caches under /home/user/.cache (pip, huggingface, torch)",
+    "chrome navigation: GitHub/Colab views and history",
+    "runtime(terminal).housekeeping, runtime(vscode).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Configuring the environment' means: clone the repository into /home/user/instructor-embedding and install its Python dependencies (requirements.txt) plus the InstructorEmbedding package, so INSTRUCTOR can be imported, as a Colab setup cell would do.",
+    "If the agent uses a virtualenv, the probe runs with that environment activated, provided it lives under /home/user and is clearly created for this project; otherwise the default python3 is used.",
+    "Downloading model weights or running an embedding is not required."
+   ],
+   "confidence": "low"
+  },
+  "spec_Y": {
+   "id": "69acbb55-d945-4927-a87b-8480e1a5bb7e",
+   "must": [
+    "git('/home/user/instructor-embedding').is_worktree == true",
+    "git('/home/user/instructor-embedding').origin.normalized_url == 'https://github.com/xlang-ai/instructor-embedding'",
+    "git('/home/user/instructor-embedding').tracked_file_diff == []",
+    "python_environment(project='/home/user/instructor-embedding').interpreter.executable.exists == true",
+    "python_environment(project='/home/user/instructor-embedding').import('InstructorEmbedding').exported_names contains 'INSTRUCTOR'",
+    "python_environment(project='/home/user/instructor-embedding').declared_project_requirements_unsatisfied == []",
+    "python_environment(project='/home/user/instructor-embedding').pip_check.exit_code == 0"
+   ],
+   "footprint": [
+    "fs('/home/user/instructor-embedding')",
+    "python_environment(project='/home/user/instructor-embedding').project_or_user_scoped_packages",
+    "fs('/home/user/.cache/pip').task_downloads",
+    "chrome.tabs.repository_or_reference_notebook_navigation",
+    "chrome.history.task_entries",
+    "chrome.site_storage[GitHub or Colab]",
+    "vscode.ui.task_workspace",
+    "terminal.history_and_scrollback",
+    "runtime('chrome').housekeeping",
+    "runtime('vscode').housekeeping",
+    "runtime('terminal').housekeeping"
+   ],
+   "fuzzy": [
+    "The selected interpreter and dependency versions support the repository's intended embedding workflow and follow applicable setup guidance in the referenced Colab notebook. Explain the environment activation and setup commands in an accessible terminal transcript or editor view."
+   ],
+   "assumptions": [
+    "Create a usable local checkout at /home/user/instructor-embedding; the supplied input contains neither the Colab cells nor version pins, so exact package versions, model downloads, GPU/CUDA, and successful model inference cannot be independently specified.",
+    "Prefer a project virtual environment, but a working user-level environment is acceptable. Do not alter the remote repository, notebook, or global OS configuration. Colab reference: https://colab.research.google.com/drive/1P7ivNLMosHyG7XOHmoh7CoqpXryKy3Qt?usp=sharing."
+   ],
+   "confidence": "low"
+  }
+ },
+ {
+  "id": "b52b40a5-ad70-4c53-b5b0-5650a8387052",
+  "domain": "multi_apps",
+  "instruction": "Could you help me merge all PDF files in the \"Paper Recommendation\" email attachment in Thunderbird into one file and upload it to attachment_full.pdf in Google Drive?",
+  "inspection_report": "research/exp5-grounded/inspections/b52b40a5-ad70-4c53-b5b0-5650a8387052.md",
+  "spec_X": {
+   "id": "b52b40a5-ad70-4c53-b5b0-5650a8387052",
+   "must": [
+    "count(googledrive.files(query=\"title = 'attachment_full.pdf' and 'root' in parents and trashed = false\")) == 1 as F",
+    "pdf.bytes(F).page_count == 75",
+    "pdf.bytes(F).pages(1..25).text similarity>= 0.98 thunderbird.message(folder='Local Folders/Articles', subject='Paper Recommendation').attachment('attachment_part1.pdf').pages(1..25).text",
+    "pdf.bytes(F).pages(26..50).text similarity>= 0.98 attachment('attachment_part2.pdf').pages(1..25).text",
+    "pdf.bytes(F).pages(51..75).text similarity>= 0.98 attachment('attachment_part3.pdf').pages(1..25).text",
+    "thunderbird.all_messages == before(thunderbird.all_messages) (no message deleted, moved, sent or altered; read/unread flags excepted)",
+    "googledrive.files(other than F) == before(googledrive.files)"
+   ],
+   "footprint": [
+    "googledrive: one new file attachment_full.pdf in My Drive root",
+    "filesystem: saved copies of attachment_part1.pdf, attachment_part2.pdf, attachment_part3.pdf and a local merged PDF anywhere under /home/user or /tmp",
+    "thunderbird: message read flags, folder selection and view state",
+    "chrome navigation: Google Drive views and history, new tabs",
+    "python/apt: installation of a PDF merge tool (for example pdftk, poppler-utils, pypdf)",
+    "runtime(thunderbird).housekeeping, runtime(chrome).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The 'Paper Recommendation' email has three PDF attachments, attachment_part1.pdf, attachment_part2.pdf and attachment_part3.pdf, with 25 pages each (75 total). The same message also appears in the Archives/2024 IMAP folder with identical attachments.",
+    "Merging follows part order 1, 2, 3, which is the obvious order of the numbered parts.",
+    "Uploading to 'attachment_full.pdf' means the Drive file in My Drive root is named exactly attachment_full.pdf. Setup deletes any previous copy, so exactly one should exist."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "b52b40a5-ad70-4c53-b5b0-5650a8387052",
+   "must": [
+    "drive.current_user.folder(path='/').files.filter(name='attachment_full.pdf', trashed=false).count == 1",
+    "drive.current_user.file(path='/attachment_full.pdf').mime_type == 'application/pdf'",
+    "pdf(drive.current_user.file(path='/attachment_full.pdf').bytes).page_count == sum(before(thunderbird.messages(subject='Paper Recommendation').selected_unique_message.attachments.filter(mime_type='application/pdf').pdf_page_counts))",
+    "pdf(drive.current_user.file(path='/attachment_full.pdf').bytes).page_content_sequence in whole_document_concatenations(before(thunderbird.messages(subject='Paper Recommendation').selected_unique_message.attachments.filter(mime_type='application/pdf').ordered_page_content_sequences))",
+    "thunderbird.messages(subject='Paper Recommendation').selected_unique_message.content_and_attachments == before(thunderbird.messages(subject='Paper Recommendation').selected_unique_message.content_and_attachments)"
+   ],
+   "footprint": [
+    "drive.current_user.folder('/').new_file('attachment_full.pdf')",
+    "fs('/home/user/Downloads').task_PDF_attachments_and_merged_output",
+    "file('/home/user/Desktop/attachment_full.pdf')",
+    "thunderbird.ui.navigation_and_target_message_read_flag",
+    "chrome.tabs.drive_navigation",
+    "chrome.history.task_entries",
+    "chrome.site_storage[Google Drive session]",
+    "runtime('thunderbird').housekeeping",
+    "runtime('chrome').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Use every PDF attachment from the email whose subject is Paper Recommendation, preserving each PDF's internal page order and including every page once.",
+    "The request does not prescribe attachment order, so any concatenation of whole PDFs is acceptable. Upload one actual PDF to Drive root with the exact requested name. Do not send mail or modify the attachment contents."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "937087b6-f668-4ba6-9110-60682ee33441",
+  "domain": "multi_apps",
+  "instruction": "I am currently using a ubuntu system. Could you help me set the default video player as VLC?",
+  "inspection_report": null,
+  "spec_X": {
+   "id": "937087b6-f668-4ba6-9110-60682ee33441",
+   "must": [
+    "package_installed('vlc') or flatpak/snap VLC installed, providing vlc.desktop (or org.videolan.VLC.desktop / vlc_vlc.desktop)",
+    "all(xdg_mime.default(t) in ['vlc.desktop', 'org.videolan.VLC.desktop', 'vlc_vlc.desktop'] for t in ['video/mp4', 'video/x-matroska', 'video/webm', 'video/quicktime', 'video/x-msvideo', 'video/mpeg'])",
+    "all(xdg_mime.default(t) == before(xdg_mime.default(t)) for t in mime types not starting with 'video/')"
+   ],
+   "footprint": [
+    "~/.config/mimeapps.list: [Default Applications] and [Added Associations] entries for video/* types only",
+    "package installation of VLC if it is missing (apt/snap/flatpak)",
+    "gnome-control-center Default Applications view",
+    "runtime(gnome-control-center).housekeeping, runtime(terminal).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'Default video player' means the default handler for common video MIME types. GNOME Settings > Default Applications > Video sets all video types at once. A command-line approach must cover at least the six common types listed.",
+    "Audio and other associations must not change."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "937087b6-f668-4ba6-9110-60682ee33441",
+   "must": [
+    "desktop.default_application_for_category('video') == 'VLC'",
+    "mime_associations.video_types_previously_assigned_to_default_player.effective_handlers.all_desktop_ids == 'vlc.desktop'",
+    "mime_association('video/mp4').effective_default == 'vlc.desktop'"
+   ],
+   "footprint": [
+    "desktop.default_applications.video",
+    "mime_associations[video MIME types].default_and_added_associations",
+    "os.ui.settings_navigation",
+    "runtime('settings').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Set Ubuntu's default Video application to VLC and the video MIME associations managed by that choice, including MP4. Audio-only defaults and unrelated MIME types must remain unchanged."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "5bc63fb9-276a-4439-a7c1-9dc76401737f",
+  "domain": "multi_apps",
+  "instruction": "I have a JSON-formatted data file opened now that stores the responses of several large language models on a specific dataset. Now, I want to filter out all the responses from Gemini and specifically look at the sentences in the responses that contain \"Iliad\". Please copy all of Gemini's responses(values) from the JSON file, paste them into a Word document named \"gemini_results.docx\" under Desktop. Each response should be a new paragraph and sepreated by a new line. Highlight the all the \"Iliad\" word.",
+  "inspection_report": "research/exp5-grounded/inspections/5bc63fb9-276a-4439-a7c1-9dc76401737f.md",
+  "spec_X": {
+   "id": "5bc63fb9-276a-4439-a7c1-9dc76401737f",
+   "must": [
+    "file('/home/user/Desktop/gemini_results.docx').exists == true",
+    "docx('/home/user/Desktop/gemini_results.docx').nonempty_response_paragraphs.texts == before(json('/home/user/Desktop/llm_answers.json').response_values_for_model(casefold='gemini', recursive=true, preserve_source_order=true))",
+    "docx('/home/user/Desktop/gemini_results.docx').between_response_paragraphs.empty_line_count == 1",
+    "docx('/home/user/Desktop/gemini_results.docx').text.matches(regex='\\bIliad\\b', case_sensitive=true).all_effective_highlights_are_nonempty == true",
+    "docx('/home/user/Desktop/gemini_results.docx').text.outside_matches(regex='\\bIliad\\b', case_sensitive=true).effective_highlight_colors set_equal ['none']",
+    "file('/home/user/Desktop/llm_answers.json').sha256 == before(file('/home/user/Desktop/llm_answers.json').sha256)"
+   ],
+   "footprint": [
+    "file('/home/user/Desktop/gemini_results.docx')",
+    "libreoffice.ui.task_document",
+    "runtime('libreoffice').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The explicit instruction to copy all Gemini response values takes precedence over the introductory mention of sentences containing Iliad: retain all Gemini responses, not only matching sentences.",
+    "Identify Gemini entries from the actual model keys or model metadata, including Gemini variant names, without including other models. Do not add keys, prompts, or JSON syntax.",
+    "Use one response paragraph per value with one blank line separating responses; embedded line breaks in a response may be soft breaks. Highlight every exact whole-word Iliad; yellow is acceptable, but no highlight color is specified."
+   ],
+   "confidence": "medium"
+  },
+  "spec_Y": {
+   "id": "5bc63fb9-276a-4439-a7c1-9dc76401737f",
+   "must": [
+    "let D = libreoffice.writer.file('/home/user/Desktop/gemini_results.docx'); let G = before(json.file('/home/user/Desktop/llm_answers.json')).values_where_key_matches(case_insensitive 'gemini') in document order (6 strings: 1.Multi_Hop.declare_ans.GEMINI, 1.Multi_Hop.question_ans.GEMINI, 1.Date_modification.declare_ans.GEMINI, 1.Date_modification.question_ans.GEMINI, 1.Word_Replacement.declare_ans.GEMINI, 1.Word_Replacement.question_ans.GEMINI)",
+    "collapse_whitespace(replace(D.text, literal backslash-n sequences, ' ')) == collapse_whitespace(join(G, ' '))",
+    "for each g in G: some paragraph of D starts with the first line of g (each response begins a new paragraph), and those paragraphs appear in the order of G",
+    "for each consecutive pair of responses, at least one paragraph break separates the end of one from the start of the next",
+    "count(occurrences of 'Iliad' in D.text) == 33 and every character of every 'Iliad' occurrence has D.highlight_or_char_background != none",
+    "no alphanumeric character outside the 'Iliad' occurrences is highlighted or has a character background",
+    "filesystem.file('/home/user/Desktop/llm_answers.json').sha256 == before(filesystem.file('/home/user/Desktop/llm_answers.json').sha256)"
+   ],
+   "footprint": [
+    "filesystem: create /home/user/Desktop/gemini_results.docx",
+    "system clipboard",
+    "runtime(libreoffice).housekeeping, runtime(text editor).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "The JSON contains six Gemini values, all under key '1' (declare_ans and question_ans for Multi_Hop, Date_modification and Word_Replacement). Their order in the file is the expected paragraph order.",
+    "The values contain their own line breaks and markdown markers (**, *). Keeping those as text and turning internal newlines into paragraph or line breaks are both accepted, because text is compared after collapsing whitespace. Literal backslash-n sequences left over from copying raw JSON are treated as whitespace.",
+    "'Iliad' occurs 33 times across the six values (case-sensitive; the same count case-insensitive). Every occurrence must be highlighted with any highlight color or character background, including possessive forms where only the word 'Iliad' needs highlighting."
+   ],
+   "confidence": "medium"
+  }
+ },
+ {
+  "id": "f9be0997-4b7c-45c5-b05c-4612b44a6118",
+  "domain": "os",
+  "instruction": "I am currently working on a ubuntu system but I do not want the notifications to bother me. Can you help me to switch to 'Do not disturb mode'?",
+  "inspection_report": null,
+  "spec_X": {
+   "id": "f9be0997-4b7c-45c5-b05c-4612b44a6118",
+   "must": [
+    "gsettings('org.gnome.desktop.notifications', 'show-banners') == false",
+    "desktop.notifications.do_not_disturb == true"
+   ],
+   "footprint": [
+    "gsettings('org.gnome.desktop.notifications','show-banners')",
+    "os.ui.notification_panel",
+    "runtime('gnome-shell').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Enable GNOME Do Not Disturb by suppressing notification banners. Do not disable individual applications or erase notification history."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "f9be0997-4b7c-45c5-b05c-4612b44a6118",
+   "must": [
+    "gsettings('org.gnome.desktop.notifications', 'show-banners') == false"
+   ],
+   "footprint": [
+    "gsettings key org.gnome.desktop.notifications show-banners",
+    "GNOME shell quick-settings or notification-panel views; gnome-control-center Notifications view",
+    "runtime(gnome-control-center).housekeeping, runtime(terminal).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "In GNOME, Do Not Disturb is the show-banners key set to false (setup sets it to true). The GUI toggle and gsettings both set this key."
+   ],
+   "confidence": "high"
+  }
+ },
+ {
+  "id": "23393935-50c7-4a86-aeea-2b78fd089c5c",
+  "domain": "os",
+  "instruction": "Recursively go through the folders of the 'photos' directory and copy any .jpg files found into another directory named 'cpjpg'.",
+  "inspection_report": "research/exp5-grounded/inspections/23393935-50c7-4a86-aeea-2b78fd089c5c.md",
+  "spec_X": {
+   "id": "23393935-50c7-4a86-aeea-2b78fd089c5c",
+   "must": [
+    "fs('/home/user/Desktop/cpjpg').exists == true",
+    "fs('/home/user/Desktop/cpjpg').files(recursive=true).map(relative_path, sha256) set_equal map(before(fs('/home/user/Desktop/photos').regular_files(recursive=true, suffix='.jpg')), pair(basename(path), sha256))",
+    "fs('/home/user/Desktop/photos').paths_and_file_bytes == before(fs('/home/user/Desktop/photos').paths_and_file_bytes)"
+   ],
+   "footprint": [
+    "fs('/home/user/Desktop/cpjpg').copied_jpg_files",
+    "terminal.history_and_scrollback",
+    "os.ui.file_manager_navigation",
+    "runtime('terminal').housekeeping",
+    "runtime('file-manager').housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "Use the two directories prepared on Desktop. Recursively collect lowercase .jpg regular files and copy them into the flat cpjpg directory with original basenames and bytes; the supplied filenames do not collide.",
+    "Do not move source files, copy PNGs, or require reproduction of the source directory hierarchy."
+   ],
+   "confidence": "high"
+  },
+  "spec_Y": {
+   "id": "23393935-50c7-4a86-aeea-2b78fd089c5c",
+   "must": [
+    "let SRC = before(filesystem.find('/home/user/Desktop/photos', name_glob='*.jpg', recursive=true)) == {vacation/thailand/monk252520thailand252520wat252520arun252520scaled25255B225255D.jpg (302041 bytes), vacation/hk/hong-kong-china.jpg (190512 bytes), vacation/hk/hk_group_photo.jpg (52375 bytes), events/emnlp2023.jpg (342815 bytes)}",
+    "for each s in SRC: exists f in filesystem.find('/home/user/Desktop/cpjpg', recursive=true) where basename(f) == basename(s) and f.sha256 == s.sha256",
+    "multiset_equal([f.sha256 for f in filesystem.find('/home/user/Desktop/cpjpg', type=file, recursive=true)], [s.sha256 for s in SRC])",
+    "filesystem.find('/home/user/Desktop/cpjpg', name_glob='*.png', recursive=true) is empty",
+    "filesystem.tree('/home/user/Desktop/photos') == before(filesystem.tree('/home/user/Desktop/photos')) (names and contents)"
+   ],
+   "footprint": [
+    "filesystem: new files (and, if the source structure is kept, subdirectories) under /home/user/Desktop/cpjpg",
+    "runtime(terminal).housekeeping, runtime(nautilus).housekeeping"
+   ],
+   "fuzzy": [],
+   "assumptions": [
+    "'.jpg files' is decided by file extension. family/us_3.png contains JPEG data but has a .png extension, so it must not be copied.",
+    "Copies are normally placed directly in cpjpg. Keeping the source subdirectory structure (as cp --parents would) is also accepted, as long as exactly the four .jpg files are present byte-identical. The basenames do not collide.",
+    "This is a copy, so the photos tree must stay unchanged."
+   ],
+   "confidence": "high"
+  }
+ }
+]

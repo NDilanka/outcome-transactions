@@ -1,0 +1,175 @@
+{
+ "T1_edit_one_cell": {
+  "timing": {
+   "wall_to_settle_s": 0.167,
+   "driver_s": 0.071,
+   "cpu_s": 0.08,
+   "all_asleep_sample_share": 0.936
+  },
+  "memory": {
+   "dirty_pages": 2323,
+   "new_pages": 1098,
+   "changed_bytes": 5065597,
+   "delta_compressed": 613235,
+   "fullpage_compressed": 1288367,
+   "zero_pages": 70,
+   "unique_dirty": 1637,
+   "resident_pages_before": 16817,
+   "changed_bytes_hist": {
+    "<=16": 434,
+    "17-256": 452,
+    "257-2048": 246,
+    ">2048": 1191
+   },
+   "dirty_bytes_naive_cow": 9515008,
+   "resident_bytes_before": 68882432
+  },
+  "active_window_after": "budget.xlsx \u2014 LibreOffice Calc"
+ },
+ "T2_type_50_values": {
+  "timing": {
+   "wall_to_settle_s": 2.854,
+   "driver_s": 2.226,
+   "cpu_s": 3.19,
+   "all_asleep_sample_share": 0.761
+  },
+  "memory": {
+   "dirty_pages": 4041,
+   "new_pages": 701,
+   "changed_bytes": 3904971,
+   "delta_compressed": 1073129,
+   "fullpage_compressed": 1550767,
+   "zero_pages": 1,
+   "unique_dirty": 4033,
+   "resident_pages_before": 17915,
+   "changed_bytes_hist": {
+    "<=16": 443,
+    "17-256": 2387,
+    "257-2048": 359,
+    ">2048": 852
+   },
+   "dirty_bytes_naive_cow": 16551936,
+   "resident_bytes_before": 73379840
+  },
+  "active_window_after": "budget.xlsx \u2014 LibreOffice Calc"
+ },
+ "T3_open_close_format_dialog": {
+  "timing": {
+   "wall_to_settle_s": 1.538,
+   "driver_s": 1.527,
+   "cpu_s": 0.56,
+   "all_asleep_sample_share": 0.978
+  },
+  "memory": {
+   "dirty_pages": 14617,
+   "new_pages": 12415,
+   "changed_bytes": 54323630,
+   "delta_compressed": 6638434,
+   "fullpage_compressed": 7371062,
+   "zero_pages": 438,
+   "unique_dirty": 13837,
+   "resident_pages_before": 18616,
+   "changed_bytes_hist": {
+    "<=16": 502,
+    "17-256": 419,
+    "257-2048": 420,
+    ">2048": 13276
+   },
+   "dirty_bytes_naive_cow": 59871232,
+   "resident_bytes_before": 76251136
+  },
+  "active_window_after": "budget.xlsx \u2014 LibreOffice Calc"
+ },
+ "T4_bold_column": {
+  "timing": {
+   "wall_to_settle_s": 0.365,
+   "driver_s": 0.041,
+   "cpu_s": 0.08,
+   "all_asleep_sample_share": 0.945
+  },
+  "memory": {
+   "dirty_pages": 4453,
+   "new_pages": 5,
+   "changed_bytes": 3320341,
+   "delta_compressed": 1193890,
+   "fullpage_compressed": 2094671,
+   "zero_pages": 4,
+   "unique_dirty": 4417,
+   "resident_pages_before": 31031,
+   "changed_bytes_hist": {
+    "<=16": 604,
+    "17-256": 2289,
+    "257-2048": 838,
+    ">2048": 722
+   },
+   "dirty_bytes_naive_cow": 18239488,
+   "resident_bytes_before": 127102976
+  },
+  "active_window_after": "budget.xlsx \u2014 LibreOffice Calc"
+ },
+ "T5_sort_like_scroll_1000_rows": {
+  "timing": {
+   "wall_to_settle_s": 0.136,
+   "driver_s": 0.084,
+   "cpu_s": 0.19,
+   "all_asleep_sample_share": 0.901
+  },
+  "memory": {
+   "dirty_pages": 5564,
+   "new_pages": 675,
+   "changed_bytes": 5144588,
+   "delta_compressed": 1670699,
+   "fullpage_compressed": 2397638,
+   "zero_pages": 76,
+   "unique_dirty": 5371,
+   "resident_pages_before": 31036,
+   "changed_bytes_hist": {
+    "<=16": 591,
+    "17-256": 2154,
+    "257-2048": 1867,
+    ">2048": 952
+   },
+   "dirty_bytes_naive_cow": 22790144,
+   "resident_bytes_before": 127123456
+  },
+  "active_window_after": "budget.xlsx \u2014 LibreOffice Calc"
+ },
+ "T6_save_keep_format": {
+  "timing": {
+   "wall_to_settle_s": 1.532,
+   "driver_s": 1.532,
+   "cpu_s": 0.08,
+   "all_asleep_sample_share": 1.0
+  },
+  "memory": {
+   "dirty_pages": 2447,
+   "new_pages": 158,
+   "changed_bytes": 4390824,
+   "delta_compressed": 1495527,
+   "fullpage_compressed": 1920501,
+   "zero_pages": 245,
+   "unique_dirty": 2157,
+   "resident_pages_before": 31711,
+   "changed_bytes_hist": {
+    "<=16": 274,
+    "17-256": 366,
+    "257-2048": 858,
+    ">2048": 949
+   },
+   "dirty_bytes_naive_cow": 10022912,
+   "resident_bytes_before": 129888256
+  },
+  "active_window_after": ""
+ },
+ "verification": {
+  "saved": false,
+  "B2": "0",
+  "F2_to_F6": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ }
+}

@@ -1,0 +1,662 @@
+[
+ {
+  "id": "cabb3bae-cccb-41bd-9f5d-0f3a9fecd825",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Closes official's body-text substring hole by verifying both the active sort control and ascending product prices while bounding side effects. Properly allows either search queries or category/filter browsing for kids' Spider-Man toys.",
+  "notes_blind": "Closes official's substring hole (where unselected dropdown text 'Price Low-High' in body can pass) by checking active sort order and ascending displayed prices. Slightly narrower than Y by requiring search terms rather than also permitting category/filter navigation."
+ },
+ {
+  "id": "2ae9ba84-3a0d-4d4c-8338-3a1478dc5fe3",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks the exact Chrome Preferences profile.name and corresponding Local State info_cache entries set when renaming the profile to 'Thomas'. More concrete than Y by naming the actual Chrome config keys.",
+  "notes_blind": "Checks the same local profile display name change to 'Thomas' as the official evaluator, using an abstract property name."
+ },
+ {
+  "id": "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Closes major holes in official (which only checks .amazon.com via compare_urls, missing subdomains, site storage, and collateral deletion of all other sites' cookies). Uses concrete Amazon domain regexes and restricts non-Amazon cookie preservation to pre-existing persistent cookies.",
+  "notes_blind": "Closes official's holes by checking Amazon cookies, site storage, and preservation of non-Amazon cookies. Less concrete than X because it relies on undefined origin corporate-ownership metadata and compares all non-Amazon cookie records without allowances for session cookies."
+ },
+ {
+  "id": "a96b564e-dbe9-42c3-9ccf-b4498073438a",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Identifies the same maximum-post topic in FlightAware > General as official while matching the discussions.flightaware.com/t/<slug>/<id> URL pattern cleanly (including Discourse post-number suffixes).",
+  "notes_blind": "Identifies the same maximum-reply topic in FlightAware > General as official while evaluating dynamically and allowing tie sets. Omits an explicit check on the discussions.flightaware.com hostname in must."
+ },
+ {
+  "id": "9656a811-9b5b-4ddf-99c7-5117bcef0626",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "tie",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks safebrowsing.enabled == true on the Default profile and permits either Standard or Enhanced protection, matching official.",
+  "notes_blind": "Checks safebrowsing.enabled == true with effective mode in ['standard', 'enhanced'], matching official."
+ },
+ {
+  "id": "030eeff7-b492-4218-b312-701ec99ee0cc",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "tie",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks enable_do_not_track == true in the Default profile preferences with minimal settings-navigation footprint, matching official.",
+  "notes_blind": "Checks enable_do_not_track == true in Chrome preferences with minimal settings-navigation footprint, matching official."
+ },
+ {
+  "id": "d52d6308-ec58-42b7-a2c9-de80e4837b2b",
+  "grounded": "different_spec_better",
+  "blind": "different_spec_better",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks left_dock.visible == false while keeping the main window open and tolerating Hide Docks in footprint, accepting both actually closing the left dock (which official rejects) and Windows > Hide Docks.",
+  "notes_blind": "Requires the left dock to be hidden while preserving the right dock, which is more faithful to the instruction than official's hide-docks=yes check (which hides all docks and rejects closing only the left dock). However, disallowing Hide Docks is restrictive in GIMP single-window mode where the left toolbox has no close button."
+ },
+ {
+  "id": "f4aec372-4fb0-4df5-a52b-79e0e2a5d6ce",
+  "grounded": "stricter_overstrict",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Accurately grounds canvas size ([800, 800]), yellow triangle bbox size ([341, 199]), pixel ratio (0.053), and layer names against the starting files, while checking background preservation. However, requiring bbox center within(10) of [400, 400] rejects valid hand-dragged placements and centroid-centered placements (where centroid is 33px below bbox center, which official's 40px centroid tolerance accepts).",
+  "notes_blind": "Preserves canvas size, object pixels, and background, but requiring visible_bounds.center_xy within(1 pixel) of canvas center rejects virtually all manual Move-tool placements and centroid-based centering."
+ },
+ {
+  "id": "06ca5602-62ca-47f6-ad4f-da151cde54cc",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Matches official's palette-mode and SSIM structure check by verifying INDEXED base type, colormap length in 2..256, exact [5184, 3888] size, and composite similarity >= 0.80 to the starting image.",
+  "notes_blind": "Checks indexed color mode, palette size <= 256, and preserved canvas dimensions with footprint limited to indexed conversion, but omits an explicit visual similarity threshold in must and allows color_count == 1."
+ },
+ {
+  "id": "e2dd0213-26db-4349-abe5-d5667bfd725c",
+  "grounded": "stricter_reasonable",
+  "blind": "looser",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Accurately grounds layer names ('Thanks World' 422x77 at (976, 702) and 'orange_background.png' 2192x1118 at (0, 0)) and requires the entire text box to lie in the left half (offset_x + width <= 1096, i.e. offset_x <= 674) while verifying the background layer did not move.",
+  "notes_blind": "In the starting 2192x1118 XCF, the 422px-wide text box starts at offset_x=976 (center_x=1187), so must (center_x < canvas.width / 2 = 1096) accepts shifting left by just 92px to offset_x=884 (still straddling the middle of the canvas, which official's left_most_dark_pixel < 767 rejects), delegating actually being on the left side to fuzzy."
+ },
+ {
+  "id": "7b7617bd-57cc-468e-9c91-40c4ec2bcb3d",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "tie",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks that GIMP's persistent undo-levels preference is 100 with no unrelated setting changes, matching official.",
+  "notes_blind": "Checks gimp.config('undo-levels') == 100 with minimal dialog footprint, matching official."
+ },
+ {
+  "id": "554785e9-4523-4e7a-b8e1-8016f565f56a",
+  "grounded": "stricter_reasonable",
+  "blind": "looser",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks exact dimensions (1099x730), grayscale structure similarity, and value bounds while requiring both mean chroma increase and >=8% mean HSV saturation increase over the starting image, closing official's hole where an imperceptible >0 saturation uptick or darkening passes.",
+  "notes_blind": "Checks only canvas size, alpha preservation, and mean_hsv_saturation > before in must, delegating scene and structure preservation entirely to fuzzy whereas official enforces SSIM(H) >= 0.9 and SSIM(V) >= 0.9."
+ },
+ {
+  "id": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+  "grounded": "equivalent",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies all 28 exact cleaned titles in C2:C29 (allowing both hyphen-capitalization variants for row 27), preserves B1:C1 and B2:B29, and restricts nonempty cells to B1:C29 on Sheet1, matching official sheet_data.",
+  "notes_blind": "Requires all_cell_styles == before across the entire workbook (rejecting valid paste/formula default style changes on C2:C29 that official sheet_data ignores) and queries header 'Garbage Movie Titles' whereas B1 is 'Garbage Movie titles'."
+ },
+ {
+  "id": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+  "grounded": "equivalent",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Checks the exact monthly totals ([4852, 4587, 3943, 3857, 4677, 4243]) in B12:G12, Feb-Jun growth values in C13:G13 with B13 blank, and the Total bar/column and 5-point Growth line charts, matching official sheet_data and chart checks.",
+  "notes_blind": "Requires number_formats('Feb','Jun').all_display_percent == true on the Growth row and explicit month category bindings on both charts, rejecting valid solutions with unformatted growth fractions that official sheet_data accepts."
+ },
+ {
+  "id": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies all 35 exact row revenues in Sheet1!G2:G36 and all 15 exact product totals in the Sheet2 pivot table while preserving Sheet1!A1:F36 and Retail Price, and accepts any G1 header containing 'revenue'.",
+  "notes_blind": "Checks the Sheet2 product-revenue pivot table and preservation of existing data like official, while also directly verifying each row's computed revenue in the new Sheet1 column."
+ },
+ {
+  "id": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "tie",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies the exact column sums (867786 and 411686) under 'Total Revenue' and 'Total Expenses' in Sheet2!A1:B2 with no extra populated cells and Sheet1 preserved, matching official sheet_data and preserve_cells.",
+  "notes_blind": "Checks the same 'Total Revenue' and 'Total Expenses' headers and sums in Sheet2!A1:B2 while preserving Sheet1, matching the official evaluator."
+ },
+ {
+  "id": "1273e544-688f-496b-8d89-3e0f40aa0606",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "tie",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Checks that Sheet2!A1:A20 equals before(Sheet1!A1:A20) with no other populated cells on Sheet2 and Sheet1 preserved, matching the official evaluator.",
+  "notes_blind": "Checks that Sheet2 column A contains the exact header and 19 values of Sheet1's Revenue column while Sheet1 is unchanged, matching official sheet_data and preserve_cells."
+ },
+ {
+  "id": "6054afcb-5bab-4702-90a0-b259b5d3217c",
+  "grounded": "stricter_reasonable",
+  "blind": "different_official_better",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies that the exact 13 rows with =NA() ([3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]) are hidden with all values and formulas preserved, and also enforces autofilter == null and hidden_columns == [].",
+  "notes_blind": "Misinterprets the instruction as making cell text 'N/A' invisible while keeping all rows visible (row_and_column_structure == before), whereas the cells contain =NA() (#N/A) and official expects hiding those 13 rows via Hide Rows."
+ },
+ {
+  "id": "2cd43775-7085-45d8-89fa-9e35c0a915cf",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks both that AutoSave is enabled and that its interval is 3 minutes while treating UserAutoSave as optional in footprint, closing official's hole of checking AutoSaveTimeIntervall == 3 without verifying AutoSave is enabled.",
+  "notes_blind": "Requires save_original_document_automatically.value_if_supported == true (UserAutoSave) in must, which rejects standard solutions that only enable AutoRecovery every 3 minutes as checked by official."
+ },
+ {
+  "id": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Explicitly targets slide 1 PlaceHolder 2 paragraph 1, verifies its bullet type changed from buNone to an unordered bullet (['char', 'picture']), and preserves PlaceHolder 1 and paragraph text.",
+  "notes_blind": "Checks that the slide's non-empty body paragraph has a visible bullet while preserving all text and slide count, matching the official gold comparison."
+ },
+ {
+  "id": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+  "grounded": "stricter_overstrict",
+  "blind": "different_official_better",
+  "better": "tie",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Requires slide(3).picture_shapes.all_heights_cm within(0.05) 20 and non_picture_shapes == before, which rejects valid solutions because slide 3 has seven 1.1cm PICTURE bullet icons that must stay 1.1cm while the main 26.8cm photo is a FREEFORM (5) shape.",
+  "notes_blind": "Correctly targets the pictures on slides 4 (30cm) and 6 (25cm), but on slide 3 targets the seven 1.1cm PICTURE (13) bullet icons (450..456) and freezes non_picture_shapes, missing that slide 3's 26.8cm photograph is Google Shape;446;p18 (a FREEFORM (5) shape with blipFill, checked via shape_type == 5 in slides.py)."
+ },
+ {
+  "id": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Explicitly grounds slide 5 PlaceHolder 2 paragraphs 1 ('Finance Meetings:') and 2 ('Providing another perspective...') as having strikethrough while paragraphs 3..9 have strike == 'none' and all other shapes and slides are preserved.",
+  "notes_blind": "Checks that the first two logical lines of the active slide's to-do body have strikethrough applied while remaining lines, text, and other slides are unchanged, matching the official gold comparison."
+ },
+ {
+  "id": "57667013-ea97-417c-9dce-2713091e6e2a",
+  "grounded": "equivalent",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Correctly identifies the two text-bearing shapes on slide 5 ('Google Shape;166;p 1' and 'Google Shape;167;p 1'), requires their text runs to be exact RGB 'FFFF00', and preserves all other slide content and formatting like compare_pptx_files.",
+  "notes_blind": "Requires empty_paragraph_default_font_colors_srgb set_equal ['#FFFF00'] even though slide 5's text shapes have no empty paragraphs, and requires live UI state current_slide_index == 5 which the official evaluator does not check."
+ },
+ {
+  "id": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "tie",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks that slide 1 has a 'dissolve' transition like check_transition while also verifying that slides 2..24 keep their transitions, slide count stays 24, and slide content is untouched.",
+  "notes_blind": "Checks that slide 1 has a 'dissolve' transition like check_transition, and reasonably adds preservation of transitions and content on the remaining slides so 'Apply to All Slides' is rejected."
+ },
+ {
+  "id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Closes the holes in contains_page_break by concretely verifying that rendered page 1 is unchanged, rendered page 2 is blank, and rendered page 3 starts with 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)' with all non-empty paragraphs preserved.",
+  "notes_blind": "Closes the major holes in contains_page_break (which only checks page_break_count == 5 anywhere in the document) by requiring rendered page count to increase by 1 with a blank page immediately after the starting cursor's page and all non-blank content preserved."
+ },
+ {
+  "id": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies lowercase conversion across all body paragraphs (with accurate spot checks on paragraphs 2 and 8) and the 2x2 grading table while preserving formatting and allowing rendered lowercase case-mapping attributes.",
+  "notes_blind": "Checks that all editable text stories (including the 2x2 table that compare_docx_files ignores) are lowercased and that character/paragraph formatting is preserved."
+ },
+ {
+  "id": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Accurately enumerates all 7 sentences of paragraph 1 (including exclamation-terminated sentences), allows either 1 or 2 blank lines before 'Setting' to account for the pre-existing empty paragraph, strips whitespace as official options intended, and preserves the table that compare_docx_files ignores.",
+  "notes_blind": "Requires the replacement of paragraph 1 to include a trailing blank line after the final sentence while also preserving all subsequent content (which already begins with empty paragraph p1), rejecting valid solutions that leave a single blank line before 'Setting'."
+ },
+ {
+  "id": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies that the existing 11x7 table and all non-empty paragraphs are preserved and that a second empty 5x7 table is inserted in the trailing empty paragraphs where the setup's 40 Down-arrow presses place the cursor.",
+  "notes_blind": "Checks that one empty 5x7 table is added at the starting cursor anchor and closes the hole in compare_docx_tables by requiring body paragraphs outside tables to remain unchanged."
+ },
+ {
+  "id": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Concretely verifies the exact 5x4 cell matrix of the new first table (normalizing non-breaking spaces from paragraphs 5-9), preservation of the 13 existing tables and all other paragraphs, and removal of the original comma-separated lines.",
+  "notes_blind": "Checks that the comma-delimited paragraph block is converted into a table and closes the hole in compare_docx_tables by verifying that the original comma-separated paragraphs were removed and surrounding prose was preserved."
+ },
+ {
+  "id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies that all run and paragraph highlight/background colors are None or 'transparent' (matching ODT's actual style representation) and that all text and per-character formatting\u2014including italic on the highlighted 'UCSF\u2019s' span\u2014are preserved.",
+  "notes_blind": "Checks that all character highlighting is removed and all text is preserved like check_highlighted_words, while closing the hole where clearing direct formatting would also strip bold and italic styles."
+ },
+ {
+  "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+  "grounded": "stricter_overstrict",
+  "blind": "stricter_reasonable",
+  "better": "blind",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Requires every non-LibreOffice OS process started before the task to remain alive (which fails whenever unrelated background OS processes exit) and uses a rigid kill command regex that rejects valid variants like kill -15 <pid> or xargs kill.",
+  "notes_blind": "Checks that the frozen LibreOffice Writer session is terminated via a terminal command without rebooting or losing other open user applications, closing holes in the official ps/bash_history check without overstrict OS-wide process equality."
+ },
+ {
+  "id": "22a4636f-8179-4357-8e87-d1743ece1f81",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Checks that a unique PDF named Meeting-Agenda.pdf is uploaded to the Drive 'meetings' folder with matching extracted text (including concrete phrases from the agenda) and that the original Desktop DOCX is untouched.",
+  "notes_blind": "Requires page_renders similarity >= 0.99 between the uploaded PDF and the DOCX, which plausibly rejects valid PDF conversions whose pagination or font rendering differs slightly, and restricts any local PDF copy to Desktop."
+ },
+ {
+  "id": "f918266a-b3e0-4914-865d-4faa564f1aef",
+  "grounded": "stricter_reasonable",
+  "blind": "looser",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Checks that log.txt contains the sorted output ['5', '6', '11', '12', '13'] like compare_text_file, and closes a major hole by verifying that calculator.py actually completes insertionSort with arr[j+1] = arr[j] and produces that output when run.",
+  "notes_blind": "Because the unedited calculator.py already parses and runs with exit code 0 (printing the unsorted list), must only checks that the TODO marker is removed and log.txt matches calculator.py's stdout, accepting wrong outputs in log.txt while delegating correctness to fuzzy."
+ },
+ {
+  "id": "d68204bf-11c1-4b13-b48b-d303c73d4bf6",
+  "grounded": "stricter_reasonable",
+  "blind": "unverifiable",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Correctly identifies the warmest-to-coolest strip order as right, middle, left ([T[3], T[2], T[1]]) and adds RGB color preservation and source-image preservation checks that the official grayscale SSIM check misses. It also sensibly allows a 2px width tolerance for splitting the 962px-wide image into three strips.",
+  "notes_blind": "Delegates the core warmest-to-coolest ordering requirement to fuzzy while must accepts any horizontal permutation of the three strips. It also requires exact pixel equality on three equal vertical strips despite the 962px source width not being divisible by 3."
+ },
+ {
+  "id": "a74b607e-6bb5-4ea8-8a7c-5d97c7bbcd2a",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks the concrete manifest name ('Hello Extensions') and version ('1.0') from /home/user/Desktop/helloExtension and verifies that the extension is enabled and existing extensions are preserved. Official only checks that the path string appears in Chrome Preferences.",
+  "notes_blind": "Checks that the unpacked extension from Desktop is installed, enabled, and has unmodified source files, closing official's hole of not checking enabled state or source integrity. Requiring developer_mode to remain true at the end is slightly less flexible than X."
+ },
+ {
+  "id": "26150609-0da3-4a7d-8868-0faf9c5f01bb",
+  "grounded": "different_spec_better",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Official's test.py only tests whether Snake() and Food() reach exact coordinate equality in isolation without running main.py, rejecting valid collision-check fixes in main.py and ignoring growth/respawn. Spec X runs the actual game loop headlessly across 200 seeds to verify eating, length increase, and food respawn.",
+  "notes_blind": "Relies on an underspecified snake_test scenario and requires replacement_food_on_grid_and_not_on_snake == true, which rejects valid rectangle-overlap collision fixes in main.py and demands non-overlapping spawn logic not present in Food.respawn()."
+ },
+ {
+  "id": "8e116af7-7db7-4e35-a68b-b0939c066c78",
+  "grounded": "different_spec_better",
+  "blind": "unverifiable",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies the exact five receipt expense amounts ([-186.93, -3670, -5.70, -154.06, -8.10]) and running balance ending at -3234.79 in any row order, whereas official hardcodes the receipt_0..4 row order. It also requires non-empty Description and Category cells in A9:B13, which official ignores.",
+  "notes_blind": "Delegates receipt OCR and column mapping to an oracle reader (receipts(...).transactions.project_to_existing_bookkeeping_columns) that presupposes solving the task and to fuzzy prose."
+ },
+ {
+  "id": "f8cfa149-d1c1-4215-8dac-4a0932bad3c2",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks that an open Chrome tab has search results for the concrete cell B6 value 'Nereida' while also verifying that cell_search.xls is unmodified and at least two pre-existing tabs remain open.",
+  "notes_blind": "Checks that the active Chrome tab shows search results for cell B6's display text and adds a check that cell_search.xls is unmodified, though X is more concrete and less brittle to page-kind classification."
+ },
+ {
+  "id": "69acbb55-d945-4927-a87b-8480e1a5bb7e",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks that 'from InstructorEmbedding import INSTRUCTOR' succeeds like official, while closing official's hole by verifying that the repository is cleanly cloned at /home/user/instructor-embedding and its requirements.txt dependencies are satisfied.",
+  "notes_blind": "Checks the git clone at /home/user/instructor-embedding, INSTRUCTOR import, and project requirements, but requires global pip_check.exit_code == 0 which is slightly more brittle than X's project-scoped check if pre-installed packages have conflicts."
+ },
+ {
+  "id": "b52b40a5-ad70-4c53-b5b0-5650a8387052",
+  "grounded": "stricter_reasonable",
+  "blind": "looser",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies that a unique attachment_full.pdf in Google Drive root has 75 pages matching attachment_part1.pdf, attachment_part2.pdf, and attachment_part3.pdf in order, while preserving Thunderbird messages and other Drive files.",
+  "notes_blind": "Accepts any concatenation order of the three PDF attachments even though they are numbered attachment_part1.pdf through attachment_part3.pdf, and assumes a unique Thunderbird message by subject when copies exist in two folders."
+ },
+ {
+  "id": "937087b6-f668-4ba6-9110-60682ee33441",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Requires VLC to be installed and set as the default handler across six common video MIME types while preserving non-video MIME types, closing official's hole of only checking the statistical mode across 43 video subtypes.",
+  "notes_blind": "Checks that the desktop default video player is VLC and that video/mp4 plus video types previously assigned to the default player resolve to vlc.desktop, though X's explicit list of common video MIME types and desktop IDs is more direct."
+ },
+ {
+  "id": "5bc63fb9-276a-4439-a7c1-9dc76401737f",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Verifies the exact 6 Gemini responses in document order and all 33 highlighted occurrences of 'Iliad' (which official's paragraph-text comparator completely omits), while accepting both literal \\n sequences from raw editor copy-paste and parsed paragraph breaks.",
+  "notes_blind": "Closes official's hole of ignoring 'Iliad' highlighting, but requires each multi-paragraph Gemini response to be a single paragraph separated by exactly one empty line and fails if any adjacent whitespace or punctuation is highlighted."
+ },
+ {
+  "id": "f9be0997-4b7c-45c5-b05c-4612b44a6118",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "tie",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks gsettings('org.gnome.desktop.notifications', 'show-banners') == false, matching the official evaluator.",
+  "notes_blind": "Checks gsettings('org.gnome.desktop.notifications', 'show-banners') == false, which is the exact GNOME setting checked by the official evaluator."
+ },
+ {
+  "id": "23393935-50c7-4a86-aeea-2b78fd089c5c",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "blind",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Accurately lists the four source .jpg files and checks sha256 equality and source-tree preservation, though its file-only check under recursive find would also accept leftover empty subdirectories inside cpjpg.",
+  "notes_blind": "Checks that /home/user/Desktop/cpjpg contains flat copies of the four .jpg files matching both basename and sha256 and that /home/user/Desktop/photos is unchanged, closing official's filename-only and move-vs-copy holes."
+ },
+ {
+  "id": "4d117223-a354-47fb-8b45-62ab1390a95f",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks 0644 permissions on all regular files under /home/user/testDir like eval.sh, while closing official holes where deleting files vacuously passes or chmod -R 644 breaks directory execute bits. All concrete file and directory paths match setup.sh.",
+  "notes_blind": "Checks 0644 permissions on all regular files under the active shell's cwd while preserving file contents, owners, and directory metadata. Slightly more brittle than X if directory traversal updates directory atime inside metadata."
+ },
+ {
+  "id": "3ce045a0-877b-42aa-8d2c-b4a863336ab8",
+  "grounded": "looser",
+  "blind": "stricter_overstrict",
+  "better": "blind",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Only requires text-scaling-factor > before (or display scaling > before) with no meaningful minimum threshold, which is looser than official's >= 1.2 check and would accept an imperceptible change like 1.01. It also rejects the screen magnifier branch that official accepts.",
+  "notes_blind": "Requires text-scaling-factor >= 1.25 (matching GNOME's Large Text toggle) and forbids display scaling or screen magnification. This is overstrict because it rejects text-scaling-factor = 1.2, global display scaling, and GNOME zoom, which official or a reasonable user would accept."
+ },
+ {
+  "id": "5812b315-e7bd-4265-b51f-863c02174c28",
+  "grounded": "different_spec_better",
+  "blind": "different_spec_better",
+  "better": "blind",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Official only checks su login, passwd home directory /home/test1, and owner write permission without checking sshd or folder confinement at all, which is incompatible with OpenSSH ChrootDirectory (requiring root ownership of /home/test1) and SFTP-only accounts. Spec X is more faithful to the instruction by verifying actual SSH login and confinement to /home/test1, though its can_list('/home/test1') probe mixes host and chroot-relative paths.",
+  "notes_blind": "Official only checks su login and passwd home=/home/test1 with owner write bits, ignoring SSH and folder confinement and conflicting with OpenSSH ChrootDirectory root-ownership rules. Spec Y is more faithful to the instruction and avoids X's chroot-path ambiguity by checking sshd effective chroot_realpath == '/home/test1' and no accessible host user data outside it."
+ },
+ {
+  "id": "94d95f96-9699-4208-98ba-3c3119edf9c2",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Verifies that Spotify is installed via an official package channel (snap, apt spotify-client, or flatpak com.spotify.Client) and launches without error, closing the official evaluator's 'which spotify' dummy-binary hole and supporting Flatpak.",
+  "notes_blind": "Verifies that the Spotify application is installed, its desktop launcher resolves, and an isolated launch probe succeeds without dependency errors. Slightly less concrete than X because Ubuntu package managers do not expose a uniform publisher='Spotify' field."
+ },
+ {
+  "id": "f201fbc3-44e6-46fc-bcaa-432f9815454c",
+  "grounded": "equivalent",
+  "blind": "stricter_reasonable",
+  "better": "blind",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks the exact same preference (mail.identity.id1.auto_quote == false in t5q2a5hp.default-release/prefs.js) as the official evaluator, while bounding the footprint to that preference.",
+  "notes_blind": "Checks that effective auto_quote is false for the active identity (id1) and that a reply preview contains no quoted body, while bounding side effects to auto_quote preferences. Unlike official and Y, it also accepts disabling mail.identity.default.auto_quote via Config Editor."
+ },
+ {
+  "id": "9b7bc335-06b5-4cd3-9119-1a649c478509",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks the exact msgFilterRules.dat file for an enabled match-all Forward rule to anonym-x2024@gmail.com like official, while also requiring incoming-mail trigger bits (type & 1 or 32), forbidding destructive co-actions, and verifying the remote account and sent mail were untouched.",
+  "notes_blind": "Checks for an enabled local incoming match-all forward filter to anonym-x2024@gmail.com, untouched remote settings, and no newly sent messages. Less concrete than X because it relies on a filter simulation oracle and does not explicitly forbid destructive co-actions alongside forwarding."
+ },
+ {
+  "id": "d38192b0-17dc-4e1d-99c3-786d0117de77",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Verifies that the 'New-month AWS Bill' compose window remains open with ~/aws-bill.pdf attached like official, while also verifying the file's SHA-256, attachment count == 1, preserved sender/recipients/body, and no sent mail. Concrete subject, sender, and recipient values match the setup command.",
+  "notes_blind": "Verifies that the open compose window has ~/aws-bill.pdf attached with matching SHA-256, preserved sender/recipients/subject/body, and zero sent or queued messages. Slightly less resilient than X because exact body equality does not normalize incidental editor whitespace."
+ },
+ {
+  "id": "15c3b339-88f7-4a86-ab16-e71c58dcb01e",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Verifies that the Thunderbird account setup tab remains at the initial form with email 'anonym-x2024@outlook.com' and password 'password' filled in and no accounts/servers/logins persisted in 6ex3j72p.default-release. Closes a major official evaluator bug where the password XPath only matches the field label (@name contains 'Password') even when the password box is empty.",
+  "notes_blind": "Verifies that the account setup page is visible with email 'anonym-x2024@outlook.com' and secret password value 'password', closing official's empty-password XPath bug. Slightly less precise than X because 'completed == false' may not reject advancing past the initial form into autoconfig lookup."
+ },
+ {
+  "id": "dd84e895-72fd-4023-a336-97689ded257c",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks that the 2 messages in mailbox://nobody@Local%20Folders/Bills are flagged without extra messages added, bodies/tags altered, or messages in other folders (such as the decoy IMAP Bills folder) starred. Both concrete subject strings and count == 2 match the starting mbox file.",
+  "notes_blind": "Checks that the message IDs in Local Folders/Bills are unchanged, all are starred, and their contents and other flags are preserved (both messages start already read with X-Mozilla-Status 0001). Less explicit than X in must about stars in decoy Bills folders."
+ },
+ {
+  "id": "08c73485-7c6d-4681-999d-919f5c32dcfa",
+  "grounded": "looser",
+  "blind": "looser",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks that applyIncomingFilters is enabled in prefs.js and existing filter rules are unchanged, but misses mail.imap.use_status_for_biff == false (and autosync_offline_stores != false) which the official evaluator enforces so IMAP subfolders are polled for filtering. Its footprint also omits mail.imap.use_status_for_biff.",
+  "notes_blind": "Checks mail.server.default.applyIncomingFilters == true, omits official's mail.imap.use_status_for_biff == false requirement from must and footprint, and relies on a filter simulation over existing incoming rules even though msgFilterRules.dat starts with zero rules."
+ },
+ {
+  "id": "386dbd0e-0241-4a0a-b6a2-6704fba26b1c",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Checks that a non-empty, uncommented global play/pause hotkey is set in vlcrc, does not collide with existing shortcuts, and toggles VLC playback while lecture.pdf remains open and focused. Closes official's vlcrc parser bug (which matches commented lines or 'Unset') and verifies the shortcut actually works without disturbing the PDF reader.",
+  "notes_blind": "Checks that a non-conflicting VLC global play-pause hotkey is persisted and toggles playback in an isolated probe while keeping a PDF reader focused. Slightly less grounded than X because it does not explicitly check in must that the existing lecture.pdf window remained open."
+ },
+ {
+  "id": "fba2c100-79e8-42df-ae74-b592418d54f4",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Checks actual PNG format, reasonable dimensions (>=640x360), source MP4 preservation, and similarity >=0.80 against any frame in the paused 120.4-121.2s scene. Also properly permits intermediate vlcsnap files in ~/Pictures in the footprint.",
+  "notes_blind": "Overstrictly requires exact native frame dimensions and >=0.99 pixel similarity to a single before frame, which can reject valid snapshots due to minor timing or color-conversion differences. Its filesystem footprint also omits default vlcsnap files in ~/Pictures."
+ },
+ {
+  "id": "d06f0d4d-2cd5-4ede-8de9-598629438c6e",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Directly checks qt-slider-colours in vlcrc has all 12 RGB values (closing official's partial-tuple hole) with channels <=80 (slightly tighter than official's <100) and preserves other vlcrc keys.",
+  "notes_blind": "Requires vlc.ui.volume_slider.fill_palette_matches_persisted == true in the live UI, which rejects valid solutions where the user saved the preference in VLC without restarting the player. Also uses ungrounded config key names and delegates core judgment to fuzzy prose."
+ },
+ {
+  "id": "9195653c-f4aa-453d-aa95-787f6ccfaae9",
+  "grounded": "equivalent",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Matches the official evaluator by checking qt-max-volume == 200 in /home/user/.config/vlc/vlcrc while ensuring unrelated vlcrc keys remain unchanged.",
+  "notes_blind": "Requires vlc.ui.volume_slider.maximum_percent == 200 in the running UI, but VLC only updates the Qt volume slider limit after a restart (which official performs in postconfig and the instruction does not request)."
+ },
+ {
+  "id": "efcf0d81-0835-4880-b2fd-d866e8bc2294",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": true,
+  "ref": true,
+  "notes_grounded": "Checks the active GNOME background URI (accounting for color-scheme), verifies picture-options != 'none' and similarity >=0.80 to any frame in the 120.4-121.2s scene, and preserves the source video.",
+  "notes_blind": "Overstrictly demands >=0.99 pixel similarity to a single before frame and restricts the /home/user footprint to a single new image file, which fails when GNOME copies the snapshot into ~/.local/share/backgrounds."
+ },
+ {
+  "id": "a5bbbcd5-b398-4c91-83d4-55e1e31bbb81",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_overstrict",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks persisted minimal-view configuration (qt-minimal-view in vlcrc or MainWindow/minimal-view in vlc-qt-interface.conf) plus an isolated restart probe verifying windowed (non-fullscreen) minimal view with hidden controls.",
+  "notes_blind": "In addition to a restart probe, requires the pre-restart live VLC window to remain open and already in minimal view, rejecting valid solutions that save 'Start in minimal view mode' in Preferences without restarting VLC."
+ },
+ {
+  "id": "9439a27b-18ae-42d8-9778-5f68f891805e",
+  "grounded": "equivalent",
+  "blind": "equivalent",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Directly and concretely checks that debug.focusEditorOnBreak is false in /home/user/.config/Code/User/settings.json with no extraneous changes.",
+  "notes_blind": "Checks that debug.focusEditorOnBreak is persisted and effective as false, though it adds an unnecessary abstract debug_probe despite no debuggable workspace being open."
+ },
+ {
+  "id": "eabc805a-bfcf-4460-b250-ac92135819f6",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "tie",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks that exact extension ID 'ms-python.python' is installed and enabled, and explicitly accounts for its auto-installed companion extensions in /home/user/.vscode/extensions.",
+  "notes_blind": "Checks that exact extension ID 'ms-python.python' is installed and enabled in the current profile while allowing automatically installed dependencies in the footprint."
+ },
+ {
+  "id": "53ad5833-3455-407b-bbc6-45b4c79ab8fb",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Closes official's folder-name substring hole by verifying an open VS Code window has exact workspace_folders ['/home/user/project'] and that all files in /home/user/project remain unmodified.",
+  "notes_blind": "Also verifies the canonical path '/home/user/project' and file preservation, but unnecessarily restricts the check to active_window and Explorer root_paths rather than any open VS Code window."
+ },
+ {
+  "id": "ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks that /home/user/.config/Code/User/keybindings.json contains a ctrl+f -> -list.find removal rule, that ctrl+f no longer resolves to list.find in Explorer focus, and that editor ctrl+f remains intact.",
+  "notes_blind": "Checks the same effective keybinding resolution in Explorer and editor contexts, but uses informal prose context descriptions instead of concrete VS Code context keys and file paths."
+ },
+ {
+  "id": "6ed0a554-cbee-4b44-84ea-fd6c042f4fe1",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "grounded",
+  "files": true,
+  "ref": false,
+  "notes_grounded": "Concretely verifies the 3 resolved folder paths ['/home/user/project', '/home/user/data1', '/home/user/data2'], enforces len(folders) == 3 against duplicates, preserves workspace settings, and checks the open VS Code window.",
+  "notes_blind": "Verifies that /home/user/project.code-workspace and the active VS Code window contain the resolved paths for project, data1, and data2 while preserving other workspace keys, though set_equal in must does not rule out duplicate folder entries."
+ },
+ {
+  "id": "4e60007a-f5be-4bfc-9723-c39affa0a6d3",
+  "grounded": "stricter_reasonable",
+  "blind": "stricter_reasonable",
+  "better": "tie",
+  "files": false,
+  "ref": false,
+  "notes_grounded": "Checks that exact extension ID 'njpwerner.autodocstring' is installed and enabled, with footprint scoped to its folder and extensions.json entry under /home/user/.vscode/extensions.",
+  "notes_blind": "Checks that exact extension ID 'njpwerner.autodocstring' is installed and enabled in the current profile, with footprint scoped to the extension and registry."
+ }
+]

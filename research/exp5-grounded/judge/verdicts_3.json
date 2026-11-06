@@ -1,0 +1,101 @@
+[
+  {
+    "id": "57667013-ea97-417c-9dce-2713091e6e2a",
+    "verdict_X": "equivalent",
+    "verdict_Y": "stricter_overstrict",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Correctly identifies the two text-bearing shapes on slide 5 ('Google Shape;166;p 1' and 'Google Shape;167;p 1'), requires their text runs to be exact RGB 'FFFF00', and preserves all other slide content and formatting like compare_pptx_files.",
+    "notes_Y": "Requires empty_paragraph_default_font_colors_srgb set_equal ['#FFFF00'] even though slide 5's text shapes have no empty paragraphs, and requires live UI state current_slide_index == 5 which the official evaluator does not check."
+  },
+  {
+    "id": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "tie",
+    "official_uses_reference_file": false,
+    "notes_X": "Checks that slide 1 has a 'dissolve' transition like check_transition, and reasonably adds preservation of transitions and content on the remaining slides so 'Apply to All Slides' is rejected.",
+    "notes_Y": "Checks that slide 1 has a 'dissolve' transition like check_transition while also verifying that slides 2..24 keep their transitions, slide count stays 24, and slide content is untouched."
+  },
+  {
+    "id": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Closes the major holes in contains_page_break (which only checks page_break_count == 5 anywhere in the document) by requiring rendered page count to increase by 1 with a blank page immediately after the starting cursor's page and all non-blank content preserved.",
+    "notes_Y": "Closes the holes in contains_page_break by concretely verifying that rendered page 1 is unchanged, rendered page 2 is blank, and rendered page 3 starts with 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)' with all non-empty paragraphs preserved."
+  },
+  {
+    "id": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that all editable text stories (including the 2x2 table that compare_docx_files ignores) are lowercased and that character/paragraph formatting is preserved.",
+    "notes_Y": "Verifies lowercase conversion across all body paragraphs (with accurate spot checks on paragraphs 2 and 8) and the 2x2 grading table while preserving formatting and allowing rendered lowercase case-mapping attributes."
+  },
+  {
+    "id": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+    "verdict_X": "stricter_overstrict",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Requires the replacement of paragraph 1 to include a trailing blank line after the final sentence while also preserving all subsequent content (which already begins with empty paragraph p1), rejecting valid solutions that leave a single blank line before 'Setting'.",
+    "notes_Y": "Accurately enumerates all 7 sentences of paragraph 1 (including exclamation-terminated sentences), allows either 1 or 2 blank lines before 'Setting' to account for the pre-existing empty paragraph, strips whitespace as official options intended, and preserves the table that compare_docx_files ignores."
+  },
+  {
+    "id": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that one empty 5x7 table is added at the starting cursor anchor and closes the hole in compare_docx_tables by requiring body paragraphs outside tables to remain unchanged.",
+    "notes_Y": "Verifies that the existing 11x7 table and all non-empty paragraphs are preserved and that a second empty 5x7 table is inserted in the trailing empty paragraphs where the setup's 40 Down-arrow presses place the cursor."
+  },
+  {
+    "id": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that the comma-delimited paragraph block is converted into a table and closes the hole in compare_docx_tables by verifying that the original comma-separated paragraphs were removed and surrounding prose was preserved.",
+    "notes_Y": "Concretely verifies the exact 5x4 cell matrix of the new first table (normalizing non-breaking spaces from paragraphs 5-9), preservation of the 13 existing tables and all other paragraphs, and removal of the original comma-separated lines."
+  },
+  {
+    "id": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that all character highlighting is removed and all text is preserved like check_highlighted_words, while closing the hole where clearing direct formatting would also strip bold and italic styles.",
+    "notes_Y": "Verifies that all run and paragraph highlight/background colors are None or 'transparent' (matching ODT's actual style representation) and that all text and per-character formatting—including italic on the highlighted 'UCSF’s' span—are preserved."
+  },
+  {
+    "id": "2b9493d7-49b8-493a-a71b-56cd1f4d6908",
+    "verdict_X": "stricter_overstrict",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": false,
+    "notes_X": "Requires every non-LibreOffice OS process started before the task to remain alive (which fails whenever unrelated background OS processes exit) and uses a rigid kill command regex that rejects valid variants like kill -15 <pid> or xargs kill.",
+    "notes_Y": "Checks that the frozen LibreOffice Writer session is terminated via a terminal command without rebooting or losing other open user applications, closing holes in the official ps/bash_history check without overstrict OS-wide process equality."
+  },
+  {
+    "id": "22a4636f-8179-4357-8e87-d1743ece1f81",
+    "verdict_X": "stricter_overstrict",
+    "verdict_Y": "stricter_reasonable",
+    "better": "Y",
+    "official_uses_reference_file": true,
+    "notes_X": "Requires page_renders similarity >= 0.99 between the uploaded PDF and the DOCX, which plausibly rejects valid PDF conversions whose pagination or font rendering differs slightly, and restricts any local PDF copy to Desktop.",
+    "notes_Y": "Checks that a unique PDF named Meeting-Agenda.pdf is uploaded to the Drive 'meetings' folder with matching extracted text (including concrete phrases from the agenda) and that the original Desktop DOCX is untouched."
+  },
+  {
+    "id": "f918266a-b3e0-4914-865d-4faa564f1aef",
+    "verdict_X": "stricter_reasonable",
+    "verdict_Y": "looser",
+    "better": "X",
+    "official_uses_reference_file": true,
+    "notes_X": "Checks that log.txt contains the sorted output ['5', '6', '11', '12', '13'] like compare_text_file, and closes a major hole by verifying that calculator.py actually completes insertionSort with arr[j+1] = arr[j] and produces that output when run.",
+    "notes_Y": "Because the unedited calculator.py already parses and runs with exit code 0 (printing the unsorted list), must only checks that the TODO marker is removed and log.txt matches calculator.py's stdout, accepting wrong outputs in log.txt while delegating correctness to fuzzy."
+  }
+]
