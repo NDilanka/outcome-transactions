@@ -2,7 +2,7 @@
 
 Owner: T3 (Exp 8 real-agent executor). Branch `exp8-direct-agent`. Judge: Sol (orchestrator judge agent). I did not judge.
 Labels: **measured** (read from a run file or script output), **inferred** (derived from timestamps or a rule), **guess** (estimate, not measured), **post hoc** (chosen after the primary results were seen).
-Version 4. Changes from version 3: ground truth is now GT v4, after the orchestrator's rulings on ecc2413d and d53ff5ee (five rows). All arm numbers are recomputed on v4. The post hoc key figure is corrected: A with the key is 14 of 18 (78%), not 15 of 18 (83%). Agreement is dropped as a safety key. The private salt is wired into the packet builder for future runs. The GT issues section is replaced by the GT v4 rulings and evidence.
+Version 4.1. Change from version 4: the Gemini judge landed; the pending bullets are replaced with the result (post hoc, details in `exp8-agreement.md`). Version 4 moved the report to GT v4 after the orchestrator's rulings on ecc2413d and d53ff5ee (five rows), recomputed all arm numbers, corrected the post hoc key figure (A with the key is 14 of 18 (78%), not 15 of 18 (83%)), dropped agreement as a safety key, wired the private salt into the packet builder for future runs, and replaced the GT issues section with the GT v4 rulings and evidence.
 
 ## Answer first
 
@@ -14,7 +14,7 @@ Version 4. Changes from version 3: ground truth is now GT v4, after the orchestr
 - Speed fails G3. Median time per request is 98 s without the judge (slowest of four candidates, parallel assumed), against a 10 s target. The 5x comparison with a step-by-step agent was not run. **Measured for executor time, inferred for generation time, guess for judge time.**
 - The auto-save task (2cd43775) is unresolved. The primary reading counts 083c86e1 wrong, and A commits it. The judge split near-identical profiles, and the harness cannot observe auto-save. **Measured.**
 - Agreement is dropped as a safety key (orchestrator ruling). The post hoc policy C commits 10 of 18 correctly, with 2 wrong. The analysis stays in `exp8-agreement.md`. **Measured, hypothesis.**
-- Second judge (Gemini): not yet on origin. Policies E and E2 wait for its verdicts. **Pending.**
+- Second judge (Gemini 4 Argon): done, all post hoc. Policy E (Sol and Gemini accept) commits exactly what A commits: 13 of 18, 3 wrong. E2 (E with Sol's key) is 14 of 18, 2 wrong. E3 (spec and both judges) matches B: 8 of 18, 1 wrong. Gemini alone commits on every request (15 of 18, 3 wrong, no abstention). Gemini rejects 1 of the 6 wrong accepts that survive Sol's key. Details in `exp8-agreement.md`. **Measured, post hoc.**
 
 ## What ran
 
@@ -245,8 +245,8 @@ GT by method A to D: C correct, W wrong. Spec: ACC, REJ, UND. Judge: acc or rej,
 
 ## Open items
 
-- Second judge (Gemini) on the same 84 packets. Verdicts are not on origin yet. When they land, add policy E (Sol accept and Gemini accept) and E2 (E with Sol's key), against strict GT v4, labelled post hoc.
 - Word render check of ecc2413d, if a Word render can be produced. Until then the page-layout GT rests on LibreOffice only.
+- Judge packets: if the dump is ever revised, add document-order position relative to the cursor and rendered pagination. Four of the six wrong accepts that survive Sol's key fail on those two properties (see `exp8-agreement.md`).
 - Auto-save: resolve with a probe that reads the setting and observes an actual save, or drop the request.
 - Measure per-packet judge time (one packet per call, timed).
 - Run the blind 10-second diff reviewer on CONFIRM items, to complete G1 as the north-star defines it.

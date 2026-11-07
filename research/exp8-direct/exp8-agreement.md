@@ -2,7 +2,7 @@
 
 Owner: T3 (Exp 8 real-agent executor). Branch `exp8-direct-agent`. Judge: Sol. I did not judge.
 Labels: **measured** (script output or file read), **inferred** (from measured facts), **guess** (estimate), **post hoc** (chosen after the primary results were seen).
-Version 3. Changes from version 2: all numbers are on GT v4 (five rows changed by the orchestrator's rulings, see `exp8-results.md`). The ecc2413d and d53ff5ee questions are resolved, so the open-ruling text is gone. The judge key is recomputed and its post hoc effect is corrected (A with key 14 of 18, not 15). Agreement is dropped as a safety key by ruling. The analysis stays here for the record.
+Version 4. Changes from version 3: a second judge from a different lab (Gemini 4 Argon) judged the same 84 packets. Policies E, E2 and E3 are scored against strict GT v4. All of it is post hoc. Earlier versions: v3 moved all numbers to GT v4 (five rows changed by the orchestrator's rulings, see `exp8-results.md`), resolved the ecc2413d and d53ff5ee questions, corrected the judge-key effect (A with key 14 of 18, not 15), and dropped agreement as a safety key by ruling.
 
 **Status: HYPOTHESIS, dropped as a safety key.** The two agreement policies below were proposed after the primary arm results were known. They were not pre-registered. By orchestrator ruling, agreement is not used as a safety key. This document keeps the analysis only.
 
@@ -206,6 +206,61 @@ All four flips are on content that the judge also saw in an identical or near-id
 - Arm A changes on one request: 13 correct and 3 wrong becomes 14 and 2. B, Bs, C and D are unchanged.
 - The key is not a safety mechanism on this sample. It removes one of the wrong first-pass accepts (the auto-save one) and three correct ones. Six wrong accepts survive.
 
+## Second judge from another lab (Gemini 4 Argon), policies E, E2, E3
+
+**Status: post hoc.** Gemini judged the same 84 packets in the same six batches. Verdicts are on `origin/exp8-judge-verdicts` at commit 99f06b3, in `research/exp8-direct/judge_gemini/`. The commit message says each judge saw only its own batch, not Sol's verdicts. Script: `gemini_policies.py`. Output: `gemini_policies_output.txt`. All numbers use strict GT v4.
+
+### Checks (measured)
+
+- 84 verdicts. The packet ids match the private map for all 84. 73 accept, 11 reject. Confidence: 75 high, 3 medium, 6 low. Sol's first pass had 47 high of 84, so Gemini's confidence label carries less information. **Measured, inferred (information content).**
+- Sol first pass x Gemini: 61 accept/accept, 8 reject/reject, 15 disagreements (12 where Sol rejects and Gemini accepts, 3 the reverse). These match the counts the orchestrator reported.
+- Against GT v4 (all 84): Gemini accepts 63 correct and 10 wrong; rejects 7 correct and 4 wrong. Precision 86.3%, recall on correct states 90.0%. Sol's first pass: precision 89.1%, recall 81.4%. Gemini accepts more of everything, wrong states included. **Measured.**
+- Disagreements by GT: of the 12 Sol-reject/Gemini-accept, 8 are correct and 4 wrong (f624e5ec, 81a65c80, a9e34228, and 2cd48d90 in the ablation set). Of the 3 Sol-accept/Gemini-reject, 2 are correct and 1 is wrong (eeb4b683). **Measured.**
+
+### Policies (primary 72 attempts, 18 requests)
+
+- **E:** Sol accept (first pass) AND Gemini accept.
+- **E2:** E with the Sol self-consistency key: Sol accept in both passes AND Gemini accept.
+- **E3:** spec ACCEPT AND Sol accept (first pass) AND Gemini accept.
+- Pick rule: highest confidence of the policy's first verdict (Sol's first pass for E, E2, E3), ties to the lower method index. A sensitivity rule takes the lowest label over the verdicts the policy uses. It changes no result (checked).
+- Reference arms: A and B as in `metrics.py`. G is Gemini alone, for reference only.
+
+| Policy | Correct zero-click | 95% CI (exact) | Wrong commits | CONFIRM (AMBIGUOUS / GAP) | Wrong commit tasks |
+|---|---|---|---|---|---|
+| A (reference) | 13 of 18 (72.2%) | 46.5% to 90.3% | 3 | 2 (2 / 0) | 083c86e1, de97694c, 476b080a |
+| B (reference) | 8 of 18 (44.4%) | 21.5% to 69.2% | 1 | 9 (7 / 2) | de97694c |
+| G Gemini only (reference) | 15 of 18 (83.3%) | 58.6% to 96.4% | 3 | 0 | 083c86e1, de97694c, 476b080a |
+| E | 13 of 18 (72.2%) | 46.5% to 90.3% | 3 | 2 (2 / 0) | 083c86e1, de97694c, 476b080a |
+| E2 | 14 of 18 (77.8%) | 52.4% to 93.6% | 2 | 2 (2 / 0) | de97694c, 476b080a |
+| E3 | 8 of 18 (44.4%) | 21.5% to 69.2% | 1 | 9 (7 / 2) | de97694c |
+
+**Measured (script), post hoc.**
+
+- E changes no commit against A. Gemini rejects 3 packets that Sol accepts, and none of them is A's pick on its request. At the candidate-pool level E removes one wrong accept (eeb4b683), which no arm picked anyway.
+- E2 equals A with the self-consistency key on every request. Gemini adds nothing to the key here.
+- E3 equals B on every request. Gemini's rejects never touch B's candidate pool picks.
+- G alone commits on all 18 requests (no CONFIRM), commits the same three wrong states as A, and reaches 15 of 18 correct. It has no abstention, so it carries no safety signal. Its wrong-commit upper bound equals A's (0.377). **Measured.**
+- One-sided 95% upper bounds on wrong commits per request: E 0.377 (3 of 18), E2 0.31 (2 of 18), E3 0.238 (1 of 18). **Measured.**
+
+### The six wrong accepts that survive Sol's key: Gemini's verdict and what the packet showed
+
+| Code | Task, method | Sol (both passes) | Gemini | What discriminates the state | Did the packet show it? |
+|---|---|---|---|---|---|
+| e6b4b156 | 66399b0d, 4 (ui) | accept, low | accept, high | The inserted table sits one paragraph above the cursor's empty last paragraph | No. The dump lists all paragraphs first and all tables second, so the diff order is not document order. The UI state names the cursor ("empty last paragraph, below the table"), but nothing ties the new table to a position relative to it. |
+| de97694c | d53ff5ee, 2 | accept, high | accept, high | 21 ordinary-case letters were lowercased along with the all-caps text | Yes. The diff shows the ordinary-case words before and after ("Presentation Instruction" and others). Both judges read "all uppercase text" as "all uppercase characters". A reading error, not an observability gap. The request is flagged ambiguous. |
+| b9d8b59c | d53ff5ee, 4 | accept, high | accept, high | Same edit as de97694c | Yes. Same as above. |
+| 476b080a | ecc2413d, 1 (ui) | accept, low | accept, high | The render has no blank page after page 1 (7 pages, text equal to input) | No. The packet shows the page-break count (4 to 5) and a new empty paragraph, but no rendered pagination. The judge inferred a blank page from the break. |
+| eeb4b683 | ecc2413d, 2 (ui) | accept, low | reject, low | Same render result | No, same gap, but Gemini rejected it anyway: "only a single page break was added without a new paragraph ... either inserts a break before page 1 or fails to create a blank page after page 1". Its diff differs from m1 and m4 (no new paragraph). The only one of the six Gemini catches. |
+| 7b72ebd1 | ecc2413d, 4 (ui) | accept, low | accept, high | Same render result as m1 | No. Same pagination gap as m1. |
+
+**Measured (packets, verdicts, end states).** The position claim for e6b4b156 was checked by walking the end state with python-docx: the new table sits between the existing table and the last two empty paragraphs, one paragraph above the cursor paragraph. The packet's own diff cannot show that, because the dump groups paragraphs and tables separately.
+
+Reference: 02d030c7 (ecc2413d m3, wrong in GT v3, correct in v4). Gemini accepts it (high), as do both Sol passes. Correct accept under v4.
+
+### Pattern against Exp 7
+
+Exp 7 found all 8 of its two-key failures came from properties no dump printed. Here, four of the six surviving wrong accepts fail on a property the packet did not show (one cursor position, three rendered pagination). Two fail on request reading with the evidence in full view (the d53ff5ee pair). A second lab does not fix either kind: Gemini catches 1 of the 6, and it accepts 4 wrong states that Sol rejected. **Measured.**
+
 ## Limits
 
 - 18 requests and 14 wrong states (13 in the primary set). Any result here is for one sample. **Measured.**
@@ -213,9 +268,10 @@ All four flips are on content that the judge also saw in an identical or near-id
 - GT v4 is post hoc. Five rows changed after the primary v3 numbers were seen, and all policy numbers here use v4. **Measured (timeline).**
 - Signatures depend on the inspector view, which includes round-trip run markers (see Method). **Measured.**
 - Agreement depends on the four method hints producing diffs that can match. Two methods with the same wrong reading will match. ecc2413d shows this. **Inferred.**
-- Judge verdicts come from one model and one prompt, run twice. The second pass measures run-to-run variance, not bias. **Measured (design), inferred (effect).**
+- Judge verdicts come from one model and one prompt, run twice. The second pass measures run-to-run variance, not bias. Gemini is a second lab, but on the same packets and the same task wording. **Measured (design), inferred (effect).**
+- Policies E, E2 and E3 were defined and scored after the Gemini verdicts were seen. All Gemini numbers here are post hoc. **Measured (timeline).**
 
 ## Next steps
 
-- A second judge from another lab (Gemini) on the same 84 packets. Not on origin yet. When it lands, add policy E (Sol accept and Gemini accept) and E2 (E with Sol's key), against strict GT v4, labelled post hoc.
 - Agreement stays out of any safety design. If it is pursued for other reasons, test it on more requests with independent method hints, and add a check for shared misreading (for example, an independent wording of the request).
+- If a judge packet is ever revised, add the two properties the current dump cannot show: document-order position of inserted objects relative to the cursor, and rendered pagination. Four of the six surviving wrong accepts fail on those two properties.
