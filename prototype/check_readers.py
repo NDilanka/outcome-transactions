@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+"""Reader checks for the cases a second validator round found. Each FAIL is a silent wrong commit or a missed
+change. Workbooks for label cases are made by LibreOffice (as the prototype's own files are); the rest are
+hand-built content.xml packages. Run: python3 check_readers.py (needs soffice on PATH)."""
+import os, sys, shutil, subprocess, tempfile, zipfile
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import readers as R
+
+NS = ('xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" '
+      'xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" '
+      'xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" '
+      'xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" '
+      'xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" '
+      'xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"')
+WORK = tempfile.mkdtemp(prefix="check_readers_")
+PROFILE = "file://" + os.path.join(WORK, "lo_profile")
+
+def sv(t): return f'<table:table-cell office:value-type="string"><text:p>{t}</text:p></table:table-cell>'
+def fv(v): return f'<table:table-cell office:value-type="float" office:value="{v}"><text:p>{v}</text:p></table:table-cell>'
+def row(*cells): return '<table:table-row>' + ''.join(cells) + '</table:table-row>'
+def table(name, rows): return f'<table:table table:name="{name}">' + ''.join(rows) + '</table:table>'
+HDR = row(sv("Item"), sv("Q1"), sv("Q2"), sv("Q3"))
+LIST_STYLE = ('<office:automatic-styles><text:list-style style:name="L">'
+              '<text:list-level-style-number text:level="1" style:num-format="1" style:num-suffix="."/>'
+              '</text:list-style></office:automatic-styles>')
+
+def zip_ods(name, content, styles=""):
+    """A content.xml package, read by the parser only (no LibreOffice needed)."""
+    path = os.path.join(WORK, name)
+    doc = (f'<?xml version="1.0" encoding="UTF-8"?><office:document-content {NS} office:version="1.3">'
+           f'{styles}<office:body><office:spreadsheet>{content}</office:spreadsheet></office:body></office:document-content>')
+    with zipfile.ZipFile(path, "w") as z:
+        z.writestr(zipfile.ZipInfo("mimetype"), "application/vnd.oasis.opendocument.spreadsheet", compress_type=zipfile.ZIP_STORED)
+        z.writestr("content.xml", doc)
+    return path
+
+def lo_ods(name, sheets_xml):
+    """A workbook saved by LibreOffice from a flat ODS, the same way the prototype's own files are made."""
+    fods = os.path.join(WORK, name + ".fods")
+    open(fods, "w").write(f'<?xml version="1.0" encoding="UTF-8"?><office:document {NS} office:version="1.3" '
+                          f'office:mimetype="application/vnd.oasis.opendocument.spreadsheet">{LIST_STYLE}'
+                          f'<office:body><office:spreadsheet>{sheets_xml}</office:spreadsheet></office:body></office:document>')
+    r = subprocess.run(["soffice", f"-env:UserInstallation={PROFILE}", "--headless", "--convert-to", "ods", "--outdir", WORK, fods],
+                       capture_output=True, text=True, timeout=180)
+    out = os.path.join(WORK, name + ".ods")
+    if r.returncode or not os.path.exists(out): raise RuntimeError(f"soffice could not build {name}: {r.stderr[-200:]}")
+    return out
+
+RESULTS = []
+def check(name, ok, detail=""):
+    RESULTS.append((name, bool(ok)))
+    print(("PASS " if ok else "FAIL ") + name + ("" if ok or not detail else f" | {detail}"), flush=True)
+
+# A. The parser must see every cell, and changes it cannot see are a missed change.
+ten_wide = zip_ods("ten_wide.ods", table("Q3", [HDR, row(
+    '<table:table-cell table:number-columns-repeated="1001" office:value-type="float" office:value="7"><text:p>7</text:p></table:table-cell>')]))
+check("A1 a populated repeat of 1001 cells keeps its last cell",
+      f"{R.col_name(1000)}2" in R.all_cells(ten_wide), "the 1001st column is cut at 1000")
+
+dup_a = zip_ods("dup_sheet_a.ods", table("Q3", [HDR]) + table("Other", [row(fv(7))]) + table("Other", [row(fv(9))]))
+dup_b = zip_ods("dup_sheet_b.ods", table("Q3", [HDR]) + table("Other", [row(fv(8))]) + table("Other", [row(fv(9))]))
+try:
+    seen = bool(R.changed_cells(dup_a, dup_b))
+except ValueError:
+    seen = True  # refusing a workbook with duplicate sheet names is also acceptable
+check("A2 a change on the first of two sheets named Other is seen or refused", seen, "all_cells keeps only the last sheet")
+
+# B. The fingerprint covers what a method can change without changing the displayed value.
+def cell_row(*cells): return row(*cells)
+def with_formula(f): return f'<table:table-cell table:formula="{f}" office:value-type="float" office:value="3"><text:p>3</text:p></table:table-cell>'
+f1 = zip_ods("formula_a.ods", table("Q3", [HDR, cell_row(sv("item1"), fv(3), fv(4), fv(5), with_formula("of:=1+2"))]))
+f2 = zip_ods("formula_b.ods", table("Q3", [HDR, cell_row(sv("item1"), fv(3), fv(4), fv(5), with_formula("of:=3"))]))
+check("B1 a formula change with the same value is a change", R.changed_cells(f1, f2), "table:formula is not in the fingerprint")
+
+t1 = zip_ods("time_a.ods", table("Q3", [HDR, cell_row(sv("item1"), fv(3), '<table:table-cell office:value-type="time" office:time-value="PT1H"/>')]))
+t2 = zip_ods("time_b.ods", table("Q3", [HDR, cell_row(sv("item1"), fv(3), '<table:table-cell office:value-type="time" office:time-value="PT2H"/>')]))
+check("B2 a time value without displayed text is a change", R.changed_cells(t1, t2), "office:time-value is not read")
+
+c1 = zip_ods("cur_a.ods", table("Q3", [HDR, cell_row(sv("item1"), fv(3), '<table:table-cell office:value-type="currency" office:value="5" office:currency="EUR"/>')]))
+c2 = zip_ods("cur_b.ods", table("Q3", [HDR, cell_row(sv("item1"), fv(3), '<table:table-cell office:value-type="currency" office:value="5" office:currency="USD"/>')]))
+check("B3 a currency change with the same amount is a change", R.changed_cells(c1, c2), "office:currency is not in the fingerprint")
+
+same = zip_ods("same_a.ods", table("Q3", [HDR, cell_row(sv("item1"), fv(3))]))
+check("B0 an identical copy has no change (control)", not R.changed_cells(same, same))
+
+# C and D. Anchor labels: what the user sees must decide the target, and a label the parser cannot read is a refusal.
+book = lo_ods("labels", (
+    table("Space", [HDR, row(sv(" R "), fv(3)), row(sv("R"), fv(4))]) +
+    table("List", [HDR, row(sv("1."), fv(3)), row(
+        '<table:table-cell office:value-type="string"><text:list text:style-name="L"><text:list-item><text:p/></text:list-item></text:list></table:table-cell>',
+        fv(4))]) +
+    table("Span", [row(sv("Item"), '<table:table-cell table:number-columns-spanned="2" office:value-type="string"><text:p>Q1</text:p></table:table-cell>'
+                       '<table:covered-table-cell/>', sv("Q3")), row(sv("item1"), fv(3), fv(4), fv(5))]) +
+    table("Pos", [HDR, row(sv("item1"), fv(3)), row(sv("item2"), fv(4))])))
+def target_of(sheet): return R.find_anchor(book, R.anchor_of(book, f"{sheet}!B2"))
+check("C1 a label that differs only in spaces is a duplicate", target_of("Space") is None, f"resolved to {target_of('Space')}")
+check("C2 a label whose number is a list marker is refused", target_of("List") is None, f"resolved to {target_of('List')}")
+check("D1 a header merged over two columns is refused", target_of("Span") is None, f"resolved to {target_of('Span')}")
+check("D0 unique labels resolve to their cell (control)", target_of("Pos") == "Pos!B2", f"resolved to {target_of('Pos')}")
+
+shutil.rmtree(WORK, ignore_errors=True)
+failed = [n for n, ok in RESULTS if not ok]
+print(f"{len(RESULTS) - len(failed)} passed, {len(failed)} failed")
+sys.exit(1 if failed else 0)
