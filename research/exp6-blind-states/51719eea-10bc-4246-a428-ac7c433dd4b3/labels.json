@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_vlookup_and_pivot_sheet",
+    "label": "correct",
+    "why": "Column G on Sheet1 computes discounted product revenue via VLOOKUP and Sheet2 summarizes the total revenue for each product with a grand total row."
+  },
+  {
+    "state": "correct_static_revenue_and_summary",
+    "label": "correct",
+    "why": "Column G on Sheet1 holds the computed revenue considering price, quantity, and discount, and Sheet2 lists each product with its summed revenue."
+  },
+  {
+    "state": "wrong_discount_ignored",
+    "label": "wrong",
+    "why": "Revenue is computed as price times quantity without subtracting the discount percentage."
+  },
+  {
+    "state": "wrong_multiplied_by_discount_rate",
+    "label": "wrong",
+    "why": "Revenue multiplies by the discount fraction directly instead of multiplying by one minus the discount fraction."
+  },
+  {
+    "state": "wrong_missing_sheet2_summary",
+    "label": "wrong",
+    "why": "The revenue column is added to Sheet1, but the new sheet Sheet2 summarizing revenue by product is never created."
+  },
+  {
+    "state": "wrong_summarized_by_website",
+    "label": "wrong",
+    "why": "Sheet2 summarizes revenue grouped by Web Site rather than summarizing the revenue of each product."
+  },
+  {
+    "state": "wrong_sheet_named_summary_instead_of_sheet2",
+    "label": "wrong",
+    "why": "The product revenue summary is placed in a sheet named 'Summary' instead of 'Sheet2' as requested."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_formulas_with_charts",
+    "label": "correct",
+    "why": "Rows 12 and 13 compute 'Total' and Feb-to-Jun 'Growth' with formulas and cached values, accompanied by a bar chart titled 'Total' and a line chart titled 'Growth' omitting Jan."
+  },
+  {
+    "state": "correct_values_with_charts",
+    "label": "correct",
+    "why": "Rows 12 and 13 contain the exact monthly totals and Feb-to-Jun growth percentages alongside the 'Total' bar chart and 'Growth' line chart with Jan omitted."
+  },
+  {
+    "state": "wrong_missing_charts",
+    "label": "wrong",
+    "why": "The 'Total' and 'Growth' rows are calculated, but neither the bar chart nor the line chart is added to the worksheet."
+  },
+  {
+    "state": "wrong_growth_divides_by_current_month",
+    "label": "wrong",
+    "why": "Month-on-month growth divides the monthly difference by the current month instead of the previous month."
+  },
+  {
+    "state": "wrong_jan_included_in_growth_and_chart",
+    "label": "wrong",
+    "why": "January is filled with 0.00% in the Growth row and included in the Growth line chart instead of being omitted."
+  },
+  {
+    "state": "wrong_swapped_chart_titles",
+    "label": "wrong",
+    "why": "The bar chart and line chart titles are swapped rather than matching their respective row headers 'Total' and 'Growth'."
+  },
+  {
+    "state": "wrong_total_off_by_one_row",
+    "label": "wrong",
+    "why": "The Total row sums only rows 2 through 10 and omits the tenth sales representative in row 11."
+  }
+]

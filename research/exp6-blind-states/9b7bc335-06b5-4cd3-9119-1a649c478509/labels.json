@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_imap_forward_all_filter_type17",
+    "label": "correct",
+    "why": "An enabled message filter on the email account (ImapMail/outlook.office365.com/msgFilterRules.dat) matches ALL messages and forwards them to anonym-x2024@gmail.com."
+  },
+  {
+    "state": "correct_imap_and_local_forward_all_filter",
+    "label": "correct",
+    "why": "An enabled filter rule matching ALL messages with action Forward to anonym-x2024@gmail.com is configured in msgFilterRules.dat."
+  },
+  {
+    "state": "wrong_forwarded_to_outlook_instead_of_gmail",
+    "label": "wrong",
+    "why": "The filter forwards messages to anonym-x2024@outlook.com instead of anonym-x2024@gmail.com."
+  },
+  {
+    "state": "wrong_filter_disabled",
+    "label": "wrong",
+    "why": "The forward filter rule is created with enabled=\"no\" so it will not run."
+  },
+  {
+    "state": "wrong_action_delete_instead_of_forward",
+    "label": "wrong",
+    "why": "The filter action is set to Delete instead of Forward to anonym-x2024@gmail.com."
+  },
+  {
+    "state": "wrong_condition_restrictive_not_all",
+    "label": "wrong",
+    "why": "The filter only forwards messages whose subject contains 'urgent' instead of forwarding all messages (condition=\"ALL\")."
+  },
+  {
+    "state": "wrong_only_in_local_folders_imap_untouched",
+    "label": "wrong",
+    "why": "The filter is added only to Local Folders while the email account's msgFilterRules.dat remains empty."
+  }
+]

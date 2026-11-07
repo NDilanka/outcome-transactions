@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_sum_formulas_on_sheet2",
+    "label": "correct",
+    "why": "Sheet2 contains columns 'Total Revenue' and 'Total Expenses' with SUM formulas and cached totals 867786 and 411686 from Sheet1."
+  },
+  {
+    "state": "correct_static_sums_on_sheet2",
+    "label": "correct",
+    "why": "Sheet2 contains columns 'Total Revenue' and 'Total Expenses' with the exact computed sums 867786 and 411686."
+  },
+  {
+    "state": "wrong_sums_placed_on_sheet1",
+    "label": "wrong",
+    "why": "The sums are appended to row 21 of Sheet1 instead of being placed on a new sheet named Sheet2."
+  },
+  {
+    "state": "wrong_swapped_column_values",
+    "label": "wrong",
+    "why": "The sum of Total Expenses is placed under 'Total Revenue' and the sum of Revenue is placed under 'Total Expenses'."
+  },
+  {
+    "state": "wrong_wrong_column_header_revenue",
+    "label": "wrong",
+    "why": "The columns on Sheet2 are named 'Revenue' and 'Expenses' instead of 'Total Revenue' and 'Total Expenses'."
+  },
+  {
+    "state": "wrong_off_by_one_missed_last_row",
+    "label": "wrong",
+    "why": "The sums on Sheet2 only aggregate rows 2 through 19 of Sheet1 and omit row 20."
+  },
+  {
+    "state": "wrong_sheet1_deleted",
+    "label": "wrong",
+    "why": "Sheet2 has the right headers and totals, but the original data sheet Sheet1 was deleted."
+  }
+]

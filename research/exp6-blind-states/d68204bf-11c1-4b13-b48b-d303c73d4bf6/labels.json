@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_warmest_to_coolest_by_temp_2_1_0",
+    "label": "correct",
+    "why": "The three vertical sections are ordered from warmest to coolest by red-blue color temperature (right, middle, left) and saved at the original 962x1280 resolution as rearranged.png."
+  },
+  {
+    "state": "correct_warmest_to_coolest_by_red_2_0_1",
+    "label": "correct",
+    "why": "The three vertical sections are ordered from warmest to coolest by red/warm channel intensity (right, left, middle) at 962x1280 resolution in rearranged.png."
+  },
+  {
+    "state": "wrong_coolest_to_warmest_reversed",
+    "label": "wrong",
+    "why": "The vertical sections are arranged with the warmest right-hand section placed last instead of from warmest to coolest."
+  },
+  {
+    "state": "wrong_cut_horizontally_instead_of_vertically",
+    "label": "wrong",
+    "why": "The image is cut into three horizontal bands instead of three vertical sections of equal width."
+  },
+  {
+    "state": "wrong_resolution_960_instead_of_962",
+    "label": "wrong",
+    "why": "The output image has resolution 960x1280 instead of the original 962x1280 resolution."
+  },
+  {
+    "state": "wrong_overwrote_tilearray_missing_rearranged",
+    "label": "wrong",
+    "why": "The result overwrites tilearray.png and does not export rearranged.png on the desktop."
+  },
+  {
+    "state": "wrong_duplicated_warmest_section_three_times",
+    "label": "wrong",
+    "why": "The warmest section is repeated three times instead of rearranging the three sections of the original image."
+  }
+]

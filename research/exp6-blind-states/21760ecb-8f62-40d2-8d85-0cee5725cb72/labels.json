@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_dissolve_transition_slide1",
+    "label": "correct",
+    "why": "Slide 1 has a presentationml transition element containing a dissolve transition while all other slides remain unchanged."
+  },
+  {
+    "state": "correct_dissolve_transition_with_speed_attrs",
+    "label": "correct",
+    "why": "Slide 1 has a dissolve slide transition configured with standard medium speed and advance-on-click attributes."
+  },
+  {
+    "state": "wrong_fade_transition_slide1",
+    "label": "wrong",
+    "why": "Slide 1 is given a 'fade' transition instead of the requested 'dissolve' transition."
+  },
+  {
+    "state": "wrong_dissolve_on_slide2_instead",
+    "label": "wrong",
+    "why": "The 'dissolve' transition is added to the second slide instead of the first page."
+  },
+  {
+    "state": "wrong_dissolve_applied_to_all_slides",
+    "label": "wrong",
+    "why": "The 'dissolve' transition is applied across all 24 slides rather than only the first page."
+  },
+  {
+    "state": "wrong_wipe_transition_slide1",
+    "label": "wrong",
+    "why": "Slide 1 is given a 'wipe' transition instead of 'dissolve'."
+  },
+  {
+    "state": "wrong_dissolve_slide1_but_title_text_cleared",
+    "label": "wrong",
+    "why": "Slide 1 receives the dissolve transition, but the title text on the first slide is erased."
+  }
+]

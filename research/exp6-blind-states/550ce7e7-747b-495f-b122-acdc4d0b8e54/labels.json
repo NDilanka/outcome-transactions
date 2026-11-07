@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_slide5_first_two_lines_strike",
+    "label": "correct",
+    "why": "Single strike-through is applied to the runs of the first and second lines of the list on the active slide (Slide 5)."
+  },
+  {
+    "state": "correct_slide5_run_and_defrpr_strike",
+    "label": "correct",
+    "why": "Single strike-through is set on both run properties and default paragraph run properties for the first and second lines on Slide 5."
+  },
+  {
+    "state": "wrong_only_first_line_struck",
+    "label": "wrong",
+    "why": "Strike-through is applied only to the first line while the second line is left unchanged."
+  },
+  {
+    "state": "wrong_all_lines_on_slide5_struck",
+    "label": "wrong",
+    "why": "Strike-through is applied to all nine lines of the list instead of only the first and second lines."
+  },
+  {
+    "state": "wrong_struck_slide1_title_and_subtitle",
+    "label": "wrong",
+    "why": "Strike-through is applied to the title and subtitle on Slide 1 instead of the first two lines of the list on Slide 5."
+  },
+  {
+    "state": "wrong_underlined_instead_of_strikethrough",
+    "label": "wrong",
+    "why": "The first and second lines are underlined (u='sng') rather than given a strike-through."
+  },
+  {
+    "state": "wrong_first_two_lines_deleted_instead_of_struck",
+    "label": "wrong",
+    "why": "The text of the first and second lines is deleted instead of being formatted with a strike-through."
+  }
+]

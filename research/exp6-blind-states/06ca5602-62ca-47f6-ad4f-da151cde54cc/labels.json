@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_adaptive_palette_256",
+    "label": "correct",
+    "why": "computer.png is converted to an 8-bit palette-based PNG (mode 'P', 256 adaptive colors), reducing its file size while preserving 720x480 dimensions."
+  },
+  {
+    "state": "correct_mediancut_quantize_palette",
+    "label": "correct",
+    "why": "computer.png is quantized to a 256-color median-cut palette-based PNG (mode 'P') with reduced file size."
+  },
+  {
+    "state": "wrong_grayscale_mode_L_instead_of_palette",
+    "label": "wrong",
+    "why": "The image is converted to grayscale (mode 'L') instead of a color palette-based format (mode 'P')."
+  },
+  {
+    "state": "wrong_rgb_mode_not_palette_indexed",
+    "label": "wrong",
+    "why": "The alpha channel is stripped to produce a 24-bit RGB image rather than a palette-based indexed image."
+  },
+  {
+    "state": "wrong_1bit_bilevel_black_white",
+    "label": "wrong",
+    "why": "The image is converted to 1-bit monochrome black-and-white (mode '1') instead of an indexed color palette."
+  },
+  {
+    "state": "wrong_palette_but_resized_half_dimensions",
+    "label": "wrong",
+    "why": "The image is converted to palette mode, but its resolution is shrunk from 720x480 to 360x240."
+  },
+  {
+    "state": "wrong_saved_as_jpg_left_png_rgba",
+    "label": "wrong",
+    "why": "A JPEG copy is saved as computer.jpg while computer.png remains in unindexed RGBA format."
+  }
+]

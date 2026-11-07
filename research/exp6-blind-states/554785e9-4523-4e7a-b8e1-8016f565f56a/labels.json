@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_color_saturation_boost_1_35",
+    "label": "correct",
+    "why": "The color saturation/vibrancy of woman_sitting_by_the_tree2.png is increased by 35% while preserving image dimensions and detail."
+  },
+  {
+    "state": "correct_color_and_contrast_vibrancy_boost",
+    "label": "correct",
+    "why": "The color vibrancy of woman_sitting_by_the_tree2.png is enhanced by 50% with a subtle contrast boost."
+  },
+  {
+    "state": "wrong_desaturated_to_grayscale",
+    "label": "wrong",
+    "why": "Color saturation is reduced to zero, turning the photo grayscale instead of enhancing vibrancy."
+  },
+  {
+    "state": "wrong_reduced_saturation_dull",
+    "label": "wrong",
+    "why": "Color saturation is cut in half (0.5x), making the colors duller instead of more vibrant."
+  },
+  {
+    "state": "wrong_inverted_negative_colors",
+    "label": "wrong",
+    "why": "The RGB channels are inverted into a photographic negative rather than enhancing color vibrancy."
+  },
+  {
+    "state": "wrong_extreme_overblown_brightness",
+    "label": "wrong",
+    "why": "Brightness is blown out by 2.8x, washing out the image instead of enhancing color vibrancy."
+  },
+  {
+    "state": "wrong_saved_to_new_file_original_untouched",
+    "label": "wrong",
+    "why": "The enhanced image is saved to a separate filename while woman_sitting_by_the_tree2.png remains unmodified."
+  }
+]

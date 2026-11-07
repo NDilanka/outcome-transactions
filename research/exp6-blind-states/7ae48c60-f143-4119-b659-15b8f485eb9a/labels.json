@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_exact_heights_all_picture_shapes",
+    "label": "correct",
+    "why": "Pictures on slides 3, 4, and 6 have their heights set to 20cm, 30cm, and 25cm respectively."
+  },
+  {
+    "state": "correct_main_pictures_aspect_locked",
+    "label": "correct",
+    "why": "Pictures on slides 3, 4, and 6 are resized to heights of 20cm, 30cm, and 25cm while scaling width proportionally."
+  },
+  {
+    "state": "wrong_changed_width_instead_of_height",
+    "label": "wrong",
+    "why": "Picture widths are changed to 20cm, 30cm, and 25cm while picture heights remain unchanged."
+  },
+  {
+    "state": "wrong_heights_assigned_to_wrong_slides",
+    "label": "wrong",
+    "why": "The heights 30cm, 25cm, and 20cm are applied in the wrong order to slides 3, 4, and 6 instead of 20cm, 30cm, and 25cm respectively."
+  },
+  {
+    "state": "wrong_partial_missed_slide_6",
+    "label": "wrong",
+    "why": "Picture heights are updated on slides 3 and 4, but the picture on slide 6 is left at its original 26.03cm height."
+  },
+  {
+    "state": "wrong_off_by_one_slides_2_3_5",
+    "label": "wrong",
+    "why": "Zero-indexed slide confusion modifies shapes on slides 2, 3, and 5 instead of slides 3, 4, and 6."
+  },
+  {
+    "state": "wrong_used_inches_instead_of_cm",
+    "label": "wrong",
+    "why": "Picture heights are set to 20, 30, and 25 inches instead of centimeters."
+  }
+]

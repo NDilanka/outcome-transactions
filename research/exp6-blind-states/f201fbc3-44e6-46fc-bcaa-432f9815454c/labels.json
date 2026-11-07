@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_id1_auto_quote_false",
+    "label": "correct",
+    "why": "mail.identity.id1.auto_quote (the identity for anonym-x2024@outlook.com) is set to false in prefs.js."
+  },
+  {
+    "state": "correct_id1_auto_quote_false_sorted",
+    "label": "correct",
+    "why": "mail.identity.id1.auto_quote is set to false alongside the other mail.identity.id1 preferences in prefs.js."
+  },
+  {
+    "state": "wrong_auto_quote_set_to_true",
+    "label": "wrong",
+    "why": "mail.identity.id1.auto_quote is set to true (enabled) instead of false (disabled)."
+  },
+  {
+    "state": "wrong_id2_instead_of_id1",
+    "label": "wrong",
+    "why": "auto_quote is disabled on mail.identity.id2 instead of id1 (which belongs to anonym-x2024@outlook.com)."
+  },
+  {
+    "state": "wrong_string_false_instead_of_boolean",
+    "label": "wrong",
+    "why": "mail.identity.id1.auto_quote is written as the string \"false\" instead of the boolean false."
+  },
+  {
+    "state": "wrong_changed_reply_on_top_instead_of_auto_quote",
+    "label": "wrong",
+    "why": "mail.identity.id1.reply_on_top is modified instead of disabling mail.identity.id1.auto_quote."
+  },
+  {
+    "state": "wrong_deleted_id1_identity_settings",
+    "label": "wrong",
+    "why": "Setting auto_quote to false also deletes all other mail.identity.id1 settings including useremail."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_separate_paragraphs_with_empty_paragraphs",
+    "label": "correct",
+    "why": "Each of the seven sentences in the first paragraph is placed in its own paragraph separated by one empty paragraph line space."
+  },
+  {
+    "state": "correct_double_newlines_within_first_paragraph",
+    "label": "correct",
+    "why": "Each of the seven sentences in the first paragraph is separated by two line breaks (one empty line space)."
+  },
+  {
+    "state": "wrong_single_newline_no_empty_line_space",
+    "label": "wrong",
+    "why": "Sentences are separated by a single line break with no empty line space between them."
+  },
+  {
+    "state": "wrong_missed_exclamation_sentence_boundary",
+    "label": "wrong",
+    "why": "The sentence ending with an exclamation mark ('If you can’t, you don’t!') is not separated from the following sentence."
+  },
+  {
+    "state": "wrong_two_empty_lines_between_sentences",
+    "label": "wrong",
+    "why": "Sentences in the first paragraph are separated by two empty line spaces instead of one."
+  },
+  {
+    "state": "wrong_separated_last_paragraph_instead_of_first",
+    "label": "wrong",
+    "why": "Sentences are separated in the last paragraph of the document while the first paragraph is left unchanged."
+  },
+  {
+    "state": "wrong_kept_only_first_sentence_deleted_rest",
+    "label": "wrong",
+    "why": "Only the first sentence of the first paragraph is kept while the remaining six sentences are deleted."
+  }
+]

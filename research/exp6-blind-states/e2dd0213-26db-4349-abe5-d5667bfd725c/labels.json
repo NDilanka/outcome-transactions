@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_left_side_dx_120",
+    "label": "correct",
+    "why": "The 'Thanks World' text layer in orange_background.xcf is moved from the center (x=976) to the left side of the 2192px canvas at x=120."
+  },
+  {
+    "state": "correct_left_side_dx_240",
+    "label": "correct",
+    "why": "The 'Thanks World' text layer in orange_background.xcf is moved from x=976 to the left side at x=240 while keeping its vertical position."
+  },
+  {
+    "state": "wrong_moved_to_right_side",
+    "label": "wrong",
+    "why": "The 'Thanks World' layer is moved to the right side of the canvas (x=1650) instead of the left side."
+  },
+  {
+    "state": "wrong_moved_background_layer_instead",
+    "label": "wrong",
+    "why": "The orange 'background' layer is shifted to the left while the 'Thanks World' layer stays at x=976."
+  },
+  {
+    "state": "wrong_moved_up_vertically_not_left",
+    "label": "wrong",
+    "why": "The 'Thanks World' layer is moved vertically to the top (y=80) while its horizontal position remains centered at x=976."
+  },
+  {
+    "state": "wrong_moved_completely_off_canvas_left",
+    "label": "wrong",
+    "why": "The 'Thanks World' layer is placed at x=-600, completely outside the visible canvas."
+  },
+  {
+    "state": "wrong_hidden_layer_without_moving",
+    "label": "wrong",
+    "why": "The 'Thanks World' layer is hidden (visibility set to 0) without moving its position from x=976."
+  }
+]

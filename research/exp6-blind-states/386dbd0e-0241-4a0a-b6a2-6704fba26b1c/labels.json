@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_global_key_play_pause_ctrl_alt_space",
+    "label": "correct",
+    "why": "global-key-play-pause is uncommented and assigned to Ctrl+Alt+Space in vlcrc without conflicting with system hotkeys."
+  },
+  {
+    "state": "correct_global_key_play_pause_pause_key",
+    "label": "correct",
+    "why": "global-key-play-pause is uncommented and assigned to Pause in vlcrc."
+  },
+  {
+    "state": "wrong_modified_local_key_not_global",
+    "label": "wrong",
+    "why": "The regular key-play-pause setting is changed while global-key-play-pause remains commented out and unset."
+  },
+  {
+    "state": "wrong_left_commented_out",
+    "label": "wrong",
+    "why": "A keybinding is written on the #global-key-play-pause line, but the leading '#' comment character is not removed."
+  },
+  {
+    "state": "wrong_set_global_key_stop_instead_of_play_pause",
+    "label": "wrong",
+    "why": "The global hotkey is assigned to global-key-stop instead of global-key-play-pause."
+  },
+  {
+    "state": "wrong_uncommented_but_empty_value",
+    "label": "wrong",
+    "why": "global-key-play-pause= is uncommented but left empty with no key assigned."
+  },
+  {
+    "state": "wrong_conflicting_system_hotkey_alt_f4",
+    "label": "wrong",
+    "why": "global-key-play-pause is set to Alt+F4, which conflicts with the system close-window shortcut."
+  }
+]

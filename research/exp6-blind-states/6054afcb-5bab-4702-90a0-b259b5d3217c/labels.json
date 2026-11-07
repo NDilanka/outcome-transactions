@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_hide_na_rows",
+    "label": "correct",
+    "why": "All 13 rows containing N/A values are hidden via row dimension hidden flags without deleting any cells or adding a filter."
+  },
+  {
+    "state": "correct_hide_na_rows_zero_height",
+    "label": "correct",
+    "why": "All 13 rows with N/A entries are marked hidden with zero row height while preserving every cell value and avoiding filters."
+  },
+  {
+    "state": "wrong_deleted_na_cell_contents",
+    "label": "wrong",
+    "why": "The N/A cells in columns D and E are cleared even though the instruction states not to delete any cells."
+  },
+  {
+    "state": "wrong_deleted_entire_na_rows",
+    "label": "wrong",
+    "why": "The rows containing N/A are deleted from the table instead of being hidden."
+  },
+  {
+    "state": "wrong_autofilter_applied",
+    "label": "wrong",
+    "why": "An AutoFilter is applied to B1:E36 even though the instruction states that a filter is not needed."
+  },
+  {
+    "state": "wrong_partial_na_rows_hidden",
+    "label": "wrong",
+    "why": "Only the first seven N/A rows are hidden while the remaining six N/A rows stay visible."
+  },
+  {
+    "state": "wrong_hid_entire_columns_d_and_e",
+    "label": "wrong",
+    "why": "Entire columns D and E are hidden, which hides all valid Actual and Difference values along with the N/A entries."
+  }
+]

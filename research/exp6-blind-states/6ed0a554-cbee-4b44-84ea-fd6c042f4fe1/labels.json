@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_workspace_relative_paths",
+    "label": "correct",
+    "why": "/home/user/project.code-workspace includes the current project folder along with data1 and data2 using workspace-relative paths."
+  },
+  {
+    "state": "correct_workspace_absolute_paths",
+    "label": "correct",
+    "why": "/home/user/project.code-workspace includes /home/user/project, /home/user/data1, and /home/user/data2 using explicit absolute paths."
+  },
+  {
+    "state": "wrong_partial_only_data1_added",
+    "label": "wrong",
+    "why": "Only /home/user/data1 is added to the workspace while /home/user/data2 is omitted."
+  },
+  {
+    "state": "wrong_saved_inside_project_subdir",
+    "label": "wrong",
+    "why": "The workspace file is saved at /home/user/project/project.code-workspace instead of /home/user/project.code-workspace."
+  },
+  {
+    "state": "wrong_typo_data3_instead_of_data2",
+    "label": "wrong",
+    "why": "The workspace references data3 instead of /home/user/data2."
+  },
+  {
+    "state": "wrong_invalid_json_syntax",
+    "label": "wrong",
+    "why": "/home/user/project.code-workspace contains invalid unquoted JSON syntax that VS Code cannot parse."
+  },
+  {
+    "state": "wrong_empty_folders_list",
+    "label": "wrong",
+    "why": "/home/user/project.code-workspace is saved with an empty folders array instead of adding data1 and data2."
+  }
+]

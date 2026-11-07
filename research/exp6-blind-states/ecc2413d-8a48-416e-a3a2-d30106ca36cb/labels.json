@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_new_page_break_paragraph_after_page1",
+    "label": "correct",
+    "why": "A paragraph containing a page break is inserted immediately before the existing page break at paragraph 5, creating a blank second page right after page 1."
+  },
+  {
+    "state": "correct_page_break_appended_to_page1_end",
+    "label": "correct",
+    "why": "A page break is appended at the end of paragraph 4 before paragraph 5's page break, producing a blank page right after the first page."
+  },
+  {
+    "state": "wrong_blank_page_before_first_page",
+    "label": "wrong",
+    "why": "The page break is inserted before the first paragraph, making the very first page blank instead of the page right after the first page."
+  },
+  {
+    "state": "wrong_blank_page_at_end_of_document",
+    "label": "wrong",
+    "why": "A page break is added at the end of the document rather than right after the first page."
+  },
+  {
+    "state": "wrong_line_break_instead_of_page_break",
+    "label": "wrong",
+    "why": "An ordinary line break (w:br without type='page') is inserted after page 1 instead of a page break."
+  },
+  {
+    "state": "wrong_blank_page_after_second_page",
+    "label": "wrong",
+    "why": "The blank page is inserted after the second page (paragraph 70) instead of right after the first page."
+  },
+  {
+    "state": "wrong_first_page_content_deleted",
+    "label": "wrong",
+    "why": "The text on the first page is deleted instead of inserting a new blank page after the first page."
+  }
+]

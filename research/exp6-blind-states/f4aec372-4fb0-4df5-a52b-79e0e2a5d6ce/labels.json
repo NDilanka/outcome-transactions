@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_centered_exact_226_299",
+    "label": "correct",
+    "why": "The 348x202 yellow triangle is moved from the top-left (28, 73) to the center of the 800x800 image at (226, 299) in both the PNG and XCF files."
+  },
+  {
+    "state": "correct_centered_layer_226_298",
+    "label": "correct",
+    "why": "The 348x203 pasted triangle layer is centered at (226, 298) in the 800x800 canvas in both the PNG and XCF files."
+  },
+  {
+    "state": "wrong_only_horizontally_centered",
+    "label": "wrong",
+    "why": "The yellow triangle is centered horizontally (x=226) but remains near the top edge (y=72) instead of the center of the image."
+  },
+  {
+    "state": "wrong_moved_to_bottom_right_corner",
+    "label": "wrong",
+    "why": "The yellow triangle is moved to the bottom-right corner instead of the center of the image."
+  },
+  {
+    "state": "wrong_duplicated_triangle_left_original",
+    "label": "wrong",
+    "why": "A second yellow triangle is pasted at the center while the original triangle on the top-left side is not removed."
+  },
+  {
+    "state": "wrong_centered_but_recolored_blue",
+    "label": "wrong",
+    "why": "The triangle is positioned at the center, but its yellow color is changed to blue."
+  },
+  {
+    "state": "wrong_erased_triangle_all_white",
+    "label": "wrong",
+    "why": "The yellow triangle is erased from the image leaving a blank white canvas."
+  }
+]

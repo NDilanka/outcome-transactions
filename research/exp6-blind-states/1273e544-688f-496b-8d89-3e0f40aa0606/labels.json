@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_copy_values_with_header",
+    "label": "correct",
+    "why": "The Revenue header and all 19 revenue values from Sheet1 column A are copied to Sheet2 column A while leaving Sheet1 intact."
+  },
+  {
+    "state": "correct_copy_values_and_styles",
+    "label": "correct",
+    "why": "The Revenue column including its header and cell formatting is copied to the new sheet named Sheet2."
+  },
+  {
+    "state": "wrong_missing_header_row",
+    "label": "wrong",
+    "why": "Only the numeric values of the Revenue column are copied to Sheet2 without the 'Revenue' header."
+  },
+  {
+    "state": "wrong_copied_expenses_instead_of_revenue",
+    "label": "wrong",
+    "why": "The 'Total Expenses' column is copied to Sheet2 instead of the 'Revenue' column."
+  },
+  {
+    "state": "wrong_cut_instead_of_copy",
+    "label": "wrong",
+    "why": "The Revenue column is moved to Sheet2 and cleared from Sheet1 rather than being copied."
+  },
+  {
+    "state": "wrong_wrong_sheet_name",
+    "label": "wrong",
+    "why": "The Revenue column is copied to a new sheet named 'Revenue' instead of 'Sheet2'."
+  },
+  {
+    "state": "wrong_partial_rows_copied",
+    "label": "wrong",
+    "why": "Only the header and the first nine revenue entries are copied to Sheet2 while rows 11 through 20 are omitted."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_python_monitor_and_log",
+    "label": "correct",
+    "why": "A Python monitoring script on the Desktop streams calculator.py stdout to the terminal and appends lines containing 'ERROR' to log.txt on the Desktop."
+  },
+  {
+    "state": "correct_bash_monitor_and_log",
+    "label": "correct",
+    "why": "A Bash monitoring script on the Desktop prints calculator.py output and appends lines containing 'ERROR' to log.txt on the Desktop."
+  },
+  {
+    "state": "wrong_log_in_home_instead_of_desktop",
+    "label": "wrong",
+    "why": "log.txt is created in /home/user/ instead of on the Desktop."
+  },
+  {
+    "state": "wrong_logged_all_stdout_lines_not_just_error",
+    "label": "wrong",
+    "why": "Every stdout line from calculator.py is written to log.txt instead of only lines containing the word 'ERROR'."
+  },
+  {
+    "state": "wrong_overwrote_calculator_py",
+    "label": "wrong",
+    "why": "calculator.py on the Desktop is overwritten and destroyed instead of creating a separate monitoring script."
+  },
+  {
+    "state": "wrong_stripped_error_keyword_from_log",
+    "label": "wrong",
+    "why": "The word 'ERROR:' is stripped from the logged line instead of appending the line containing 'ERROR'."
+  },
+  {
+    "state": "wrong_empty_log_txt_filtered_wrong_word",
+    "label": "wrong",
+    "why": "The script filters for 'FATAL' instead of 'ERROR' and suppresses standard output, leaving log.txt empty."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_all_document_text_lowercase",
+    "label": "correct",
+    "why": "All uppercase text across every paragraph and table cell in the document is converted to lowercase while preserving formatting."
+  },
+  {
+    "state": "correct_all_paragraphs_lowercase",
+    "label": "correct",
+    "why": "Every run in all body paragraphs (including the all-uppercase instructions paragraph) is converted to lowercase."
+  },
+  {
+    "state": "wrong_partial_only_first_allcaps_sentence",
+    "label": "wrong",
+    "why": "Only the first uppercase sentence in paragraph 7 is converted to lowercase while the remaining uppercase sentences stay in all caps."
+  },
+  {
+    "state": "wrong_converted_all_text_to_uppercase",
+    "label": "wrong",
+    "why": "All text in the document is converted to uppercase instead of lowercase."
+  },
+  {
+    "state": "wrong_converted_to_title_case",
+    "label": "wrong",
+    "why": "The document text is converted to Title Case, leaving every word capitalized instead of lowercase."
+  },
+  {
+    "state": "wrong_deleted_allcaps_paragraph",
+    "label": "wrong",
+    "why": "The uppercase paragraph is deleted entirely instead of being converted to lowercase."
+  },
+  {
+    "state": "wrong_saved_to_new_file_original_untouched",
+    "label": "wrong",
+    "why": "The lowercase document is saved to a separate filename while presentation_instruction_2023_Feb.docx remains unchanged."
+  }
+]

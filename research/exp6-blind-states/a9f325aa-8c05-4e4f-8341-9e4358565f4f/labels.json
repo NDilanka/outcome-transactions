@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_static_clean_titles",
+    "label": "correct",
+    "why": "Every movie title from B2 to B29 is copied to C2 to C29 with redundant whitespace collapsed and each word capitalized while leaving all other cells untouched."
+  },
+  {
+    "state": "correct_formula_proper_trim",
+    "label": "correct",
+    "why": "Column C uses PROPER(TRIM(...)) with cached cleaned values to normalize whitespace and word capitalization across C2 to C29 without modifying any other region."
+  },
+  {
+    "state": "wrong_overwrite_source_column",
+    "label": "wrong",
+    "why": "The cleaned titles overwrite the 'Garbage Movie titles' source column B instead of being placed into the 'Clean Movie Titles' column C."
+  },
+  {
+    "state": "wrong_sentence_case_only",
+    "label": "wrong",
+    "why": "Only the first word of each movie title is capitalized rather than capitalizing the first letter of every word as requested."
+  },
+  {
+    "state": "wrong_redundant_spaces_kept",
+    "label": "wrong",
+    "why": "Letter casing is canonicalized in column C, but the redundant leading and internal whitespaces are not removed."
+  },
+  {
+    "state": "wrong_partial_half_rows",
+    "label": "wrong",
+    "why": "Only rows 2 through 15 are cleaned and copied into column C while rows 16 through 29 remain empty."
+  },
+  {
+    "state": "wrong_irrelevant_region_touched",
+    "label": "wrong",
+    "why": "Column C has the cleaned movie titles, but blank column A is filled with row index numbers despite the instruction not to touch irrelevant blank regions."
+  }
+]

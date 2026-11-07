@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_replace_yellow_with_transparent",
+    "label": "correct",
+    "why": "All yellow highlight styles in content.xml have fo:background-color changed from '#ffff00' to 'transparent' while preserving bold, italic, and text content."
+  },
+  {
+    "state": "correct_remove_yellow_background_attribute",
+    "label": "correct",
+    "why": "Every fo:background-color='#ffff00' attribute is removed from the text styles in content.xml while keeping all other formatting intact."
+  },
+  {
+    "state": "wrong_partial_only_non_italic_highlight_removed",
+    "label": "wrong",
+    "why": "Yellow highlight is removed from style T9, but italic yellow-highlighted spans using style T5 remain highlighted."
+  },
+  {
+    "state": "wrong_changed_yellow_to_white_highlight",
+    "label": "wrong",
+    "why": "The highlight color is changed to white (#ffffff) instead of removing the highlight."
+  },
+  {
+    "state": "wrong_deleted_highlighted_text_spans",
+    "label": "wrong",
+    "why": "The highlighted text spans themselves are deleted from the script instead of only removing their yellow highlight formatting."
+  },
+  {
+    "state": "wrong_removed_all_bold_and_italic_formatting",
+    "label": "wrong",
+    "why": "Removing the highlight also strips bold and italic formatting across the document."
+  },
+  {
+    "state": "wrong_changed_font_color_left_yellow_highlight",
+    "label": "wrong",
+    "why": "The text color is set to black while the #ffff00 yellow background highlight remains intact."
+  }
+]

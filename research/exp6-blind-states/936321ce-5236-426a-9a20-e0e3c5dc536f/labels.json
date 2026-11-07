@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_exact_comma_split_table_in_place",
+    "label": "correct",
+    "why": "The five comma-separated lines in paragraphs 4 through 8 are converted in-place into a 5-row by 4-column table separated by commas."
+  },
+  {
+    "state": "correct_trimmed_comma_split_table_in_place",
+    "label": "correct",
+    "why": "The five comma-separated lines are replaced in-place by a 5-row by 4-column table with comma-delimited cell text trimmed of trailing non-breaking spaces."
+  },
+  {
+    "state": "wrong_table_added_but_paragraphs_kept",
+    "label": "wrong",
+    "why": "The 5x4 table is inserted, but the five original comma-separated text paragraphs are left in the document instead of being converted."
+  },
+  {
+    "state": "wrong_partial_missed_header_paragraph",
+    "label": "wrong",
+    "why": "Only the four data lines are converted into a 4x4 table while the 'Sound-Letter Pattern,Grapheme...' header line remains plain text."
+  },
+  {
+    "state": "wrong_table_appended_at_document_end",
+    "label": "wrong",
+    "why": "The converted table is placed at the very end of the document after all existing tables instead of in-place where the text was."
+  },
+  {
+    "state": "wrong_transposed_4_rows_5_cols",
+    "label": "wrong",
+    "why": "The text is placed into a transposed 4-row by 5-column table instead of 5 rows by 4 columns."
+  },
+  {
+    "state": "wrong_single_column_table_commas_not_split",
+    "label": "wrong",
+    "why": "The five lines are placed into a 5-row by 1-column table without splitting the cells at commas."
+  }
+]

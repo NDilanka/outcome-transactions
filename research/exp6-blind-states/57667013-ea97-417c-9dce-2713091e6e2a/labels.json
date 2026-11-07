@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_slide5_all_textboxes_yellow",
+    "label": "correct",
+    "why": "Every run in both textboxes on slide 5 has its font color set to exact yellow (FFFF00)."
+  },
+  {
+    "state": "correct_slide5_yellow_runs_and_defrpr",
+    "label": "correct",
+    "why": "All textboxes on slide 5 have their run font color and paragraph default run color set to exact yellow (FFFF00)."
+  },
+  {
+    "state": "wrong_only_first_textbox_yellow",
+    "label": "wrong",
+    "why": "Only the quote textbox on slide 5 is set to yellow while the second citation textbox retains its original font color."
+  },
+  {
+    "state": "wrong_light_yellow_variation",
+    "label": "wrong",
+    "why": "The textboxes on slide 5 are set to light yellow (FFFF99) despite the requirement to use exact yellow with no variations."
+  },
+  {
+    "state": "wrong_slide4_instead_of_slide5",
+    "label": "wrong",
+    "why": "The font color is changed to yellow on slide 4 instead of slide 5."
+  },
+  {
+    "state": "wrong_changed_shape_fill_instead_of_font",
+    "label": "wrong",
+    "why": "The background shape fill of the textboxes on slide 5 is set to yellow instead of the font color."
+  },
+  {
+    "state": "wrong_yellow_applied_to_all_slides",
+    "label": "wrong",
+    "why": "All textboxes across all five slides are changed to yellow instead of only the textboxes on slide 5."
+  }
+]

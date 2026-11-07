@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_frame_at_120_5s_fast_seek",
+    "label": "correct",
+    "why": "The video frame at 120.5 seconds is extracted from Interstellar_Imax_2014.mp4 and saved as Desktop/interstellar.png."
+  },
+  {
+    "state": "correct_frame_at_120_5s_exact_seek",
+    "label": "correct",
+    "why": "The exact decoded frame at 120.5 seconds is captured and saved to Desktop/interstellar.png."
+  },
+  {
+    "state": "wrong_captured_at_0_seconds_start",
+    "label": "wrong",
+    "why": "The frame is captured from the beginning of the video (0.5s) instead of at 120.5 seconds."
+  },
+  {
+    "state": "wrong_captured_at_12_05_seconds_decimal_error",
+    "label": "wrong",
+    "why": "The frame is captured at 12.05 seconds instead of 120.5 seconds."
+  },
+  {
+    "state": "wrong_saved_in_home_instead_of_desktop",
+    "label": "wrong",
+    "why": "interstellar.png is saved in /home/user/ instead of on the Desktop."
+  },
+  {
+    "state": "wrong_saved_as_jpg_named_interstellar_jpg",
+    "label": "wrong",
+    "why": "The frame is saved as interstellar.jpg on the Desktop instead of interstellar.png."
+  },
+  {
+    "state": "wrong_blank_black_image",
+    "label": "wrong",
+    "why": "A blank solid-black PNG is written to Desktop/interstellar.png instead of the video frame at 120.5 seconds."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_both_messages_starred_0005",
+    "label": "correct",
+    "why": "Every email in Local Folders/Bills has the 0x0004 star flag set on X-Mozilla-Status (0005)."
+  },
+  {
+    "state": "correct_both_messages_starred_and_msf_refreshed",
+    "label": "correct",
+    "why": "Both messages in Local Folders/Bills have X-Mozilla-Status set to 0005 (read + starred) and the stale .msf summary is removed."
+  },
+  {
+    "state": "wrong_only_first_email_starred",
+    "label": "wrong",
+    "why": "Only the first email in Local Folders/Bills is starred while the second email remains unstarred at 0001."
+  },
+  {
+    "state": "wrong_marked_deleted_0009_instead_of_starred",
+    "label": "wrong",
+    "why": "The messages in Bills are given the expunged/deleted flag (0x0008 -> 0009) instead of the star flag (0x0004 -> 0005)."
+  },
+  {
+    "state": "wrong_starred_trash_instead_of_bills",
+    "label": "wrong",
+    "why": "Emails in Local Folders/Trash are starred while the emails in Local Folders/Bills remain unstarred."
+  },
+  {
+    "state": "wrong_deleted_bills_messages",
+    "label": "wrong",
+    "why": "All messages in Local Folders/Bills are deleted instead of being starred."
+  },
+  {
+    "state": "wrong_marked_unread_0000_not_starred",
+    "label": "wrong",
+    "why": "The emails in Local Folders/Bills are marked unread (0000) without attaching a star."
+  }
+]

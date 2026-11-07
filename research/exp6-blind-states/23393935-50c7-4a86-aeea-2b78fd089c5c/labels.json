@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_copy_four_jpgs_flat_preserve_meta",
+    "label": "correct",
+    "why": "All four .jpg files under Desktop/photos (events/emnlp2023.jpg, vacation/hk/hk_group_photo.jpg, vacation/hk/hong-kong-china.jpg, and vacation/thailand/monk...jpg) are copied into Desktop/cpjpg while excluding us_3.png."
+  },
+  {
+    "state": "correct_copy_four_jpgs_content",
+    "label": "correct",
+    "why": "All four .jpg files across all nested folders of Desktop/photos are copied into Desktop/cpjpg with identical file contents."
+  },
+  {
+    "state": "wrong_moved_instead_of_copied",
+    "label": "wrong",
+    "why": "The .jpg files are moved out of Desktop/photos instead of copied, deleting the originals."
+  },
+  {
+    "state": "wrong_copied_png_file_as_well",
+    "label": "wrong",
+    "why": "family/us_3.png is copied into Desktop/cpjpg alongside the .jpg files instead of copying only .jpg files."
+  },
+  {
+    "state": "wrong_partial_missed_nested_vacation_subfolders",
+    "label": "wrong",
+    "why": "Only events/emnlp2023.jpg (depth 1) is copied while the three .jpg files inside vacation/hk and vacation/thailand (depth 2) are missed."
+  },
+  {
+    "state": "wrong_copied_nested_subdirectories_not_flat",
+    "label": "wrong",
+    "why": "The entire photos directory hierarchy (including us_3.png and subfolders) is copied under Desktop/cpjpg/photos."
+  },
+  {
+    "state": "wrong_created_empty_zero_byte_jpgs",
+    "label": "wrong",
+    "why": "Zero-byte empty files with the .jpg filenames are created in Desktop/cpjpg instead of copying the image data."
+  }
+]

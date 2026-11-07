@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_six_gemini_paragraphs_yellow_highlight",
+    "label": "correct",
+    "why": "All six GEMINI responses from llm_answers.json are written to Desktop/gemini_results.docx with every occurrence of 'Iliad' highlighted in yellow."
+  },
+  {
+    "state": "correct_gemini_responses_case_insensitive_yellow",
+    "label": "correct",
+    "why": "All GEMINI responses are extracted into Desktop/gemini_results.docx with case-insensitive matches of 'Iliad' given yellow highlight formatting."
+  },
+  {
+    "state": "wrong_extracted_gpt4_instead_of_gemini",
+    "label": "wrong",
+    "why": "The document contains GPT-4 responses from llm_answers.json instead of Gemini responses."
+  },
+  {
+    "state": "wrong_no_highlight_on_iliad",
+    "label": "wrong",
+    "why": "All Gemini responses are written to gemini_results.docx, but the word 'Iliad' is not highlighted."
+  },
+  {
+    "state": "wrong_highlighted_green_instead_of_yellow",
+    "label": "wrong",
+    "why": "Occurrences of 'Iliad' are highlighted in bright green instead of yellow."
+  },
+  {
+    "state": "wrong_partial_only_declare_ans_extracted",
+    "label": "wrong",
+    "why": "Only the three declare_ans Gemini responses are extracted while the three question_ans Gemini responses are omitted."
+  },
+  {
+    "state": "wrong_saved_in_home_instead_of_desktop",
+    "label": "wrong",
+    "why": "gemini_results.docx is saved in /home/user/ instead of on the Desktop."
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_all_five_receipts_with_cashout_income",
+    "label": "correct",
+    "why": "All five receipts (receipt_0 through receipt_4) are appended with exact post-tax totals (-186.93, +3670, -236.49, -11.99, -42.46) and running balance formulas."
+  },
+  {
+    "state": "correct_four_expense_receipts_only",
+    "label": "correct",
+    "why": "All four expense receipts (-186.93, -236.49, -11.99, -42.46) are appended to my_bookkeeping.xlsx with negative expense amounts and running balance formulas."
+  },
+  {
+    "state": "wrong_positive_signs_for_expenses",
+    "label": "wrong",
+    "why": "Expense amounts are entered as positive numbers instead of negative numbers, adding to the balance instead of deducting expenses."
+  },
+  {
+    "state": "wrong_used_pre_tax_subtotals",
+    "label": "wrong",
+    "why": "Pre-tax subtotals (-185.08 and -218.97) are recorded for receipt_0 and receipt_2 instead of the actual totals paid (-186.93 and -236.49)."
+  },
+  {
+    "state": "wrong_partial_only_first_two_receipts",
+    "label": "wrong",
+    "why": "Only receipt_0 and receipt_1 are entered while receipt_2, receipt_3, and receipt_4 are omitted."
+  },
+  {
+    "state": "wrong_overwrote_existing_rows_3_to_7",
+    "label": "wrong",
+    "why": "The new transactions overwrite existing rows 3 through 7 instead of being appended below row 8."
+  },
+  {
+    "state": "wrong_missing_balance_column_update",
+    "label": "wrong",
+    "why": "The new transaction rows are added in columns A through D, but the Balance column (E) is left empty."
+  }
+]

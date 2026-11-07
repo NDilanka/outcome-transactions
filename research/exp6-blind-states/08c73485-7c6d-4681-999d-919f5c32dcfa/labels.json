@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_apply_incoming_filters_boolean_true",
+    "label": "correct",
+    "why": "mail.server.default.applyIncomingFilters is set to true in Thunderbird's prefs.js while preserving existing preferences."
+  },
+  {
+    "state": "correct_apply_incoming_filters_string_true",
+    "label": "correct",
+    "why": "mail.server.default.applyIncomingFilters is set to \"true\" in Thunderbird's prefs.js."
+  },
+  {
+    "state": "wrong_set_to_false",
+    "label": "wrong",
+    "why": "mail.server.default.applyIncomingFilters is set to false instead of enabling it."
+  },
+  {
+    "state": "wrong_server1_instead_of_default",
+    "label": "wrong",
+    "why": "mail.server.server1.applyIncomingFilters is modified instead of mail.server.default.applyIncomingFilters."
+  },
+  {
+    "state": "wrong_typo_missing_trailing_s",
+    "label": "wrong",
+    "why": "The preference name is misspelled as mail.server.default.applyIncomingFilter (missing the final 's')."
+  },
+  {
+    "state": "wrong_integer_zero_disabled",
+    "label": "wrong",
+    "why": "mail.server.default.applyIncomingFilters is set to 0 instead of enabling automatic filter execution."
+  },
+  {
+    "state": "wrong_wiped_existing_prefs_js",
+    "label": "wrong",
+    "why": "prefs.js is overwritten with only the single preference line, erasing all existing Thunderbird account and server settings."
+  }
+]

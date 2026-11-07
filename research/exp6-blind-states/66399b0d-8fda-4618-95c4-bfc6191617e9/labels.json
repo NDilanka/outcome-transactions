@@ -1,0 +1,37 @@
+[
+  {
+    "state": "correct_add_table_5_rows_7_cols_at_end",
+    "label": "correct",
+    "why": "An empty table with 5 rows and 7 columns is inserted at the bottom of the document after the existing table."
+  },
+  {
+    "state": "correct_add_table_5_rows_7_cols_at_cursor_paragraph",
+    "label": "correct",
+    "why": "An empty 5-row by 7-column table is placed at the trailing cursor paragraph below the existing table."
+  },
+  {
+    "state": "wrong_swapped_7_rows_5_cols",
+    "label": "wrong",
+    "why": "The inserted table has 7 rows and 5 columns instead of 7 columns and 5 rows."
+  },
+  {
+    "state": "wrong_inserted_at_top_of_document",
+    "label": "wrong",
+    "why": "The 5x7 table is inserted at the top of the document before the heading rather than at the cursor position at the bottom."
+  },
+  {
+    "state": "wrong_off_by_one_4_rows_7_cols",
+    "label": "wrong",
+    "why": "The inserted table has 4 rows and 7 columns instead of 5 rows and 7 columns."
+  },
+  {
+    "state": "wrong_deleted_existing_table",
+    "label": "wrong",
+    "why": "The original 11x7 work effort table is deleted when adding the new 5x7 table."
+  },
+  {
+    "state": "wrong_populated_table_not_empty",
+    "label": "wrong",
+    "why": "The inserted 5x7 table is pre-filled with column header text instead of being an empty table."
+  }
+]
