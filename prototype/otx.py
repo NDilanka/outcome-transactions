@@ -43,6 +43,10 @@ EXPECT = {
     "insert_row_same_b2": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_label": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "race_window": dict(outcome="aborted_user_edit", committed=False, released=[], user_c3_kept=True),
+    "dup_cached": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "dup_comment": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "dup_space": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "dup_sheet": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
 }
 
 def write_report(rep):
@@ -141,6 +145,9 @@ def main():
     run(f"umount {H}/views/* 2>/dev/null; pkill -x Xvfb; pkill -x soffice.bin; rm -rf {H}; mkdir -p {H}/forks {H}/views")
     run(f"python3 {CODE}/make_workspace.py {REAL}", check=True)
     log("workspace ready", files=sorted(R.tree_hashes(REAL)))
+    if MODE == "dup_space":
+        R.ods_replace_cell(f"{REAL}/budget.ods", "A2", '<table:table-cell office:value-type="string"><text:p>item 0</text:p></table:table-cell>')
+        log("frozen target row relabelled 'item 0' before the fork")
     sink = http.server.ThreadingHTTPServer(("127.0.0.1", 9900), Sink)
     threading.Thread(target=sink.serve_forever, daemon=True).start()
 
@@ -186,6 +193,17 @@ def main():
             R.ods_set_cell(f"{REAL}/budget.ods", "B2", 3); log("user typed 3 into the new B2")
     if MODE == "dup_label":
         R.ods_append_block(f"{REAL}/budget.ods", "item0", 1001); log("user pasted 1001 identical rows labelled item0 below the data during search")
+    if MODE == "dup_cached":
+        R.ods_append_rows(f"{REAL}/budget.ods", '<table:table-row table:number-rows-repeated="1001"><table:table-cell office:value-type="string" office:string-value="item0"/></table:table-row>')
+        log("user pasted 1001 identical rows labelled item0 with cached string values and no text, during search")
+    if MODE == "dup_comment":
+        R.ods_append_rows(f"{REAL}/budget.ods", '<table:table-row><table:table-cell office:value-type="string"><office:annotation><text:p>note</text:p></office:annotation><text:p>item0</text:p></table:table-cell></table:table-row>')
+        log("user pasted a row labelled item0 whose label cell carries a comment, during search")
+    if MODE == "dup_space":
+        R.ods_append_rows(f"{REAL}/budget.ods", '<table:table-row><table:table-cell office:value-type="string"><text:p>item<text:s/>0</text:p></table:table-cell></table:table-row>')
+        log("user pasted a row labelled 'item 0' with a text:s space, during search")
+    if MODE == "dup_sheet":
+        R.ods_copy_sheet_first(f"{REAL}/budget.ods", "Q3 copy"); log("user copied sheet Q3 and moved the copy ahead of it, during search")
     for th in ths: th.join()
     search_s = time.monotonic() - t_search
     nv = view_of("f0_null")

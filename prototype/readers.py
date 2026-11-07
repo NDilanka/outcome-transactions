@@ -1,5 +1,5 @@
 """State readers and ODS editing for the outcome-transaction prototype."""
-import zipfile, re, io, os, hashlib, subprocess, shutil
+import zipfile, re, io, os, hashlib, subprocess, shutil, copy
 import xml.etree.ElementTree as ET
 
 NS = {
@@ -205,6 +205,48 @@ def ods_append_block(path, label, count):
     row = ET.SubElement(table, T + "table-row", {T + "number-rows-repeated": str(count)})
     cell = ET.SubElement(row, T + "table-cell", {O + "value-type": "string"})
     ET.SubElement(cell, X + "p").text = label
+    _save_content(path, items, root)
+
+def _fragment(xml):
+    """Parse XML written with the ODS prefixes, so a test adds rows and cells as content.xml holds them."""
+    wrap = f'<w xmlns:table="{NS["table"]}" xmlns:office="{NS["office"]}" xmlns:text="{NS["text"]}">{xml}</w>'
+    return list(ET.fromstring(wrap))
+
+def _load_content(path):
+    with zipfile.ZipFile(path) as z:
+        items = [(i, z.read(i.filename)) for i in z.infolist()]
+    content = dict((i.filename, d) for i, d in items)["content.xml"]
+    _register_ns(content)
+    return items, ET.fromstring(content)
+
+def ods_append_rows(path, rows_xml):
+    """Append table-row XML after the last row of the first sheet, as a paste of rows does."""
+    items, root = _load_content(path)
+    next(root.iter(T + "table")).extend(_fragment(rows_xml))
+    _save_content(path, items, root)
+
+def ods_replace_cell(path, ref, cell_xml):
+    """Replace one cell of the first sheet with table-cell XML. Rows above it and the cell itself must not be repeated."""
+    rr, cc = ref_to_rc(ref)
+    items, root = _load_content(path)
+    rows = list(next(root.iter(T + "table")).iter(T + "table-row"))
+    assert all(r.get(T + "number-rows-repeated", "1") == "1" for r in rows[:rr + 1])
+    row = rows[rr]
+    old = [c for c in row if c.tag == T + "table-cell"][cc]
+    assert old.get(T + "number-columns-repeated", "1") == "1"
+    row.insert(list(row).index(old), _fragment(cell_xml)[0])
+    row.remove(old)
+    _save_content(path, items, root)
+
+def ods_copy_sheet_first(path, name):
+    """Insert a copy of the first sheet under a new name, ahead of it, as a user who duplicates and moves a sheet does."""
+    items, root = _load_content(path)
+    parent_of = {c: p for p in root.iter() for c in p}
+    first = next(root.iter(T + "table"))
+    dup = copy.deepcopy(first)
+    dup.set(T + "name", name)
+    parent = parent_of[first]
+    parent.insert(list(parent).index(first), dup)
     _save_content(path, items, root)
 
 def pdf_text(path):
