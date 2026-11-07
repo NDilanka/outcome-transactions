@@ -1,0 +1,77 @@
+{
+  "cc248d973ba8": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The first two lines of the task-list body are struck through, with no other visible presentation changes."
+  },
+  "ccd9a72da092": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "Sentence separation is complete, but the original 12-point black run formatting was removed and equivalent inherited formatting is not shown."
+  },
+  "ce74ca9cec89": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The Bills index still records both messages without the starred flag, and the binary mailbox dump cannot establish otherwise."
+  },
+  "cf60aa20dd4d": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The profile preference change is consistent with disabling automatic reply quoting, although the truncated dump hides the final preference value."
+  },
+  "d2520c0d30ca": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only emnlp2023.jpg was copied into cpjpg, leaving the three JPG files in the vacation subfolders uncopied."
+  },
+  "d25bf596b497": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The output repeats the original rightmost third three times instead of rearranging all three original sections."
+  },
+  "d3276d423255": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "gemini_results.docx contains zero paragraphs, so the Gemini responses and highlighted Iliad occurrences are missing."
+  },
+  "d5363bd212a0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The forwarding filter is disabled with enabled=\"no\", so future incoming emails will not be forwarded."
+  },
+  "d5379b859638": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The current workspace retains project and adds data1 and data2 with paths resolving to the requested folders."
+  },
+  "d5a6dbe52cab": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The comma-delimited rows became a correct table, but it was appended after the existing tables instead of retaining the source text's position."
+  },
+  "d5a988944138": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The current workspace file is unchanged, and the requested folders were added only to a different newly created workspace file."
+  },
+  "d765cf50a5a0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The forwarding filter matches only subjects containing urgent rather than every future incoming email."
+  },
+  "d802418bb1fd": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "There is no empty line after \"If you can’t, you don’t!\", leaving two sentences together."
+  },
+  "d9877b64b90e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 has the requested headers and correct totals of 867786 revenue and 411686 expenses, with Sheet1 unchanged."
+  },
+  "dae9efc17784": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The XCF changed while retaining its canvas, consistent with moving a text layer, but the dump does not expose layer positions."
+  }
+}

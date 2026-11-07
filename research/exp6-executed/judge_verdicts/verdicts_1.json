@@ -1,0 +1,77 @@
+{
+  "13d9be7f5686": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All movie titles were copied into the clean column with normalized whitespace and capitalization, with no other visible changes."
+  },
+  "14eb7788f897": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The insertion-sort code remains incomplete and log.txt contains unrelated calculator messages rather than the script's sorted output."
+  },
+  "1598bd56ca12": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table was added without visible damage, although the dump does not reveal the original cursor position."
+  },
+  "16a32ad51659": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested Desktop document contains six separate response paragraphs with highlighting, although the truncated source and aggregated formatting prevent verification of complete extraction and exact highlight coverage."
+  },
+  "1702ffad82ee": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Neither requested folder was added and the existing project folder was removed from the workspace."
+  },
+  "1849459ed5d1": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A full-resolution PNG named interstellar.png was added to the Desktop without changing the video, although the dump cannot confirm that it depicts the current scene."
+  },
+  "187e069a596b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 summarizes revenue by website instead of by product."
+  },
+  "199cd72e829f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new transactions overwrite existing bookkeeping records and place numbers and descriptions under incompatible column headings."
+  },
+  "1a79d982c41e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible yellow highlight styles were made transparent while preserving document text and other displayed formatting."
+  },
+  "1adb0a9c56c0": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Thunderbird profile was installed and its archive updated without visible destructive changes, although truncation hides the resulting filtering preferences."
+  },
+  "1ae3292dc448": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The photo was saved as interstellar.jpg rather than the explicitly requested interstellar.png."
+  },
+  "1ae8ad5735d3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The dissolve transition was added to slide 2 while the requested first slide still has no transition."
+  },
+  "1d46a4585fc4": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The sentence spacing was added, but the first paragraph also lost its explicit black color and 12-point font formatting."
+  },
+  "1d9d29bc8abb": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Existing balance caches were corrupted, including E4 showing 879.5 despite its unchanged formula adding 850 and 500."
+  },
+  "1ecdde83479e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The photo's RGB values were inverted rather than its color vibrancy enhanced."
+  }
+}

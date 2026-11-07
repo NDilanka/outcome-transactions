@@ -1,0 +1,77 @@
+{
+  "8a45e46e477f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The resulting profile reduces prefs.js to 61 bytes, discarding existing account settings instead of preserving them while enabling subfolder filtering."
+  },
+  "8b817e36dc34": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "One page break was added without changing the document's other shown content, although the dump cannot verify that the resulting blank page is immediately after the current page."
+  },
+  "8be09f8eec66": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Highlighted words including UCSF and bronchoscopy were deleted rather than merely having their highlighting removed."
+  },
+  "8c1454b8f5c4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The XCF changed without changing its canvas or format, consistent with moving the text layer, but the dump does not expose layer positions."
+  },
+  "8d2a24cd6daa": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The picture heights became 50.8, 76.2, and 63.5 cm instead of 20, 30, and 25 cm, and slide 3's small picture icons were also stretched."
+  },
+  "8e55b2e84a46": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The XCF changed without changing its canvas or format, consistent with moving the text layer, but the dump does not expose layer positions."
+  },
+  "8f21e8ced4e7": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table was added while preserving all shown existing content, although its placement relative to the cursor is not shown."
+  },
+  "8f6ef23ed210": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The image is now palette-based mode P with unchanged dimensions and only the color changes expected from palette conversion."
+  },
+  "8f9e499c0aed": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "VLC's global play/pause shortcut is configured as Ctrl+Alt+Space, enabling control without focusing VLC while leaving the lecture and media files unchanged."
+  },
+  "90303144ecbe": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Rows containing N/A were deleted rather than hidden, shrinking the table and leaving incorrect references in the remaining difference formulas."
+  },
+  "91f7916767c5": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the requested headers and correct sums of 867786 for revenue and 411686 for expenses, with Sheet1 unchanged."
+  },
+  "9218a1aaa9d7": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The triangle moved to the lower-right corner with its yellow-pixel centroid at (614,705), not the center of the 800-by-800 picture."
+  },
+  "92f0143d04d6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The growth formulas divide each month's change by the current month's total rather than the previous month's total, producing incorrect month-on-month percentages."
+  },
+  "92ff211a494c": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested Desktop document contains three response paragraphs with yellow highlighting and leaves the JSON unchanged, although the truncated source and missing run details prevent full verification."
+  },
+  "93703cff2c40": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Yellow highlighting was changed to white background highlighting instead of being removed, so highlighted text styles remain."
+  }
+}

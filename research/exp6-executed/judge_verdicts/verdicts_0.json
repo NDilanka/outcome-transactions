@@ -1,0 +1,77 @@
+{
+  "0402f7f21095": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first two lines were deleted instead of being struck through."
+  },
+  "06d2104354ec": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Dissolve transitions were added to other slides as well as the requested first slide."
+  },
+  "06dad296a931": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only rows 2 through 15 were cleaned, leaving the titles in rows 16 through 29 without corresponding clean values."
+  },
+  "084d37f3b7c4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested Desktop document contains six separately paragraphed responses with Iliad highlighting, although the truncated source and run details prevent complete verification."
+  },
+  "0a36474b2462": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The profile and preferences-file updates are consistent with enabling automatic subfolder filtering, but the truncated end-state dump hides the actual preference."
+  },
+  "0a4c19202ba1": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The sole changed file is the XCF with its canvas preserved, consistent with moving the text layer left, but layer positions are not shown."
+  },
+  "0c42f74548d9": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The profile and preferences-file updates are consistent with disabling automatic reply quotations, but the truncated end-state dump hides the actual preference."
+  },
+  "0cbcb8f502bc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new lowercase copy retains uppercase letters in its table, so not all document text was converted."
+  },
+  "0d5f8520f443": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The profile and preferences-file updates are consistent with disabling automatic reply quotations, but the truncated end-state dump hides the actual preference."
+  },
+  "0dbcf2f837e9": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The new rearranged.png orders the original column thirds from greater to lesser red-blue warmth while preserving dimensions and color statistics and leaving the source unchanged."
+  },
+  "0e1053ae6dba": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The profile and preferences-file updates are consistent with enabling automatic subfolder filtering, but the truncated end-state dump hides the actual preference."
+  },
+  "109d0c036504": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Revenue column was copied to a sheet named Revenue instead of the requested Sheet2."
+  },
+  "11c7390ffc01": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Single strikethrough was applied to the first two list lines while the remaining shown content and formatting were preserved."
+  },
+  "137143a48fbb": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The uppercase instruction paragraph was deleted rather than converted to lowercase."
+  },
+  "13ce7d37612d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original tilearray.png was overwritten and no file named rearranged.png was created."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "6cb7a3091ca0": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The change strikes the presentation title and semester subtitle rather than identifiable first and second entries in the requested to-do list."
+  },
+  "6fd7dab00d6a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the vertical sections are reordered warmest to coolest, the output loses two columns of original image content by shrinking from 962 to 960 pixels wide."
+  },
+  "70908df45da2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The image becomes palette-based but is also reduced from 5184x3888 to 360x240, an unrequested loss of resolution and change of aspect ratio."
+  },
+  "720755a46dde": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all 19 revenue values while the original sheet remains unchanged."
+  },
+  "726650968322": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Hiding the entire Actual column conceals valid data while leaving the N/A errors in the Difference column visible."
+  },
+  "72ebf6948a93": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested totals, percentage growth formulas and two chart types are present, although the dump does not expose chart titles or plotted ranges."
+  },
+  "730f990de539": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty paragraph and one page break are added without changing existing content, consistent with a blank page, although the user's current page is not shown."
+  },
+  "747be6c9c1b6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the four data rows are converted into a table, leaving the comma-separated header outside it."
+  },
+  "74b4a34f07f1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The incomplete insertion-sort script remains unchanged and the added log is in the wrong directory with an unrelated division-by-zero message."
+  },
+  "767f73f94cf9": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The resulting colors move closer to neutral gray, reducing saturation rather than enhancing color vibrancy."
+  },
+  "770a9ab2be8e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The slide's content paragraph gains bullet formatting while the title, text and other shown properties remain unchanged."
+  },
+  "7854252e5cf3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains the revenue values but omits the explicitly requested Revenue header."
+  },
+  "7a4a7ded00e4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The image remains RGB rather than becoming palette-based."
+  },
+  "7ab3f7a1bcb0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A literal hyphen is prepended to the text but the paragraph still has no bullet formatting."
+  },
+  "7b008d33e607": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The global play/pause shortcut is commented out, so the VLC configuration does not enable the requested background keyboard control."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "7bea5ceae56e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Strikethrough was applied to every line of the slide's body rather than only the requested first two lines."
+  },
+  "7bff2aa90ff8": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the complete Revenue column including its header, and Sheet1 is unchanged."
+  },
+  "7ca1ce43b0e4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph's sentences are separated by three newline characters, producing two empty lines instead of the requested one."
+  },
+  "7cbf59b356fe": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "An autofilter was added despite the request to hide the missing-data entries without using a filter."
+  },
+  "7cf132cd96a6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The revenue column was added, but the required Sheet2 and product-revenue Pivot Table are missing."
+  },
+  "7dce5e0c5f83": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve transition was added only to slide 1, with the remaining dumped presentation content unchanged."
+  },
+  "800158942258": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original off-center triangle remains and the yellow pixel area doubles, indicating duplication rather than moving the triangle to the center."
+  },
+  "8167e5940374": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The added blank paragraph and extra page break likely insert the requested blank page while preserving existing content, but the dump does not establish exact pagination."
+  },
+  "81927026c377": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the Finance Meetings heading receives strikethrough, leaving the requested second line unstruck."
+  },
+  "823653cd5eaa": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Slide 1 now has a dissolve transition and no other changes appear in the dump."
+  },
+  "851b199a4332": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The source Garbage Movie Titles values were overwritten while the requested Clean Movie Titles destination remains empty."
+  },
+  "851d07dc6b70": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The picture heights are assigned to the wrong slides and the small slide 3 pictures are also stretched to 30 cm."
+  },
+  "858af36a2bce": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Every total formula excludes the final sales representative in row 11, making the totals and resulting growth percentages incorrect."
+  },
+  "86852eaf466c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The food-placement bug remains unfixed and an incomplete function declaration introduces a syntax error that prevents the game from starting."
+  },
+  "89dc58cf77bd": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Yellow backgrounds were removed from both highlighted text styles while the document text and other shown formatting remain unchanged."
+  }
+}

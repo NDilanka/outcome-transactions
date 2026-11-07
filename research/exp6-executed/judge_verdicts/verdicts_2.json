@@ -1,0 +1,77 @@
+{
+  "205c31159ac7": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All displayed text, including table cells, is lowercase while the document's other content and formatting are preserved."
+  },
+  "214082418bf8": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The global shortcut is assigned to Stop rather than Play/Pause, leaving background pause and resume unconfigured."
+  },
+  "23e5140a50c2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 5's text remains green and white instead of the requested yellow."
+  },
+  "24747d114557": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The global Play/Pause binding is empty, so no keyboard shortcut is configured for background pause and resume."
+  },
+  "25b7d53495b8": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Outlook account's local Thunderbird rules include an enabled incoming-mail filter matching all messages and forwarding them to anonym-x2024@gmail.com."
+  },
+  "25fb78e07e36": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Revenue ignores the discounts, as shown by Aspen's first sale being 724.35 instead of approximately 604.83, making the summary totals incorrect."
+  },
+  "2627717dd289": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A table was added but the original comma-separated paragraphs remain, duplicating the content instead of converting it."
+  },
+  "26c929756c2c": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The unchanged image dimensions and increased separation between color channels suggest enhanced vibrancy, although the statistical dump cannot verify visual quality."
+  },
+  "27d3fd34a358": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested document contains six separate response paragraphs and leaves the source unchanged, but source truncation and absent highlighting detail prevent complete verification."
+  },
+  "299294125251": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The slide's content paragraph now has a bullet while its text, title, and other displayed formatting remain unchanged."
+  },
+  "29ca96cd4e7f": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Only a newline paragraph was inserted and the page-break count remains four, which does not appear to add the requested blank page."
+  },
+  "2ba2cee06a62": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The XCF changed without altering its canvas or file size, which is consistent with moving a layer, but the dump omits positions needed to verify the text moved left."
+  },
+  "2c26aada6ed2": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The updated profile preferences make automatic subfolder filtering plausible, but truncation hides the settings needed to verify it."
+  },
+  "2dc3d448a702": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new calculator.py contains only a comment rather than the completed insertion sort, and log.txt contains an unrelated division-by-zero error."
+  },
+  "2ec0c5d4583a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The workspace includes data1 but omits the requested data2 folder."
+  }
+}

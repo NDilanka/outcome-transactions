@@ -1,0 +1,77 @@
+{
+  "a24e29db43b3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Food still initially spawns off the snake's movement grid, and respawning was also changed to off-grid coordinates, so eating is not reliably fixed."
+  },
+  "a5422d05091f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The insertion-sort TODO remains unfinished and log.txt contains an unrelated division-by-zero error instead of the script's sorted output."
+  },
+  "a674c4202601": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Slide 1 has the requested dissolve transition and the shown slide content and formatting are otherwise unchanged."
+  },
+  "a6faee5acc2e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The destination includes us_3.png even though only files with the .jpg extension were requested."
+  },
+  "a701be1f246f": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All shown text on slide 5 is set to exact yellow FFFF00 with no other shown changes."
+  },
+  "a899cde699ca": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 5 text uses pale yellow FFFF99 rather than the explicitly requested exact yellow FFFF00."
+  },
+  "a8ec7489bec5": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The snapshot was saved to /home/user/interstellar.png rather than the requested Desktop directory."
+  },
+  "a904798f002d": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The profile update is consistent with disabling automatic reply quoting, but truncation omits the actual updated preference so this cannot be verified."
+  },
+  "aa4000548752": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The workspace adds data1 and data3, leaving the requested data2 missing and adding an unrequested folder."
+  },
+  "aadd6a8ae2f5": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Hiding entire rows also conceals valid Date and Budget values instead of only the requested N/A placeholders."
+  },
+  "abc38bb22c66": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The profile update is consistent with enabling incoming filters on subfolders, but the relevant preference is omitted by truncation so automatic filtering cannot be verified."
+  },
+  "b0cb34357471": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The image is converted to palette mode P while retaining its dimensions and substantially the same image content."
+  },
+  "b1772fdae765": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A PNG snapshot with the requested name is saved on the Desktop without other changes, although the dump cannot establish whether it depicts the current video scene."
+  },
+  "b17c73650be0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the local key-play-pause shortcut is configured while global-key-play-pause remains unset, so it will not work while the PDF reader has focus."
+  },
+  "b1b4fd0a665c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "New rows put sequence numbers in Description and merchant descriptions in Type, while existing balance caches are also changed to incorrect values."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "93f28ef1f743": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "VLC's global Play/Pause shortcut is set to Pause, enabling playback control without switching away from the PDF reader."
+  },
+  "94f23c8b4bba": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The Total and Growth rows appear correct, but the dump provides no evidence of the required bar and line charts or their titles."
+  },
+  "96917704a5bf": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Uppercase letters remain throughout the table even though the request covers the entire document."
+  },
+  "96c182ed4da2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Picture widths were changed instead of the requested heights, and the small slide 3 pictures were also stretched."
+  },
+  "976bf4d0e92b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A bullet was added to the slide title as well as the body content, introducing an unrequested title-formatting change."
+  },
+  "9786b6d250f3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "All but the first sentence of the opening paragraph were deleted rather than separated with empty lines."
+  },
+  "98e42279560d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The appended transactions do not follow the existing description and type columns, lack balances, and accompany incorrect cached balances in existing rows."
+  },
+  "99a9affd6bef": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The image was converted to one-bit black and white rather than palette-based mode, discarding its colors."
+  },
+  "9a4ff7dd7059": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "Revenue calculations and product totals are present, but Sheet2 appears to contain a static summary with no evidence of the requested Pivot Table."
+  },
+  "9aae6e1223da": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The local forwarding filter targets anonym-x2024@outlook.com instead of the requested anonym-x2024@gmail.com."
+  },
+  "9f3429a9de6e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The totals were placed on Sheet2, but the original Sheet1 and its source data were removed."
+  },
+  "a130cdadfeab": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The existing populated table was replaced with an empty 5-by-7 table rather than preserved while inserting a new table."
+  },
+  "a1af9cfca77d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The totals are swapped: Total Revenue contains 411686 and Total Expenses contains 867786."
+  },
+  "a1e85cfeeb46": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The triangle was centered horizontally but remains near the top at y=75–273 rather than the center of the 800-by-800 picture."
+  },
+  "a233e9d197d6": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The correctly named Desktop PNG is entirely black, making it unlikely to capture the requested current video scene."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "307280f3511b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The revenue summary is created on a sheet named Summary instead of the explicitly requested Sheet2."
+  },
+  "3119fd178076": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The totals are appended to Sheet1 instead of being placed under the requested headers in a new Sheet2."
+  },
+  "31947e3bf276": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the main pictures reach the requested heights, seven small agenda icons on slide 3 are also stretched from 1.1 cm to 20 cm."
+  },
+  "32bc1e90f531": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The document text is converted to uppercase rather than the requested lowercase."
+  },
+  "336477cd4cbb": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The output document is saved in /home/user rather than the requested Desktop directory."
+  },
+  "3392b09e9027": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The copied titles retain their leading and repeated spaces instead of removing redundant whitespace."
+  },
+  "340ec77676db": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The output reverses horizontal bands from top to bottom instead of reordering vertical sections from warmest to coolest left to right."
+  },
+  "341602d5e468": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The revenue formulas and Sheet2 product totals match the request, although the dump does not expose native Pivot Table metadata."
+  },
+  "348eee8bb34f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Revenue column calculates the discount amount rather than price times quantity times one minus the discount."
+  },
+  "35e1a890854e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The appended rows put numbers in Description and transaction descriptions in Type, while existing balance caches become inconsistent with their formulas."
+  },
+  "37ceea1d286c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Initial food placement aligns only the x coordinate to the snake's grid, leaving most y coordinates unreachable."
+  },
+  "37f4e6fa0665": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "All displayed text remains explicitly marked noStrike, so the requested first and second lines are not struck through."
+  },
+  "39e4ecf043e6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles capitalize only the first letter of the entire title rather than the first letter of every word."
+  },
+  "3a955bb338c1": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The totals, growth percentages, and chart types match the request, although chart titles and the line chart's category range are not exposed."
+  },
+  "3b2f74555b57": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A bullet is added to the slide title while the requested body content remains unbulleted."
+  }
+}

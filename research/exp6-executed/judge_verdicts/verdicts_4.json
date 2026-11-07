@@ -1,0 +1,77 @@
+{
+  "3cd41b9e459e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The main pictures have the requested heights, but seven small agenda icons on slide 3 were also stretched to 20 cm tall."
+  },
+  "3e556cb6bbc0": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An enhanced copy preserves the photo's dimensions and shows stronger color separation consistent with increased vibrancy, although the dump cannot establish visual quality."
+  },
+  "4185690f3cd5": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The five comma-separated lines were converted into a matching five-row, four-column table while the other document content and existing tables remain intact."
+  },
+  "42214e4a2f04": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested Desktop document contains six separate response paragraphs with yellow highlighting, although the truncated source and aggregated formatting prevent verifying completeness and every highlighted occurrence."
+  },
+  "4273974db038": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The JPG files were moved into cpjpg and removed from their original locations instead of being copied."
+  },
+  "43118f0e2770": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide's content was deleted and replaced with an empty bullet rather than adding a bullet to the existing content."
+  },
+  "43c8536b1dcb": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The visible Bills message index still records both messages without the starred flag, so the requested stars do not appear to have been applied."
+  },
+  "44067611a1b4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added rows put numeric identifiers in Description and merchants in Type, while existing and new displayed balances are inconsistent with the unchanged transactions and formulas."
+  },
+  "45857aab26c6": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The updated profile includes a small preference-file change consistent with disabling reply quoting, but the relevant setting is omitted from the truncated dump."
+  },
+  "45ca079c122d": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The XCF was changed without altering its canvas, which is consistent with moving the text box, but the dump does not expose layer positions."
+  },
+  "465725fd1bb7": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Rows 19, 20, 24, 27, 32, and 33 still contain visible N/A values because only seven of the thirteen affected rows were hidden."
+  },
+  "46dcdbf58feb": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Food initialization now uses the same grid-aligned spawning as subsequent food, allowing the snake's existing equality check to detect and eat it."
+  },
+  "46ff8c5ec089": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The unconditional forwarding rule was added to Local Folders as well as the Outlook account, exceeding the requested account-specific scope."
+  },
+  "472da8ca6974": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The copies include us_3.png even though the request only asks to copy files with the .jpg extension."
+  },
+  "48939e92edbf": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All movie titles are copied into C2:C29 with collapsed whitespace and title-style casing, while the source column and other visible regions remain unchanged."
+  }
+}

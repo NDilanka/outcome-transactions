@@ -1,0 +1,77 @@
+{
+  "b6d6db2c7585": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The yellow triangle is centered on the 800-by-800 canvas without changing its size or colors."
+  },
+  "b729151c240f": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The monthly totals and February–June growth percentages are correct and both chart types are present, although chart titles and plotted ranges are not exposed."
+  },
+  "b8194e67b4e9": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The updated profile contains the Bills mailbox with no demonstrated damage, but its star flags are not exposed in the dump."
+  },
+  "b869fdbf10d6": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The Growth row incorrectly adds a January growth value of 0% despite the request to calculate growth only for February through June."
+  },
+  "bab0b8dc6f58": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The N/A cells and their dependent formulas were cleared instead of merely hidden."
+  },
+  "bbcdaa4be3af": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added transactions use the wrong column meanings and positive expense amounts, while existing balance caches are also corrupted."
+  },
+  "c279e14e4c0a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "An unrequested Index column was added to previously blank cells despite the explicit instruction not to touch irrelevant regions."
+  },
+  "c3537f0998c4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A full-resolution interstellar.png was saved on the Desktop without modifying the video, although the current playback frame cannot be verified."
+  },
+  "c38e04fe0026": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The photo was converted to grayscale rather than having its color vibrancy enhanced."
+  },
+  "c452cf5c13c5": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide content was given automatic numbering rather than a bullet point."
+  },
+  "c4db6f159d35": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The highlights were removed but existing bold and italic formatting was also stripped without authorization."
+  },
+  "c713731f3ec4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although food is now grid-aligned, grow() removes the sole snake segment and causes the next movement to fail."
+  },
+  "c7cccd070089": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All shown slide 5 text is exactly FFFF00 yellow, with other slides and the existing formatting preserved."
+  },
+  "c89c602302da": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both Bills message records lack the starred flag, retaining flags 1 and 10000001 instead."
+  },
+  "c9b2fe64217a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The title, copyright, and disclaimer were deleted instead of inserting a blank page after the current page."
+  }
+}
