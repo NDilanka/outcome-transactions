@@ -9,6 +9,7 @@ NS = {
 }
 T = "{%s}" % NS["table"]; O = "{%s}" % NS["office"]; X = "{%s}" % NS["text"]
 MAX_COLUMNS = 16384  # the widest sheet a spreadsheet application writes
+CELL_STATE = ("formula", "value-type", "currency", "time-value", "date-value", "boolean-value")  # changes that show even when the cached value does not
 
 def col_name(i):
     s = ""
@@ -50,7 +51,7 @@ def _style_props(root):
 
 def _cached(cell):
     """The value a cell stores in an attribute (number, date, boolean or string), or None. A string cell may have no text."""
-    for a in ("value", "date-value", "boolean-value", "string-value"):
+    for a in ("value", "date-value", "boolean-value", "string-value", "time-value"):
         if cell.get(O + a):
             return cell.get(O + a)
     return None
@@ -138,7 +139,8 @@ def _sheet_cells(table, sprops):
                 val = _text(cell) or None
             sname = cell.get(T + "style-name") or row.get(T + "default-cell-style-name")
             style = sprops.get(sname, (sname, False, ()))[2] if sname else ()
-            cells.append((c, crep, val, style))
+            state = tuple(sorted((k.rsplit("}", 1)[-1], v) for k, v in cell.attrib.items() if k.rsplit("}", 1)[-1] in CELL_STATE))
+            cells.append((c, crep, val, style + state))
             c += crep
         # Empty rows repeated to the end of the sheet are skipped. A repeated block that holds values is read in full,
         # so duplicate labels in it are seen (an anchor must match exactly one row).
