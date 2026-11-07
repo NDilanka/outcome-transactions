@@ -1,0 +1,229 @@
+{
+ "description": "GIMP 2.10.36 batch exports of XCF layers and flattened composites. Keys are SHA-256 of the XCF file bytes.",
+ "files": {
+  "0d7244256cdc7f46af5183c28392f94b4ed3fba71c7ac9534af7d9092c69195a": {
+   "composite_sha256": "fcac4047fa99da63b87d2df6f7e3fda4d8060ec67eb809b9c69abb0135fc8e13",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "被粘贴的图层",
+     "rgba_sha256": "83dd1f28eba47f0a7ddbe0d5a223ed97e015d9a7f939d9d9085caac0b56b3010"
+    },
+    {
+     "index": 2,
+     "name": "背景",
+     "rgba_sha256": "47d23dadd0f8a03d2ce179b07af10b6a2461477526e919003bad797678040ea0"
+    }
+   ]
+  },
+  "1b1788671a5236366cd0193dd1ccf55a48aac02ac14c069899d1bf9bb39391bd": {
+   "composite_sha256": "df5ff261a8a6641b142bf23416bf9ef3fa4a4ab20969422cd89d984282c90b65",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  },
+  "34de9430b93442827adcf9023298451101a64e14aeec5c1678a9c006ea0ad87c": {
+   "composite_sha256": "369921777375cc618ef200c9c121dd1f354dd5f5141b3ec39c0e33fedc955c63",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  },
+  "35c402f30466931459e9510bdfc52f85b43c79aabb4b64ae870fbf4a311ec517": {
+   "composite_sha256": "ecbdd18c03ac88896aaba6aa5f25e1e5f96cb46cb1149061d164ba9b96ca4310",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  },
+  "403c9bdec6eac182776f8a6232fa816631b15cd349ec2f671af4afd2a3b98fce": {
+   "composite_sha256": "c4cf479faf9550aa67933946546fc299cab7c141337432faa6789e7268ff9fcd",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "被粘贴的图层",
+     "rgba_sha256": "83dd1f28eba47f0a7ddbe0d5a223ed97e015d9a7f939d9d9085caac0b56b3010"
+    },
+    {
+     "index": 2,
+     "name": "背景",
+     "rgba_sha256": "47d23dadd0f8a03d2ce179b07af10b6a2461477526e919003bad797678040ea0"
+    }
+   ]
+  },
+  "45e7f4a1c7a8a483dfb32ac854a67b7e035e88a287467eebcfd7ab6fe10232e5": {
+   "composite_sha256": "fef6b7083d61133e0e1ad842bd3872af3441a441a90a1bd509ef5b81460dd8e7",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "被粘贴的图层",
+     "rgba_sha256": "83dd1f28eba47f0a7ddbe0d5a223ed97e015d9a7f939d9d9085caac0b56b3010"
+    },
+    {
+     "index": 2,
+     "name": "背景",
+     "rgba_sha256": "47d23dadd0f8a03d2ce179b07af10b6a2461477526e919003bad797678040ea0"
+    }
+   ]
+  },
+  "510dec9e343f4bd670408125e6b6d615756406bf5368bf172382066053b4e8ad": {
+   "composite_sha256": "8b284950ad004baf28e32e0f0ce5a25600e4e1d149fe6951e43531d39c0e55e8",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  },
+  "69465bf3e952ba7dacc22547cce379a7ac3ac7e5a4edd9e25d08c441209155c5": {
+   "composite_sha256": "66ac4f1381549a35b0ea4ccecc8c172b87bbcd7ca998a9de60e3b0de4ad83652",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "被粘贴的图层",
+     "rgba_sha256": "83dd1f28eba47f0a7ddbe0d5a223ed97e015d9a7f939d9d9085caac0b56b3010"
+    },
+    {
+     "index": 2,
+     "name": "背景",
+     "rgba_sha256": "47d23dadd0f8a03d2ce179b07af10b6a2461477526e919003bad797678040ea0"
+    }
+   ]
+  },
+  "69d88abd1ad425933ecc19959acde54aa5137721a3ca48b94604969fd73ee7b0": {
+   "composite_sha256": "bba75ceea89c1026d4ed2caef3c18b03bb708b6a699493fcc9d8924bc30a83d1",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  },
+  "95b750bbe0ccdbf0904f2e339989ad3d25d9b8bda2134f1ea2c8a1c01d135897": {
+   "composite_sha256": "ad65cf822146e15f1a81f7a1e0541979494dfc82bde38fe2cd3203ba5b1fd29a",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "被粘贴的图层",
+     "rgba_sha256": "83dd1f28eba47f0a7ddbe0d5a223ed97e015d9a7f939d9d9085caac0b56b3010"
+    },
+    {
+     "index": 2,
+     "name": "背景",
+     "rgba_sha256": "47d23dadd0f8a03d2ce179b07af10b6a2461477526e919003bad797678040ea0"
+    }
+   ]
+  },
+  "b0d435edab44f8653bb71997ab1662728a2a1c0a867b33fc056f863d756a332e": {
+   "composite_sha256": "8b284950ad004baf28e32e0f0ce5a25600e4e1d149fe6951e43531d39c0e55e8",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  },
+  "dde9a51a9780ed768bc1d4453c7a1f5bddd1b24c831cf758d933911bcdaee93e": {
+   "composite_sha256": "6253f4e5f695f948d0d1ff40e9f2aed79ab00d67a6ee3ccde30fbe0beeae4ab7",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  },
+  "e64fce2e98143681fe75ddb89015e75f5c3f5ed50116d73fe9bc470df598437b": {
+   "composite_sha256": "d883267b40e389a772f00ef4c50d49471138afed85da8f101de16ad6cf5a9d9f",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "被粘贴的图层",
+     "rgba_sha256": "83dd1f28eba47f0a7ddbe0d5a223ed97e015d9a7f939d9d9085caac0b56b3010"
+    },
+    {
+     "index": 2,
+     "name": "背景",
+     "rgba_sha256": "47d23dadd0f8a03d2ce179b07af10b6a2461477526e919003bad797678040ea0"
+    }
+   ]
+  },
+  "ed1466b3fe6f3f59fd3ff73b284b33775b2411d9a5a69777e4eefa7afebe703b": {
+   "composite_sha256": "31367455bae49b1ccf4d8f7e2ce59e0fc31357599f11b32aeb4c0b4b75eadf8f",
+   "gimp_version": "2.10.36",
+   "layers": [
+    {
+     "index": 1,
+     "name": "Thanks World",
+     "rgba_sha256": "39f0b28ef4477fc0fa915d1aa0dffd5162ccd271252f581154729166ead76808"
+    },
+    {
+     "index": 2,
+     "name": "orange_background.png",
+     "rgba_sha256": "d6a25b843ccd2072cb71df08d002c953343cf400eadf00bddb5661dd3ec618c5"
+    }
+   ]
+  }
+ }
+}
