@@ -63,7 +63,7 @@ Known executor defects, none fixed in the primary run:
 |---|---|---|
 | wrong accepts <= 2% of >= 200 wrong states | all: 2/173, sample 173 < 200, upper bound 4.11%; group (a): 2/86 | not met (sample size and bound) |
 | wrong rejects <= 10% of correct states | all: REJECT 6/65 (9.2%); group (a): REJECT 6/33 (18.2%), UNDECIDED 12/33 (36.4%) | met only when group (b) is included; group (a) fails. UNDECIDED is not counted as a reject |
-| judge wrong accepts >= 3x specs | judge not run by this agent | pending (orchestrator) |
+| judge wrong accepts >= 3x specs | all: judge 24 vs 3 x 2 = 6 (PASS); group (a): judge 5 vs 6 (FAIL) | scored in `judge_results.md` |
 
 ## Label x executor (labels as claimed, normalized states)
 
@@ -180,7 +180,7 @@ The two fixed states still do not accept. Their spec also uses `.columns` and `b
 
 ## Not done
 
-- Judge wrong accepts (orchestrator-run judge on the packets in `judge_packets/`).
+- Judge scoring is in `judge_results.md` (judge run by the orchestrator; verdicts on branch `exp6-judge-verdicts`).
 - Wrong-accept sample is below 200 wrong states. More blind states are needed to meet that gate.
 - Not fixed in either run: `.odt` reader, `.columns`, `body_order`, `charts`, `height_cm`/`width_cm`, and the grammar forms listed above.
 - Word rendering was not available, so the renderer question is open.

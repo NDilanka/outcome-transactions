@@ -190,6 +190,8 @@ def main():
     assert cb.get('wrong_with_unsupported_or_error', 0) + cb.get('correct_with_unsupported_or_error', 0) == \
         cb.get('wrong_states', 0) + cb.get('correct_states', 0), 'a group (b) state has only evaluable predicates'
     assert res['groups']['b']['correct_exec'].get('ACCEPT', 0) == 0 and res['groups']['b']['wrong_accept'] == 0
+    judge_json = os.path.join(OUT, 'judge_results.json')  # written by judge_score.py; run that first
+    res['judge'] = json.load(open(judge_json, encoding='utf-8')) if os.path.exists(judge_json) else None
     os.makedirs(OUT, exist_ok=True)
     json.dump(res, open(os.path.join(OUT, 'blind_results.json'), 'w'), indent=1, ensure_ascii=False, default=str)
     write_md(res)
@@ -294,7 +296,15 @@ def write_md(res):
              f"group (a): REJECT {pct(G['a']['correct_exec'].get('REJECT', 0), G['a']['correct'])}, UNDECIDED "
              f"{pct(G['a']['correct_exec'].get('UNDECIDED', 0), G['a']['correct'])} | "
              f"met only when group (b) is included; group (a) fails. UNDECIDED is not counted as a reject |")
-    L.append('| judge wrong accepts >= 3x specs | judge not run by this agent | pending (orchestrator) |\n')
+    J = res.get('judge')
+    if J:
+        ja, jg = J['views']['adj']['all'], J['views']['adj']['a']
+        verdict = lambda m: 'PASS' if m['gate_3x_pass'] else 'FAIL'
+        L.append(f"| judge wrong accepts >= 3x specs | all: judge {ja['judge_wrong_accept']} vs 3 x {ja['spec_wrong_accept']} = "
+                 f"{3 * ja['spec_wrong_accept']} ({verdict(ja)}); group (a): judge {jg['judge_wrong_accept']} vs "
+                 f"{3 * jg['spec_wrong_accept']} ({verdict(jg)}) | scored in `judge_results.md` |\n")
+    else:
+        L.append('| judge wrong accepts >= 3x specs | judge not scored | pending |\n')
 
     L.append('## Label x executor (labels as claimed, normalized states)\n')
     L.append('| label | ACCEPT | REJECT | UNDECIDED | total |')
@@ -379,7 +389,7 @@ def write_md(res):
     L.append('The two fixed states still do not accept. Their spec also uses `.columns` and `body_order`, which the executor does not read, so they move from REJECT to UNDECIDED.\n')
 
     L.append('## Not done\n')
-    L.append('- Judge wrong accepts (orchestrator-run judge on the packets in `judge_packets/`).')
+    L.append('- Judge scoring is in `judge_results.md` (judge run by the orchestrator; verdicts on branch `exp6-judge-verdicts`).')
     L.append('- Wrong-accept sample is below 200 wrong states. More blind states are needed to meet that gate.')
     L.append('- Not fixed in either run: `.odt` reader, `.columns`, `body_order`, `charts`, `height_cm`/`width_cm`, and the grammar forms listed above.')
     L.append('- Word rendering was not available, so the renderer question is open.\n')
