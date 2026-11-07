@@ -1,0 +1,22 @@
+{
+  "6177bbd5a738": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and only the first ten values, leaving out the remaining Revenue entries."
+  },
+  "636fb34a5521": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty seven-column, five-row table is added without visible changes to existing content, although the original cursor position cannot be verified from the images."
+  },
+  "6b5f0c2aeacb": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The correct monthly totals and February-to-June growth percentages appear in the requested rows and correctly titled bar and line charts, with January omitted from the growth chart."
+  },
+  "6c4b048bfbb7": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All N/A entries are hidden while the table and other values remain unchanged, although the images cannot establish that the underlying cells were preserved rather than cleared."
+  }
+}

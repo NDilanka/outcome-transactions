@@ -1,0 +1,22 @@
+{
+  "46596e052775": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The end document still has seven nonblank pages, with no requested blank page inserted."
+  },
+  "4b462954d9bd": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The pictures on slides 3, 4, and 6 appear unchanged, making the requested height changes unlikely although exact dimensions are not visible."
+  },
+  "4beef515ad40": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 5's text uses a dark olive-yellow shade rather than the exact yellow requested."
+  },
+  "4d53a324ae6d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Total bar chart plots individual sales data across five numbered categories instead of the six monthly totals."
+  }
+}

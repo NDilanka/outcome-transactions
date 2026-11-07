@@ -1,0 +1,7 @@
+{
+  "9e57cf748e88": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All fully uppercase text is converted to lowercase, while other content and formatting are preserved apart from natural text reflow."
+  }
+}

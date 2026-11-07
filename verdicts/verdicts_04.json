@@ -1,0 +1,7 @@
+{
+  "320ea4931b8c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The pictures are resized horizontally rather than vertically, leaving their heights unchanged instead of applying the requested heights on slides 3, 4, and 6."
+  }
+}

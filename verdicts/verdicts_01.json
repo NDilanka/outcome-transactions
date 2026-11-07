@@ -1,0 +1,22 @@
+{
+  "007b5d24bf5f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Much of the document's original text was deleted instead of being preserved and converted to lowercase."
+  },
+  "0115623e881a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original ODT still contains yellow highlights, while an unrequested DOCX copy changes the formatting and pagination."
+  },
+  "0237af1854bd": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Most of the original text was deleted and uppercase text remains, so this is not a faithful lowercase conversion."
+  },
+  "04f989aa987f": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The pictures on slides 3 and 6 also move upward to the slide's top edge, changing their placement beyond the requested height adjustments."
+  }
+}

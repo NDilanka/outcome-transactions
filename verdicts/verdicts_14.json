@@ -1,0 +1,12 @@
+{
+  "986268a5037c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Uppercase text is lowercased, but the title and ordinary body text also have unrequested font and size changes."
+  },
+  "98aa2cba3baa": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The main uppercase paragraph is lowercased, but the uppercase course code CHIN9505 remains unchanged."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "cc7b54031c2a": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A blank second page is added and the original pages remain unchanged, although the request's current-page reference is not visible."
+  },
+  "cdd7e8f29ed8": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The clean column contains whitespace-normalized, initial-capital movie titles while the source column and surrounding regions appear unchanged."
+  },
+  "cf7fe521af54": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each sentence of the first paragraph is separated by an empty line, with the remaining content preserved through the resulting reflow."
+  },
+  "d0786d9632fb": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Only the pictures on slides 3, 4, and 6 visibly change size consistently with the request, although exact centimetre heights cannot be verified from the images."
+  }
+}

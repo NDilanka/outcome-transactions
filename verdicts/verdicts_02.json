@@ -1,0 +1,22 @@
+{
+  "056ea2af680f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Highlights are removed, but the end state also removes the original bold formatting from the Study Team labels and introductory emphasis."
+  },
+  "0b3b4898d2e2": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The end state adds a blank page without a visible new 7-column, 5-row table, so the requested insertion cannot be verified."
+  },
+  "1d845c15a7cf": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Rows containing N/A are no longer displayed and the remaining data appear unchanged, although images cannot distinguish hiding from deletion or filtering."
+  },
+  "206ce0e2e433": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The original table is preserved and the complete Revenue column with its header appears separately, although the new sheet's name is not visible."
+  }
+}

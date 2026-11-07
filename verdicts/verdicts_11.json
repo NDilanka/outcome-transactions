@@ -1,0 +1,7 @@
+{
+  "6e72c01943fb": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first slide's title and logo disappeared and its background layout changed, causing unrequested damage beyond adding a dissolve transition."
+  }
+}

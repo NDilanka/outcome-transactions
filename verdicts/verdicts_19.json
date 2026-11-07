@@ -1,0 +1,7 @@
+{
+  "b32e2c41bd97": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All slide images are unchanged with no visible damage, so the requested first-slide dissolve transition is plausibly applied but cannot be verified from static images."
+  }
+}

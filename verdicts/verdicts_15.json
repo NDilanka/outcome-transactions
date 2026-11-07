@@ -1,0 +1,7 @@
+{
+  "99cc42222a8b": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "An unrequested duplicate presentation was added, while the unchanged static renders cannot establish whether the first slide has the requested dissolve transition."
+  }
+}

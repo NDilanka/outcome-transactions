@@ -1,0 +1,7 @@
+{
+  "eddbbf26b990": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All slide images are unchanged with no visible damage, consistent with a transition-only edit, but static renders cannot verify the dissolve effect."
+  }
+}

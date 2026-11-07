@@ -1,0 +1,12 @@
+{
+  "f44d89885a83": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The inserted seven-column, five-row table contains repeated Column 1 through Column 7 text instead of being empty."
+  },
+  "f85a09bb7d2c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The revenue summary shows zero for every product and the total despite nonzero revenues in the new sales column."
+  }
+}

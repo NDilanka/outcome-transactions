@@ -1,0 +1,17 @@
+{
+  "22dde4d97db7": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Slide 5's text is yellow, with its layout preserved and all other slides unchanged."
+  },
+  "2758f767d6b1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-separated content is arranged into a table, but the original underlining in the example words has been removed."
+  },
+  "2998dc6da38e": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The pictures appear flattened to a common height rather than the distinct 20, 30, and 25 cm heights requested."
+  }
+}
