@@ -5,8 +5,9 @@ The canonical node keeps metadata, a pixel hash, and channel statistics. Pixel a
 demand by load_pixels() and composite(), so the tree stays small and diffs stay fast.
 
 XCF support covers file version v011 (the version in the snapshots): layer stack, names, offsets,
-visibility, opacity, mode, the text-layer parasite, tile decoding (none and RLE compression), and a
-normal-mode composite. Other XCF versions and blend modes raise XcfUnsupported.
+visibility, opacity, mode, the text-layer parasite, and a normal-mode composite. Pixel decoding covers RLE tiles
+at 8-bit precision for RGB and RGBA layers only, and is gated by TILE_DECODE_VALIDATED. Other XCF versions,
+compressions, precisions, layer types and blend modes raise XcfUnsupported.
 In v011 every file pointer (layer, hierarchy, level, tile) is 64 bits wide, and the header has a precision
 field after the base type; earlier versions use 32-bit pointers and no precision field.
 """
@@ -21,6 +22,8 @@ from PIL import Image
 XCF_LAYER_TYPES = {0: 'RGB', 1: 'RGBA', 2: 'GRAY', 3: 'GRAYA', 4: 'INDEXED', 5: 'INDEXEDA'}
 XCF_BASE_TYPES = {0: 'RGB', 1: 'GRAY', 2: 'INDEXED'}
 TILE = 64
+# Layer modes in v011 files: 0 is NORMAL_LEGACY and 28 is NORMAL (GIMP 2.10 enum values, checked against GIMP 2.10.36).
+NORMAL_MODES = (0, 28)
 
 
 class XcfUnsupported(Exception):
@@ -155,7 +158,7 @@ def _read_xcf_header(data):
     r = _Reader(data)
     r.p = 14
     width, height, base = r.u32(), r.u32(), r.u32()
-    r.u32()  # precision (v011 adds it after the base type; 150 is 8-bit gamma). Not used.
+    precision = r.u32()  # v011 adds it after the base type; 150 is 8-bit gamma
     props, r.p = _parse_props(data, r.p)
     compression = props[PROP_COMPRESSION][0] if PROP_COMPRESSION in props else 0
     colormap = None
@@ -170,7 +173,7 @@ def _read_xcf_header(data):
             break
         layer_ptrs.append(off)
     return {'width': width, 'height': height, 'base_type': XCF_BASE_TYPES.get(base, str(base)),
-            'compression': compression, 'colormap': colormap, 'layer_ptrs': layer_ptrs}
+            'compression': compression, 'precision': precision, 'colormap': colormap, 'layer_ptrs': layer_ptrs}
 
 
 def _read_layer(data, offset, compression):
@@ -213,22 +216,34 @@ def _gimp_text_string(blob):
 
 
 def _rle_plane(data, pos, n):
+    """One channel plane of an RLE tile, n bytes. Token t (checked against GIMP 2.10.36 output):
+    t < 127: run of t + 1 copies of the next byte; t == 127: 16-bit big-endian count, then a value byte, run;
+    t >= 128: literal of 256 - t bytes. A plane that does not end exactly at n bytes is an error."""
     out = bytearray()
     while len(out) < n:
-        v = data[pos]
+        t = data[pos]
         pos += 1
-        if v >= 128:
-            count = 256 - v
-            out.extend(bytes([data[pos]]) * count)
+        if t == 127:
+            count = (data[pos] << 8) | data[pos + 1]
+            out.extend(bytes([data[pos + 2]]) * count)
+            pos += 3
+        elif t < 127:
+            out.extend(bytes([data[pos]]) * (t + 1))
             pos += 1
         else:
-            count = v + 1
+            count = 256 - t
+            if pos + count > len(data):
+                raise ValueError('literal runs past the end of the data')
             out.extend(data[pos:pos + count])
             pos += count
-    return bytes(out[:n]), pos
+    if len(out) != n:
+        raise ValueError('run overshoots the plane')
+    return bytes(out), pos
 
 
-def _decode_tiles(data, level_off, bpp, w, h, compression):
+def _decode_tiles(data, level_off, bpp):
+    """RLE tiles of one level. Each tile stores its channels one after another; edge tiles are stored at their
+    visible size (checked: the planes end exactly at the tile's size, see _rle_plane)."""
     r = _Reader(data)
     r.p = level_off
     lw, lh = r.u32(), r.u32()
@@ -245,28 +260,33 @@ def _decode_tiles(data, level_off, bpp, w, h, compression):
         tw, th = min(TILE, lw - x0), min(TILE, lh - y0)
         pos = toff
         for c in range(bpp):
-            if compression == 0:
-                plane = data[pos:pos + tw * th]
-                pos += tw * th
-            elif compression == 1:
-                plane, pos = _rle_plane(data, pos, tw * th)
-            else:
-                raise XcfUnsupported(f'XCF tile compression {compression} not supported')
+            plane, pos = _rle_plane(data, pos, tw * th)
             planes[y0:y0 + th, x0:x0 + tw, c] = np.frombuffer(plane, dtype=np.uint8).reshape(th, tw)
     return planes
 
 
-TILE_DECODE_VALIDATED = False
-"""Set to True only after the RLE tile decoder is checked against GIMP output. Until then, no XCF pixel is read:
-an unvalidated decoder could return wrong pixels that compare as equal or unequal without warning."""
+TILE_DECODE_VALIDATED = True
+"""Pixel reads (layers and composite) are enabled only because the decoder was checked against GIMP 2.10.36 output:
+all 28 layers and all 14 composites of the 14 unique XCF files in the snapshots and end states match exactly
+(see tests/data/xcf_gimp_reference.json). Setting this to False makes every XCF pixel UNSUPPORTED.
+Validated scope: RLE compression, 8-bit gamma precision (150), RGB and RGBA layers, normal blend mode.
+Anything outside that scope raises XcfUnsupported even when this flag is True."""
+VALIDATED_PRECISION = 150
+VALIDATED_COMPRESSION = 1
+VALIDATED_LAYER_TYPES = ('RGB', 'RGBA')
 
 
-def _layer_rgba(data, layer_info, colormap, compression):
+def _layer_rgba(data, layer_info, head):
     """Decoded layer as RGBA (H, W, 4) uint8, positioned in its own rectangle (not on the canvas)."""
     if not TILE_DECODE_VALIDATED:
         raise XcfUnsupported('XCF tile decoding is not validated against GIMP output')
+    colormap, compression = head['colormap'], head['compression']
+    if head['precision'] != VALIDATED_PRECISION or compression != VALIDATED_COMPRESSION:
+        raise XcfUnsupported(f"XCF precision {head['precision']} / compression {compression} not validated")
     ltype = layer_info['type']
-    bpp = {'RGB': 3, 'RGBA': 4, 'GRAY': 1, 'GRAYA': 2, 'INDEXED': 1, 'INDEXEDA': 2}[ltype]
+    if ltype not in VALIDATED_LAYER_TYPES:
+        raise XcfUnsupported(f'XCF layer type {ltype} not validated')
+    bpp = {'RGB': 3, 'RGBA': 4}[ltype]
     r = _Reader(data)
     r.p = layer_info['_hier']
     _w, _h, _bpp = r.u32(), r.u32(), r.u32()
@@ -277,26 +297,14 @@ def _layer_rgba(data, layer_info, colormap, compression):
             break
         level_ptrs.append(off)
     try:
-        planes = _decode_tiles(data, level_ptrs[0], bpp, layer_info['width'], layer_info['height'], compression)
+        planes = _decode_tiles(data, level_ptrs[0], bpp)
     except (IndexError, ValueError, struct.error) as e:
         # The tile stream does not decode with the rules implemented here. Pixels are then unreadable, not empty.
         raise XcfUnsupported(f"tile data of layer {layer_info['name']!r} does not decode: {type(e).__name__}")
     h, w = planes.shape[:2]
-    if ltype in ('RGB', 'RGBA'):
-        rgba = planes if bpp == 4 else np.concatenate([planes, np.full((h, w, 1), 255, np.uint8)], axis=2)
-    elif ltype in ('GRAY', 'GRAYA'):
-        g = planes[:, :, 0]
-        a = planes[:, :, 1] if bpp == 2 else np.full((h, w), 255, np.uint8)
-        rgba = np.stack([g, g, g, a], axis=2)
-    else:
-        if colormap is None:
-            raise XcfUnsupported('indexed layer without colormap')
-        pal = np.array(colormap, dtype=np.uint8)
-        idx = planes[:, :, 0]
-        rgb = pal[np.minimum(idx, len(pal) - 1)]
-        a = planes[:, :, 1] if bpp == 2 else np.full((h, w), 255, np.uint8)
-        rgba = np.concatenate([rgb, a[:, :, None]], axis=2)
-    return rgba
+    if bpp == 4:
+        return planes
+    return np.concatenate([planes, np.full((h, w, 1), 255, np.uint8)], axis=2)
 
 
 @functools.lru_cache(maxsize=16)
@@ -317,7 +325,7 @@ def read_xcf(path, stamp):
         node = {k: v for k, v in layer.items() if not k.startswith('_')}
         node['pixel_source'] = {'layer_index': i}
         try:
-            rgba = _layer_rgba(data, layer, head['colormap'], head['compression'])
+            rgba = _layer_rgba(data, layer, head)
             node['pixels_sha256'] = hashlib.sha256(np.ascontiguousarray(rgba).tobytes()).hexdigest()
         except XcfUnsupported as e:
             node['pixels_sha256'] = None
@@ -352,7 +360,7 @@ def layer_pixels(path, stamp, index):
     """RGBA array of one layer, placed at its offset on a canvas the size of the image (transparent elsewhere)."""
     data, head, layers = _xcf_document(path, stamp)
     layer = layers[index - 1]
-    rgba = _layer_rgba(data, layer, head['colormap'], head['compression'])
+    rgba = _layer_rgba(data, layer, head)
     canvas = np.zeros((head['height'], head['width'], 4), dtype=np.uint8)
     ox, oy = layer['offset_x'], layer['offset_y']
     h, w = rgba.shape[:2]
@@ -363,21 +371,34 @@ def layer_pixels(path, stamp, index):
     return canvas
 
 
+def _srgb_to_linear(v):
+    return np.where(v <= 0.04045, v / 12.92, ((v + 0.055) / 1.055) ** 2.4)
+
+
+def _linear_to_srgb(lin):
+    lin = np.clip(lin, 0.0, 1.0)
+    return np.where(lin <= 0.0031308, lin * 12.92, 1.055 * np.power(lin, 1 / 2.4) - 0.055)
+
+
 def composite(path, stamp):
-    """Flattened RGB of the visible layers, normal mode, over white. Bottom layer first."""
+    """Flattened RGB of the visible layers over white, normal mode, bottom layer first.
+
+    GIMP 2.10.36 flattens these files in linear light: each layer's sRGB values are decoded, blended with its
+    alpha times opacity, then encoded back to sRGB and rounded to the nearest 8-bit value. Checked pixel-exact
+    against GIMP's flatten on all snapshot composites (see TILE_DECODE_VALIDATED)."""
     data, head, layers = _xcf_document(path, stamp)
     H, W = head['height'], head['width']
-    out = np.full((H, W, 3), 255.0)
+    out = np.ones((H, W, 3))
     for index in range(len(layers), 0, -1):
         layer = layers[index - 1]
         if not layer['visible']:
             continue
-        if layer['mode'] != 0:
+        if layer['mode'] not in NORMAL_MODES:
             raise XcfUnsupported(f"blend mode {layer['mode']} not supported")
         src = layer_pixels(path, stamp, index).astype(np.float64)
         alpha = src[..., 3:4] / 255.0 * layer['opacity']
-        out = src[..., :3] * alpha + out * (1 - alpha)
-    return np.clip(np.round(out), 0, 255).astype(np.uint8)
+        out = _srgb_to_linear(src[..., :3] / 255.0) * alpha + out * (1 - alpha)
+    return np.round(_linear_to_srgb(out) * 255).astype(np.uint8)
 
 
 def read_image(path, stamp, kind):

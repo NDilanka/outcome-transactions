@@ -108,8 +108,13 @@ Notes:
   ODS (LibreOffice writes formatted columns this way). Empty cells are recorded only when they carry their own style.
 - The raw xlsx style index (`s`) is not kept. An app renumbers it on every save.
 - ODS dates are converted to Excel serial numbers (days since 1899-12-30), as xlsx stores them.
+- docx paragraph `style` and `alignment` are the values Word applies, not the raw XML. With no `w:pStyle`, the style
+  is the default paragraph style (`w:default="1"`). With no `w:jc`, alignment comes from the style chain (`basedOn`),
+  then the document default, then left. Adjacent runs with the same formatting are one run. Checked against LibreOffice
+  re-saves (save-noise residuals in the results note).
 - Not read: odp shape fill and odp paragraph formatting, xlsx conditional formats, indexed palette colours,
-  docx and pptx theme-colour names (`schemeClr`), table borders, and cell wrap or rotation.
+  docx and pptx theme-colour names (`schemeClr`), table borders, table-style paragraph properties, and cell wrap or
+  rotation.
 
 ## Formula values (xlsx)
 
@@ -129,7 +134,8 @@ executable tree, 8 are live probes (`probe ...`: kept as 'live', UNSUPPORTED), a
 
 Added forms: regex literals after matches, contains and does_not_match; keyword arguments; dict and tuple
 literals; ranges as arguments; `&` and `|` on integers; ternary `c ? a : b`; contains; does_not_match; is and is
-not; similarity (parsed, UNSUPPORTED); ordered_by ascending and descending; filters `X where C` and `X.where(C)`
+not; similarity (parsed, UNSUPPORTED); ordered_by ascending and descending; `ordered_by stack` on `layers.names`
+(top layer first, as in the GIMP Layers dialog; UNSUPPORTED on any other list); filters `X where C` and `X.where(C)`
 (bare names in C are the item's fields); `for each v in it: body`; `if C: B`; statements separated by `;` with
 `let NAME = expr` and `expr as NAME`; `of DOC` after a quantifier; the set operators as calls, `set_equal(a, b)`;
 keywords as attribute names, `x.includes(...)`.

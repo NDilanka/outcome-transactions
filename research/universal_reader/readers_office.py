@@ -204,7 +204,52 @@ def _docx_run_props(rpr):
     return out
 
 
-def _docx_paragraph(p, links=None):
+def _docx_styles(z):
+    """Paragraph styles from word/styles.xml: the default paragraph style, each style's basedOn and jc, and the
+    document default jc. Used to resolve what a paragraph with no pStyle or jc actually uses."""
+    out = {'default': None, 'styles': {}, 'doc_jc': None}
+    if 'word/styles.xml' not in z.namelist():
+        return out
+    root = _xml(z, 'word/styles.xml')
+    for st in root.findall(W + 'style'):
+        if st.get(W + 'type') != 'paragraph':
+            continue
+        sid = st.get(W + 'styleId')
+        if st.get(W + 'default') == '1':
+            out['default'] = sid
+        based, jc = st.find(W + 'basedOn'), st.find(f'{W}pPr/{W}jc')
+        out['styles'][sid] = {'based_on': based.get(W + 'val') if based is not None else None,
+                              'jc': _jc_value(jc)}
+    out['doc_jc'] = _jc_value(root.find(f'{W}docDefaults/{W}pPrDefault/{W}pPr/{W}jc'))
+    return out
+
+
+def _jc_value(jc):
+    return ALIGNMENT.get(jc.get(W + 'val'), jc.get(W + 'val')) if jc is not None else None
+
+
+def _docx_effective(style_id, jc, styles):
+    """Paragraph style and alignment as Word applies them (ECMA-376 cascade): a paragraph with no pStyle uses the
+    default paragraph style; direct alignment wins, then the style chain, then the document default, then left."""
+    style_id = style_id or styles['default']
+    if jc is not None:
+        return style_id, jc
+    seen, sid = set(), style_id
+    while sid in styles['styles'] and sid not in seen:
+        seen.add(sid)
+        st = styles['styles'][sid]
+        if st['jc'] is not None:
+            return style_id, st['jc']
+        sid = st['based_on']
+    return style_id, styles['doc_jc'] or 'left'
+
+
+def _run_key(run):
+    return tuple(sorted((k, repr(v)) for k, v in run.items() if k != 'text'))
+
+
+def _docx_paragraph(p, links=None, styles=None):
+    styles = styles or {'default': None, 'styles': {}, 'doc_jc': None}
     runs, texts = {}, []
     for r in p.iter(W + 'r'):
         parts = []
@@ -229,7 +274,12 @@ def _docx_paragraph(p, links=None):
             if target is None and parent.get(W + 'anchor'):
                 target = '#' + parent.get(W + 'anchor')
             node['hyperlink'] = target
-        runs[str(len(runs) + 1)] = node
+        # Adjacent runs with the same formatting are one span. Apps split runs at points where nothing visible changes.
+        prev = runs.get(str(len(runs)))
+        if prev is not None and _run_key(prev) == _run_key(node):
+            prev['text'] += text
+        else:
+            runs[str(len(runs) + 1)] = node
         texts.append(text)
     ppr = p.find(W + 'pPr')
     style = jc = None
@@ -244,17 +294,18 @@ def _docx_paragraph(p, links=None):
         if shd is not None and shd.get(W + 'fill') not in (None, 'auto'):
             bg = _hex(shd.get(W + 'fill'))
         numbered = ppr.find(W + 'numPr') is not None
+    style, jc = _docx_effective(style, jc, styles)
     return {'text': ''.join(texts), 'style': style, 'alignment': jc, 'background_color': bg,
             'numbered': numbered, 'runs': runs}
 
 
-def _docx_table(tbl, links=None):
+def _docx_table(tbl, links=None, styles=None):
     rows = {}
     grid = tbl.find(W + 'tblGrid')
     for i, tr in enumerate(tbl.findall(W + 'tr'), 1):
         cells = {}
         for j, tc in enumerate(tr.findall(W + 'tc'), 1):
-            paras = [_docx_paragraph(p, links) for p in tc.findall(W + 'p')]
+            paras = [_docx_paragraph(p, links, styles) for p in tc.findall(W + 'p')]
             shd = tc.find(f'{W}tcPr/{W}shd')
             bg = _hex(shd.get(W + 'fill')) if shd is not None and shd.get(W + 'fill') not in (None, 'auto') else None
             cells[str(j)] = {'text': '\n'.join(p['text'] for p in paras), 'background_color': bg,
@@ -267,13 +318,14 @@ def read_docx(z):
     root = _xml(z, 'word/document.xml')
     body = root.find(W + 'body')
     links = _link_targets(z, 'word/document.xml')
+    styles = _docx_styles(z)
     paragraphs, tables, order = {}, {}, []
     for el in body:
         if el.tag == W + 'p':
-            paragraphs[str(len(paragraphs) + 1)] = _docx_paragraph(el, links)
+            paragraphs[str(len(paragraphs) + 1)] = _docx_paragraph(el, links, styles)
             order.append(['p', len(paragraphs)])
         elif el.tag == W + 'tbl':
-            tables[str(len(tables) + 1)] = _docx_table(el, links)
+            tables[str(len(tables) + 1)] = _docx_table(el, links, styles)
             order.append(['t', len(tables)])
     return {'paragraphs': paragraphs, 'tables': tables, 'body_order': order}
 

@@ -732,13 +732,18 @@ class LayerView:
         return PixelsView(self.doc.layer_arr(self.idx))
 
 
+class StackOrdered(list):
+    """A list that is already in layer stack order (top layer first, as in the GIMP Layers dialog)."""
+
+
 class LayersView:
     def __init__(self, doc):
         self.doc = doc
 
     @property
     def names(self):
-        return [self.doc.layers[str(i)]['name'] for i in range(1, len(self.doc.layers) + 1)]
+        # Index 1 is the top layer: the composite is blended bottom-first and matches GIMP output exactly.
+        return StackOrdered(self.doc.layer_nodes[str(i)]['name'] for i in range(1, len(self.doc.layer_nodes) + 1))
 
 
 class CompositeView:
@@ -760,7 +765,7 @@ class GimpDoc:
         self.stamp = stamp
         self.is_xcf = fmt == 'xcf'
         ctx.proxy = True
-        self.layers = content.get('layers', {}) if self.is_xcf else {}
+        self.layer_nodes = content.get('layers', {}) if self.is_xcf else {}
 
     @property
     def size(self):
@@ -778,13 +783,13 @@ class GimpDoc:
         return cm
 
     def layer(self, name):
-        for i in range(1, len(self.layers) + 1):
-            if self.layers[str(i)]['name'] == name:
-                return LayerView(self, i, self.layers[str(i)])
+        for i in range(1, len(self.layer_nodes) + 1):
+            if self.layer_nodes[str(i)]['name'] == name:
+                return LayerView(self, i, self.layer_nodes[str(i)])
         raise ReaderMiss(f'no layer {name!r}')
 
     @property
-    def layers_view(self):
+    def layers(self):
         return LayersView(self)
 
     def layer_arr(self, idx):
@@ -1288,6 +1293,10 @@ def ev(n, env, ctx, roots):
         raise Unsupported('similarity: the tree has no image or video similarity measure')
     if k == 'ordered':
         xs = ev(n[1], env, ctx, roots)
+        if n[2] == 'stack':
+            if not isinstance(xs, StackOrdered):
+                raise Unsupported('ordered_by stack needs a collection that has a stack order (layers.names)')
+            return list(xs)
         if not isinstance(xs, list):
             raise Unsupported('ordered_by needs a list')
         if n[2] == 'ascending':

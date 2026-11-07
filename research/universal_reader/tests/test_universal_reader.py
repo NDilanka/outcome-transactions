@@ -6,12 +6,14 @@ Set UR_ENDSTATES to the materialized end-state directory to load every end state
 The snapshot test needs research/exp5-grounded/snapshots (made by fetch.py); it skips when that is missing.
 """
 import glob
+import json
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -228,6 +230,39 @@ class FormatRepairTests(unittest.TestCase):
             got = [p['text'] for _, p in sorted(content['paragraphs'].items(), key=lambda kv: int(kv[0]))]
             want = [p.text for p in Document(path).paragraphs]
             self.assertEqual(got, want)
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+
+    def test_docx_missing_style_and_alignment_resolve_as_word_does(self):
+        """No pStyle means the default paragraph style, and no jc means the style chain, then the document default,
+        then left. Adjacent runs with the same formatting are one span (apps split runs where nothing changes)."""
+        try:
+            from docx import Document
+            from docx.enum.text import WD_ALIGN_PARAGRAPH
+            from docx.enum.style import WD_STYLE_TYPE
+        except ImportError:
+            self.skipTest('python-docx not installed')
+        d = tempfile.mkdtemp()
+        try:
+            path = os.path.join(d, 'x.docx')
+            doc = Document()
+            doc.add_paragraph('Plain')
+            centred = doc.add_paragraph('Centred')
+            centred.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            split = doc.add_paragraph()
+            split.add_run('Two')
+            split.add_run(' runs')
+            mixed = doc.add_paragraph()
+            mixed.add_run('Bold').bold = True
+            mixed.add_run(' then plain')
+            doc.save(path)
+            default_id = Document(path).styles.default(WD_STYLE_TYPE.PARAGRAPH).style_id
+            paras = readers_office.read_office(path, 'docx')['paragraphs']
+            self.assertEqual(paras['1']['style'], default_id)
+            self.assertEqual(paras['1']['alignment'], 'left')
+            self.assertEqual(paras['2']['alignment'], 'center')
+            self.assertEqual({k: v['text'] for k, v in paras['3']['runs'].items()}, {'1': 'Two runs'})
+            self.assertEqual([v['text'] for v in paras['4']['runs'].values()], ['Bold', ' then plain'])
         finally:
             shutil.rmtree(d, ignore_errors=True)
 
@@ -599,7 +634,7 @@ class RecalculatedValueTests(unittest.TestCase):
 
 class XcfTests(unittest.TestCase):
     """XCF v011 has 64-bit pointers and a precision field in the header. Layer metadata must come out right.
-    Pixels are not read until the tile decoder is validated, so pixel predicates must be UNSUPPORTED."""
+    Pixels are read only because the decoder matches GIMP 2.10.36 output (see XcfGimpReferenceTests)."""
 
     def setUp(self):
         if not os.path.isfile(XCF_SNAP):
@@ -615,18 +650,28 @@ class XcfTests(unittest.TestCase):
         self.assertEqual((layers['orange_background.png']['width'], layers['orange_background.png']['height']),
                          (2192, 1118))
 
-    def test_pixel_predicates_are_undecided_not_compared(self):
-        root = os.path.join(SNAP, 'e2dd0213-26db-4349-abe5-d5667bfd725c')
-        tree = canon.dir_tree(root)
+    def _layer_pixel_spec(self, root):
         path = '/home/user/Desktop/orange_background.xcf'
-        spec = {'must': [
+        return {'must': [
             f"gimp.document('{path}').layer('Thanks World').size == [422, 77]",
             f"gimp.document('{path}').layer('Thanks World').pixels == before(gimp.document('{path}').layer('Thanks World').pixels)",
         ]}
-        res = evaluate.run_spec(spec, tree, tree, root, root)
+
+    def test_pixel_predicates_are_undecided_when_the_gate_is_closed(self):
+        root = os.path.join(SNAP, 'e2dd0213-26db-4349-abe5-d5667bfd725c')
+        tree = canon.dir_tree(root)
+        with unittest.mock.patch.object(readers_image, 'TILE_DECODE_VALIDATED', False):
+            res = evaluate.run_spec(self._layer_pixel_spec(root), tree, tree, root, root)
         self.assertEqual(res['predicates'][0]['status'], 'PASS')
         self.assertEqual(res['predicates'][1]['status'], 'UNSUPPORTED')
         self.assertEqual(res['decision'], 'UNDECIDED')
+
+    def test_pixel_predicates_compare_when_the_decoder_is_validated(self):
+        root = os.path.join(SNAP, 'e2dd0213-26db-4349-abe5-d5667bfd725c')
+        tree = canon.dir_tree(root)
+        res = evaluate.run_spec(self._layer_pixel_spec(root), tree, tree, root, root)
+        self.assertEqual(res['predicates'][1]['status'], 'PASS', res['predicates'][1]['reason'])
+        self.assertEqual(res['decision'], 'ACCEPT')
 
     def test_missing_baseline_file_is_undecided_not_a_fail(self):
         """The start state has no filter file (the task creates it). Its rules cannot be compared, so the
@@ -641,6 +686,81 @@ class XcfTests(unittest.TestCase):
         self.assertEqual(res['decision'], 'UNDECIDED')
         res = evaluate.run_spec(spec, {}, end, '/nonexistent', '/nonexistent')
         self.assertEqual(res['predicates'][0]['status'], 'FAIL')
+
+    def test_layer_names_are_in_stack_order_top_first(self):
+        """Layer 1 of an XCF file is the top layer (checked against GIMP's own layer list). ordered_by stack
+        reads the names in that order and is not evaluated for a plain list."""
+        path = '/home/user/Desktop/orange_background.xcf'
+        root = os.path.join(SNAP, 'e2dd0213-26db-4349-abe5-d5667bfd725c')
+        tree = canon.dir_tree(root)
+        top_first = {'must': [f"gimp.document('{path}').layers.names ordered_by stack == ['Thanks World', 'orange_background.png']"]}
+        bottom_first = {'must': [f"gimp.document('{path}').layers.names ordered_by stack == ['orange_background.png', 'Thanks World']"]}
+        plain = {'must': ["[1, 2] ordered_by stack == [1, 2]"]}
+        res = evaluate.run_spec(top_first, tree, tree, root, root)
+        self.assertEqual(res['predicates'][0]['status'], 'PASS', res['predicates'][0]['reason'])
+        res = evaluate.run_spec(bottom_first, tree, tree, root, root)
+        self.assertEqual(res['predicates'][0]['status'], 'FAIL', res['predicates'][0]['reason'])
+        res = evaluate.run_spec(plain, tree, tree, root, root)
+        self.assertEqual(res['predicates'][0]['status'], 'UNSUPPORTED', res['predicates'][0]['reason'])
+
+
+class XcfRleTests(unittest.TestCase):
+    """RLE token rules checked against GIMP output: below 127 a run of t + 1 copies of the next byte; 127 a
+    16-bit big-endian count and a value; 128 and above a literal of 256 - t bytes."""
+
+    def test_short_run_long_run_and_literal_tokens(self):
+        data = bytes([0x02, 0xAB,            # run of 3 x 0xAB
+                      0x7F, 0x00, 0x05, 0x07,  # long run of 5 x 0x07
+                      0xFE, 0x01, 0x02,      # literal of 2 bytes: 01 02
+                      0x00, 0x09])           # run of 1 x 0x09
+        plane, end = readers_image._rle_plane(data, 0, 11)
+        self.assertEqual(plane, bytes([0xAB] * 3 + [0x07] * 5 + [0x01, 0x02, 0x09]))
+        self.assertEqual(end, len(data))
+
+    def test_plane_that_overshoots_is_an_error(self):
+        data = bytes([0x03, 0x11])  # run of 4 x 0x11, but the plane is 3 bytes
+        with self.assertRaises(ValueError):
+            readers_image._rle_plane(data, 0, 3)
+
+    def test_literal_past_the_end_is_an_error(self):
+        data = bytes([0xFD, 0x01])  # literal of 3 bytes, only 1 present
+        with self.assertRaises(ValueError):
+            readers_image._rle_plane(data, 0, 3)
+
+
+class XcfGimpReferenceTests(unittest.TestCase):
+    """Every XCF in the snapshots that GIMP 2.10.36 was run on: each layer's RGBA bytes and the flattened
+    composite must hash to the GIMP output recorded in tests/data/xcf_gimp_reference.json."""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(os.path.join(HERE, 'data', 'xcf_gimp_reference.json'), encoding='utf-8') as fh:
+            cls.reference = json.load(fh)['files']
+
+    def test_snapshot_xcf_files_match_gimp(self):
+        import hashlib
+        import numpy as np
+        checked = 0
+        for path in glob.glob(os.path.join(SNAP, '*', '**', '*.xcf'), recursive=True):
+            with open(path, 'rb') as fh:
+                raw = fh.read()
+            key = hashlib.sha256(raw).hexdigest()
+            if key not in self.reference:
+                continue
+            checked += 1
+            ref = self.reference[key]
+            data, head, layers = readers_image._xcf_document(path, 0)
+            self.assertEqual(len(layers), len(ref['layers']), path)
+            for i, (layer, expect) in enumerate(zip(layers, ref['layers']), 1):
+                rgba = readers_image._layer_rgba(data, layer, head)
+                self.assertEqual(layer['name'], expect['name'])
+                self.assertEqual(hashlib.sha256(np.ascontiguousarray(rgba).tobytes()).hexdigest(),
+                                 expect['rgba_sha256'], f'{path} layer {i} {layer["name"]!r}')
+            comp = readers_image.composite(path, 0)
+            self.assertEqual(hashlib.sha256(np.ascontiguousarray(comp).tobytes()).hexdigest(),
+                             ref['composite_sha256'], f'{path} composite')
+        if checked == 0:
+            self.skipTest('no snapshot XCF file matches the GIMP reference set')
 
 
 class GimpTextLayerTests(unittest.TestCase):

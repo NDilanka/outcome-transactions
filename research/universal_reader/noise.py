@@ -11,9 +11,10 @@ For one file, with start S (the snapshot), end E (the blind state), and noise N 
   raw   = diff(S, E)            every change the end state makes
   sub   = subtract(raw, N)      changes that are not explained by the producer's no-op save
 Library check:   raw, N, sub counts, and idempotence = diff(E, resave(E)) (the tree's sensitivity to a re-save of E).
-LibreOffice check: sub_lo = subtract(diff(S, LO(E)), diff(S, LO(S))) should equal raw_lib = diff(S, E) by path.
-Paths in the sub_lo but not raw_lib are unexplained save differences, and paths in raw_lib but not sub_lo are intended
-changes that subtraction removed. Both are reported.
+LibreOffice check: sub_lo = subtract(diff(S, LO(E)), diff(S, LO(S))) should equal intended = subtract(diff(S, E),
+noise) by path. The library's own noise is not part of the intended edit, so it is removed first.
+Paths in sub_lo but not intended are unexplained save differences, and paths in intended but not sub_lo are intended
+changes that the app save lost. Both are reported.
 
 Usage: noise.py --blind-src <dir> --endstates <dir> [--snapshots <dir>] [--out <dir>] [--skip-lo]
 """
@@ -137,10 +138,10 @@ def main(argv=None):
                         noise_lo = file_diff(s_path, lo_s, rel)
                         raw_lo = file_diff(s_path, lo_e, rel)
                         sub_lo, lo_spur = diff.subtract_noise(raw_lo, noise_lo)
-                        want = sub_paths(raw)
+                        want = sub_paths(sub)  # the intended edit: the library's changes after its own noise is removed
                         got = sub_paths(sub_lo)
                         lo_rows.append({'task': task, 'family': fam[task], 'state': state, 'file': rel,
-                                        'raw_lib': sum(want.values()), 'noise_lo_on_start': len(noise_lo.changes),
+                                        'intended_lib': sum(want.values()), 'noise_lo_on_start': len(noise_lo.changes),
                                         'raw_lo': len(raw_lo.changes), 'sub_lo': sum(got.values()),
                                         'agree': len(set(want) & set(got)),
                                         'only_lo_residual': len(set(got) - set(want)),
@@ -189,10 +190,10 @@ def summarise(rows, lo_rows):
         for r in lo_rows:
             c = lb.setdefault(r['family'], collections.Counter())
             c['files'] += 1
-            for k in ('raw_lib', 'sub_lo', 'agree', 'only_lo_residual', 'only_lib_intended_removed'):
+            for k in ('intended_lib', 'sub_lo', 'agree', 'only_lo_residual', 'only_lib_intended_removed'):
                 c[k] += r[k]
         for fm, c in lb.items():
-            print(f"| {fm} | {c['files']} | {c['raw_lib']} | {c['sub_lo']} | {c['agree']} | "
+            print(f"| {fm} | {c['files']} | {c['intended_lib']} | {c['sub_lo']} | {c['agree']} | "
                   f"{c['only_lo_residual']} | {c['only_lib_intended_removed']} |")
 
 
