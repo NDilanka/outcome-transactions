@@ -16,7 +16,8 @@ CONFLICT = MODE in ("conflict", "same_cell")
 CLEAR = MODE == "clear_cell"
 INSERT = MODE in ("insert_row", "insert_row_same_b2")
 FAULT = MODE in ("fault_postcommit", "race_rollback")
-RACE = MODE in ("race_commit", "race_rollback")
+RACE = MODE in ("race_commit", "race_rollback", "race_window")
+WINDOW = MODE == "race_window"
 T0 = time.monotonic()
 def log(msg, **kw):
     e = dict(t=round(time.monotonic() - T0, 2), msg=msg, **kw); LOG.append(e); print(json.dumps(e), flush=True)
@@ -41,6 +42,7 @@ EXPECT = {
     "insert_row": dict(outcome="anchor_mismatch", committed=False, real_b2=None),
     "insert_row_same_b2": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_label": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "race_window": dict(outcome="aborted_user_edit", committed=False, released=[], user_c3_kept=True),
 }
 
 def write_report(rep):
@@ -56,7 +58,7 @@ def abort(outcome, level, **kw):
 def fsha(p):
     return R.sha(p) if os.path.exists(p) else None
 
-def sync_file(f, src_root, expect, landed, mutate=None):
+def sync_file(f, src_root, expect, landed, mutate=None, between=None):
     """Make REAL's copy of f match src_root's copy, or remove it if src_root has none. REAL is replaced only
     while it still holds sha `expect` (None: absent); landed[f] records the sha now in REAL (None if removed).
     The check and the replace are two steps: a user write in that window is overwritten. Returns False and
@@ -69,6 +71,7 @@ def sync_file(f, src_root, expect, landed, mutate=None):
             shutil.copy2(src, tmp)
             if mutate: mutate(tmp)
         if fsha(dst) != expect: return False
+        if between: between()
         sha = fsha(tmp) if os.path.exists(src) else None
         if os.path.exists(src): os.replace(tmp, dst)
         elif os.path.exists(dst): os.remove(dst)
@@ -258,12 +261,14 @@ def main():
     # 7. Commit by result transplant, then re-verify on the real workspace.
     if MODE == "race_commit":
         R.ods_set_cell(f"{REAL}/budget.ods", "C3", 77); log("user edited real budget.ods C3 after the precommit copy")
+    def user_in_window():
+        R.ods_set_cell(f"{REAL}/budget.ods", "C3", 77); log("user edited real budget.ods C3 between the check and the replace")
     moved = results[winner]["changed"]
     mutate = {"budget.ods": lambda p: R.ods_set_cell(p, "B2", 4999)} if FAULT else {}
     landed, edited = {}, None
     try:
         for f in moved:
-            if not sync_file(f, v, fsha(f"{pre}/{f}"), landed, mutate.get(f)):
+            if not sync_file(f, v, fsha(f"{pre}/{f}"), landed, mutate.get(f), between=user_in_window if WINDOW and f == "budget.ods" else None):
                 edited = f; break
         ok, reasons, changed = (False, [f"user edited {edited} during the transplant"], []) if edited else SP.evaluate(SPEC, pre, REAL)
     except Exception as ex:
