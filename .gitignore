@@ -10,3 +10,11 @@ research/exp6-executed/endstates/
 research/exp6-executed/gate/
 research/exp6-executed/debug/states/
 research/exp6-executed/blind_map.json
+research/exp6-executed/blind_src/
+research/exp6-executed/blind_run/
+research/exp6-executed/endstates_norm/
+research/exp6-executed/normalize_report.json
+research/exp6-executed/blind_run_raw/
+research/exp6-executed/blind_run*/
+# Private adjudication: labels, state names, and per-state evidence (the judge must not see these)
+research/exp6-executed/blind_private/

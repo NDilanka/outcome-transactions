@@ -26,11 +26,17 @@ def sha(p):
     return h.hexdigest()
 
 
+def scrubbed(root, p):
+    """Inspector text for one file with the absolute root removed. Inspector errors embed the full path, which
+    carries the task id and state name, so the root must not reach the packet."""
+    return insp.inspect_file(p).replace(os.path.abspath(root), '')
+
+
 def dump(root):
     """Inspector text per file, same format as research/exp5-grounded/inspections/*.md."""
     parts = []
     for vp, p in sorted(files_under(root).items()):
-        parts.append(f"\n## FILE {vp} ({os.path.getsize(p)} bytes)\n" + insp.clip(insp.inspect_file(p), insp.CAP_FILE))
+        parts.append(f"\n## FILE {vp} ({os.path.getsize(p)} bytes)\n" + insp.clip(scrubbed(root, p), insp.CAP_FILE))
     return insp.clip(''.join(parts), insp.CAP_TASK)
 
 
@@ -42,11 +48,16 @@ def diff(before_root, after_root):
         if vp not in b: lines.append(f"ADDED {vp} ({os.path.getsize(a[vp])} bytes)"); continue
         if sha(b[vp]) == sha(a[vp]): continue
         lines.append(f"CHANGED {vp} ({os.path.getsize(b[vp])} -> {os.path.getsize(a[vp])} bytes)")
-        d = difflib.unified_diff(insp.inspect_file(b[vp]).splitlines(), insp.inspect_file(a[vp]).splitlines(),
+        d = difflib.unified_diff(scrubbed(before_root, b[vp]).splitlines(), scrubbed(after_root, a[vp]).splitlines(),
                                  'before', 'after', lineterm='', n=2)
         text = '\n'.join(d)
         if text: lines.append(insp.clip(text, CAP_DIFF))
     return '\n'.join(lines) if lines else 'NO FILE CHANGED'
+
+
+def blind_id(task, state):
+    """Stable opaque id for one end state. Carries no task or state name."""
+    return hashlib.sha256(('exp6-' + f"{task}|{state}").encode()).hexdigest()[:12]
 
 
 def build(records, out_dir, map_path, requests):
@@ -55,8 +66,7 @@ def build(records, out_dir, map_path, requests):
     os.makedirs(out_dir, exist_ok=True)
     blind_map = {}
     for r in records:
-        key = f"{r['task']}|{r['state']}"
-        bid = hashlib.sha256(('exp6-' + key).encode()).hexdigest()[:12]
+        bid = blind_id(r['task'], r['state'])
         req = requests[r['task'][:8]]
         packet = {
             'blind_id': bid,

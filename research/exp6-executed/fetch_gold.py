@@ -2,7 +2,11 @@
 import json, glob, os, urllib.request, concurrent.futures as cf
 HERE = os.path.dirname(os.path.abspath(__file__))
 SUBSET = ['42e0a640','1273e544','6054afcb','a9f325aa','f23acfd2','57667013','21760ecb',
-          'd53ff5ee','88fe4b2d','936321ce','ecc2413d','4d117223','23393935']
+          'd53ff5ee','88fe4b2d','936321ce','ecc2413d','4d117223','23393935',
+          # Exp 6 blind-state tasks not listed above (22 of the 34 blind tasks): gold for the official checker
+          '0326d92d','06ca5602','08c73485','26150609','386dbd0e','51719eea','550ce7e7',
+          '554785e9','5bc63fb9','66399b0d','6a33f9b9','6ed0a554','7ae48c60','8e116af7','9b7bc335',
+          'd68204bf','dd84e895','e2dd0213','f201fbc3','f4aec372','f918266a','fba2c100']
 jobs = []
 for f in glob.glob(os.path.join(HERE, '..', 'OSWorld', 'evaluation_examples', 'examples', '*', '*.json')):
     tid = os.path.basename(f)[:-5]

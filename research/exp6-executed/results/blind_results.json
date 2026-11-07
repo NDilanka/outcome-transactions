@@ -1,0 +1,693 @@
+{
+ "n_states": 238,
+ "n_tasks": 34,
+ "raw_run_no_normalization": {
+  "states": 238,
+  "wrong": 170,
+  "correct": 68,
+  "wrong_exec": {
+   "UNDECIDED": 106,
+   "REJECT": 61,
+   "ACCEPT": 3
+  },
+  "correct_exec": {
+   "UNDECIDED": 46,
+   "ACCEPT": 12,
+   "REJECT": 10
+  },
+  "wrong_accept": 3,
+  "wrong_accept_pct": 1.76,
+  "wrong_accept_ub95_pct": 5.07,
+  "correct_reject_pct": 14.7,
+  "correct_undecided_pct": 67.6,
+  "correct_not_accepted_pct": 82.4,
+  "wrong_official": {
+   "FAIL": 78,
+   "NOT_RUNNABLE": 85,
+   "PASS": 6,
+   "ERROR": 1
+  },
+  "correct_official": {
+   "FAIL": 17,
+   "NOT_RUNNABLE": 34,
+   "PASS": 17
+  }
+ },
+ "as_labelled": {
+  "states": 238,
+  "wrong": 170,
+  "correct": 68,
+  "wrong_exec": {
+   "UNDECIDED": 107,
+   "REJECT": 60,
+   "ACCEPT": 3
+  },
+  "correct_exec": {
+   "UNDECIDED": 48,
+   "ACCEPT": 14,
+   "REJECT": 6
+  },
+  "wrong_accept": 3,
+  "wrong_accept_pct": 1.76,
+  "wrong_accept_ub95_pct": 5.07,
+  "correct_reject_pct": 8.8,
+  "correct_undecided_pct": 70.6,
+  "correct_not_accepted_pct": 79.4,
+  "wrong_official": {
+   "FAIL": 78,
+   "NOT_RUNNABLE": 85,
+   "PASS": 7
+  },
+  "correct_official": {
+   "FAIL": 15,
+   "NOT_RUNNABLE": 34,
+   "PASS": 19
+  }
+ },
+ "adjusted": {
+  "states": 238,
+  "wrong": 173,
+  "correct": 65,
+  "wrong_exec": {
+   "UNDECIDED": 111,
+   "REJECT": 60,
+   "ACCEPT": 2
+  },
+  "correct_exec": {
+   "UNDECIDED": 44,
+   "ACCEPT": 15,
+   "REJECT": 6
+  },
+  "wrong_accept": 2,
+  "wrong_accept_pct": 1.16,
+  "wrong_accept_ub95_pct": 4.11,
+  "correct_reject_pct": 9.2,
+  "correct_undecided_pct": 67.7,
+  "correct_not_accepted_pct": 76.9,
+  "wrong_official": {
+   "FAIL": 82,
+   "NOT_RUNNABLE": 85,
+   "PASS": 6
+  },
+  "correct_official": {
+   "FAIL": 11,
+   "NOT_RUNNABLE": 34,
+   "PASS": 20
+  }
+ },
+ "sensitivity": {
+  "states": 238,
+  "wrong": 174,
+  "correct": 64,
+  "wrong_exec": {
+   "UNDECIDED": 111,
+   "REJECT": 60,
+   "ACCEPT": 3
+  },
+  "correct_exec": {
+   "UNDECIDED": 44,
+   "ACCEPT": 14,
+   "REJECT": 6
+  },
+  "wrong_accept": 3,
+  "wrong_accept_pct": 1.72,
+  "wrong_accept_ub95_pct": 4.96,
+  "correct_reject_pct": 9.4,
+  "correct_undecided_pct": 68.8,
+  "correct_not_accepted_pct": 78.1,
+  "wrong_official": {
+   "FAIL": 83,
+   "NOT_RUNNABLE": 85,
+   "PASS": 6
+  },
+  "correct_official": {
+   "FAIL": 10,
+   "NOT_RUNNABLE": 34,
+   "PASS": 20
+  }
+ },
+ "categories": {
+  "AMBIGUOUS_LABEL": 8,
+  "OFFICIAL_FALSE_ACCEPT": 6,
+  "LABEL_ERROR": 5,
+  "SPEC_GAP": 2,
+  "EXECUTOR_DEFECT": 2,
+  "OFFICIAL_OVER_STRICT": 4,
+  "SPEC_ERROR": 1,
+  "RENDERER": 2
+ },
+ "label_changes": {
+  "wrong -> correct": 1,
+  "correct -> wrong": 4
+ },
+ "ablation": {
+  "gate_pass": {
+   "states": 28,
+   "wrong": 19,
+   "correct": 9,
+   "wrong_exec": {
+    "REJECT": 19
+   },
+   "correct_exec": {
+    "ACCEPT": 6,
+    "REJECT": 3
+   },
+   "wrong_accept": 0,
+   "wrong_accept_pct": 0.0,
+   "wrong_accept_ub95_pct": 17.65,
+   "correct_reject_pct": 33.3,
+   "correct_undecided_pct": 0.0,
+   "correct_not_accepted_pct": 33.3,
+   "wrong_official": {
+    "FAIL": 14,
+    "PASS": 5
+   },
+   "correct_official": {
+    "PASS": 9
+   }
+  },
+  "gate_fail": {
+   "states": 210,
+   "wrong": 154,
+   "correct": 56,
+   "wrong_exec": {
+    "UNDECIDED": 111,
+    "REJECT": 41,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 44,
+    "ACCEPT": 9,
+    "REJECT": 3
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 1.3,
+   "wrong_accept_ub95_pct": 4.61,
+   "correct_reject_pct": 5.4,
+   "correct_undecided_pct": 78.6,
+   "correct_not_accepted_pct": 83.9,
+   "wrong_official": {
+    "FAIL": 68,
+    "NOT_RUNNABLE": 85,
+    "PASS": 1
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "NOT_RUNNABLE": 34,
+    "PASS": 11
+   }
+  },
+  "gate_pass_tasks_in_blind_set": [
+   "21760ecb",
+   "6054afcb",
+   "d53ff5ee",
+   "ecc2413d"
+  ]
+ },
+ "families": [
+  [
+   "gimp",
+   4,
+   28,
+   20,
+   8,
+   0,
+   0,
+   8,
+   0,
+   28
+  ],
+  [
+   "libreoffice_calc",
+   6,
+   42,
+   32,
+   10,
+   0,
+   1,
+   2,
+   7,
+   0
+  ],
+  [
+   "libreoffice_impress",
+   5,
+   35,
+   24,
+   11,
+   2,
+   0,
+   4,
+   7,
+   0
+  ],
+  [
+   "libreoffice_writer",
+   6,
+   42,
+   30,
+   12,
+   0,
+   5,
+   6,
+   1,
+   7
+  ],
+  [
+   "multi_apps",
+   5,
+   35,
+   27,
+   8,
+   0,
+   0,
+   8,
+   0,
+   28
+  ],
+  [
+   "os",
+   1,
+   7,
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "thunderbird",
+   4,
+   28,
+   20,
+   8,
+   0,
+   0,
+   8,
+   0,
+   28
+  ],
+  [
+   "vlc",
+   2,
+   14,
+   10,
+   4,
+   0,
+   0,
+   4,
+   0,
+   14
+  ],
+  [
+   "vs_code",
+   1,
+   7,
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ]
+ ],
+ "tasks": [
+  [
+   "0326d92d",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "06ca5602",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "08c73485",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "1273e544",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "21760ecb",
+   "libreoffice_impress",
+   4,
+   3,
+   0,
+   0,
+   0,
+   3,
+   0
+  ],
+  [
+   "23393935",
+   "os",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "26150609",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "386dbd0e",
+   "vlc",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "42e0a640",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "51719eea",
+   "libreoffice_calc",
+   7,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   "550ce7e7",
+   "libreoffice_impress",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "554785e9",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "57667013",
+   "libreoffice_impress",
+   5,
+   2,
+   1,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "5bc63fb9",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "6054afcb",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "66399b0d",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   2,
+   0,
+   0,
+   0
+  ],
+  [
+   "6a33f9b9",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "6ed0a554",
+   "vs_code",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "7ae48c60",
+   "libreoffice_impress",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "88fe4b2d",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "8e116af7",
+   "multi_apps",
+   7,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   "936321ce",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "9b7bc335",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "a9f325aa",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   1,
+   0,
+   1,
+   0
+  ],
+  [
+   "d53ff5ee",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   1,
+   0,
+   1,
+   0
+  ],
+  [
+   "d68204bf",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "dd84e895",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "e2dd0213",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "ecc2413d",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   2,
+   0,
+   0,
+   0
+  ],
+  [
+   "f201fbc3",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "f23acfd2",
+   "libreoffice_impress",
+   5,
+   2,
+   1,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "f4aec372",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "f918266a",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "fba2c100",
+   "vlc",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ]
+ ]
+}
