@@ -2,7 +2,7 @@
 # Runs the four prototype scenarios and prints a one-line summary of each; exits 1 if any fails.
 cd "$(dirname "$0")"
 status=0
-for m in normal conflict same_cell fault_postcommit; do
+for m in normal conflict same_cell clear_cell fault_postcommit; do
   rm -f run_report_$m.json
   timeout 600 python3 otx.py run_report_$m.json $m > run_log_$m.jsonl 2>&1 || status=1
   python3 - "$m" <<'PY' || status=1

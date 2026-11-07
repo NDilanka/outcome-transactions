@@ -12,6 +12,7 @@ REAL, SNAP = f"{H}/real", f"{H}/snap"
 LOG = []
 MODE = sys.argv[2] if len(sys.argv) > 2 else "normal"
 CONFLICT = MODE in ("conflict", "same_cell")
+CLEAR = MODE == "clear_cell"
 FAULT = MODE == "fault_postcommit"
 T0 = time.monotonic()
 def log(msg, **kw):
@@ -30,6 +31,7 @@ EXPECT = {
     "normal": dict(committed=True, level="verified"),
     "conflict": dict(committed=True, level="verified"),
     "same_cell": dict(outcome="true_conflict", committed=False),
+    "clear_cell": dict(outcome="true_conflict", committed=False),
     "fault_postcommit": dict(committed=False, released=[], rolled_back=True),
 }
 
@@ -150,6 +152,9 @@ def main():
         cell = "B2" if MODE == "same_cell" else "C3"
         R.ods_set_cell(f"{REAL}/budget.ods", cell, 77)
         log(f"user edited real budget.ods {cell} during search (same file as the task)")
+    if CLEAR:
+        R.ods_set_cell(f"{REAL}/budget.ods", "B2", None)
+        log("user cleared real budget.ods B2 during search (same file as the task)")
     for th in ths: th.join()
     search_s = time.monotonic() - t_search
     nv = view_of("f0_null")
@@ -186,8 +191,8 @@ def main():
     replays = 0
     while conflicts:
         # Semantic merge test: the same file changed on both sides, but did the same cells?
-        user_cells = {k for k, x in R.ods_cells(f"{REAL}/budget.ods").items() if R.ods_cells(f"{SNAP}/budget.ods").get(k) != x}
-        win_cells = {k for k, x in R.ods_cells(f"{v}/budget.ods").items() if R.ods_cells(f"{SNAP}/budget.ods").get(k) != x}
+        user_cells = R.changed_cells(f"{SNAP}/budget.ods", f"{REAL}/budget.ods")
+        win_cells = R.changed_cells(f"{SNAP}/budget.ods", f"{v}/budget.ods")
         overlap = sorted(user_cells & win_cells)
         log("semantic merge test", user_cells=sorted(user_cells), winner_cells=sorted(win_cells), overlap=overlap)
         if overlap or replays >= 3:

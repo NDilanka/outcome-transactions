@@ -84,8 +84,13 @@ def ods_cells(path, sheet=None):
         r += rrep
     return out
 
+def changed_cells(a_path, b_path):
+    """Refs whose cell differs between two sheets, over both key sets; an absent cell is None."""
+    ca, cb = ods_cells(a_path), ods_cells(b_path)
+    return {k for k in set(ca) | set(cb) if ca.get(k) != cb.get(k)}
+
 def ods_set_cell(path, ref, value):
-    """Set a numeric cell in place, preserving everything else in the file."""
+    """Set a numeric cell in place, or clear it when value is None; everything else in the file is preserved."""
     rr, cc = ref_to_rc(ref)
     with zipfile.ZipFile(path) as z:
         items = [(i, z.read(i.filename)) for i in z.infolist()]
@@ -120,12 +125,15 @@ def ods_set_cell(path, ref, value):
                 for k, p in enumerate(parts):
                     parent.insert(pos + k, p)
                 cell = mid
-            cell.set(O + "value-type", "float")
-            cell.set(O + "value", str(value))
             for p in list(cell):
                 if p.tag == X + "p":
                     cell.remove(p)
-            p = ET.SubElement(cell, X + "p"); p.text = str(value)
+            if value is None:
+                cell.attrib.pop(O + "value-type", None); cell.attrib.pop(O + "value", None)
+            else:
+                cell.set(O + "value-type", "float")
+                cell.set(O + "value", str(value))
+                p = ET.SubElement(cell, X + "p"); p.text = str(value)
             break
         c += crep
     new = ET.tostring(root, xml_declaration=True, encoding="UTF-8")

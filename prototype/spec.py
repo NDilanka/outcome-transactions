@@ -31,11 +31,9 @@ def evaluate(spec, before, after, noise=()):
             fb, fa = os.path.join(before, f), os.path.join(after, f)
             if os.path.exists(fb) and os.path.exists(fa):
                 cb, ca = R.ods_cells(fb), R.ods_cells(fa)
-                for ref in sorted(set(cb) | set(ca)):
-                    if ref in allowed: continue
-                    if cb.get(ref) != ca.get(ref):
-                        reasons.append(f"preserve: {f}:{ref} changed {cb.get(ref)} -> {ca.get(ref)}")
-                        if len(reasons) > 12: break
+                for ref in sorted(R.changed_cells(fb, fa) - set(allowed)):
+                    reasons.append(f"preserve: {f}:{ref} changed {cb.get(ref)} -> {ca.get(ref)}")
+                    if len(reasons) > 12: break
     return (len(reasons) == 0), reasons, sorted(changed)
 
 def semantic_diff(before, after, spec):
@@ -48,6 +46,5 @@ def semantic_diff(before, after, spec):
     for p in spec.get("preserve", []):
         if p[0] == "ods_cells_except":
             fb, fa = os.path.join(before, p[1]), os.path.join(after, p[1])
-            cb, ca = R.ods_cells(fb), R.ods_cells(fa)
-            d["other_cells_changed"] = sum(1 for k in set(cb) | set(ca) if k not in p[2] and cb.get(k) != ca.get(k))
+            d["other_cells_changed"] = len(R.changed_cells(fb, fa) - set(p[2]))
     return d
