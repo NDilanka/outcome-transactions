@@ -11,6 +11,8 @@ Both gates pass as written, so under section 5 of the prereg the render represen
 - Group A: the render judge rejected 7 of the 8 corrected wrong accepts. Sol accepted all 8 in Exp 7. The one accept is a cursor state (66399b0d state_02), which is reported separately.
 - Group C: the render judge rejected 34 of 40 wrong states (85.0%). Sol rejected 35 of the same 40 (87.5%). On this sample the render judge did not do better than Sol.
 
+Render is at least as good as the dump judge here, but this data does not show it is an independent representation.
+
 The caveats in section 9 apply to these results. Section 5a gives the joint table with Sol.
 
 ## 2. Gates
@@ -150,7 +152,7 @@ Salt, revealed after scoring:
 1. G1 rests on 3 states (1 as registered), from one task (57667013) and one property family (slide text color and fill). It shows that the mechanism works on these states. It does not show how often the mechanism works. The state_22 reason misnames the object and the color. It describes a change from light blue to dark blue background. The render shows the blue slide 5 shapes filled solid black.
 
 2. The cursor family (66399b0d, five wrong states). The render judge rejected 4 of 5 (01, 03, 04 and 17) and accepted 02. None of the four reasons cites placement. All of them say that no table is visible. Render check, one state each:
-   - state_02 (wrong, accepted): its new table has grid borders, so page 3 shows a grid. The grid has 3 rows on that page. The table has 5 rows in the file, and I did not find why 2 rows are not drawn.
+   - state_02 (wrong, accepted): its new table has grid borders, so page 3 shows a grid. The grid has 3 rows on that page, but the table has 5 rows in the file. This is an unexplained render anomaly, recorded in caveat 4.
    - state_01, 03 and 04 (wrong, rejected): the new table has no borders. Page 3 of the end render is blank.
    - state_06 (correct, accepted): the new table is at the document start, with no borders. The render shows blank space above the title. The judge accepted it, and its reason says invisible borders prevent confirming seven columns.
    - The other new tables in this family (state_08, state_12 and state_17) also have no borders.
@@ -158,6 +160,8 @@ Salt, revealed after scoring:
    So in this pipeline an empty table shows only if it has borders. Without borders, its presence shows only as blank space or a blank page. The rejects of 01, 03 and 04 are right on the start-of-document reading, but the render shows only an extra blank page at the end of the document. A correct empty table inserted at the end would look the same. This sample has no correct mid-document cursor insert, so whether a correct insert gets falsely rejected is an open question. The verdicts follow visibility, not placement: state_02 has the same end placement and was accepted. State_17 is a merged-row error. The render cannot show it (Amendment 2), so its reject is not a detection of the merge.
 
 3. The render key and Sol overlap heavily on group C (34 vs 35 of 40). Of the 40, 33 are rejected by both keys, 1 by render only, 2 by Sol only, and 4 are missed by both (section 5a). Across the 48 wrong states of groups A and C, the render key catches 41 and Sol catches 35. Both catch 33. Render alone catches 8, Sol alone catches 2, and both miss 5. Seven of the 8 render-only catches are group A states that Sol accepted by selection, since the combined policy that defines group A includes Sol. On the random sample the two keys make nearly the same calls. So this result does not yet show that rendering is a different representation in general.
+
+4. Unexplained render anomaly (66399b0d state_02). The table has 5 rows in the file, but the grid drawn on page 3 of the end render has only 3 rows. I did not find the cause, so the render does not show this table in full. The state is a cursor state, so it is not counted in G1 or G2. Its accept reason describes a five-row table, while the page shows three drawn rows. Anyone who reuses `render_lib.py` on bordered tables should check the drawn row count against the file.
 
 Other limits:
 
