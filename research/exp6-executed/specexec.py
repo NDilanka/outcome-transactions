@@ -17,6 +17,9 @@ from pptx import Presentation
 from lxml import etree
 from pypdf import PdfReader
 
+# Executor fixes that only a separate rerun enables (EXP6_FIXES=table_rows). The frozen primary run sets none.
+FIXES = frozenset(filter(None, os.environ.get('EXP6_FIXES', '').split(',')))
+
 
 class Unsupported(Exception):
     """Predicate uses syntax or a reader the executor does not implement."""
@@ -256,6 +259,10 @@ class Seq(list):
         return Seq(self[a - 1:(len(self) if b is None else b)])
 
 
+class RowList(Seq):
+    """Table rows. Compared with an integer, it means the row count (fix table_rows)."""
+
+
 class IntRange:
     def __init__(self, lo, hi): self.lo, self.hi = lo, hi
     def __contains__(self, x): return self.lo <= x <= self.hi
@@ -439,7 +446,7 @@ class TableObj:
     def __init__(self, index, t): self.index, self.t = index, t
     @property
     def rows(self):
-        return Seq([Seq([CellObj(c.text) for c in r.cells]) for r in self.t.rows])
+        return RowList([Seq([CellObj(c.text) for c in r.cells]) for r in self.t.rows])
     @property
     def cells(self): return Seq([c for r in self.rows for c in r])
     def __eq__(self, o):
@@ -646,6 +653,8 @@ def ev(n, env, ctx):
     if k == 'cmp':
         a, b = ev(n[2], env, ctx), ev(n[3], env, ctx)
         op = n[1]
+        if 'table_rows' in FIXES and isinstance(a, RowList) and isinstance(b, int) and not isinstance(b, bool):
+            a = len(a)  # table(n).rows == 5 counts the rows; the projection rule below would test each row against 5
         # A projection (list) compared with a scalar is a universal condition over its items
         # (writer_conventions.txt); an empty projection is satisfied vacuously.
         if isinstance(a, list) and not isinstance(b, list) and not isinstance(b, OneOf):

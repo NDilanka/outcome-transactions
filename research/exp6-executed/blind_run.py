@@ -58,6 +58,8 @@ def main():
                   flush=True)
     with open(os.path.join(out_dir, 'decisions.json'), 'w', encoding='utf-8') as fh:
         json.dump(decisions, fh, indent=1, ensure_ascii=False, default=str)
+    with open(os.path.join(out_dir, 'run_config.json'), 'w', encoding='utf-8') as fh:
+        json.dump({'endstates': ENDSTATES, 'executor_fixes': sorted(specexec.FIXES)}, fh, indent=1)
     with open(os.path.join(HERE, 'blind_map.json'), 'w', encoding='utf-8') as fh:
         json.dump(blind_map, fh, indent=1)
     print(f'done: {len(decisions)} states')

@@ -18,6 +18,7 @@
   "wrong_accept": 3,
   "wrong_accept_pct": 1.76,
   "wrong_accept_ub95_pct": 5.07,
+  "correct_accept_pct": 17.6,
   "correct_reject_pct": 14.7,
   "correct_undecided_pct": 67.6,
   "correct_not_accepted_pct": 82.4,
@@ -50,6 +51,7 @@
   "wrong_accept": 3,
   "wrong_accept_pct": 1.76,
   "wrong_accept_ub95_pct": 5.07,
+  "correct_accept_pct": 20.6,
   "correct_reject_pct": 8.8,
   "correct_undecided_pct": 70.6,
   "correct_not_accepted_pct": 79.4,
@@ -81,6 +83,7 @@
   "wrong_accept": 2,
   "wrong_accept_pct": 1.16,
   "wrong_accept_ub95_pct": 4.11,
+  "correct_accept_pct": 23.1,
   "correct_reject_pct": 9.2,
   "correct_undecided_pct": 67.7,
   "correct_not_accepted_pct": 76.9,
@@ -112,6 +115,7 @@
   "wrong_accept": 3,
   "wrong_accept_pct": 1.72,
   "wrong_accept_ub95_pct": 4.96,
+  "correct_accept_pct": 21.9,
   "correct_reject_pct": 9.4,
   "correct_undecided_pct": 68.8,
   "correct_not_accepted_pct": 78.1,
@@ -126,6 +130,213 @@
    "PASS": 20
   }
  },
+ "groups": {
+  "a": {
+   "states": 119,
+   "wrong": 86,
+   "correct": 33,
+   "wrong_exec": {
+    "UNDECIDED": 24,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 12,
+    "ACCEPT": 15,
+    "REJECT": 6
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 2.33,
+   "wrong_accept_ub95_pct": 8.15,
+   "correct_accept_pct": 45.5,
+   "correct_reject_pct": 18.2,
+   "correct_undecided_pct": 36.4,
+   "correct_not_accepted_pct": 54.5,
+   "wrong_official": {
+    "FAIL": 75,
+    "PASS": 6,
+    "NOT_RUNNABLE": 5
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "PASS": 20,
+    "NOT_RUNNABLE": 2
+   }
+  },
+  "b": {
+   "states": 119,
+   "wrong": 87,
+   "correct": 32,
+   "wrong_exec": {
+    "UNDECIDED": 87
+   },
+   "correct_exec": {
+    "UNDECIDED": 32
+   },
+   "wrong_accept": 0,
+   "wrong_accept_pct": 0.0,
+   "wrong_accept_ub95_pct": 4.15,
+   "correct_accept_pct": 0.0,
+   "correct_reject_pct": 0.0,
+   "correct_undecided_pct": 100.0,
+   "correct_not_accepted_pct": 100.0,
+   "wrong_official": {
+    "NOT_RUNNABLE": 80,
+    "FAIL": 7
+   },
+   "correct_official": {
+    "NOT_RUNNABLE": 32
+   }
+  },
+  "all": {
+   "states": 238,
+   "wrong": 173,
+   "correct": 65,
+   "wrong_exec": {
+    "UNDECIDED": 111,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 44,
+    "ACCEPT": 15,
+    "REJECT": 6
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 1.16,
+   "wrong_accept_ub95_pct": 4.11,
+   "correct_accept_pct": 23.1,
+   "correct_reject_pct": 9.2,
+   "correct_undecided_pct": 67.7,
+   "correct_not_accepted_pct": 76.9,
+   "wrong_official": {
+    "FAIL": 82,
+    "NOT_RUNNABLE": 85,
+    "PASS": 6
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "NOT_RUNNABLE": 34,
+    "PASS": 20
+   }
+  }
+ },
+ "coverage_group_b": {
+  "correct_states": 32,
+  "correct_with_unsupported_or_error": 32,
+  "correct_with_unknown_app_root": 30,
+  "wrong_states": 87,
+  "wrong_with_unsupported_or_error": 87,
+  "wrong_with_unknown_app_root": 82
+ },
+ "rerun_groups": {
+  "a": {
+   "states": 119,
+   "wrong": 86,
+   "correct": 33,
+   "wrong_exec": {
+    "UNDECIDED": 24,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 14,
+    "ACCEPT": 15,
+    "REJECT": 4
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 2.33,
+   "wrong_accept_ub95_pct": 8.15,
+   "correct_accept_pct": 45.5,
+   "correct_reject_pct": 12.1,
+   "correct_undecided_pct": 42.4,
+   "correct_not_accepted_pct": 54.5,
+   "wrong_official": {
+    "FAIL": 75,
+    "PASS": 6,
+    "NOT_RUNNABLE": 5
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "PASS": 20,
+    "NOT_RUNNABLE": 2
+   }
+  },
+  "b": {
+   "states": 119,
+   "wrong": 87,
+   "correct": 32,
+   "wrong_exec": {
+    "UNDECIDED": 87
+   },
+   "correct_exec": {
+    "UNDECIDED": 32
+   },
+   "wrong_accept": 0,
+   "wrong_accept_pct": 0.0,
+   "wrong_accept_ub95_pct": 4.15,
+   "correct_accept_pct": 0.0,
+   "correct_reject_pct": 0.0,
+   "correct_undecided_pct": 100.0,
+   "correct_not_accepted_pct": 100.0,
+   "wrong_official": {
+    "NOT_RUNNABLE": 80,
+    "FAIL": 7
+   },
+   "correct_official": {
+    "NOT_RUNNABLE": 32
+   }
+  },
+  "all": {
+   "states": 238,
+   "wrong": 173,
+   "correct": 65,
+   "wrong_exec": {
+    "UNDECIDED": 111,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 46,
+    "ACCEPT": 15,
+    "REJECT": 4
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 1.16,
+   "wrong_accept_ub95_pct": 4.11,
+   "correct_accept_pct": 23.1,
+   "correct_reject_pct": 6.2,
+   "correct_undecided_pct": 70.8,
+   "correct_not_accepted_pct": 76.9,
+   "wrong_official": {
+    "FAIL": 82,
+    "NOT_RUNNABLE": 85,
+    "PASS": 6
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "NOT_RUNNABLE": 34,
+    "PASS": 20
+   }
+  }
+ },
+ "rerun_transitions": [
+  {
+   "group": "a",
+   "label": "correct",
+   "primary": "REJECT",
+   "rerun": "UNDECIDED",
+   "states": 2
+  }
+ ],
+ "rerun_checks": {
+  "decision_changed": 2,
+  "predicate_records_changed": 3,
+  "official_changed": 0,
+  "tasks_changed": [
+   "66399b0d"
+  ]
+ },
  "categories": {
   "AMBIGUOUS_LABEL": 8,
   "OFFICIAL_FALSE_ACCEPT": 6,
@@ -139,6 +350,53 @@
  "label_changes": {
   "wrong -> correct": 1,
   "correct -> wrong": 4
+ },
+ "causes": {
+  "executor defect": {
+   "states": 8,
+   "reject": 2,
+   "undecided": 6,
+   "tasks": [
+    "0326d92d",
+    "66399b0d",
+    "6a33f9b9",
+    "7ae48c60"
+   ]
+  },
+  "prose/grammar": {
+   "states": 6,
+   "reject": 0,
+   "undecided": 6,
+   "tasks": [
+    "550ce7e7",
+    "88fe4b2d",
+    "936321ce"
+   ]
+  },
+  "contradiction": {
+   "states": 1,
+   "reject": 1,
+   "undecided": 0,
+   "tasks": [
+    "a9f325aa"
+   ]
+  },
+  "spec over-pin": {
+   "states": 1,
+   "reject": 1,
+   "undecided": 0,
+   "tasks": [
+    "d53ff5ee"
+   ]
+  },
+  "renderer": {
+   "states": 2,
+   "reject": 2,
+   "undecided": 0,
+   "tasks": [
+    "ecc2413d"
+   ]
+  }
  },
  "ablation": {
   "gate_pass": {
@@ -155,6 +413,7 @@
    "wrong_accept": 0,
    "wrong_accept_pct": 0.0,
    "wrong_accept_ub95_pct": 17.65,
+   "correct_accept_pct": 66.7,
    "correct_reject_pct": 33.3,
    "correct_undecided_pct": 0.0,
    "correct_not_accepted_pct": 33.3,
@@ -183,6 +442,7 @@
    "wrong_accept": 2,
    "wrong_accept_pct": 1.3,
    "wrong_accept_ub95_pct": 4.61,
+   "correct_accept_pct": 16.1,
    "correct_reject_pct": 5.4,
    "correct_undecided_pct": 78.6,
    "correct_not_accepted_pct": 83.9,
@@ -203,37 +463,6 @@
    "d53ff5ee",
    "ecc2413d"
   ]
- },
- "file_families": {
-  "states": 119,
-  "wrong": 86,
-  "correct": 33,
-  "wrong_exec": {
-   "UNDECIDED": 24,
-   "REJECT": 60,
-   "ACCEPT": 2
-  },
-  "correct_exec": {
-   "UNDECIDED": 12,
-   "ACCEPT": 15,
-   "REJECT": 6
-  },
-  "wrong_accept": 2,
-  "wrong_accept_pct": 2.33,
-  "wrong_accept_ub95_pct": 8.15,
-  "correct_reject_pct": 18.2,
-  "correct_undecided_pct": 36.4,
-  "correct_not_accepted_pct": 54.5,
-  "wrong_official": {
-   "FAIL": 75,
-   "PASS": 6,
-   "NOT_RUNNABLE": 5
-  },
-  "correct_official": {
-   "FAIL": 11,
-   "PASS": 20,
-   "NOT_RUNNABLE": 2
-  }
  },
  "families": [
   [
