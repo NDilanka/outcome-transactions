@@ -1,0 +1,30 @@
+0424196baade: reject, confidence high, instead of inserting a blank page the agent deleted all page-1 content (title, copyright, disclaimer paragraph), leaving page 1 empty.
+045e0293a07f: reject, confidence high, strikethrough was applied to all nine lines of slide 5's body list rather than only the first and second lines of the to-do list.
+09a90668e1b2: accept, confidence high, both text-bearing shapes on slide 5 are set to pure yellow #FFFF00 and slides 1-4 are unchanged.
+0f95aea7b07f: accept, confidence high, an empty 7-column by 5-row table was inserted at the end of the document with no other changes.
+13a61c181e22: accept, confidence high, slide 5's text boxes are #FFFF00 and all other slides are byte-equivalent in content.
+16aad3dd1672: accept, confidence high, new Sheet2 contains the Revenue header plus all 19 values copied as numbers, Sheet1 untouched.
+288e299be5d4: reject, confidence high, slide 4 (30cm) and slide 6 (25cm) pictures are correct but slide 3's pictures are unchanged (1.13cm) and a 26.78cm freeform shape on slide 3 was deleted.
+2a89ff362615: accept, confidence high, an empty 7x5 table was inserted at the end of the document.
+3c816d87ac7b: reject, confidence high, only the slide 5 title "What I do:" was struck through; the first and second lines of the list were not.
+3e1f0cb27916: reject, confidence high, cleaned titles were written to column C but 12 of 28 cells still contain a leading space (e.g. ' Minions In Black'), so whitespace was not fully removed.
+4070883553d8: accept, confidence high, an empty 7x5 table was inserted at the end of the document.
+4c633f013c01: accept, confidence high, column C was filled with whitespace-normalized word-capitalized titles while column B and the rest of the sheet were left untouched.
+5054d1ad404f: reject, confidence high, the all-caps paragraph was lowercased but truncated mid-sentence ("...you need to talk in"), losing most of its original text.
+5d2d2c81af87: accept, confidence high, the first paragraph was split into its 7 sentences with exactly one empty line after each.
+68cdd9e1d859: reject, confidence high, the cleaned titles overwrote the Garbage column B and the Clean Movie Titles column C was left empty.
+6a3c3bd98895: accept, confidence high, an empty 7x5 table was appended at the document end.
+7073fc94e192: accept, confidence high, the first paragraph's 7 sentences are each followed by exactly one empty line.
+878de9ada0da: reject, confidence high, revenue is missing for the first data row (G2 empty), a stray error formula sits in G37, Sheet2's SUMIFs reference Sheet2's own empty columns so every product sums to 0, and it is a formula table rather than a real Pivot Table.
+a48f055bf701: reject, confidence high, the first slide's transition was set to fade, not dissolve.
+be60b04814c8: accept, confidence high, an empty 7x5 table was inserted at the end of the document.
+bea324fe3791: reject, confidence low, the Revenue values were copied to Sheet2 as text strings ('39929') rather than numbers, so the copy changes the data type even though it looks identical.
+beccd684987f: reject, confidence high, one yellow-highlighted span ("UCSF" with style T5, background #ffff00) still remains in the document.
+c13cc9b03522: reject, confidence high, only an empty paragraph was added before the existing page break; no actual blank page was created.
+d7e56844b7ed: reject, confidence high, no bullet point was added to the content; the only change is an empty bullet character (buChar char="") on the existing paragraph.
+e40b7fe455f1: accept, confidence high, slide 5's text boxes are #FFFF00 with all other slides unchanged.
+e6e0e30ce460: reject, confidence high, two empty lines were inserted after each sentence instead of the requested one empty line.
+e799e5a20619: reject, confidence high, Sheet2 contains both the Revenue and Total Expenses columns when only the Revenue column was requested.
+f12e6776f1d6: reject, confidence high, a dissolve transition was added to slide 1 but the deck was gutted from 24 slides and 39 media parts down to 1 slide and 2 media parts.
+f7d114dc856c: accept, confidence high, a Total row with per-month SUMs, a Growth row with Feb-Jun month-on-month percentages, a bar chart of the totals titled "Total", and a line chart of growth (Jan omitted) titled "Growth" were all added correctly.
+fbbc0f7c7534: reject, confidence high, no strikethrough was applied anywhere; the text content is identical to the before state.
