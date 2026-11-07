@@ -1,0 +1,72 @@
+{
+  "01c06ed3fb05": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added row totals each month across representatives instead of adding a total for each representative."
+  },
+  "03f3531c376c": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The overview heading and topic headings now match the title slide's bold gold styling without other visible changes."
+  },
+  "04198e8288d2": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The file changed without altering its content, consistent with bolding the second table's headers, but the dump does not expose table formatting."
+  },
+  "07f97ca7e2c8": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The change bolds metadata and numerous agenda details in addition to the section headings."
+  },
+  "0851a7a43a3b": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A PDF copy contains all agenda text and the original DOCX is unchanged, although the dump cannot verify layout fidelity."
+  },
+  "0a8698c53b36": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The workbook changed without visible content damage, plausibly through header sizing or styling that the dump does not display."
+  },
+  "0e34c252623f": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Only the title is set to 16-point text, likely enlarging it from its inherited size, which the starting dump does not reveal."
+  },
+  "0e8f1b0129e3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A separate Launch day text box was added while the original BIG LAUNCH title remains unchanged."
+  },
+  "0ec94046495d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The visible URLs were replaced with different labels even though the request only asked to make the existing links clickable."
+  },
+  "100d3dd6ff65": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A Total column correctly sums all six months for every representative while preserving the existing data."
+  },
+  "130cf6fab1b9": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new total incorrectly sums successive running balances instead of totaling transaction amounts."
+  },
+  "1657a9b2a65f": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The end state already allocates the tutorial's 30 percent equally as 10 percent each for presentation, discussion, and debate."
+  },
+  "1a3a4fea0a85": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "No changes were made and repeated products such as Aspen and Fun Fly remain."
+  },
+  "1be38faae536": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The numeric total cells were replaced with n/a instead of retaining or calculating the zero totals supported by the numeric entries."
+  }
+}

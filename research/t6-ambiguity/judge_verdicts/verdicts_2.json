@@ -1,0 +1,72 @@
+{
+  "6b4009478890": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The headings were already underlined, but the result additionally underlines body text such as the complete time-limit instruction."
+  },
+  "6b5bb94e6308": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The original garbage-title column was overwritten while the designated Clean Movie Titles column remains empty."
+  },
+  "6c597257aa00": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The visible change removes both header fills without showing any added emphasis, making the headers appear less distinctive rather than more."
+  },
+  "6fb15a5e491b": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The two assessment allocations are 5% each, totaling 10%, with the deduction rules and other content preserved."
+  },
+  "7297c2847f96": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All column headers are bold in the end state, and no files or other content were changed."
+  },
+  "75403d556505": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The first-slide title box is horizontally centered with no unrelated visible changes, although its text alignment is not exposed in the dump."
+  },
+  "763fdb3c40d0": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The last-slide title is entirely uppercase, and the supporting caption and other visible slide contents are unchanged."
+  },
+  "79e026fb57d2": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The last-slide title is entirely uppercase, and the supporting caption and other visible slide contents are unchanged."
+  },
+  "817cd8972da5": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The header row is bold, but the sales-representative data cells A2:A11 were also bolded without being requested."
+  },
+  "8187ed30267f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only a grand total is placed in C1, leaving C2:C20 empty instead of providing net income alongside each revenue-and-expense row."
+  },
+  "822e182daa2d": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All seven column headers are bold, and the data and other visible formatting are preserved."
+  },
+  "87dd8873d5f2": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The placeholder text is cleared, but the seven aligned bullet-icon pictures and a bulleted empty paragraph remain on the agenda slide."
+  },
+  "91b3e59600be": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The standalone Sound-Letter Pattern paragraph outside the tables was bolded rather than limiting the change to the second table's headers."
+  },
+  "93cdf68159ee": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A labeled bottom row correctly totals all transaction amounts as -210 while preserving the existing entries, balances, and receipt files."
+  }
+}
