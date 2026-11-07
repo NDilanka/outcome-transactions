@@ -1,7 +1,7 @@
 """Exp 8 metrics: arms, headline and safety gates, per-request table, speed and resource numbers.
 
 Inputs (private, not committed, except as summarised in exp8-results.md):
-  gt:     /home/factory-user/exp8/gt/final_gt_v3.tsv     code, verdict (C/W), ambiguous (Y/N)
+  gt:     /home/factory-user/exp8/gt/final_gt_v4.tsv     code, verdict (C/W), ambiguous (Y/N); built by make_gt_v4.py
   spec:   /home/factory-user/exp8/specs/<code>.json       executor c909d02 decision per attempt
   exec:   /home/factory-user/exp8/exec/<code>/result.json harness: generation_s, wall_s, cpu_s, peak_rss_mb
   map:    /home/factory-user/exp8/private/map.json        attempt -> task (short), method_idx, condition
@@ -19,7 +19,7 @@ executor decision is UNDECIDED or the executor and the judge disagree on a candi
 """
 import csv, json, math, os, statistics, sys
 
-GT = '/home/factory-user/exp8/gt/final_gt_v3.tsv'
+GT = '/home/factory-user/exp8/gt/final_gt_v4.tsv'
 SPEC = '/home/factory-user/exp8/specs'
 EXEC = '/home/factory-user/exp8/exec'
 MAP = '/home/factory-user/exp8/private/map.json'
@@ -27,7 +27,8 @@ JUDGE = '/home/factory-user/exp8/judge/judge_by_code.tsv'
 CONF = {'low': 1, 'medium': 2, 'high': 3}
 # Auto-save family (2cd43775). The end-state profiles of 083c86e1, 81a65c80 and a9e34228 do not set
 # UserAutoSaveEnabled to true (76604199 does). The strict reading counts those three as wrong. This is the PRIMARY
-# reading (orchestrator ruling). GT v3 as adjudicated (all four C) is the sensitivity reading: load_attempts({}).
+# reading (orchestrator ruling). GT v4 with the auto-save family as adjudicated (all four C) is the sensitivity reading:
+# load_attempts({}).
 AUTOSAVE_STRICT_W = {'083c86e1': 'W', '81a65c80': 'W', 'a9e34228': 'W'}
 # Judge phase, from commit times on origin: packets 307ced3 at 10:53:04 UTC, verdicts dbc95e0 at 11:14:04 UTC.
 # 21 min for 84 packets (six batches of 14, two batches rerun). The per-packet judge time was not measured.
@@ -260,7 +261,7 @@ def crosstab(rows):
 
 if __name__ == '__main__':
     rows = load_attempts()           # PRIMARY: strict auto-save reading (AUTOSAVE_STRICT_W)
-    lenient = load_attempts({})      # sensitivity: GT v3 as adjudicated
+    lenient = load_attempts({})      # sensitivity: GT v4, auto-save family as adjudicated
     primary = [a for a in rows if a['condition'] in ('none', 'ui')]
     wrong = [a for a in rows if a['gt'] == 'W']
     print('GT reading: PRIMARY = strict auto-save (083c86e1, 81a65c80, a9e34228 wrong)')
@@ -300,10 +301,10 @@ if __name__ == '__main__':
     print('G7 per request (4 candidates, primary): CPU-s median', round(statistics.median(cpu_req), 2),
           'max', round(max(cpu_req), 2), '| peak RSS median', round(statistics.median(rss_req), 1),
           'max', round(max(rss_req), 1))
-    # Sensitivity: GT v3 as adjudicated, all four auto-save candidates C (not the PRIMARY reading).
+    # Sensitivity: GT v4, all four auto-save candidates C (not the PRIMARY reading).
     lenient_primary = [a for a in lenient if a['condition'] in ('none', 'ui')]
     for arm in ('A', 'B', 'Bs'):
         r = arm_report(lenient_primary, arm)
-        print('SENSITIVITY GT v3 as adjudicated', arm, 'correct', r['correct_zero_click'], 'wrong', r['wrong_commit'],
+        print('SENSITIVITY GT v4, auto-save as adjudicated', arm, 'correct', r['correct_zero_click'], 'wrong', r['wrong_commit'],
               'confirm', r['confirm'], r['wrong_commit_tasks'])
     print(per_request_table(primary))

@@ -1,0 +1,9 @@
+input: 7 pages, blank pages []
+476b080a: 7 pages, blank pages []; output page -> input page with same text: p1=1, p2=2, p3=3, p4=4, p5=5, p6=6, p7=7
+  page 1 text equals input page 1: True
+eeb4b683: 7 pages, blank pages []; output page -> input page with same text: p1=1, p2=2, p3=3, p4=4, p5=5, p6=6, p7=7
+  page 1 text equals input page 1: True
+02d030c7: 8 pages, blank pages [2]; output page -> input page with same text: p1=1, p2=blank, p3=2, p4=3, p5=4, p6=5, p7=6, p8=7
+  page 1 text equals input page 1: True
+7b72ebd1: 7 pages, blank pages []; output page -> input page with same text: p1=1, p2=2, p3=3, p4=4, p5=5, p6=6, p7=7
+  page 1 text equals input page 1: True

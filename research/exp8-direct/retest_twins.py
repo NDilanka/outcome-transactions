@@ -23,6 +23,7 @@ import openpyxl
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import metrics as mt  # noqa: E402
 import retest as rt  # noqa: E402
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
@@ -64,13 +65,14 @@ def main():
     first = rt.read_pass(rt.FIRST)
     second = rt.read_pass(rt.SECOND)
     mp = json.load(open(MAP))
+    gt = {a['code']: a['gt'] for a in mt.load_attempts()}
     end = {e['code']: json.load(open(os.path.join(EXEC, e['code'], 'result.json')))['end_state'] for e in mp}
     contents = {e['code']: content(end[e['code']]) for e in mp}
     flips = sorted(b for b in first if first[b]['verdict'] != second[b]['verdict'])
     for b in flips:
         code = bm[b]
         short = next(e['short'] for e in mp if e['code'] == code)
-        print(f'== flipped {code} (task {short}, GT label from v3 file)')
+        print(f'== flipped {code} (task {short}, GT v4 strict label: {gt[code]})')
         if contents[code][0] not in ('xlsx', 'docx', 'dir'):
             print('  format not compared')
             continue

@@ -1,0 +1,11 @@
+input: 18 paragraphs (tables included), 2 all-caps paragraphs, 16 other paragraphs
+699226e8: changed paragraphs 2 (2 all-caps, 0 other); uppercase letters lowered in all-caps text 210; in ordinary-case text 0
+  lowers ordinary-case text: no
+de97694c: changed paragraphs 14 (2 all-caps, 12 other); uppercase letters lowered in all-caps text 210; in ordinary-case text 21
+  ordinary-case words lowered (first examples): Presentation, Instruction, Describe, China, Such, What, Please, Do
+  lowers ordinary-case text: yes
+a6cac88c: changed paragraphs 2 (2 all-caps, 0 other); uppercase letters lowered in all-caps text 210; in ordinary-case text 0
+  lowers ordinary-case text: no
+b9d8b59c: changed paragraphs 14 (2 all-caps, 12 other); uppercase letters lowered in all-caps text 210; in ordinary-case text 21
+  ordinary-case words lowered (first examples): Presentation, Instruction, Describe, China, Such, What, Please, Do
+  lowers ordinary-case text: yes

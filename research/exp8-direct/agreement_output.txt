@@ -1,10 +1,10 @@
 == signature mode: sorted
 attempts with no content change: 0
 agreement groups (>=2 attempts, same signature): 15 in 14 of 18 requests
-agreement groups by GT of members: {'all C': 13, 'mixed': 1, 'all W': 1}
-POLICY A {"requests": 18, "correct_zero_click": 14, "wrong_commit": 2, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c"]}
-POLICY B {"requests": 18, "correct_zero_click": 7, "wrong_commit": 2, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:02d030c7"]}
-POLICY C {"requests": 18, "correct_zero_click": 11, "wrong_commit": 1, "confirm": 6, "confirm_tags": {"GAP": 1, "AMBIGUOUS": 5}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+agreement groups by GT of members: {'all C': 12, 'mixed': 1, 'all W': 2}
+POLICY A {"requests": 18, "correct_zero_click": 13, "wrong_commit": 3, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c", "ecc2413d:476b080a"]}
+POLICY B {"requests": 18, "correct_zero_click": 8, "wrong_commit": 1, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+POLICY C {"requests": 18, "correct_zero_click": 10, "wrong_commit": 2, "confirm": 6, "confirm_tags": {"GAP": 1, "AMBIGUOUS": 5}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:476b080a"]}
 POLICY D {"requests": 18, "correct_zero_click": 9, "wrong_commit": 1, "confirm": 8, "confirm_tags": {"GAP": 2, "AMBIGUOUS": 6}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
 
 | task | signature groups (method: GT) | A | B | C | D | CONFIRM tag |
@@ -25,7 +25,7 @@ POLICY D {"requests": 18, "correct_zero_click": 9, "wrong_commit": 1, "confirm":
 | 936321ce | c7485e {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
 | a9f325aa | adf400 {1:C, 2:C, 3:C, 4:C} | none | none | none | none | AMBIGUOUS |
 | d53ff5ee | d7c15a {2:W, 4:W} | 2:W | 2:W | 2:W | 2:W |  |
-| ecc2413d | 0d7fbd {1:C, 4:C} | 1:C | 3:W | 1:C | none | GAP |
+| ecc2413d | 0d7fbd {1:W, 4:W} | 1:W | 3:C | 1:W | none | GAP |
 | f23acfd2 | none | 3:C | none | none | none | AMBIGUOUS |
 
 pairwise Jaccard of changed-line sets (min, max) and changed lines per method, per request:
@@ -51,10 +51,10 @@ pairwise Jaccard of changed-line sets (min, max) and changed lines per method, p
 == signature mode: anchored
 attempts with no content change: 0
 agreement groups (>=2 attempts, same signature): 15 in 14 of 18 requests
-agreement groups by GT of members: {'all C': 14, 'all W': 1}
-POLICY A {"requests": 18, "correct_zero_click": 14, "wrong_commit": 2, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c"]}
-POLICY B {"requests": 18, "correct_zero_click": 7, "wrong_commit": 2, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:02d030c7"]}
-POLICY C {"requests": 18, "correct_zero_click": 11, "wrong_commit": 1, "confirm": 6, "confirm_tags": {"GAP": 1, "AMBIGUOUS": 5}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+agreement groups by GT of members: {'all C': 13, 'all W': 2}
+POLICY A {"requests": 18, "correct_zero_click": 13, "wrong_commit": 3, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c", "ecc2413d:476b080a"]}
+POLICY B {"requests": 18, "correct_zero_click": 8, "wrong_commit": 1, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+POLICY C {"requests": 18, "correct_zero_click": 10, "wrong_commit": 2, "confirm": 6, "confirm_tags": {"GAP": 1, "AMBIGUOUS": 5}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:476b080a"]}
 POLICY D {"requests": 18, "correct_zero_click": 9, "wrong_commit": 1, "confirm": 8, "confirm_tags": {"GAP": 2, "AMBIGUOUS": 6}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
 
 | task | signature groups (method: GT) | A | B | C | D | CONFIRM tag |
@@ -75,7 +75,7 @@ POLICY D {"requests": 18, "correct_zero_click": 9, "wrong_commit": 1, "confirm":
 | 936321ce | c7c6b1 {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
 | a9f325aa | 51fadc {1:C, 2:C, 3:C, 4:C} | none | none | none | none | AMBIGUOUS |
 | d53ff5ee | 4e05f6 {2:W, 4:W} | 2:W | 2:W | 2:W | 2:W |  |
-| ecc2413d | eac8b6 {1:C, 4:C} | 1:C | 3:W | 1:C | none | GAP |
+| ecc2413d | eac8b6 {1:W, 4:W} | 1:W | 3:C | 1:W | none | GAP |
 | f23acfd2 | none | 3:C | none | none | none | AMBIGUOUS |
 
 pairwise Jaccard of changed-line sets (min, max) and changed lines per method, per request:
@@ -99,22 +99,15 @@ pairwise Jaccard of changed-line sets (min, max) and changed lines per method, p
   f23acfd2: jaccard (0.11, 0.5); changed lines 1:3, 2:3, 3:7, 4:3
 
 ######## signature mode: sorted
-== scenario: sensitivity: GT v3 as adjudicated (auto-save family all C)
-   wrong end states (all 84): 10; two-key passes: 4; spec ACCEPT on wrong: 4; judge accept on wrong: 4
-   A   correct 15/18  wrong 1  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['d53ff5ee:de97694c']
-   B   correct  7/18  wrong 2  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   Bs  correct  8/18  wrong 2  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   C   correct 11/18  wrong 1  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c']
+== scenario: sensitivity: GT v4, auto-save family as adjudicated (all C)
+   wrong end states (all 84): 11; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 6
+   A   correct 14/18  wrong 2  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   C   correct 10/18  wrong 2  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
    D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
-== scenario: PRIMARY: auto-save strict reading
-   wrong end states (all 84): 13; two-key passes: 4; spec ACCEPT on wrong: 4; judge accept on wrong: 5
-   A   correct 14/18  wrong 2  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['2cd43775:083c86e1', 'd53ff5ee:de97694c']
-   B   correct  7/18  wrong 2  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   Bs  correct  8/18  wrong 2  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   C   correct 11/18  wrong 1  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c']
-   D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
-== scenario: auto-save strict + ecc2413d render check (sensitivity, not GT)
-   wrong end states (all 84): 15; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 7
+== scenario: PRIMARY: GT v4, auto-save strict reading
+   wrong end states (all 84): 14; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 7
    A   correct 13/18  wrong 3  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['2cd43775:083c86e1', 'd53ff5ee:de97694c', 'ecc2413d:476b080a']
    B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
    Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
@@ -139,26 +132,19 @@ PER-REQUEST, PRIMARY SCENARIO (sorted signatures, strict auto-save):
 | 936321ce | c7485e {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
 | a9f325aa | adf400 {1:C, 2:C, 3:C, 4:C} | none | none | none | none | AMBIGUOUS |
 | d53ff5ee | d7c15a {2:W, 4:W} | 2:W | 2:W | 2:W | 2:W |  |
-| ecc2413d | 0d7fbd {1:C, 4:C} | 1:C | 3:W | 1:C | none | GAP |
+| ecc2413d | 0d7fbd {1:W, 4:W} | 1:W | 3:C | 1:W | none | GAP |
 | f23acfd2 | none | 3:C | none | none | none | AMBIGUOUS |
 
 ######## signature mode: anchored
-== scenario: sensitivity: GT v3 as adjudicated (auto-save family all C)
-   wrong end states (all 84): 10; two-key passes: 4; spec ACCEPT on wrong: 4; judge accept on wrong: 4
-   A   correct 15/18  wrong 1  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['d53ff5ee:de97694c']
-   B   correct  7/18  wrong 2  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   Bs  correct  8/18  wrong 2  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   C   correct 11/18  wrong 1  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c']
+== scenario: sensitivity: GT v4, auto-save family as adjudicated (all C)
+   wrong end states (all 84): 11; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 6
+   A   correct 14/18  wrong 2  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   C   correct 10/18  wrong 2  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
    D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
-== scenario: PRIMARY: auto-save strict reading
-   wrong end states (all 84): 13; two-key passes: 4; spec ACCEPT on wrong: 4; judge accept on wrong: 5
-   A   correct 14/18  wrong 2  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['2cd43775:083c86e1', 'd53ff5ee:de97694c']
-   B   correct  7/18  wrong 2  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   Bs  correct  8/18  wrong 2  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-   C   correct 11/18  wrong 1  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c']
-   D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
-== scenario: auto-save strict + ecc2413d render check (sensitivity, not GT)
-   wrong end states (all 84): 15; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 7
+== scenario: PRIMARY: GT v4, auto-save strict reading
+   wrong end states (all 84): 14; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 7
    A   correct 13/18  wrong 3  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['2cd43775:083c86e1', 'd53ff5ee:de97694c', 'ecc2413d:476b080a']
    B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
    Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']

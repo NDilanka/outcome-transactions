@@ -1,29 +1,29 @@
 GT reading: PRIMARY = strict auto-save (083c86e1, 81a65c80, a9e34228 wrong)
 attempts 84 primary 72 ablation 12
-GT C/W (all 84): 71 13 ambiguous Y: 33
-GT wrong end states (all 84): 13 in primary: 12
-spec ACCEPT on wrong: 4 judge accept on wrong: 5 both (two-key passes wrong): 4
-judge accept: C 59 W 5 | judge reject: C 12 W 8
+GT C/W (all 84): 70 14 ambiguous Y: 33
+GT wrong end states (all 84): 14 in primary: 13
+spec ACCEPT on wrong: 3 judge accept on wrong: 7 both (two-key passes wrong): 3
+judge accept: C 57 W 7 | judge reject: C 13 W 7
 spec decision counts: {'ACCEPT': 38, 'REJECT': 17, 'UNDECIDED': 29}
-crosstab (spec, judge, gt) -> count: {"ACCEPT/accept/C": 30, "ACCEPT/accept/W": 4, "ACCEPT/reject/C": 4, "REJECT/accept/C": 9, "REJECT/reject/C": 4, "REJECT/reject/W": 4, "UNDECIDED/accept/C": 20, "UNDECIDED/accept/W": 1, "UNDECIDED/reject/C": 4, "UNDECIDED/reject/W": 4}
+crosstab (spec, judge, gt) -> count: {"ACCEPT/accept/C": 31, "ACCEPT/accept/W": 3, "ACCEPT/reject/C": 4, "REJECT/accept/C": 6, "REJECT/accept/W": 3, "REJECT/reject/C": 5, "REJECT/reject/W": 3, "UNDECIDED/accept/C": 20, "UNDECIDED/accept/W": 1, "UNDECIDED/reject/C": 4, "UNDECIDED/reject/W": 4}
 speed (all 84) {"n": 84, "median_s": 54.0, "p90_s": 123.4, "max_s": 629.9, "gen_median_s": 38.0, "exec_median_s": 0.204, "spec_median_s": 0.618, "judge_est_s": 15.0}
 speed (primary 72) {"n": 72, "median_s": 53.4, "p90_s": 125.4, "max_s": 629.9, "gen_median_s": 37.7, "exec_median_s": 0.219, "spec_median_s": 0.611, "judge_est_s": 15.0}
 timing split (all 84) {"gen_inferred_median_s": 38.04, "gen_inferred_p90_s": 106.5, "exec_wall_median_s": 0.204, "spec_wall_median_s": 0.618, "exec_cpu_median_s": 0.165, "spec_cpu_median_s": 0.923, "exec_rss_median_mb": 29.8, "spec_rss_median_mb": 70.85}
 timing per request (primary 72, slowest of four, parallel assumed) {"no_judge": {"median_s": 97.9, "p90_s": 291.6, "max_s": 614.9}, "judge_serial_est": {"median_s": 112.9, "p90_s": 306.6, "max_s": 629.9}, "judge_parallel_est": {"median_s": 187.9, "p90_s": 381.6, "max_s": 704.9}}
 resources (all 84) {"cpu_s_median": 1.26, "cpu_s_p90": 3.17, "cpu_s_max": 4.66, "peak_rss_mb_median": 83.3, "peak_rss_mb_p90": 246.8, "peak_rss_mb_max": 408.8}
-ARM A {"requests": 18, "correct_zero_click": 14, "wrong_commit": 2, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c"], "G0_correct_zero_click_share": 0.778, "wrong_commits_per_request": 0.111, "confirm_share": 0.111, "gap_share": 0.0}
-  G0 95% CI (Clopper-Pearson): (0.524, 0.936) | wrong commits 1-sided 95% UB per request: 0.31 | random tie-break expected: {"correct": 14.0, "wrong": 2.0, "confirm": 2.0}
-ARM B {"requests": 18, "correct_zero_click": 7, "wrong_commit": 2, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2, "PLAIN": 0}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:02d030c7"], "G0_correct_zero_click_share": 0.389, "wrong_commits_per_request": 0.111, "confirm_share": 0.5, "gap_share": 0.111}
-  G0 95% CI (Clopper-Pearson): (0.173, 0.643) | wrong commits 1-sided 95% UB per request: 0.31 | random tie-break expected: {"correct": 6.75, "wrong": 2.25, "confirm": 9.0}
-ARM Bs {"requests": 18, "correct_zero_click": 8, "wrong_commit": 2, "confirm": 8, "confirm_tags": {"AMBIGUOUS": 6, "GAP": 2, "PLAIN": 0}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:02d030c7"], "G0_correct_zero_click_share": 0.444, "wrong_commits_per_request": 0.111, "confirm_share": 0.444, "gap_share": 0.111}
-  G0 95% CI (Clopper-Pearson): (0.215, 0.692) | wrong commits 1-sided 95% UB per request: 0.31 | random tie-break expected: {"correct": 7.75, "wrong": 2.25, "confirm": 8.0}
+ARM A {"requests": 18, "correct_zero_click": 13, "wrong_commit": 3, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c", "ecc2413d:476b080a"], "G0_correct_zero_click_share": 0.722, "wrong_commits_per_request": 0.167, "confirm_share": 0.111, "gap_share": 0.0}
+  G0 95% CI (Clopper-Pearson): (0.465, 0.903) | wrong commits 1-sided 95% UB per request: 0.377 | random tie-break expected: {"correct": 13.5, "wrong": 2.5, "confirm": 2.0}
+ARM B {"requests": 18, "correct_zero_click": 8, "wrong_commit": 1, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2, "PLAIN": 0}, "wrong_commit_tasks": ["d53ff5ee:de97694c"], "G0_correct_zero_click_share": 0.444, "wrong_commits_per_request": 0.056, "confirm_share": 0.5, "gap_share": 0.111}
+  G0 95% CI (Clopper-Pearson): (0.215, 0.692) | wrong commits 1-sided 95% UB per request: 0.238 | random tie-break expected: {"correct": 7.75, "wrong": 1.25, "confirm": 9.0}
+ARM Bs {"requests": 18, "correct_zero_click": 9, "wrong_commit": 1, "confirm": 8, "confirm_tags": {"AMBIGUOUS": 6, "GAP": 2, "PLAIN": 0}, "wrong_commit_tasks": ["d53ff5ee:de97694c"], "G0_correct_zero_click_share": 0.5, "wrong_commits_per_request": 0.056, "confirm_share": 0.444, "gap_share": 0.111}
+  G0 95% CI (Clopper-Pearson): (0.26, 0.74) | wrong commits 1-sided 95% UB per request: 0.238 | random tie-break expected: {"correct": 8.75, "wrong": 1.25, "confirm": 8.0}
 ABLATION ui vs noui on 3 tasks: {"ui": {"A": {"requests": 3, "correct_zero_click": 3, "wrong_commit": 0, "confirm": 0, "confirm_tags": {"AMBIGUOUS": 0, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": [], "G0_correct_zero_click_share": 1.0, "wrong_commits_per_request": 0.0, "confirm_share": 0.0, "gap_share": 0.0}, "B": {"requests": 3, "correct_zero_click": 2, "wrong_commit": 0, "confirm": 1, "confirm_tags": {"AMBIGUOUS": 1, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": [], "G0_correct_zero_click_share": 0.667, "wrong_commits_per_request": 0.0, "confirm_share": 0.333, "gap_share": 0.0}, "Bs": {"requests": 3, "correct_zero_click": 2, "wrong_commit": 0, "confirm": 1, "confirm_tags": {"AMBIGUOUS": 1, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": [], "G0_correct_zero_click_share": 0.667, "wrong_commits_per_request": 0.0, "confirm_share": 0.333, "gap_share": 0.0}, "gt_C_share": 0.833}, "noui": {"A": {"requests": 3, "correct_zero_click": 3, "wrong_commit": 0, "confirm": 0, "confirm_tags": {"AMBIGUOUS": 0, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": [], "G0_correct_zero_click_share": 1.0, "wrong_commits_per_request": 0.0, "confirm_share": 0.0, "gap_share": 0.0}, "B": {"requests": 3, "correct_zero_click": 2, "wrong_commit": 0, "confirm": 1, "confirm_tags": {"AMBIGUOUS": 1, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": [], "G0_correct_zero_click_share": 0.667, "wrong_commits_per_request": 0.0, "confirm_share": 0.333, "gap_share": 0.0}, "Bs": {"requests": 3, "correct_zero_click": 2, "wrong_commit": 0, "confirm": 1, "confirm_tags": {"AMBIGUOUS": 1, "GAP": 0, "PLAIN": 0}, "wrong_commit_tasks": [], "G0_correct_zero_click_share": 0.667, "wrong_commits_per_request": 0.0, "confirm_share": 0.333, "gap_share": 0.0}, "gt_C_share": 0.917}}
-two-key pass rate on wrong end states 4 of 13 CI (Clopper-Pearson 95%): (0.091, 0.614)
+two-key pass rate on wrong end states 3 of 14 CI (Clopper-Pearson 95%): (0.047, 0.508)
 G3 per-attempt, no judge (gen + exec + spec) median s: 39.0
 G7 per request (4 candidates, primary): CPU-s median 5.77 max 15.08 | peak RSS median 244.6 max 408.8
-SENSITIVITY GT v3 as adjudicated A correct 15 wrong 1 confirm 2 ['d53ff5ee:de97694c']
-SENSITIVITY GT v3 as adjudicated B correct 7 wrong 2 confirm 9 ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
-SENSITIVITY GT v3 as adjudicated Bs correct 8 wrong 2 confirm 8 ['d53ff5ee:de97694c', 'ecc2413d:02d030c7']
+SENSITIVITY GT v4, auto-save as adjudicated A correct 14 wrong 2 confirm 2 ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+SENSITIVITY GT v4, auto-save as adjudicated B correct 8 wrong 1 confirm 9 ['d53ff5ee:de97694c']
+SENSITIVITY GT v4, auto-save as adjudicated Bs correct 9 wrong 1 confirm 8 ['d53ff5ee:de97694c']
 | task | GT by method (A-D) | spec | judge (conf) | A commit | B commit | Bs commit | CONFIRM tag |
 |---|---|---|---|---|---|---|---|
 | 0326d92d | CCCC | UND ACC ACC ACC | acc(l) acc(l) acc(l) acc(l) | 1:C | 2:C | 2:C |  |
@@ -41,6 +41,6 @@ SENSITIVITY GT v3 as adjudicated Bs correct 8 wrong 2 confirm 8 ['d53ff5ee:de976
 | 88fe4b2d | CCCC | UND UND REJ UND | acc(h) acc(h) rej(h) acc(h) | 1:C | none | none | GAP |
 | 936321ce | CCCC | UND UND UND UND | acc(h) acc(l) acc(l) rej(h) | 1:C | none | none | AMBIGUOUS |
 | a9f325aa | CCCC | ACC ACC ACC ACC | rej(m) rej(m) rej(m) rej(m) | none | none | 1:C | AMBIGUOUS |
-| d53ff5ee | CWWW | REJ ACC REJ ACC | acc(m) acc(h) rej(m) acc(h) | 2:W | 2:W | 2:W |  |
-| ecc2413d | CCWC | REJ REJ ACC REJ | acc(l) acc(l) acc(l) acc(l) | 1:C | 3:W | 3:W |  |
+| d53ff5ee | CWCW | REJ ACC REJ ACC | acc(m) acc(h) rej(m) acc(h) | 2:W | 2:W | 2:W |  |
+| ecc2413d | WWCW | REJ REJ ACC REJ | acc(l) acc(l) acc(l) acc(l) | 1:W | 3:C | 3:C |  |
 | f23acfd2 | CCCC | REJ REJ REJ REJ | rej(h) rej(m) acc(h) rej(h) | 3:C | none | none | AMBIGUOUS |

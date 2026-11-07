@@ -190,9 +190,6 @@ def main(mode='sorted'):
         print(f'  {short}: jaccard {jac}; changed lines {counts}')
 
 
-ECC_RENDER = {'476b080a': 'W', 'eeb4b683': 'W', '7b72ebd1': 'W', '02d030c7': 'C'}  # LibreOffice render: only m3 adds a page
-
-
 def with_gt(rows, overrides):
     out = []
     for a in rows:
@@ -252,11 +249,10 @@ def scenarios():
     for mode in ('sorted', 'anchored'):
         sigs = load_signatures(mode)
         strict = mt.load_attempts()        # PRIMARY: strict auto-save reading (metrics.AUTOSAVE_STRICT_W)
-        lenient = mt.load_attempts({})     # GT v3 as adjudicated
+        lenient = mt.load_attempts({})     # GT v4, auto-save family as adjudicated (all C)
         print(f'######## signature mode: {mode}')
-        scenario(lenient, sigs, 'sensitivity: GT v3 as adjudicated (auto-save family all C)', {})
-        scenario(strict, sigs, 'PRIMARY: auto-save strict reading', {})
-        scenario(strict, sigs, 'auto-save strict + ecc2413d render check (sensitivity, not GT)', ECC_RENDER)
+        scenario(lenient, sigs, 'sensitivity: GT v4, auto-save family as adjudicated (all C)', {})
+        scenario(strict, sigs, 'PRIMARY: GT v4, auto-save strict reading', {})
         if mode == 'sorted':
             print('PER-REQUEST, PRIMARY SCENARIO (sorted signatures, strict auto-save):')
             print(per_request(strict, sigs, {}))

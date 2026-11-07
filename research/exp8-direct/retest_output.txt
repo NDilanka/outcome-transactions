@@ -23,20 +23,20 @@ rated high in both passes: 43, of which flipped: 0
 | d8fa1b66 | 6054afcb | 2 | none | C | N | ACCEPT | accept medium | reject medium |
 GT of flipped: C 3, W 1
 
-judge accepts, first: 64 (C 59, W 5); precision 0.922
-judge accepts, key (first conf): 60 (C 56, W 4); precision 0.933
-judge accepts, key (min conf): 60 (C 56, W 4); precision 0.933
-wrong accepts after key (first conf): e6b4b156 (66399b0d m4, low), de97694c (d53ff5ee m2, high), b9d8b59c (d53ff5ee m4, high), 02d030c7 (ecc2413d m3, low)
-recall on correct end states, first: 59 of 71
-recall on correct end states, key: 56 of 71
+judge accepts, first: 64 (C 57, W 7); precision 0.891
+judge accepts, key (first conf): 60 (C 54, W 6); precision 0.900
+judge accepts, key (min conf): 60 (C 54, W 6); precision 0.900
+wrong accepts after key (first conf): e6b4b156 (66399b0d m4, low), de97694c (d53ff5ee m2, high), b9d8b59c (d53ff5ee m4, high), 476b080a (ecc2413d m1, low), eeb4b683 (ecc2413d m2, low), 7b72ebd1 (ecc2413d m4, low)
+recall on correct end states, first: 57 of 70
+recall on correct end states, key: 54 of 70
 
 == arms, primary 72 attempts, strict GT
 | arm | first: correct / wrong / CONFIRM | key (first conf): correct / wrong / CONFIRM | key (min conf): correct / wrong / CONFIRM | key wrong commits (first conf) |
 |---|---|---|---|---|
-| A | 14 / 2 / 2 | 15 / 1 / 2 | 15 / 1 / 2 | d53ff5ee:de97694c |
-| B | 7 / 2 / 9 | 7 / 2 / 9 | 7 / 2 / 9 | d53ff5ee:de97694c, ecc2413d:02d030c7 |
-| Bs | 8 / 2 / 8 | 8 / 2 / 8 | 8 / 2 / 8 | d53ff5ee:de97694c, ecc2413d:02d030c7 |
-| C | 11 / 1 / 6 | 11 / 1 / 6 | 11 / 1 / 6 | d53ff5ee:de97694c |
+| A | 13 / 3 / 2 | 14 / 2 / 2 | 14 / 2 / 2 | d53ff5ee:de97694c, ecc2413d:476b080a |
+| B | 8 / 1 / 9 | 8 / 1 / 9 | 8 / 1 / 9 | d53ff5ee:de97694c |
+| Bs | 9 / 1 / 8 | 9 / 1 / 8 | 9 / 1 / 8 | d53ff5ee:de97694c |
+| C | 10 / 2 / 6 | 10 / 2 / 6 | 10 / 2 / 6 | d53ff5ee:de97694c, ecc2413d:476b080a |
 | D | 9 / 1 / 8 | 9 / 1 / 8 | 9 / 1 / 8 | d53ff5ee:de97694c |
 
 == per request: commits that change under the key (first confidence rule)
