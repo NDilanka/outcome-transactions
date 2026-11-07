@@ -129,8 +129,9 @@ def all_cells(path):
     if dup: raise ValueError(f"sheet name {dup[0]!r} is used more than once")
     return {f"{t.get(T + 'name')}!{ref}": v for t in root.iter(T + "table") for ref, v in _sheet_cells(t, sprops).items()}
 
-def _sheet_cells(table, sprops, lists=None):
-    """{ref: (value, formatting)}. If lists is a list, each cell with a list paragraph is appended to it as (column, row, columns, rows)."""
+def _sheet_cells(table, sprops, lists=None, merges=None):
+    """{ref: (value, formatting)}. If lists is a list, each cell with a list paragraph is appended to it as (column, row, columns, rows).
+    If merges is a list, each merged cell (its top-left cell with a span) is appended as (column, row, columns, rows)."""
     out = {}
     r = 0
     for row in table.iter(T + "table-row"):
@@ -142,6 +143,8 @@ def _sheet_cells(table, sprops, lists=None):
                 continue
             crep = int(cell.get(T + "number-columns-repeated", "1"))
             if lists is not None and _has_list(cell): lists.append((c, r, crep, rrep))
+            cspan, rspan = int(cell.get(T + "number-columns-spanned", "1")), int(cell.get(T + "number-rows-spanned", "1"))
+            if merges is not None and (cspan > 1 or rspan > 1): merges.append((c, r, cspan, rspan))
             val = _cached(cell)
             if val is None:
                 val = _text(cell) or None
@@ -298,7 +301,8 @@ def find_anchor(path, anchor):
     """The address 'Sheet!B2' of the one cell this anchor names, or None. The sheet must occur once in the workbook
     under its name (a rename, a deletion or a duplicate refuses). Within it the label and the header must each occur
     once as LibreOffice shows them, and the stored text must find the same rows and columns, or the file and its
-    display disagree. A list paragraph in column A or row 1 refuses, because its number is not stored text.
+    display disagree. A list paragraph in column A or row 1 refuses, because its number is not stored text. A merged
+    cell that is the label, the header or the target refuses, because the merge covers cells the anchor does not name.
     No other sheet is ever used in its place."""
     sheet, label, header = anchor
     if sheet is None or label is None or header is None:
@@ -306,8 +310,8 @@ def find_anchor(path, anchor):
     root = _root(path)
     if sum(t.get(T + "name") == sheet for t in root.iter(T + "table")) != 1:
         return None
-    lists = []
-    stored = _sheet_cells(_table(root, sheet), _style_props(root), lists)
+    lists, merges = [], []
+    stored = _sheet_cells(_table(root, sheet), _style_props(root), lists, merges)
     if any(c == 0 or r == 0 for c, r, _, _ in lists):
         return None
     shown = shown_sheet(path, sheet)
@@ -321,7 +325,11 @@ def find_anchor(path, anchor):
         return None
     if len(shown_rows) != 1 or len(shown_cols) != 1:
         return None
-    return f"{sheet}!{col_name(shown_cols[0])}{shown_rows[0] + 1}"
+    row, col = shown_rows[0], shown_cols[0]
+    def merged(x, y): return any(mc <= x < mc + cs and mr <= y < mr + rs for mc, mr, cs, rs in merges)
+    if merged(col, 0) or merged(0, row) or merged(col, row):
+        return None
+    return f"{sheet}!{col_name(col)}{row + 1}"
 
 def ods_append_block(path, label, count):
     """Append count identical rows, each with label in column A, stored as one repeated row block (what pasting identical rows writes)."""
