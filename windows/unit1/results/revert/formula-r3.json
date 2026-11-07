@@ -20,19 +20,19 @@
    ]
   }
  ],
- "free_mb_before": 804,
- "pid": 10784,
+ "free_mb_before": 848,
+ "pid": 11392,
  "fg_before_commit": {
-  "hwnd": 394868,
+  "hwnd": 394858,
   "class": "Chrome_WidgetWin_1",
-  "title": "Write viral X post for Acan pre-launch - Factory",
-  "pid": 14064
+  "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros",
+  "pid": 5004
  },
  "fg_after_commit": {
-  "hwnd": 394868,
+  "hwnd": 10027838,
   "class": "Chrome_WidgetWin_1",
-  "title": "Write viral X post for Acan pre-launch - Factory",
-  "pid": 14064
+  "title": "X",
+  "pid": 5004
  },
  "plan": {
   "footprint": [
@@ -132,27 +132,36 @@
  "verdict": "CORRECT: confirm needed, revert done on confirm",
  "watch_counts": {
   "open|foreground": 1,
-  "open|window-appeared": 1
+  "open|window-appeared": 1,
+  "commit|foreground": 1
  },
  "watch_events": [
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 394868,
+   "hwnd": 394858,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 14064,
-   "title": "Write viral X post for Acan pre-launch - Factory"
+   "fg_pid": 5004,
+   "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 17761158,
+   "hwnd": 13632988,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
+  },
+  {
+   "phase": "commit",
+   "kind": "foreground",
+   "hwnd": 10027838,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "X"
   }
  ],
- "killed_excel_pid": 10784,
- "seconds": 7.8
+ "killed_excel_pid": 11392,
+ "seconds": 13.4
 }

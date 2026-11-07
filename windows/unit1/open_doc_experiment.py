@@ -20,9 +20,9 @@ import time
 import traceback
 import zipfile
 
-import pywintypes
 import win32com.client
 
+from com_gate import NotResponding, RemoteError, Step, describe, guard, ready_gate, run_steps, timed
 from otx_win import (Watchdog, docx_paras, flat_opc_paras, foreground_desc, force_foreground, free_mb,
                      image_pids, kill_pid, lock_info, new_image_pid, pid_alive, redact, rm_holders,
                      wait_for_memory, xlsx_cells)
@@ -33,10 +33,6 @@ BASE = os.path.join(HERE, "base")
 WORK = os.environ.get("OTX_WORK") or os.path.join(HERE, "work")
 RESULTS = os.environ.get("OTX_RESULTS") or os.path.join(HERE, "results")
 MIN_FREE_MB = 350
-# Office rejects COM calls while it is busy, for example right after a window activation. Both codes mean
-# "not run": the call did not reach the document, so retrying it cannot apply an edit twice.
-RETRYABLE_COM = (-2147418111, -2147417846)  # RPC_E_CALL_REJECTED (0x80010001), RPC_E_SERVERCALL_RETRYLATER
-
 XLSX_OTHERS = {"A1": "Item", "B1": "Amount", "A2": "Travel", "A3": "Food", "B3": 250.0}
 DOCX_OTHERS = ["Budget report", "Food: 250"]
 
@@ -175,19 +171,22 @@ def snapshot_step(adapter, d, stage, ext):
     return rec
 
 
-def retry_rejected(fn, tries=40, wait_s=0.25):
-    """Run fn, retrying only when Office rejects the call as busy. Returns how many rejections were retried."""
-    rejected = 0
-    for attempt in range(tries):
-        try:
-            fn()
-            return rejected
-        except pywintypes.com_error as e:
-            if e.hresult not in RETRYABLE_COM or attempt == tries - 1:
-                raise
-            rejected += 1
-            time.sleep(wait_s)
-    return rejected
+def excel_b2_step():
+    """The agent's in-app edit: B2 1000 -> 5000 through COM, read back after the write. Steps take the sheet they
+    act on from com_gate, which gives each call a fresh connection."""
+    return Step("B2 value", lambda ws: ws.Range("B2").Value,
+                lambda ws, v: setattr(ws.Range("B2"), "Value", v), 5000)
+
+
+def excel_ready_probe(ws):
+    """The gate's no-op read: Application.Ready, and one cell of the target."""
+    ready = ws.Application.Ready
+    ws.Range("B2").Value
+    return bool(ready)
+
+
+def excel_props(ws, names):
+    return {n: getattr(ws.Application, n) for n in names}
 
 
 class _Office:
@@ -224,17 +223,34 @@ class Excel(_Office):
     def user_edit(self):
         self.ws.Range("D1").Value = "user note"
 
-    def live_agent(self, quiet=False):
-        if quiet:
-            self.app.ScreenUpdating = False
+    def open_view(self):
+        """Runs on a worker thread (com_gate.timed): a fresh connection to the open workbook, as its Budget sheet."""
+        return win32com.client.GetObject(os.path.abspath(self.path)).Worksheets("Budget")
 
-        def write():
-            self.ws.Range("B2").Value = 5000
+    def live_agent(self, quiet=False, wrap=None):
+        """The agent's in-app edit, under the three layers in com_gate.py: the readiness gate; DisplayAlerts (and
+        ScreenUpdating when quiet) off for the commit, restored as checked steps; every COM call timed, with
+        reconciliation of a timed-out write. The commit never calls Close, Save, SaveAs or Quit on the user's
+        workbook. wrap(step) -> step lets the busy and hang tests act between the pre-write read and the write."""
+        gate = ready_gate(self.open_view, excel_ready_probe)
+        if not gate["ok"]:
+            return dict(status="refused", reason=gate["reason"], message=f"Refused: {gate['reason']}. Nothing written.",
+                        done=[], rollback=[], rejections=0, checks=[], gate=gate)
+        during = {"DisplayAlerts": False}
+        if quiet:
+            during["ScreenUpdating"] = False
         try:
-            self.rejected = retry_rejected(write)
-        finally:
-            if quiet:
-                self.app.ScreenUpdating = True
+            befores = timed(lambda: excel_props(self.open_view(), list(during)))
+        except (NotResponding, RemoteError) as e:
+            reason = "Excel not responding" if isinstance(e, NotResponding) else f"Excel busy ({describe(e)})"
+            return dict(status="refused", reason=reason, message=f"Refused: {reason}. Nothing written.", done=[],
+                        rollback=[], rejections=0, checks=[], gate=gate)
+        step = excel_b2_step()
+        core = [wrap(step) if wrap else step]
+        rep = run_steps(guard(core, befores, during), self.open_view)
+        rep["gate"] = gate
+        rep["guard"] = dict(before=befores, during=during)
+        return rep
 
     def mem_state(self):
         r = self.wb.Worksheets("Budget").Range
@@ -399,9 +415,12 @@ def run(app_name, state, method):
         wd.phase = "commit"
         rec["fg_before_commit"] = foreground_desc()
         if base in ("live-com", "live-com-quiet"):
-            adapter.live_agent(quiet=(base == "live-com-quiet"))
+            rep = adapter.live_agent(quiet=(base == "live-com-quiet"))
+            adapter.rejected = rep["rejections"]
             commit = {"method": method, "steps": ["in-app COM edit, no save, no activation"],
-                      "write_ok": True, "error": None}
+                      "write_ok": rep["status"] == "committed", "status": rep["status"], "error": rep["reason"],
+                      "message": rep["message"], "gate": rep["gate"], "guard": rep.get("guard"),
+                      "late_landing": rep.get("late_landing"), "reconcile": rep.get("reconcile"), "checked": rep}
         elif base == "control":
             commit = {"method": method, "steps": ["control: no commit, same waits"], "write_ok": True, "error": None}
         elif method == "reload-after-replace":

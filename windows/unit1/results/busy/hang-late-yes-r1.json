@@ -1,0 +1,105 @@
+{
+ "run": "hang-late-yes-r1",
+ "case": "hang-late-yes",
+ "rep": 1,
+ "expect": "late-landed",
+ "status": "ok",
+ "dialog_windows": [],
+ "free_mb_before": 976,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 25580,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "alerts_seen_in_write": false,
+ "injected_prompt_at": 1794067642.32,
+ "scratch_saved": true,
+ "commit_seconds": 8.69,
+ "commit": {
+  "status": "refused",
+  "done": [
+   "Application.DisplayAlerts set"
+  ],
+  "refused_at": "B2 value",
+  "reason": "the B2 value write returned after the timeout, and its value landed",
+  "message": "Refused: the B2 value write returned after the timeout, and its value landed. Finished steps were rolled back.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": "landed after the timeout, rolled back",
+  "reconcile": {
+   "step": "B2 value",
+   "state": "landed",
+   "detail": "5000.0",
+   "returned": true,
+   "call_error": null,
+   "polls": [
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))"
+   ]
+  },
+  "rollback": [
+   {
+    "step": "B2 value",
+    "status": "written",
+    "reason": null
+   },
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "already",
+    "reason": null
+   }
+  ],
+  "app_restore": null,
+  "left": [],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.03,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [],
+ "helper_exit": null,
+ "closer_exit": null,
+ "answerer_exit": "exit 0",
+ "answer_log": "1794067650.60 answer pid 7028: clicked Yes on ['Yes']\n",
+ "dialog_open_s": null,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "CORRECT: write timed out, prompt answered, the late landing caught and rolled back, file and user edit unchanged",
+ "quit_ok": true,
+ "killed_excel_pid": 25580
+}

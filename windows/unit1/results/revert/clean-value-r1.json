@@ -14,8 +14,8 @@
    ]
   }
  ],
- "free_mb_before": 842,
- "pid": 2320,
+ "free_mb_before": 1134,
+ "pid": 26328,
  "fg_before_commit": {
   "hwnd": 10027838,
   "class": "Chrome_WidgetWin_1",
@@ -130,13 +130,13 @@
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 4720778,
+   "hwnd": 2558008,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 2320,
- "seconds": 15.1
+ "killed_excel_pid": 26328,
+ "seconds": 21.6
 }

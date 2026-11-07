@@ -1,0 +1,106 @@
+{
+ "run": "excel-dirty-live-com-focused",
+ "app": "excel",
+ "state": "dirty",
+ "method": "live-com-focused",
+ "status": "error",
+ "free_mb_before": 523,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 6836,
+ "holders_open": [
+  [
+   6836,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_open": {
+  "size": 165,
+  "readable": false
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_user_edit": false,
+ "mem_after_user_edit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance-fix\\run5\\excel-dirty-live-com-focused\\budget.xlsx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance-fix\\run5\\excel-dirty-live-com-focused\\budget.xlsx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "focus_ok": true,
+ "fg_before_commit": {
+  "hwnd": 24512270,
+  "class": "XLMAIN",
+  "title": "budget - Excel",
+  "pid": 6836
+ },
+ "traceback": "Traceback (most recent call last):\n  File \"D:\\dev\\ic-win\\windows\\unit1\\open_doc_experiment.py\", line 402, in run\n    adapter.live_agent(quiet=(base == \"live-com-quiet\"))\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\dev\\ic-win\\windows\\unit1\\open_doc_experiment.py\", line 234, in live_agent\n    self.rejected = retry_rejected(write)\n                    ~~~~~~~~~~~~~~^^^^^^^\n  File \"D:\\dev\\ic-win\\windows\\unit1\\open_doc_experiment.py\", line 183, in retry_rejected\n    fn()\n    ~~^^\n  File \"D:\\dev\\ic-win\\windows\\unit1\\open_doc_experiment.py\", line 232, in write\n    self.ws.Range(\"B2\").Value = 5000\n    ~~~~~~~~~~~~~^^^^^^\n  File \"<COMObject <unknown>>\", line 2, in Range\npywintypes.com_error: (-2147418111, 'Call was rejected by callee.', None, None)\n",
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1,
+  "focus|foreground": 1,
+  "commit|foreground": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "Contributions \u00b7 Factory Guild and 5 more pages - Personal - Microsoft\u200b Edge"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 20252564,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 24512270,
+   "class": "XLMAIN",
+   "fg_pid": 6836,
+   "title": "budget - Excel"
+  },
+  {
+   "phase": "commit",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "Contributions \u00b7 Factory Guild and 5 more pages - Personal - Microsoft\u200b Edge"
+  }
+ ],
+ "quit_ok": false,
+ "quit_error": "com_error(-2147418111, 'Call was rejected by callee.', None, None)",
+ "killed_office_pid": 6836,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 19.4
+}

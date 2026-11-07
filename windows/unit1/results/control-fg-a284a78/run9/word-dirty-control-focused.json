@@ -1,0 +1,199 @@
+{
+ "run": "word-dirty-control-focused",
+ "app": "word",
+ "state": "dirty",
+ "method": "control-focused",
+ "status": "ok",
+ "free_mb_before": 291,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Word 16.0 build 16.0.14326",
+ "pid": 24064,
+ "holders_open": [
+  [
+   24064,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_open": {
+  "size": 162,
+  "readable": true
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_user_edit": false,
+ "mem_after_user_edit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run9\\word-dirty-control-focused\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run9\\word-dirty-control-focused\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "focus_ok": true,
+ "fg_before_commit": {
+  "hwnd": 30672714,
+  "class": "OpusApp",
+  "title": "budget - Word",
+  "pid": 24064
+ },
+ "commit": {
+  "method": "control-focused",
+  "steps": [
+   "control: no commit, same waits"
+  ],
+  "write_ok": true,
+  "error": null,
+  "com_rejections": null
+ },
+ "fg_after_commit": {
+  "hwnd": 30672714,
+  "class": "OpusApp",
+  "title": "budget - Word",
+  "pid": 24064
+ },
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   24064,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 162,
+  "readable": true
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run9\\word-dirty-control-focused\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run9\\word-dirty-control-focused\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   24064,
+   "Microsoft Word"
+  ]
+ ],
+ "verdict": "CONTROL: no commit, measures focus drift only",
+ "undo_probe": {
+  "before": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "activated_for_probe": false,
+  "undo_error": null,
+  "reverted": [
+   "user"
+  ],
+  "redo_error": null,
+  "restored_after_redo": true
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 2,
+  "focus|foreground": 1,
+  "focus|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "(13806) YouTube and 5 more pages - Personal - Microsoft\u200b Edge"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 8128614,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 21890850,
+   "class": "OpusApp",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 30672714,
+   "class": "OpusApp",
+   "fg_pid": 24064,
+   "title": "budget - Word"
+  },
+  {
+   "phase": "focus",
+   "kind": "window-appeared",
+   "hwnd": 1837388,
+   "class": "MSCTFIME UI",
+   "visible": false,
+   "iconic": false,
+   "title": "MSCTFIME UI"
+  }
+ ],
+ "quit_ok": true,
+ "killed_office_pid": 24064,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 19.6
+}

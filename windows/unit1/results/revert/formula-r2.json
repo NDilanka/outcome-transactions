@@ -20,19 +20,19 @@
    ]
   }
  ],
- "free_mb_before": 871,
- "pid": 8028,
+ "free_mb_before": 699,
+ "pid": 4988,
  "fg_before_commit": {
-  "hwnd": 394868,
+  "hwnd": 394858,
   "class": "Chrome_WidgetWin_1",
-  "title": "I want to write a x post on the pre launch of Acan. It must go viral and im gonn",
-  "pid": 14064
+  "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros",
+  "pid": 5004
  },
  "fg_after_commit": {
-  "hwnd": 394868,
+  "hwnd": 394858,
   "class": "Chrome_WidgetWin_1",
-  "title": "I want to write a x post on the pre launch of Acan. It must go viral and im gonn",
-  "pid": 14064
+  "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros",
+  "pid": 5004
  },
  "plan": {
   "footprint": [
@@ -138,21 +138,21 @@
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 394868,
+   "hwnd": 394858,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 14064,
-   "title": "Factory"
+   "fg_pid": 5004,
+   "title": "Gmail and 5 more pages - Personal - Microsoft\u200b Edge"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 2689196,
+   "hwnd": 1771744,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 8028,
- "seconds": 9.8
+ "killed_excel_pid": 4988,
+ "seconds": 9.3
 }

@@ -20,19 +20,19 @@
    ]
   }
  ],
- "free_mb_before": 355,
- "pid": 12692,
+ "free_mb_before": 724,
+ "pid": 13620,
  "fg_before_commit": {
-  "hwnd": 12191600,
-  "class": "ApplicationFrameWindow",
-  "title": "Media Player",
-  "pid": 12836
+  "hwnd": 29099864,
+  "class": "XLMAIN",
+  "title": "budget - Excel",
+  "pid": 13620
  },
  "fg_after_commit": {
-  "hwnd": 12191600,
-  "class": "ApplicationFrameWindow",
-  "title": "Media Player",
-  "pid": 12836
+  "hwnd": 29099864,
+  "class": "XLMAIN",
+  "title": "budget - Excel",
+  "pid": 13620
  },
  "plan": {
   "footprint": [
@@ -132,21 +132,21 @@
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 12191600,
-   "class": "ApplicationFrameWindow",
-   "fg_pid": 12836,
-   "title": "Media Player"
+   "hwnd": 29099864,
+   "class": "XLMAIN",
+   "fg_pid": 13620,
+   "title": "Excel"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 133380,
+   "hwnd": 14419988,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 12692,
- "seconds": 15.0
+ "killed_excel_pid": 13620,
+ "seconds": 11.4
 }

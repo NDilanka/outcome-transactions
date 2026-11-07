@@ -14,19 +14,19 @@
    ]
   }
  ],
- "free_mb_before": 856,
- "pid": 16504,
+ "free_mb_before": 1106,
+ "pid": 13576,
  "fg_before_commit": {
-  "hwnd": 394868,
+  "hwnd": 10027838,
   "class": "Chrome_WidgetWin_1",
-  "title": "Factory",
-  "pid": 14064
+  "title": "X",
+  "pid": 5004
  },
  "fg_after_commit": {
-  "hwnd": 394868,
+  "hwnd": 10027838,
   "class": "Chrome_WidgetWin_1",
-  "title": "Factory",
-  "pid": 14064
+  "title": "X",
+  "pid": 5004
  },
  "plan": {
   "footprint": [
@@ -122,21 +122,21 @@
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 394868,
+   "hwnd": 10027838,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 14064,
-   "title": "Factory"
+   "fg_pid": 5004,
+   "title": "X"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 2033836,
+   "hwnd": 26806116,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 16504,
- "seconds": 5.9
+ "killed_excel_pid": 13576,
+ "seconds": 13.0
 }

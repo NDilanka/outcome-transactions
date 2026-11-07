@@ -1,0 +1,266 @@
+{
+ "scenario": "features",
+ "mode": "excel",
+ "tag": "",
+ "features": true,
+ "root": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1",
+ "snapshot_method": "copy (NTFS has no block clone)",
+ "isolation": "in-process socket guard only; OS-level network isolation not applied on Windows",
+ "timings": {
+  "setup": 4.36,
+  "snapshot": 2.74,
+  "mutation": 0.18,
+  "search": 9.64,
+  "verify": 0.07,
+  "total": 17.12
+ },
+ "spec_hash": "60540218e303",
+ "mutation": {
+  "start_state": {
+   "expected_pass": false,
+   "passed": false,
+   "correct": true,
+   "reasons": [
+    "must budget.xlsx:B2 == 5000, got 1000.0",
+    "must exist: out/q3.csv",
+    "must: out/q3.csv contains '5000'"
+   ]
+  },
+  "wrong_value_B2_4999": {
+   "expected_pass": false,
+   "passed": false,
+   "correct": true,
+   "reasons": [
+    "must budget.xlsx:B2 == 5000, got 4999.0",
+    "must: out/q3.csv contains '5000'"
+   ]
+  },
+  "no_q3_csv": {
+   "expected_pass": false,
+   "passed": false,
+   "correct": true,
+   "reasons": [
+    "must exist: out/q3.csv",
+    "must: out/q3.csv contains '5000'"
+   ]
+  },
+  "collateral_C5": {
+   "expected_pass": false,
+   "passed": false,
+   "correct": true,
+   "reasons": [
+    "preserve: budget.xlsx:C5 changed 315.0 -> 1.0"
+   ]
+  },
+  "outside_footprint_notes": {
+   "expected_pass": false,
+   "passed": false,
+   "correct": true,
+   "reasons": [
+    "footprint violation: notes.txt changed"
+   ]
+  },
+  "positive_control": {
+   "expected_pass": true,
+   "passed": true,
+   "correct": true,
+   "reasons": []
+  }
+ },
+ "user_edit_after": "f0_null",
+ "forks": {
+  "f0_null": {
+   "method": "com_null",
+   "rc": 0,
+   "seconds": 2.97,
+   "network": {
+    "network_guard": "installed",
+    "scope": "in-process socket.connect, connect_ex, create_connection",
+    "os_isolation": "not applied on Windows",
+    "office_com": "allowed"
+   },
+   "env": {
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f0_null\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f0_null\\.otx-scratch",
+    "HTTP_PROXY": "http://127.0.0.1:9",
+    "HTTPS_PROXY": "http://127.0.0.1:9",
+    "ALL_PROXY": "http://127.0.0.1:9",
+    "NO_PROXY": "",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OTX_REFUSE_OFFICE": "0"
+   },
+   "divergence_bytes": 0,
+   "scratch_bytes": 41943226,
+   "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"allowed\"}\n",
+   "stderr_tail": "",
+   "verified": false,
+   "reasons": [
+    "must budget.xlsx:B2 == 5000, got 1000.0",
+    "must exist: out/q3.csv",
+    "must: out/q3.csv contains '5000'"
+   ],
+   "changed": [],
+   "outcome": {
+    "budget.xlsx:B2": 1000.0,
+    "other_cells_changed": 0
+   }
+  },
+  "f1_direct": {
+   "method": "com_excel",
+   "rc": 0,
+   "seconds": 4.15,
+   "network": {
+    "network_guard": "installed",
+    "scope": "in-process socket.connect, connect_ex, create_connection",
+    "os_isolation": "not applied on Windows",
+    "office_com": "allowed"
+   },
+   "env": {
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f1_direct\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f1_direct\\.otx-scratch",
+    "HTTP_PROXY": "http://127.0.0.1:9",
+    "HTTPS_PROXY": "http://127.0.0.1:9",
+    "ALL_PROXY": "http://127.0.0.1:9",
+    "NO_PROXY": "",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OTX_REFUSE_OFFICE": "0"
+   },
+   "divergence_bytes": 12221,
+   "scratch_bytes": 41943226,
+   "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"allowed\"}\n",
+   "stderr_tail": "",
+   "verified": true,
+   "reasons": [],
+   "changed": [
+    "budget.xlsx",
+    "out/q3.csv"
+   ],
+   "outcome": {
+    "budget.xlsx:B2": 5000.0,
+    "other_cells_changed": 0
+   }
+  },
+  "f2_wrong": {
+   "method": "wrong_xlsx",
+   "rc": 0,
+   "seconds": 0.4,
+   "network": {
+    "network_guard": "installed",
+    "scope": "in-process socket.connect, connect_ex, create_connection",
+    "os_isolation": "not applied on Windows",
+    "office_com": "allowed"
+   },
+   "env": {
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f2_wrong\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f2_wrong\\.otx-scratch",
+    "HTTP_PROXY": "http://127.0.0.1:9",
+    "HTTPS_PROXY": "http://127.0.0.1:9",
+    "ALL_PROXY": "http://127.0.0.1:9",
+    "NO_PROXY": "",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OTX_REFUSE_OFFICE": "0"
+   },
+   "divergence_bytes": 9868,
+   "scratch_bytes": 0,
+   "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"allowed\"}\n",
+   "stderr_tail": "",
+   "verified": false,
+   "reasons": [
+    "must budget.xlsx:B2 == 5000, got 1000.0",
+    "preserve: budget.xlsx:B3 changed 207.0 -> 5000.0"
+   ],
+   "changed": [
+    "budget.xlsx",
+    "out/q3.csv"
+   ],
+   "outcome": {
+    "budget.xlsx:B2": 1000.0,
+    "other_cells_changed": 1
+   }
+  },
+  "f3_second": {
+   "method": "openpyxl_xlsx",
+   "rc": 0,
+   "seconds": 2.04,
+   "network": {
+    "network_guard": "installed",
+    "scope": "in-process socket.connect, connect_ex, create_connection",
+    "os_isolation": "not applied on Windows",
+    "office_com": "refused"
+   },
+   "env": {
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f3_second\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\features-excel-2ksl73k1\\forks\\f3_second\\.otx-scratch",
+    "HTTP_PROXY": "http://127.0.0.1:9",
+    "HTTPS_PROXY": "http://127.0.0.1:9",
+    "ALL_PROXY": "http://127.0.0.1:9",
+    "NO_PROXY": "",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OTX_REFUSE_OFFICE": "1"
+   },
+   "divergence_bytes": 7099,
+   "scratch_bytes": 186,
+   "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"refused\"}\n",
+   "stderr_tail": "",
+   "verified": false,
+   "reasons": [
+    "preserve: budget.xlsx:F2 changed 600.0 -> None"
+   ],
+   "changed": [
+    "budget.xlsx",
+    "out/q3.csv"
+   ],
+   "outcome": {
+    "budget.xlsx:B2": 5000.0,
+    "other_cells_changed": 1
+   }
+  }
+ },
+ "noise": [],
+ "gates": [
+  {
+   "outcome": "agreement_refused",
+   "roundtrip_losses": {
+    "value": [
+     [
+      "F2",
+      600.0,
+      null
+     ]
+    ]
+   },
+   "fork_diffs": {
+    "value": [
+     [
+      "F2",
+      600.0,
+      null
+     ]
+    ],
+    "csv": [
+     [
+      "out/q3.csv",
+      861,
+      863
+     ]
+    ]
+   },
+   "status": {
+    "value": "refused",
+    "formula": "agreed",
+    "numfmt": "agreed",
+    "bold": "agreed",
+    "fill": "agreed",
+    "merged": "agreed",
+    "col_width": "agreed",
+    "csv": "disagree",
+    "reason": "second method failed verification"
+   }
+  }
+ ],
+ "agreement": "agreement_refused",
+ "outcome": "agreement_refused",
+ "notes_preserved": true,
+ "real_B2": 1000.0,
+ "user_cell_preserved": null
+}

@@ -20,19 +20,19 @@
    ]
   }
  ],
- "free_mb_before": 786,
- "pid": 18916,
+ "free_mb_before": 890,
+ "pid": 6552,
  "fg_before_commit": {
-  "hwnd": 12191600,
-  "class": "ApplicationFrameWindow",
-  "title": "Media Player",
-  "pid": 12836
+  "hwnd": 10027838,
+  "class": "Chrome_WidgetWin_1",
+  "title": "X",
+  "pid": 5004
  },
  "fg_after_commit": {
-  "hwnd": 12191600,
-  "class": "ApplicationFrameWindow",
-  "title": "Media Player",
-  "pid": 12836
+  "hwnd": 10027838,
+  "class": "Chrome_WidgetWin_1",
+  "title": "X",
+  "pid": 5004
  },
  "plan": {
   "footprint": [
@@ -132,21 +132,21 @@
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 12191600,
-   "class": "ApplicationFrameWindow",
-   "fg_pid": 12836,
-   "title": "Media Player"
+   "hwnd": 10027838,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "X"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 24053472,
+   "hwnd": 6621202,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 18916,
- "seconds": 15.4
+ "killed_excel_pid": 6552,
+ "seconds": 13.2
 }

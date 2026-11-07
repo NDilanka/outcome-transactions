@@ -20,19 +20,19 @@
    ]
   }
  ],
- "free_mb_before": 868,
- "pid": 7188,
+ "free_mb_before": 879,
+ "pid": 17652,
  "fg_before_commit": {
-  "hwnd": 12191600,
-  "class": "ApplicationFrameWindow",
-  "title": "Media Player",
-  "pid": 12836
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "NDilanka/acan: Stop managing coding agents in chat tabs. A live map of your code",
+  "pid": 5004
  },
  "fg_after_commit": {
-  "hwnd": 12191600,
-  "class": "ApplicationFrameWindow",
-  "title": "Media Player",
-  "pid": 12836
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "NDilanka/acan: Stop managing coding agents in chat tabs. A live map of your code",
+  "pid": 5004
  },
  "plan": {
   "footprint": [
@@ -133,35 +133,35 @@
  "watch_counts": {
   "open|foreground": 1,
   "open|window-appeared": 1,
-  "snapshot-pre|foreground": 1
+  "save|foreground": 1
  },
  "watch_events": [
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 5178874,
-   "class": "File Pilot",
-   "fg_pid": 2904,
-   "title": "acan-launch-video (D:\\dev\\acan-launch-video) - File Pilot v0.8.5"
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "NDilanka/acan: Stop managing coding agents in chat tabs. A live map of your code"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 1902648,
+   "hwnd": 13304058,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   },
   {
-   "phase": "snapshot-pre",
+   "phase": "save",
    "kind": "foreground",
-   "hwnd": 12191600,
-   "class": "ApplicationFrameWindow",
-   "fg_pid": 12836,
-   "title": "Media Player"
+   "hwnd": 10027838,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "X"
   }
  ],
- "killed_excel_pid": 7188,
- "seconds": 43.4
+ "killed_excel_pid": 17652,
+ "seconds": 7.9
 }

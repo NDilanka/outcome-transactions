@@ -1,0 +1,163 @@
+{
+ "run": "excel-clean-live-com-quiet",
+ "app": "excel",
+ "state": "clean",
+ "method": "live-com-quiet",
+ "status": "ok",
+ "free_mb_before": 988,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 8288,
+ "holders_open": [
+  [
+   8288,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_open": {
+  "size": 165,
+  "readable": false
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": true,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\excel-clean-live-com-quiet\\budget.xlsx",
+  "state": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": true,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\excel-clean-live-com-quiet\\budget.xlsx",
+  "mem_after": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  }
+ },
+ "fg_before_commit": {
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Test Acan with Factory Droid and Devin Agents / X and 6 more pages - Personal - ",
+  "pid": 5004
+ },
+ "commit": {
+  "method": "live-com-quiet",
+  "steps": [
+   "in-app COM edit, no save, no activation"
+  ],
+  "write_ok": true,
+  "error": null,
+  "com_rejections": 0
+ },
+ "fg_after_commit": {
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Test Acan with Factory Droid and Devin Agents / X and 6 more pages - Personal - ",
+  "pid": 5004
+ },
+ "mem_after_commit": {
+  "agent": true,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   8288,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 165,
+  "readable": false
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\excel-clean-live-com-quiet\\budget.xlsx",
+  "state": {
+   "agent": true,
+   "user": false,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\excel-clean-live-com-quiet\\budget.xlsx",
+  "mem_after": {
+   "agent": true,
+   "user": false,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": true,
+  "user": false,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": true,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   8288,
+   "Microsoft Excel"
+  ]
+ ],
+ "verdict": "PASS: disk correct after the user's save",
+ "undo_probe": {
+  "probe_error": "com_error(-2147418111, 'Call was rejected by callee.', None, None)"
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1,
+  "probe|foreground": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "Test Acan with Factory Droid and Devin Agents / X and 6 more pages - Personal - "
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 6096526,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "probe",
+   "kind": "foreground",
+   "hwnd": 23529314,
+   "class": "XLMAIN",
+   "fg_pid": 8288,
+   "title": "budget - Excel"
+  }
+ ],
+ "quit_ok": false,
+ "quit_error": "com_error(-2147418111, 'Call was rejected by callee.', None, None)",
+ "killed_office_pid": 8288,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 17.6
+}

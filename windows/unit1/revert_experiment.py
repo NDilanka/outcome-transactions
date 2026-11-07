@@ -32,7 +32,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(HERE), "unit2"))
 sys.path.insert(0, HERE)
 
 import xlsx_props as XP  # noqa: E402
-from open_doc_experiment import scrub_author  # noqa: E402
+from com_gate import NotResponding, RemoteError, Step, describe, guard, ready_gate, run_steps, timed  # noqa: E402
+from open_doc_experiment import excel_props, excel_ready_probe, scrub_author  # noqa: E402
 from otx_win import (Watchdog, foreground_desc, free_mb, image_pids, kill_pid, new_image_pid,  # noqa: E402
                      pid_alive, redact, wait_for_memory)
 
@@ -77,20 +78,75 @@ def cell_props(ws, ref):
                 merged=bool(c.MergeCells))
 
 
-def write_props(ws, ref, p):
-    c = ws.Range(ref)
-    if p["formula"] is not None:
-        c.Formula = p["formula"]
-    elif p["value"] is None:
-        c.ClearContents()
-    else:
-        c.Value = p["value"]
-    c.NumberFormat = p["numfmt"]
-    c.Font.Bold = p["bold"]
-    if p["fill"] is None:
-        c.Interior.Pattern = XL_NONE
-    else:
-        c.Interior.Color = p["fill"]
+# Steps act on the sheet that com_gate hands them (a fresh connection on a worker thread).
+def _formula_step(ref, want):
+    return Step(f"{ref} formula", lambda ws: ws.Range(ref).Formula,
+                lambda ws, v: setattr(ws.Range(ref), "Formula", v), want)
+
+
+def _value_step(ref, want):
+    def write(ws, v):
+        if v is None:
+            ws.Range(ref).ClearContents()
+        else:
+            ws.Range(ref).Value = v
+    return Step(f"{ref} value", lambda ws: ws.Range(ref).Value, write, want)
+
+
+def _numfmt_step(ref, want):
+    return Step(f"{ref} numfmt", lambda ws: ws.Range(ref).NumberFormat,
+                lambda ws, v: setattr(ws.Range(ref), "NumberFormat", v), want)
+
+
+def _bold_step(ref, want):
+    return Step(f"{ref} bold", lambda ws: bool(ws.Range(ref).Font.Bold),
+                lambda ws, v: setattr(ws.Range(ref).Font, "Bold", v), want)
+
+
+def _fill_step(ref, want):
+    def read(ws):
+        return None if ws.Range(ref).Interior.Pattern == XL_NONE else ws.Range(ref).Interior.Color
+
+    def write(ws, v):
+        if v is None:
+            ws.Range(ref).Interior.Pattern = XL_NONE
+        else:
+            ws.Range(ref).Interior.Color = v
+    return Step(f"{ref} fill", read, write, want)
+
+
+def _comment_step(ref, text):
+    """Adds or removes one comment on ref. The sheet's comment count goes 0 -> 1 for the agent."""
+    def write(ws, v):
+        if v:
+            ws.Range(ref).AddComment(text)
+        else:
+            ws.Range(ref).Comment.Delete()
+    return Step(f"{ref} comment", lambda ws: ws.Comments.Count, write, 1)
+
+
+def revert_steps(plan):
+    """The write-back of the recorded prior state, one checked step per property, in the old write order."""
+    steps = []
+    for r in plan["footprint"]:
+        p = plan["prior"][r]
+        steps.append(_formula_step(r, p["formula"]) if p["formula"] is not None
+                     else _value_step(r, p["value"]))
+        steps += [_numfmt_step(r, p["numfmt"]), _bold_step(r, p["bold"]), _fill_step(r, p["fill"])]
+    return steps
+
+
+def view_of(path):
+    """Runs on a worker thread: a fresh connection to the open workbook, as its Budget sheet."""
+    return lambda: win32com.client.GetObject(os.path.abspath(path)).Worksheets("Budget")
+
+
+def commit_guarded(open_view, core, during=None):
+    """Run core steps under com_gate's guard: DisplayAlerts off (and any other `during` property) for the commit,
+    restored as checked steps. Returns (run_steps report, properties before)."""
+    during = during or {"DisplayAlerts": False}
+    befores = timed(lambda: excel_props(open_view(), list(during)))
+    return run_steps(guard(core, befores, during), open_view), befores
 
 
 def snapshot(ws):
@@ -133,27 +189,48 @@ def make_plan(before, after):
                 committed={r: cell_of(after, r) for r in changed}, confirm_reasons=reasons)
 
 
-def revert(ws, plan, confirm):
-    conflicts = [r for r in plan["footprint"] if not same_state(cell_props(ws, r), plan["committed"][r])]
+def _unreachable(e, confirm):
+    reason = "Excel not responding" if isinstance(e, NotResponding) else f"Excel busy ({describe(e)})"
+    return dict(status="refused", confirm=confirm, conflicts=[], written=[], reason=reason,
+                message=f"Refused: {reason}. Nothing written.")
+
+
+def revert(open_view, plan, confirm):
+    """The revert runs the same readiness gate as the commit, then checked steps under com_gate's guard. Every COM
+    call is timed; a timed-out write is reconciled (see com_gate.py)."""
+    try:
+        conflicts = timed(lambda: [r for r in plan["footprint"]
+                                   if not same_state(cell_props(open_view(), r), plan["committed"][r])])
+    except (NotResponding, RemoteError) as e:
+        return _unreachable(e, confirm)
     if conflicts:
         return dict(status="refused", confirm=confirm, conflicts=conflicts, written=[])
     if plan["confirm_reasons"] and not confirm:
         return dict(status="confirm_required", confirm=confirm, conflicts=[], written=[])
-    for r in plan["footprint"]:
-        write_props(ws, r, plan["prior"][r])
-    return dict(status="reverted", confirm=confirm, conflicts=[], written=list(plan["footprint"]))
+    gate = ready_gate(open_view, excel_ready_probe)
+    if not gate["ok"]:
+        return dict(status="refused", confirm=confirm, conflicts=[], written=[], reason=gate["reason"], gate=gate,
+                    message=f"Refused: {gate['reason']}. Nothing written.")
+    try:
+        rep, _ = commit_guarded(open_view, revert_steps(plan))
+    except (NotResponding, RemoteError) as e:
+        return _unreachable(e, confirm)
+    if rep["status"] != "committed":
+        return dict(status=rep["status"], confirm=confirm, conflicts=[], written=[], reason=rep["reason"],
+                    message=rep["message"], steps=rep)
+    return dict(status="reverted", confirm=confirm, conflicts=[], written=list(plan["footprint"]), steps=rep)
 
 
 def _set(ws, ref, value):
     ws.Range(ref).Value = value
 
 
-AGENT = {
-    "value": lambda ws: _set(ws, "B2", 5000),
-    "format": lambda ws: (_set(ws, "B2", 5000), setattr(ws.Range("B2"), "NumberFormat", "$#,##0")),
-    "formula": lambda ws: setattr(ws.Range("E2"), "Formula", "=B2*3"),
-    "merged": lambda ws: _set(ws, "E5", "agent note"),
-    "comment": lambda ws: (_set(ws, "B2", 5000), ws.Range("B2").AddComment("agent note")),
+AGENT_STEPS = {
+    "value": lambda: [_value_step("B2", 5000)],
+    "format": lambda: [_value_step("B2", 5000), _numfmt_step("B2", "$#,##0")],
+    "formula": lambda: [_formula_step("E2", "=B2*3")],
+    "merged": lambda: [_value_step("E5", "agent note")],
+    "comment": lambda: [_value_step("B2", 5000), _comment_step("B2", "agent note")],
 }
 USER = {
     "none": lambda ws: None,
@@ -254,9 +331,22 @@ def run(case, rep):
         before = snapshot(ws)
         wd.phase = "commit"
         rec["fg_before_commit"] = foreground_desc()
-        AGENT[spec["agent"]](ws)
-        after = snapshot(ws)
+        open_view = view_of(path)
+        gate = ready_gate(open_view, excel_ready_probe)
+        rec["gate_before_commit"] = gate
+        if gate["ok"]:
+            agent_rep, befores = commit_guarded(open_view, AGENT_STEPS[spec["agent"]]())
+            rec["commit_guard_before"] = befores
+        else:
+            agent_rep = dict(status="refused", reason=gate["reason"], done=[], rollback=[], rejections=0,
+                             message=f"Refused: {gate['reason']}. Nothing written.")
+        rec["commit"] = agent_rep
         rec["fg_after_commit"] = foreground_desc()
+        if agent_rep["status"] != "committed":
+            # A refused commit is recorded and stops here: no revert is judged for a commit that did not happen.
+            rec["status"] = "commit_refused"
+            return rec
+        after = snapshot(ws)
         plan = make_plan(before, after)
         rec["plan"] = dict(footprint=plan["footprint"], confirm_reasons=plan["confirm_reasons"],
                            prior={r: plan["prior"][r] for r in plan["footprint"]},
@@ -265,12 +355,12 @@ def run(case, rep):
             wd.phase = "user-after-commit"
             USER[spec["user"]](ws)
         wd.phase = "revert"
-        first = revert(ws, plan, confirm=False)
+        first = revert(open_view, plan, confirm=False)
         rec["calls"].append(first)
         rec["mem_after_first_call"] = {r: cell_props(ws, r) for r in plan["footprint"]}
         if first["status"] == "confirm_required":
             wd.phase = "confirm"
-            rec["calls"].append(revert(ws, plan, confirm=True))
+            rec["calls"].append(revert(open_view, plan, confirm=True))
         rec["mem_after_revert"] = {r: cell_props(ws, r) for r in plan["footprint"]}
         rec["mem_user"] = {k: cell_props(ws, k) for k in ("B2", "D1")}
         rec["comments_after_revert"] = snapshot(ws)["comments"]
