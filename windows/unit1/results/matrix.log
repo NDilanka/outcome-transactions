@@ -1,0 +1,104 @@
+running excel-clean-replace
+running excel-clean-sibling-rename
+running excel-clean-inplace
+running excel-clean-reload-after-replace
+running excel-clean-close-replace-reopen
+running excel-clean-live-com
+running excel-clean-live-com-quiet
+running excel-clean-live-com-quiet-focused
+running excel-clean-control-focused
+running excel-dirty-replace
+running excel-dirty-sibling-rename
+running excel-dirty-inplace
+running excel-dirty-live-com
+running excel-dirty-live-com-quiet
+running excel-dirty-live-com-focused
+running excel-dirty-live-com-quiet-focused
+running excel-dirty-control-focused
+running word-clean-replace
+running word-clean-sibling-rename
+running word-clean-inplace
+running word-clean-reload-after-replace
+running word-clean-close-replace-reopen
+running word-clean-live-com
+running word-clean-live-com-quiet
+running word-clean-live-com-quiet-focused
+running word-clean-control-focused
+running word-dirty-replace
+running word-dirty-sibling-rename
+running word-dirty-inplace
+running word-dirty-live-com
+running word-dirty-live-com-quiet
+running word-dirty-live-com-focused
+running word-dirty-live-com-quiet-focused
+running word-dirty-control-focused
+## Commit and verdict per run
+
+| app | state | method | write ok | app shows commit before save | disk after commit | disk after user save | user edit kept | copy after commit correct | focus changes in commit | window changes in commit | undo first reverts | dialogs | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| excel | clean | close-replace-reopen | yes | yes | new | new | n/a | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | clean | control-focused | yes | no | old | old | n/a | no | 0 | 0 | undo error | none | CONTROL: no commit, measures focus drift only |
+| excel | clean | inplace | no: PermissionError winerror=None: Permission denied | no | old | old | n/a | no | 0 | 0 | undo error | none | REFUSED: write failed, nothing committed |
+| excel | clean | live-com-quiet-focused | yes | yes | old | new | n/a | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | clean | live-com-quiet | yes | yes | old | new | n/a | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | clean | live-com | yes | yes | old | new | n/a | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | clean | reload-after-replace | no: PermissionError winerror=5: Access is denied | no | old | old | n/a | no | 0 | 0 | undo error | none | REFUSED: write failed, nothing committed |
+| excel | clean | replace | no: PermissionError winerror=5: Access is denied | no | old | old | n/a | no | 0 | 0 | undo error | none | REFUSED: write failed, nothing committed |
+| excel | clean | sibling-rename | no: PermissionError winerror=32: The process cannot access the file because it is being used by another process | no | old | old | n/a | no | 0 | 0 | undo error | none | REFUSED: write failed, nothing committed |
+| excel | dirty | control-focused | yes | no | old | old | yes | no | 0 | 0 | undo error | none | CONTROL: no commit, measures focus drift only |
+| excel | dirty | inplace | no: PermissionError winerror=None: Permission denied | no | old | old | yes | no | 0 | 0 | undo error | none | REFUSED: write failed, nothing committed |
+| excel | dirty | live-com-focused | yes | yes | old | new | yes | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | dirty | live-com-quiet-focused | yes | yes | old | new | yes | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | dirty | live-com-quiet | yes | yes | old | new | yes | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | dirty | live-com | yes | yes | old | new | yes | yes | 0 | 0 | undo error | none | PASS: disk correct after the user's save |
+| excel | dirty | replace | no: PermissionError winerror=5: Access is denied | no | old | old | yes | no | 0 | 0 | undo error | none | REFUSED: write failed, nothing committed |
+| excel | dirty | sibling-rename | no: PermissionError winerror=32: The process cannot access the file because it is being used by another process | no | old | old | yes | no | 0 | 0 | undo error | none | REFUSED: write failed, nothing committed |
+| word | clean | close-replace-reopen | - | - | - | - | - | - | - | - | - | - | error |
+| word | clean | control-focused | yes | no | old | old | n/a | no | 0 | 0 | nothing | none | CONTROL: no commit, measures focus drift only |
+| word | clean | inplace | - | - | - | - | - | - | - | - | - | - | error |
+| word | clean | live-com-quiet-focused | yes | yes | old | new | n/a | yes | 0 | 0 | agent | none | PASS: disk correct after the user's save |
+| word | clean | live-com-quiet | yes | yes | old | new | n/a | yes | 0 | 0 | agent | none | PASS: disk correct after the user's save |
+| word | clean | live-com | yes | yes | old | new | n/a | yes | 0 | 0 | agent | none | PASS: disk correct after the user's save |
+| word | clean | reload-after-replace | - | - | - | - | - | - | - | - | - | - | error |
+| word | clean | replace | - | - | - | - | - | - | - | - | - | - | error |
+| word | clean | sibling-rename | - | - | - | - | - | - | - | - | - | - | error |
+| word | dirty | control-focused | yes | no | old | old | yes | no | 0 | 0 | user | none | CONTROL: no commit, measures focus drift only |
+| word | dirty | inplace | - | - | - | - | - | - | - | - | - | - | error |
+| word | dirty | live-com-focused | yes | yes | old | new | yes | yes | 0 | 0 | agent | none | PASS: disk correct after the user's save |
+| word | dirty | live-com-quiet-focused | yes | yes | old | new | yes | yes | 0 | 0 | agent | none | PASS: disk correct after the user's save |
+| word | dirty | live-com-quiet | yes | yes | old | new | yes | yes | 0 | 0 | agent | none | PASS: disk correct after the user's save |
+| word | dirty | live-com | yes | yes | old | new | yes | yes | 0 | 0 | agent | none | PASS: disk correct after the user's save |
+| word | dirty | replace | - | - | - | - | - | - | - | - | - | - | error |
+| word | dirty | sibling-rename | - | - | - | - | - | - | - | - | - | - | error |
+
+## Snapshot through the owner (before the commit)
+
+| app | state | snapshot ok | user edit in snapshot | dirty flag unchanged | name unchanged | snapshot state correct | restored after redo |
+|---|---|---|---|---|---|---|---|
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | clean | yes | n/a | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| excel | dirty | yes | yes | yes | yes | yes | no |
+| word | clean | yes | n/a | yes | yes | yes | yes |
+| word | clean | yes | n/a | yes | yes | yes | yes |
+| word | clean | yes | n/a | yes | yes | yes | yes |
+| word | clean | yes | n/a | yes | yes | yes | yes |
+| word | dirty | yes | yes | yes | yes | yes | yes |
+| word | dirty | yes | yes | yes | yes | yes | yes |
+| word | dirty | yes | yes | yes | yes | yes | yes |
+| word | dirty | yes | yes | yes | yes | yes | yes |
+| word | dirty | yes | yes | yes | yes | yes | yes |
+

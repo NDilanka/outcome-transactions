@@ -1,0 +1,170 @@
+{
+ "run": "word-clean-sibling-rename",
+ "app": "word",
+ "state": "clean",
+ "method": "sibling-rename",
+ "status": "ok",
+ "free_mb_before": 954,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Word 16.0 build 16.0.14326",
+ "pid": 5592,
+ "holders_open": [
+  [
+   5592,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_open": {
+  "size": 162,
+  "readable": true
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": true,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-clean-sibling-rename\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": true,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-clean-sibling-rename\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  }
+ },
+ "fg_before_commit": {
+  "hwnd": 394868,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Interface-compiler - Factory",
+  "pid": 14064
+ },
+ "commit": {
+  "method": "sibling-rename",
+  "steps": [
+   "FAILED: PermissionError winerror=32: The process cannot access the file because it is being used by another process"
+  ],
+  "write_ok": false,
+  "error": "PermissionError winerror=32: The process cannot access the file because it is being used by another process"
+ },
+ "fg_after_commit": {
+  "hwnd": 394868,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Interface-compiler - Factory",
+  "pid": 14064
+ },
+ "mem_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_commit": true,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   5592,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 162,
+  "readable": true
+ },
+ "snapshot_post": {
+  "saved_before": true,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-clean-sibling-rename\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": true,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-clean-sibling-rename\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   5592,
+   "Microsoft Word"
+  ]
+ ],
+ "verdict": "REFUSED: write failed, nothing committed",
+ "undo_probe": {
+  "before": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  },
+  "activated_for_probe": false,
+  "undo_error": null,
+  "reverted": [],
+  "redo_error": null,
+  "restored_after_redo": true
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 2
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394868,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 14064,
+   "title": "Interface-compiler - Factory"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 5112508,
+   "class": "OpusApp",
+   "visible": false,
+   "iconic": false,
+   "title": "Word"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 7734994,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  }
+ ],
+ "quit_ok": true,
+ "killed_office_pid": 5592,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 11.4
+}
