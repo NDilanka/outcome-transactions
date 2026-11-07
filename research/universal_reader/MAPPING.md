@@ -122,9 +122,20 @@ Notes:
 
 ## Grammar and builtins
 
-The parser is specexec's. Predicates it cannot parse stay UNSUPPORTED (96 of 302 predicates, counted in
-`dryrun.py` output). Builtins: specexec's (`lower`, `trim`, `collapse_whitespace`, `proper_case`, `replace`,
-`len`, `count`) plus `exists`, `basename`, `uri_to_path`, `urldecode`, `join`.
+The parser is specexec's (frozen, read-only import), extended in `grammar.py`. Every predicate the frozen parser
+reads keeps the same tree (206 of 302, checked in `tests/test_grammar.py`). Of the 96 it rejects, 60 get an
+executable tree, 8 are live probes (`probe ...`: kept as 'live', UNSUPPORTED), and 28 are natural-language text
+(kept as 'prose', UNSUPPORTED).
+
+Added forms: regex literals after matches, contains and does_not_match; keyword arguments; dict and tuple
+literals; ranges as arguments; `&` and `|` on integers; ternary `c ? a : b`; contains; does_not_match; is and is
+not; similarity (parsed, UNSUPPORTED); ordered_by ascending and descending; filters `X where C` and `X.where(C)`
+(bare names in C are the item's fields); `for each v in it: body`; `if C: B`; statements separated by `;` with
+`let NAME = expr` and `expr as NAME`; `of DOC` after a quantifier; the set operators as calls, `set_equal(a, b)`;
+keywords as attribute names, `x.includes(...)`.
+
+Builtins: specexec's (`lower`, `trim`, `collapse_whitespace`, `proper_case`, `replace`, `len`, `count`) plus
+`exists`, `basename`, `uri_to_path`, `urldecode`, `join`, and the set and text operators as calls.
 
 Not implemented (UNSUPPORTED, by design): `near`, `bbox`, `similarity`, `hsv_mean_*`, `mean_chroma`,
 `grayscale`, `mean_rgb`, `content_region`, `aspect_ratio`, `where`-clauses on pixel data, and any name not listed above.

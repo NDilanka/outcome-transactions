@@ -11,7 +11,6 @@ UNSUPPORTED or ERROR, ACCEPT if all PASS. A predicate that reads an unreadable f
 import collections
 import fnmatch
 import hashlib
-import importlib.util
 import inspect
 import os
 import re
@@ -23,16 +22,8 @@ from . import readers_image
 from . import readers_misc
 from . import readers_config as cfg
 from .readers_office import FORMAT_KEYS, FORMAT_DEFAULTS, CELL_FORMAT_DEFAULTS
-
-_HERE = os.path.dirname(os.path.abspath(__file__))
-_SPECEXEC = os.path.join(_HERE, '..', 'exp6-executed', 'specexec.py')
-_spec = importlib.util.spec_from_file_location('specexec_frozen', _SPECEXEC)
-_frozen = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(_frozen)
-parse = _frozen.parse
-strip_comment = _frozen.strip_comment
-Unsupported = _frozen.Unsupported
-ReaderMiss = _frozen.ReaderMiss
+# The predicate grammar: specexec.py (frozen) plus the extensions in grammar.py. Both share one frozen module object.
+from .grammar import parse, strip_comment, Unsupported, ReaderMiss
 
 
 class Unknown:
@@ -1165,6 +1156,18 @@ FUNCS = {
     'uri_to_path': lambda uri: urllib.parse.unquote(uri.replace('file://', '')),
     'urldecode': lambda s: urllib.parse.unquote(s),
     'join': lambda xs, sep='': sep.join(xs),
+    # the set and text operators also written as calls: set_equal(a, b) is a == set-equal b
+    'set_equal': lambda a, b: _op('set_equal', a, b),
+    'multiset_equal': lambda a, b: _op('multiset_equal', a, b),
+    'subset_of': lambda a, b: _op('subset_of', a, b),
+    'includes': lambda a, b: _op('includes', a, b),
+    'includes_any': lambda a, b: _op('includes_any', a, b),
+    'equals_by_character': lambda a, b: _op('equals_by_character', a, b),
+    'matches': lambda a, b: _op('matches', a, b),
+    'startswith': lambda a, b: _op('startswith', a, b),
+    'endswith': lambda a, b: _op('endswith', a, b),
+    'contains': lambda a, b: _op('contains', a, b),
+    'does_not_match': lambda a, b: _op('does_not_match', a, b),
 }
 
 
@@ -1227,8 +1230,17 @@ def ev(n, env, ctx, roots):
             return obj.span(a, b)
         return Seq(obj).span(a, b)
     if k == 'arith':
+        op = n[1]
         a, b = ev(n[2], env, ctx, roots), ev(n[3], env, ctx, roots)
-        return {'+': lambda: a + b, '-': lambda: a - b, '*': lambda: a * b, '/': lambda: a / b}[n[1]]()
+        if op in ('&', '|'):  # bit masks, as in a rule's type flags
+            if not (isinstance(a, int) and isinstance(b, int)):
+                raise Unsupported(f'bitwise {op} needs integers')
+            return a & b if op == '&' else a | b
+        if op not in ('+', '-', '*', '/'):
+            raise Unsupported(f'arithmetic operator {op} is not evaluated')
+        if op == '/' and b == 0:
+            raise Unsupported('division by zero')
+        return {'+': lambda: a + b, '-': lambda: a - b, '*': lambda: a * b, '/': lambda: a / b}[op]()
     if k == 'not':
         return not ev(n[1], env, ctx, roots)
     if k == 'and':
@@ -1257,28 +1269,68 @@ def ev(n, env, ctx, roots):
             return len(a) == len(b) and all(abs(x - y) <= tol for x, y in zip(a, b))
         return abs(a - b) <= tol
     if k == 'op':
-        op, a, b = n[1], ev(n[2], env, ctx, roots), ev(n[3], env, ctx, roots)
-        if op == 'matches':
-            if isinstance(b, list):
-                return a == b
-            return re.search(b, a) is not None
-        if op == 'startswith':
-            return a.startswith(b)
-        if op == 'endswith':
-            return a.endswith(b)
-        if op == 'set_equal':
-            return set(a) == set(_coords(b))
-        if op == 'multiset_equal':
-            return collections.Counter(a) == collections.Counter(b)
-        if op == 'equals_by_character':
-            return _by_char(a) == _by_char(b)
-        if op == 'subset_of':
-            return set(a) <= set(_coords(b))
-        if op == 'includes_any':
-            return any(x in a for x in b)
-        if op == 'includes':
-            return b in a
-        raise Unsupported(f'operator {op}')
+        return _op(n[1], ev(n[2], env, ctx, roots), ev(n[3], env, ctx, roots))
+    if k == 'regex':
+        try:
+            return re.compile(n[1], _re_flags(n[2]))
+        except re.error as e:
+            raise Unsupported(f'regex: {e}')
+    if k == 'dict':
+        return {ev(a, env, ctx, roots): ev(b, env, ctx, roots) for a, b in n[1]}
+    if k == 'tuple':
+        return tuple(ev(x, env, ctx, roots) for x in n[1])
+    if k == 'ternary':
+        return ev(n[2], env, ctx, roots) if bool(ev(n[1], env, ctx, roots)) else ev(n[3], env, ctx, roots)
+    if k == 'is':
+        a, b = ev(n[1], env, ctx, roots), ev(n[2], env, ctx, roots)
+        return a is b if (b is None or isinstance(b, bool)) else a == b
+    if k == 'similar':
+        raise Unsupported('similarity: the tree has no image or video similarity measure')
+    if k == 'ordered':
+        xs = ev(n[1], env, ctx, roots)
+        if not isinstance(xs, list):
+            raise Unsupported('ordered_by needs a list')
+        if n[2] == 'ascending':
+            return all(a <= b for a, b in zip(xs, xs[1:]))
+        if n[2] == 'descending':
+            return all(a >= b for a, b in zip(xs, xs[1:]))
+        raise Unsupported(f'ordered_by {n[2]} is not evaluated')
+    if k == 'filter':
+        return _filter(ev(n[1], env, ctx, roots), n[2], env, ctx, roots)
+    if k == 'genm':
+        out = []
+
+        def walk(i, e):
+            if i == len(n[2]):
+                out.append(ev(n[1], e, ctx, roots))
+                return
+            var, it, cond = n[2][i]
+            for x in ev(it, e, ctx, roots):
+                e2 = dict(e, **{var: x})
+                if cond is None or ev(cond, e2, ctx, roots):
+                    walk(i + 1, e2)
+        walk(0, env)
+        return out
+    if k == 'seq':
+        # statements in order: a let binds a name for the statements after it; the others must all hold
+        e2, vals = dict(env), []
+        for st in n[1]:
+            if st[0] == 'let':
+                e2[st[1]] = ev(st[2], e2, ctx, roots)
+            else:
+                vals.append(bool(ev(st, e2, ctx, roots)))
+        if not vals:
+            raise Unsupported('a binding with no assertion (the spec has no check on the bound name)')
+        return all(vals)
+    if k == 'ctx':
+        ev(n[1], env, ctx, roots)  # opens the document the body reads through its bare names
+        return ev(n[2], env, ctx, roots)
+    if k == 'live':
+        raise Unsupported('live probe: runs an app or command, not readable from a saved state')
+    if k == 'prose':
+        raise Unsupported(f'not parseable: {n[2]}')
+    if k == 'kwarg':
+        raise Unsupported('keyword argument outside a call')
     if k == 'listcomp':
         out = []
         for x in ev(n[3], env, ctx, roots):
@@ -1320,9 +1372,13 @@ def ev(n, env, ctx, roots):
             finally:
                 ctx.cur, ctx.cur_root = saved, saved_root
                 ctx.in_before -= 1
-        if fn[0] == 'name' and fn[1] in ('all', 'any') and len(args) == 1 and args[0][0] in ('gen', 'quant'):
+        if fn[0] == 'attr' and fn[2] == 'where':  # x.where(cond): the items of x that satisfy cond
+            if len(args) != 1 or args[0][0] == 'kwarg':
+                raise Unsupported('where() takes one condition')
+            return _filter(ev(fn[1], env, ctx, roots), args[0], env, ctx, roots)
+        if fn[0] == 'name' and fn[1] in ('all', 'any') and len(args) == 1 and args[0][0] in ('gen', 'genm', 'quant'):
             a = args[0]
-            if a[0] == 'gen':
+            if a[0] in ('gen', 'genm'):
                 vals = ev(a, env, ctx, roots)
             else:
                 vals = []
@@ -1342,7 +1398,18 @@ def ev(n, env, ctx, roots):
             callee = ev(fn, env, ctx, roots)
         if not callable(callee):
             raise Unsupported(f'not callable: {fn}')
-        return callee(*[ev(x, env, ctx, roots) for x in args])
+        pos = [ev(x, env, ctx, roots) for x in args if x[0] != 'kwarg']
+        kw = {x[1]: ev(x[2], env, ctx, roots) for x in args if x[0] == 'kwarg'}
+        try:
+            sig = inspect.signature(callee)
+        except (TypeError, ValueError):
+            sig = None  # a builtin without a signature: the call is made and any mismatch is an error
+        if sig is not None:
+            try:
+                sig.bind(*pos, **kw)
+            except TypeError as e:
+                raise Unsupported(f'call does not match the reader: {e}')
+        return callee(*pos, **kw)
     raise Unsupported(f'node {k}')
 
 
@@ -1356,6 +1423,100 @@ def _by_char(x):
     if isinstance(x, list):
         return [_by_char(i) for i in x]
     return x
+
+
+def _op(op, a, b):
+    """A text, set or membership operator. A value of a type the operator does not take is UNSUPPORTED."""
+    try:
+        return _op_value(op, a, b)
+    except TypeError as e:
+        raise Unsupported(f'{op}: {e}')
+
+
+def _op_value(op, a, b):
+    if op == 'matches':
+        if isinstance(b, list):
+            return a == b
+        return _search(b, a)
+    if op == 'does_not_match':
+        return not _op_value('matches', a, b)
+    if op == 'contains':
+        if isinstance(b, re.Pattern):
+            return _search(b, a)
+        return b in a
+    if op == 'startswith':
+        return a.startswith(b)
+    if op == 'endswith':
+        return a.endswith(b)
+    if op == 'set_equal':
+        return set(a) == set(_coords(b))
+    if op == 'multiset_equal':
+        return collections.Counter(a) == collections.Counter(b)
+    if op == 'equals_by_character':
+        return _by_char(a) == _by_char(b)
+    if op == 'subset_of':
+        return set(a) <= set(_coords(b))
+    if op == 'includes_any':
+        return any(x in a for x in b)
+    if op == 'includes':
+        return b in a
+    raise Unsupported(f'operator {op}')
+
+
+def _search(pat, text):
+    if not isinstance(text, str):
+        raise Unsupported('matches needs text')
+    if isinstance(pat, re.Pattern):
+        return pat.search(text) is not None
+    if isinstance(pat, str):
+        return re.search(pat, text) is not None
+    raise Unsupported('matches needs a pattern')
+
+
+def _re_flags(flags):
+    out = 0
+    for ch in flags:
+        if ch == 'i':
+            out |= re.I
+        elif ch == 'm':
+            out |= re.M
+        elif ch == 's':
+            out |= re.S
+        else:
+            raise Unsupported(f'regex flag {ch!r} is not evaluated')
+    return out
+
+
+def _has_fields(x):
+    return not isinstance(x, (str, bytes, int, float, bool, list, tuple, dict, type(None)))
+
+
+class ItemEnv(dict):
+    """Names inside where(): the fields of the item shadow the names outside it."""
+
+    def __init__(self, outer, item):
+        super().__init__(outer)
+        self.item = item
+
+    def __contains__(self, k):
+        return (not k.startswith('_') and hasattr(self.item, k)) or dict.__contains__(self, k)
+
+    def __getitem__(self, k):
+        if not k.startswith('_') and hasattr(self.item, k):
+            return getattr(self.item, k)
+        return dict.__getitem__(self, k)
+
+
+def _filter(coll, cond, env, ctx, roots):
+    """The items of coll for which cond holds. cond is a grammar node; its bare names are the item's fields."""
+    if not isinstance(coll, list):
+        raise Unsupported('where() needs a collection')
+    out = []
+    for x in coll:
+        e2 = ItemEnv(env, x) if _has_fields(x) else env
+        if bool(ev(cond, e2, ctx, roots)):
+            out.append(x)
+    return out
 
 
 def vacuous(ctx, what):
@@ -1400,11 +1561,7 @@ def run_spec(spec, end_state, start_state, root_end, root_start):
     recs = []
     for src in spec.get('must', []):
         pred = strip_comment(src)
-        try:
-            ast = parse(pred)
-        except Unsupported as e:
-            recs.append({'pred': pred, 'status': 'UNSUPPORTED', 'reason': f'parse: {e}', 'proxy': False})
-            continue
+        ast = parse(pred)  # never raises: a predicate the grammar cannot read is a 'prose' node, UNSUPPORTED
         ctx = Ctx(end_state, start_state, root_end, root_start, holder)
         status, reason = _eval_pred(ast, ctx)
         rec = {'pred': pred, 'status': status, 'reason': reason, 'proxy': ctx.proxy}
