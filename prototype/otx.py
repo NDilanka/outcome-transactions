@@ -48,6 +48,8 @@ EXPECT = {
     "dup_cached": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_comment": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_space": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "dup_spaces": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "list_label": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_sheet": dict(outcome="committed", committed=True, real_b2="5000", real_b2_by_sheet={"Q3": "5000", "Q3 copy": "3"}),
     "dup_sheet_renamed": dict(outcome="anchor_mismatch", committed=False, real_b2=None, real_b2_by_sheet={"FY2026": "3"}),
     "read_set": dict(committed=False, real_b2="3"),
@@ -222,6 +224,12 @@ def main():
         R.ods_copy_sheet_first(f"{REAL}/budget.ods", "Q3 copy"); log("user copied sheet Q3 and moved the copy ahead of it, during search")
     if MODE == "dup_sheet_renamed":
         R.ods_rename_sheet(f"{REAL}/budget.ods", "Q3", "FY2026"); log("user renamed sheet Q3 to FY2026 during search")
+    if MODE == "dup_spaces":
+        R.ods_append_rows(f"{REAL}/budget.ods", '<table:table-row><table:table-cell office:value-type="string"><text:p> item0 </text:p></table:table-cell></table:table-row>')
+        log("user pasted a row labelled ' item0 ' with spaces around the text, during search")
+    if MODE == "list_label":
+        R.ods_replace_cell(f"{REAL}/budget.ods", "A2", '<table:table-cell office:value-type="string"><text:list text:style-name="L"><text:list-item><text:p>item0</text:p></text:list-item></text:list></table:table-cell>')
+        log("user turned the target row label 'item0' into a list item during search")
     for th in ths: th.join()
     search_s = time.monotonic() - t_search
     nv = view_of("f0_null")
