@@ -5,9 +5,9 @@
  "expect": "guard-no-prompt",
  "status": "ok",
  "dialog_windows": [],
- "free_mb_before": 1171,
+ "free_mb_before": 950,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 9832,
+ "pid": 14368,
  "mem_before_commit": {
   "agent": false,
   "user": true,
@@ -16,7 +16,7 @@
  "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
  "alerts_seen_in_write": false,
  "scratch_saved": true,
- "commit_seconds": 0.64,
+ "commit_seconds": 0.44,
  "commit": {
   "status": "committed",
   "done": [
@@ -76,5 +76,5 @@
  "verdict": "CORRECT: guard kept alerts off: the save over an existing file raised no prompt, and the commit committed",
  "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 9832
+ "killed_excel_pid": 14368
 }

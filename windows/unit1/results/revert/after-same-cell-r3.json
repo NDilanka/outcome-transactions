@@ -14,18 +14,48 @@
    "written": []
   }
  ],
- "free_mb_before": 994,
- "pid": 9840,
+ "free_mb_before": 779,
+ "pid": 26020,
  "fg_before_commit": {
-  "hwnd": 10027838,
+  "hwnd": 5441884,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
+  "title": "X - Home / X",
   "pid": 5004
  },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.03,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "B2 value"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
+ },
  "fg_after_commit": {
-  "hwnd": 10027838,
+  "hwnd": 5441884,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
+  "title": "X - Home / X",
   "pid": 5004
  },
  "plan": {
@@ -122,21 +152,21 @@
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 10027838,
+   "hwnd": 5441884,
    "class": "Chrome_WidgetWin_1",
    "fg_pid": 5004,
-   "title": "X"
+   "title": "X - Home / X"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 14354648,
+   "hwnd": 29624182,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 9840,
- "seconds": 14.0
+ "killed_excel_pid": 26020,
+ "seconds": 5.5
 }

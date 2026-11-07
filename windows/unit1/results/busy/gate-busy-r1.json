@@ -12,9 +12,9 @@
    ]
   }
  ],
- "free_mb_before": 889,
+ "free_mb_before": 844,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 4796,
+ "pid": 24888,
  "mem_before_commit": {
   "agent": false,
   "user": true,
@@ -33,9 +33,9 @@
   "gate": {
    "ok": false,
    "reason": "Excel busy",
-   "tries": 18,
+   "tries": 19,
    "seconds": 5.0,
-   "last_error": "Excel turned the call away"
+   "last_error": "the application turned the call away"
   }
  },
  "closed_by_harness": [
@@ -45,7 +45,7 @@
  "closer_exit": null,
  "answerer_exit": null,
  "answer_log": "(no log)",
- "dialog_open_s": 7.06,
+ "dialog_open_s": 6.07,
  "alerts_wait_s": 0.0,
  "display_alerts_final": true,
  "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
@@ -62,5 +62,5 @@
  "verdict": "CORRECT: refused by the gate, no write tried, file and user edit unchanged",
  "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 4796
+ "killed_excel_pid": 24888
 }

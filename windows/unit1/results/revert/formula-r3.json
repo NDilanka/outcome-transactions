@@ -17,22 +17,75 @@
    "conflicts": [],
    "written": [
     "E2"
-   ]
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "E2 formula",
+     "E2 numfmt (already)",
+     "E2 bold (already)",
+     "E2 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
   }
  ],
- "free_mb_before": 848,
- "pid": 11392,
+ "free_mb_before": 730,
+ "pid": 22404,
  "fg_before_commit": {
-  "hwnd": 394858,
+  "hwnd": 394868,
   "class": "Chrome_WidgetWin_1",
-  "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros",
-  "pid": 5004
+  "title": "GMI cloud ambassadors benefits optimization - Factory",
+  "pid": 14064
+ },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.02,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "E2 formula"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
  },
  "fg_after_commit": {
-  "hwnd": 10027838,
+  "hwnd": 394868,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
-  "pid": 5004
+  "title": "GMI cloud ambassadors benefits optimization - Factory",
+  "pid": 14064
  },
  "plan": {
   "footprint": [
@@ -133,35 +186,35 @@
  "watch_counts": {
   "open|foreground": 1,
   "open|window-appeared": 1,
-  "commit|foreground": 1
+  "save|foreground": 1
  },
  "watch_events": [
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 394858,
+   "hwnd": 394868,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 5004,
-   "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros"
+   "fg_pid": 14064,
+   "title": "GMI cloud ambassadors benefits optimization - Factory"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 13632988,
+   "hwnd": 20646154,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   },
   {
-   "phase": "commit",
+   "phase": "save",
    "kind": "foreground",
-   "hwnd": 10027838,
+   "hwnd": 66800,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 5004,
-   "title": "X"
+   "fg_pid": 17588,
+   "title": "Activity - Factory - Slack"
   }
  ],
- "killed_excel_pid": 11392,
- "seconds": 13.4
+ "killed_excel_pid": 22404,
+ "seconds": 6.4
 }

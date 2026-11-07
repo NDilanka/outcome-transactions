@@ -21,7 +21,7 @@
   },
   {
    "scenario": "gate-hang",
-   "seconds_to_answer": 5.0,
+   "seconds_to_answer": 5.01,
    "status": "refused",
    "reason": "Excel not responding",
    "message": "Refused: Excel not responding. Nothing written.",
@@ -58,7 +58,7 @@
   },
   {
    "scenario": "refused-write-start-limit",
-   "seconds_to_answer": 34.91,
+   "seconds_to_answer": 34.92,
    "status": "refused_partial",
    "reason": "busy: rejected 24 times, target unchanged; rollback of E2 value not_responding: write E2 value did not return within 5 s",
    "message": "Refused, and not fully rolled back: busy: rejected 24 times, target unchanged; rollback of E2 value not_responding: write E2 value did not return within 5 s. Check B2 and E2 and E3. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
@@ -83,7 +83,7 @@
   },
   {
    "scenario": "refused-read-hang-at-forward-end",
-   "seconds_to_answer": 39.02,
+   "seconds_to_answer": 39.34,
    "status": "refused_partial",
    "reason": "Excel not responding before the G2 value write (read G2 value did not return within 5 s); rollback of F2 value not_responding: write F2 value did not return within 5 s",
    "message": "Refused, and not fully rolled back: Excel not responding before the G2 value write (read G2 value did not return within 5 s); rollback of F2 value not_responding: write F2 value did not return within 5 s. Check B2 and E2 and F2 and G2. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",

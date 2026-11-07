@@ -3,7 +3,7 @@
  "label": "fixed",
  "outcome": "returned",
  "pids": [
-  26548
+  26120
  ],
  "hung": false,
  "stages": [
@@ -18,7 +18,7 @@
   "kind": "save-prompt",
   "answer_after_s": 8.0
  },
- "seconds": 8.28,
+ "seconds": 10.57,
  "report": {
   "status": "refused",
   "reason": "Word did not answer the total line value write within 5 s, and the call returned later with nothing landed",
@@ -42,7 +42,7 @@
     "unreadable (the application turned the call away)",
     "unreadable (the application turned the call away)",
     "unreadable (the application turned the call away)",
-    "unreadable (the application turned the call away)"
+    "'Total: 1000'"
    ]
   },
   "late_landing": null,
@@ -52,7 +52,7 @@
   "restore_log": [
    {
     "attempt": 1,
-    "at": 1794075213.06,
+    "at": 1794075659.97,
     "step": "Application.DisplayAlerts set",
     "action": "restored",
     "detail": "already at the original value"
@@ -62,7 +62,7 @@
    "ok": true,
    "reason": null,
    "tries": 1,
-   "seconds": 0.03,
+   "seconds": 0.06,
    "last_error": null
   },
   "unconfirmed": null
@@ -78,11 +78,11 @@
  "save_returned": null,
  "save_error": "com_error(-2147352567, 'Exception occurred.', (0, 'Microsoft Word', \"We can\u2019t save this file because it\u2019s read-only.\\nTo keep your changes, you'll need to save ",
  "killed_pids": [
-  26548
+  26120
  ],
  "verdict": "CORRECT",
  "expected": "refused: the call returned later with nothing landed, within 40 s",
- "git_head": "57165d5",
- "working_tree_differs_from_head": true,
+ "git_head": "9c19480",
+ "working_tree_differs_from_head": false,
  "live_agent_sha": "4c81817c4b74"
 }

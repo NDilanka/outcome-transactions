@@ -1,0 +1,28 @@
+{
+ "case": "open-file-in-use",
+ "description": "Documents.Open of a file a second instance holds open (File In Use)",
+ "outcome": "HUNG: no result within 25 s (last stage: call-start)",
+ "hung": true,
+ "pids": [
+  18636,
+  11776
+ ],
+ "stages": [
+  "launched",
+  "launched",
+  "call-start"
+ ],
+ "call": "Documents.Open of a file another instance holds",
+ "hung_dialogs": [
+  {
+   "pid": 18636,
+   "cls": "bosa_sdm_msword",
+   "title": "File In Use",
+   "text": []
+  }
+ ],
+ "killed_pids": [
+  18636,
+  11776
+ ]
+}

@@ -3,7 +3,7 @@
  "label": "fixed",
  "outcome": "returned",
  "pids": [
-  19884
+  26096
  ],
  "hung": false,
  "stages": [
@@ -18,7 +18,7 @@
   "kind": "save-prompt",
   "answer_after_s": null
  },
- "seconds": 25.08,
+ "seconds": 25.16,
  "report": {
   "status": "unknown",
   "reason": "Word did not return from the total line value write (the call had not returned by the end of the reconcile window; last read unreadable (the application turned the call away))",
@@ -31,8 +31,6 @@
    "returned": false,
    "call_error": null,
    "polls": [
-    "unreadable (the application turned the call away)",
-    "unreadable (the application turned the call away)",
     "unreadable (the application turned the call away)",
     "unreadable (the application turned the call away)",
     "unreadable (the application turned the call away)",
@@ -123,7 +121,7 @@
    "ok": true,
    "reason": null,
    "tries": 1,
-   "seconds": 0.02,
+   "seconds": 0.03,
    "last_error": null
   },
   "unconfirmed": null
@@ -143,11 +141,11 @@
  "save_returned": null,
  "save_error": "com_error(-2147352567, 'Exception occurred.', (0, 'Microsoft Word', \"We can\u2019t save this file because it\u2019s read-only.\\nTo keep your changes, you'll need to save ",
  "killed_pids": [
-  19884
+  26096
  ],
  "verdict": "CORRECT",
  "expected": "unknown outcome, returned within 40 s, the cell left for the user to check",
- "git_head": "57165d5",
- "working_tree_differs_from_head": true,
+ "git_head": "9c19480",
+ "working_tree_differs_from_head": false,
  "live_agent_sha": "4c81817c4b74"
 }

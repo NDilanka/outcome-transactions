@@ -11,21 +11,74 @@
    "conflicts": [],
    "written": [
     "B2"
-   ]
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "B2 value",
+     "B2 numfmt (already)",
+     "B2 bold (already)",
+     "B2 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
   }
  ],
- "free_mb_before": 959,
- "pid": 25968,
+ "free_mb_before": 1044,
+ "pid": 24264,
  "fg_before_commit": {
-  "hwnd": 10027838,
+  "hwnd": 394858,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
+  "title": "\u2022 Discord | #clouders | GMI Cloud and 7 more pages - Personal - Microsoft\u200b Edge",
   "pid": 5004
  },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.11,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "B2 value"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
+ },
  "fg_after_commit": {
-  "hwnd": 10027838,
+  "hwnd": 394858,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
+  "title": "\u2022 Discord | #clouders | GMI Cloud and 7 more pages - Personal - Microsoft\u200b Edge",
   "pid": 5004
  },
  "plan": {
@@ -122,21 +175,21 @@
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 10027838,
+   "hwnd": 394858,
    "class": "Chrome_WidgetWin_1",
    "fg_pid": 5004,
-   "title": "X"
+   "title": "\u2022 Discord | #clouders | GMI Cloud and 7 more pages - Personal - Microsoft\u200b Edge"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 14681808,
+   "hwnd": 4655458,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 25968,
- "seconds": 39.7
+ "killed_excel_pid": 24264,
+ "seconds": 16.7
 }

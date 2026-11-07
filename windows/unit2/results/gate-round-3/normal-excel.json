@@ -3,17 +3,17 @@
  "mode": "excel",
  "tag": "",
  "features": false,
- "root": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk",
+ "root": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y",
  "snapshot_method": "copy (NTFS has no block clone)",
  "isolation": "in-process socket guard only; OS-level network isolation not applied on Windows",
  "timings": {
-  "setup": 3.9,
-  "snapshot": 3.19,
-  "mutation": 0.21,
-  "search": 9.27,
-  "verify": 0.04,
-  "commit": 0.03,
-  "total": 16.74
+  "setup": 5.86,
+  "snapshot": 3.01,
+  "mutation": 0.22,
+  "search": 11.24,
+  "verify": 0.14,
+  "commit": 0.05,
+  "total": 21.33
  },
  "spec_hash": "60540218e303",
  "mutation": {
@@ -73,7 +73,7 @@
   "f0_null": {
    "method": "com_null",
    "rc": 0,
-   "seconds": 2.93,
+   "seconds": 2.79,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -81,8 +81,8 @@
     "office_com": "allowed"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f0_null\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f0_null\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f0_null\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f0_null\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -109,7 +109,7 @@
   "f1_direct": {
    "method": "com_excel",
    "rc": 0,
-   "seconds": 4.84,
+   "seconds": 4.26,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -117,8 +117,8 @@
     "office_com": "allowed"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f1_direct\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f1_direct\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f1_direct\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f1_direct\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -126,7 +126,7 @@
     "PYTHONDONTWRITEBYTECODE": "1",
     "OTX_REFUSE_OFFICE": "0"
    },
-   "divergence_bytes": 11667,
+   "divergence_bytes": 11665,
    "scratch_bytes": 41943226,
    "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"allowed\"}\n",
    "stderr_tail": "",
@@ -144,7 +144,7 @@
   "f2_wrong": {
    "method": "wrong_xlsx",
    "rc": 0,
-   "seconds": 0.27,
+   "seconds": 0.47,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -152,8 +152,8 @@
     "office_com": "allowed"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f2_wrong\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f2_wrong\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f2_wrong\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f2_wrong\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -161,7 +161,7 @@
     "PYTHONDONTWRITEBYTECODE": "1",
     "OTX_REFUSE_OFFICE": "0"
    },
-   "divergence_bytes": 9341,
+   "divergence_bytes": 9342,
    "scratch_bytes": 0,
    "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"allowed\"}\n",
    "stderr_tail": "",
@@ -182,7 +182,7 @@
   "f3_second": {
    "method": "openpyxl_xlsx",
    "rc": 0,
-   "seconds": 1.16,
+   "seconds": 3.63,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -190,8 +190,8 @@
     "office_com": "refused"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f3_second\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-g2ojounk\\forks\\f3_second\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f3_second\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\normal-excel-5e7y539y\\forks\\f3_second\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -199,7 +199,7 @@
     "PYTHONDONTWRITEBYTECODE": "1",
     "OTX_REFUSE_OFFICE": "1"
    },
-   "divergence_bytes": 6888,
+   "divergence_bytes": 6887,
    "scratch_bytes": 186,
    "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"refused\"}\n",
    "stderr_tail": "",

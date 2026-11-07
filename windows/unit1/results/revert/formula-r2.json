@@ -17,21 +17,74 @@
    "conflicts": [],
    "written": [
     "E2"
-   ]
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "E2 formula",
+     "E2 numfmt (already)",
+     "E2 bold (already)",
+     "E2 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
   }
  ],
- "free_mb_before": 699,
- "pid": 4988,
+ "free_mb_before": 822,
+ "pid": 5112,
  "fg_before_commit": {
   "hwnd": 394858,
   "class": "Chrome_WidgetWin_1",
-  "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros",
+  "title": "NDilanka/outcome-transactions: Outcome transactions: AI computer use by forking,",
   "pid": 5004
+ },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.02,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "E2 formula"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
  },
  "fg_after_commit": {
   "hwnd": 394858,
   "class": "Chrome_WidgetWin_1",
-  "title": "Inbox (194) - thecoderbtw@gmail.com - Gmail and 5 more pages - Personal - Micros",
+  "title": "NDilanka/outcome-transactions: Outcome transactions: AI computer use by forking,",
   "pid": 5004
  },
  "plan": {
@@ -132,7 +185,8 @@
  "verdict": "CORRECT: confirm needed, revert done on confirm",
  "watch_counts": {
   "open|foreground": 1,
-  "open|window-appeared": 1
+  "open|window-appeared": 1,
+  "save|foreground": 2
  },
  "watch_events": [
   {
@@ -141,18 +195,34 @@
    "hwnd": 394858,
    "class": "Chrome_WidgetWin_1",
    "fg_pid": 5004,
-   "title": "Gmail and 5 more pages - Personal - Microsoft\u200b Edge"
+   "title": "NDilanka/outcome-transactions: Outcome transactions: AI computer use by forking,"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 1771744,
+   "hwnd": 9308496,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
+  },
+  {
+   "phase": "save",
+   "kind": "foreground",
+   "hwnd": 0,
+   "class": null,
+   "fg_pid": 1474251728,
+   "title": ""
+  },
+  {
+   "phase": "save",
+   "kind": "foreground",
+   "hwnd": 394868,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 14064,
+   "title": "GMI cloud ambassadors benefits optimization - Factory"
   }
  ],
- "killed_excel_pid": 4988,
- "seconds": 9.3
+ "killed_excel_pid": 5112,
+ "seconds": 6.2
 }

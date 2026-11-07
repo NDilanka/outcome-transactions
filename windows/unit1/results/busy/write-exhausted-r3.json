@@ -17,27 +17,27 @@
    }
   }
  ],
- "free_mb_before": 863,
+ "free_mb_before": 1185,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 24484,
+ "pid": 14820,
  "mem_before_commit": {
   "agent": false,
   "user": true,
   "others_ok": true
  },
  "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
- "commit_seconds": 15.36,
+ "commit_seconds": 15.19,
  "commit": {
   "status": "refused",
   "done": [
    "Application.DisplayAlerts set"
   ],
   "refused_at": "B2 value",
-  "reason": "busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (Excel turned the call away); the value is unconfirmed",
-  "message": "Refused: busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (Excel turned the call away); the value is unconfirmed. Check B2 before you save: the write was turned away, and its value could not be read back. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+  "reason": "busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (the application turned the call away); the value is unconfirmed",
+  "message": "Refused: busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (the application turned the call away); the value is unconfirmed. Check B2 before you save: the write was turned away, and its value could not be read back. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
   "rejections": 1,
   "checks": [
-   "unreadable (Excel turned the call away)"
+   "unreadable (the application turned the call away)"
   ],
   "late_landing": null,
   "late_outcome": null,
@@ -54,14 +54,14 @@
   "restore_log": [
    {
     "attempt": 1,
-    "at": 1794073806.87,
+    "at": 1794076731.69,
     "step": "Application.DisplayAlerts set",
     "action": "turned away",
-    "detail": "Excel turned the call away"
+    "detail": "the application turned the call away"
    },
    {
     "attempt": 2,
-    "at": 1794073807.61,
+    "at": 1794076732.34,
     "step": "Application.DisplayAlerts set",
     "action": "restored",
     "detail": "written back"
@@ -94,7 +94,7 @@
  "closer_exit": null,
  "answerer_exit": null,
  "answer_log": "(no log)",
- "dialog_open_s": 14.91,
+ "dialog_open_s": 15.0,
  "alerts_wait_s": 0.5,
  "display_alerts_final": true,
  "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
@@ -111,5 +111,5 @@
  "verdict": "CORRECT: write rejected, retry budget spent, commit refused, file and user edit unchanged, alerts restored after the dialog closed",
  "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 24484
+ "killed_excel_pid": 14820
 }

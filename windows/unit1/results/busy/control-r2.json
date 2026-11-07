@@ -5,16 +5,16 @@
  "expect": "control",
  "status": "ok",
  "dialog_windows": [],
- "free_mb_before": 918,
+ "free_mb_before": 964,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 4356,
+ "pid": 7496,
  "mem_before_commit": {
   "agent": false,
   "user": true,
   "others_ok": true
  },
  "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
- "commit_seconds": 0.23,
+ "commit_seconds": 0.18,
  "commit": {
   "status": "committed",
   "done": [
@@ -40,7 +40,7 @@
    "ok": true,
    "reason": null,
    "tries": 1,
-   "seconds": 0.03,
+   "seconds": 0.02,
    "last_error": null
   },
   "guard": {
@@ -74,5 +74,5 @@
  "verdict": "CORRECT: committed",
  "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 4356
+ "killed_excel_pid": 7496
 }

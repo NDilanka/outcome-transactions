@@ -17,22 +17,75 @@
    "conflicts": [],
    "written": [
     "E5"
-   ]
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "E5 value",
+     "E5 numfmt (already)",
+     "E5 bold (already)",
+     "E5 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
   }
  ],
- "free_mb_before": 879,
- "pid": 17652,
+ "free_mb_before": 498,
+ "pid": 19576,
  "fg_before_commit": {
-  "hwnd": 394858,
+  "hwnd": 66800,
   "class": "Chrome_WidgetWin_1",
-  "title": "NDilanka/acan: Stop managing coding agents in chat tabs. A live map of your code",
-  "pid": 5004
+  "title": "Activity - Factory - Slack",
+  "pid": 17588
+ },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.04,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "E5 value"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
  },
  "fg_after_commit": {
-  "hwnd": 394858,
+  "hwnd": 66800,
   "class": "Chrome_WidgetWin_1",
-  "title": "NDilanka/acan: Stop managing coding agents in chat tabs. A live map of your code",
-  "pid": 5004
+  "title": "Activity - Factory - Slack",
+  "pid": 17588
  },
  "plan": {
   "footprint": [
@@ -133,35 +186,35 @@
  "watch_counts": {
   "open|foreground": 1,
   "open|window-appeared": 1,
-  "save|foreground": 1
+  "confirm|foreground": 1
  },
  "watch_events": [
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 394858,
+   "hwnd": 66800,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 5004,
-   "title": "NDilanka/acan: Stop managing coding agents in chat tabs. A live map of your code"
+   "fg_pid": 17588,
+   "title": "Activity - Factory - Slack"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 13304058,
+   "hwnd": 20973798,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   },
   {
-   "phase": "save",
+   "phase": "confirm",
    "kind": "foreground",
-   "hwnd": 10027838,
+   "hwnd": 394868,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 5004,
-   "title": "X"
+   "fg_pid": 14064,
+   "title": "Interface-compiler - Factory"
   }
  ],
- "killed_excel_pid": 17652,
- "seconds": 7.9
+ "killed_excel_pid": 19576,
+ "seconds": 12.5
 }

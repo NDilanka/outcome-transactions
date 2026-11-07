@@ -17,16 +17,16 @@
    }
   }
  ],
- "free_mb_before": 379,
+ "free_mb_before": 1105,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 2064,
+ "pid": 3344,
  "mem_before_commit": {
   "agent": false,
   "user": true,
   "others_ok": true
  },
  "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
- "commit_seconds": 6.44,
+ "commit_seconds": 5.2,
  "commit": {
   "status": "committed",
   "done": [
@@ -71,7 +71,7 @@
  "closer_exit": "exit 0",
  "answerer_exit": null,
  "answer_log": "(no log)",
- "dialog_open_s": 5.45,
+ "dialog_open_s": 4.46,
  "alerts_wait_s": 0.0,
  "display_alerts_final": true,
  "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
@@ -88,5 +88,5 @@
  "verdict": "CORRECT: committed after 1 rejected writes retried",
  "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 2064
+ "killed_excel_pid": 3344
 }

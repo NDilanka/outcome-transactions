@@ -5,9 +5,9 @@
  "expect": "late-landed",
  "status": "ok",
  "dialog_windows": [],
- "free_mb_before": 876,
+ "free_mb_before": 933,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 24528,
+ "pid": 25700,
  "mem_before_commit": {
   "agent": false,
   "user": true,
@@ -15,9 +15,9 @@
  },
  "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
  "alerts_seen_in_write": false,
- "injected_prompt_at": 1794073357.13,
+ "injected_prompt_at": 1794076751.53,
  "scratch_saved": true,
- "commit_seconds": 8.75,
+ "commit_seconds": 8.68,
  "commit": {
   "status": "refused",
   "done": [
@@ -37,19 +37,19 @@
    "returned": true,
    "call_error": null,
    "polls": [
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)",
-    "unreadable (Excel turned the call away)"
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)"
    ]
   },
   "rollback": [
@@ -70,7 +70,7 @@
   "restore_log": [
    {
     "attempt": 1,
-    "at": 1794073365.79,
+    "at": 1794076760.12,
     "step": "Application.DisplayAlerts set",
     "action": "restored",
     "detail": "already at the original value"
@@ -98,7 +98,7 @@
  "helper_exit": null,
  "closer_exit": null,
  "answerer_exit": "exit 0",
- "answer_log": "1794073365.41 answer pid 25716: clicked Yes on ['Yes']\n",
+ "answer_log": "1794076759.81 answer pid 8012: clicked Yes on ['Yes']\n",
  "dialog_open_s": null,
  "alerts_wait_s": 0.0,
  "display_alerts_final": true,
@@ -116,5 +116,5 @@
  "verdict": "CORRECT: write timed out, prompt answered, the late landing caught and rolled back, file and user edit unchanged",
  "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 24528
+ "killed_excel_pid": 25700
 }

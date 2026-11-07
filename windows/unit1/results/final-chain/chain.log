@@ -1,0 +1,66 @@
+
+23:49:22 CHAIN START head=9c19480 uncommitted_code_entries=0
+23:49:22 STEP word-cases-fixed start
+23:51:42 STEP word-cases-fixed end rc=0 seconds=139 office_now=[]
+23:51:42 STEP cell-excel-clean-live-com-quiet-focused start
+23:51:55 STEP cell-excel-clean-live-com-quiet-focused end rc=0 seconds=13 office_now=[]
+23:51:55 STEP cell-excel-clean-live-com-quiet start
+23:52:09 STEP cell-excel-clean-live-com-quiet end rc=0 seconds=14 office_now=[]
+23:52:09 STEP cell-excel-clean-live-com start
+23:52:19 STEP cell-excel-clean-live-com end rc=0 seconds=10 office_now=[]
+23:52:19 STEP cell-excel-dirty-live-com-focused start
+23:52:34 STEP cell-excel-dirty-live-com-focused end rc=0 seconds=15 office_now=[]
+23:52:34 STEP cell-excel-dirty-live-com-quiet-focused start
+23:52:51 STEP cell-excel-dirty-live-com-quiet-focused end rc=0 seconds=17 office_now=[]
+23:52:51 STEP cell-excel-dirty-live-com-quiet start
+23:53:24 STEP cell-excel-dirty-live-com-quiet end rc=0 seconds=33 office_now=[]
+23:53:24 STEP cell-excel-dirty-live-com start
+23:53:43 STEP cell-excel-dirty-live-com end rc=0 seconds=19 office_now=[]
+23:53:43 STEP cell-word-clean-live-com-quiet-focused start
+23:54:05 STEP cell-word-clean-live-com-quiet-focused end rc=0 seconds=22 office_now=[]
+23:54:05 STEP cell-word-clean-live-com-quiet start
+23:54:34 STEP cell-word-clean-live-com-quiet end rc=0 seconds=28 office_now=[]
+23:54:34 STEP cell-word-clean-live-com start
+23:54:47 STEP cell-word-clean-live-com end rc=0 seconds=13 office_now=[]
+23:54:47 STEP cell-word-dirty-live-com-focused start
+23:54:58 STEP cell-word-dirty-live-com-focused end rc=0 seconds=11 office_now=[]
+23:54:58 STEP cell-word-dirty-live-com-quiet-focused start
+23:55:10 STEP cell-word-dirty-live-com-quiet-focused end rc=0 seconds=13 office_now=[]
+23:55:10 STEP cell-word-dirty-live-com-quiet start
+23:55:21 STEP cell-word-dirty-live-com-quiet end rc=0 seconds=10 office_now=[]
+23:55:21 STEP cell-word-dirty-live-com start
+23:55:32 STEP cell-word-dirty-live-com end rc=0 seconds=11 office_now=[]
+23:55:32 STEP control-1-excel start
+23:55:46 STEP control-1-excel end rc=0 seconds=14 office_now=[]
+23:55:46 STEP control-2-excel start
+23:55:56 STEP control-2-excel end rc=0 seconds=10 office_now=[]
+23:55:56 STEP control-3-excel start
+23:56:06 STEP control-3-excel end rc=0 seconds=10 office_now=[]
+23:56:06 STEP control-4-excel start
+23:56:17 STEP control-4-excel end rc=0 seconds=10 office_now=[]
+23:56:17 STEP control-5-excel start
+23:56:28 STEP control-5-excel end rc=0 seconds=11 office_now=[]
+23:56:28 STEP control-6-word start
+23:56:40 STEP control-6-word end rc=0 seconds=12 office_now=[]
+23:56:40 STEP control-7-word start
+23:56:51 STEP control-7-word end rc=0 seconds=10 office_now=[]
+23:56:51 STEP control-8-word start
+23:57:00 STEP control-8-word end rc=0 seconds=10 office_now=[]
+23:57:00 STEP control-9-word start
+23:57:28 STEP control-9-word end rc=0 seconds=28 office_now=[]
+23:57:28 STEP control-10-word start
+23:57:39 STEP control-10-word end rc=0 seconds=11 office_now=[]
+23:57:39 STEP revert-fixture start
+23:57:42 STEP revert-fixture end rc=0 seconds=3 office_now=[]
+23:57:43 STEP revert-matrix start
+00:03:48 STEP revert-matrix end rc=0 seconds=365 office_now=[]
+00:03:48 STEP gate-round-2 start
+00:05:18 STEP gate-round-2 end rc=0 seconds=90 office_now=[]
+00:05:18 STEP gate-round-3 start
+00:06:32 STEP gate-round-3 end rc=0 seconds=74 office_now=[]
+00:06:32 STEP busy-attempt-6 start
+00:11:30 STEP busy-attempt-6 end rc=0 seconds=298 office_now=[]
+00:11:30 busy attempt 6 copied: 22 files
+00:11:30 STEP bounds start
+00:13:26 STEP bounds end rc=0 seconds=116 office_now=[]
+00:13:26 CHAIN DONE head=9c19480 office_now=[]

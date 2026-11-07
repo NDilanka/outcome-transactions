@@ -17,22 +17,75 @@
    "conflicts": [],
    "written": [
     "E5"
-   ]
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "E5 value",
+     "E5 numfmt (already)",
+     "E5 bold (already)",
+     "E5 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
   }
  ],
- "free_mb_before": 1029,
- "pid": 19560,
+ "free_mb_before": 662,
+ "pid": 24588,
  "fg_before_commit": {
-  "hwnd": 10027838,
+  "hwnd": 66800,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
-  "pid": 5004
+  "title": "Activity - Factory - Slack",
+  "pid": 17588
+ },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.05,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "E5 value"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
  },
  "fg_after_commit": {
-  "hwnd": 10027838,
+  "hwnd": 66800,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
-  "pid": 5004
+  "title": "Activity - Factory - Slack",
+  "pid": 17588
  },
  "plan": {
   "footprint": [
@@ -138,21 +191,21 @@
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 10027838,
+   "hwnd": 66800,
    "class": "Chrome_WidgetWin_1",
-   "fg_pid": 5004,
-   "title": "X"
+   "fg_pid": 17588,
+   "title": "Activity - Factory - Slack"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 39323112,
+   "hwnd": 7670274,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
   }
  ],
- "killed_excel_pid": 19560,
- "seconds": 10.6
+ "killed_excel_pid": 24588,
+ "seconds": 8.8
 }

@@ -3,18 +3,18 @@
  "mode": "excel",
  "tag": "",
  "features": false,
- "root": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v",
+ "root": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u",
  "snapshot_method": "copy (NTFS has no block clone)",
  "isolation": "in-process socket guard only; OS-level network isolation not applied on Windows",
  "timings": {
-  "setup": 3.9,
-  "snapshot": 2.51,
-  "mutation": 0.23,
-  "search": 12.51,
-  "verify": 0.1,
-  "replay": 13.96,
-  "commit": 0.02,
-  "total": 33.39
+  "setup": 6.87,
+  "snapshot": 3.11,
+  "mutation": 0.13,
+  "search": 6.98,
+  "verify": 0.04,
+  "replay": 6.13,
+  "commit": 0.03,
+  "total": 23.37
  },
  "spec_hash": "60540218e303",
  "mutation": {
@@ -74,7 +74,7 @@
   "f0_null": {
    "method": "com_null",
    "rc": 0,
-   "seconds": 4.01,
+   "seconds": 2.3,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -82,8 +82,8 @@
     "office_com": "allowed"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f0_null\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f0_null\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f0_null\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f0_null\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -110,7 +110,7 @@
   "f1_direct": {
    "method": "com_excel",
    "rc": 0,
-   "seconds": 4.89,
+   "seconds": 3.51,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -118,8 +118,8 @@
     "office_com": "allowed"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f1_direct\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f1_direct\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f1_direct\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f1_direct\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -127,7 +127,7 @@
     "PYTHONDONTWRITEBYTECODE": "1",
     "OTX_REFUSE_OFFICE": "0"
    },
-   "divergence_bytes": 11669,
+   "divergence_bytes": 11670,
    "scratch_bytes": 41943226,
    "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"allowed\"}\n",
    "stderr_tail": "",
@@ -145,7 +145,7 @@
   "f2_wrong": {
    "method": "wrong_xlsx",
    "rc": 0,
-   "seconds": 0.95,
+   "seconds": 0.2,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -153,8 +153,8 @@
     "office_com": "allowed"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f2_wrong\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f2_wrong\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f2_wrong\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f2_wrong\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -162,7 +162,7 @@
     "PYTHONDONTWRITEBYTECODE": "1",
     "OTX_REFUSE_OFFICE": "0"
    },
-   "divergence_bytes": 9346,
+   "divergence_bytes": 9344,
    "scratch_bytes": 0,
    "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"allowed\"}\n",
    "stderr_tail": "",
@@ -183,7 +183,7 @@
   "f3_second": {
    "method": "openpyxl_xlsx",
    "rc": 0,
-   "seconds": 2.55,
+   "seconds": 0.91,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -191,8 +191,8 @@
     "office_com": "refused"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f3_second\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\f3_second\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f3_second\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\f3_second\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",
@@ -200,7 +200,7 @@
     "PYTHONDONTWRITEBYTECODE": "1",
     "OTX_REFUSE_OFFICE": "1"
    },
-   "divergence_bytes": 6889,
+   "divergence_bytes": 6888,
    "scratch_bytes": 186,
    "stdout_tail": "{\"network_guard\": \"installed\", \"scope\": \"in-process socket.connect, connect_ex, create_connection\", \"os_isolation\": \"not applied on Windows\", \"office_com\": \"refused\"}\n",
    "stderr_tail": "",
@@ -274,7 +274,7 @@
   {
    "method": "com_excel",
    "rc": 0,
-   "seconds": 7.85,
+   "seconds": 3.17,
    "network": {
     "network_guard": "installed",
     "scope": "in-process socket.connect, connect_ex, create_connection",
@@ -282,8 +282,8 @@
     "office_com": "allowed"
    },
    "env": {
-    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\replay1\\.otx-scratch",
-    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-l_ikip_v\\forks\\replay1\\.otx-scratch",
+    "TEMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\replay1\\.otx-scratch",
+    "TMP": "D:\\dev\\ic-win\\windows\\unit2\\work\\conflict-excel-1swgmi3u\\forks\\replay1\\.otx-scratch",
     "HTTP_PROXY": "http://127.0.0.1:9",
     "HTTPS_PROXY": "http://127.0.0.1:9",
     "ALL_PROXY": "http://127.0.0.1:9",

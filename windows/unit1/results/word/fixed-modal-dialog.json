@@ -3,8 +3,8 @@
  "label": "fixed",
  "outcome": "returned",
  "pids": [
-  6588,
-  14988
+  23384,
+  6440
  ],
  "hung": false,
  "stages": [
@@ -36,7 +36,7 @@
    ]
   }
  ],
- "dialog_waited_s": 1.01,
+ "dialog_waited_s": 4.42,
  "seconds": 5.0,
  "report": {
   "status": "refused",
@@ -52,7 +52,7 @@
   "gate": {
    "ok": false,
    "reason": "Word busy",
-   "tries": 18,
+   "tries": 17,
    "seconds": 5.0,
    "last_error": "the application turned the call away"
   },
@@ -69,11 +69,11 @@
  "save_returned": null,
  "save_error": null,
  "killed_pids": [
-  6588
+  23384
  ],
  "verdict": "CORRECT",
  "expected": "refused by the gate as Word busy, nothing written, within 6.5 s",
- "git_head": "57165d5",
- "working_tree_differs_from_head": true,
+ "git_head": "9c19480",
+ "working_tree_differs_from_head": false,
  "live_agent_sha": "4c81817c4b74"
 }

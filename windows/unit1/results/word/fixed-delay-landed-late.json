@@ -3,7 +3,7 @@
  "label": "fixed",
  "outcome": "returned",
  "pids": [
-  4380
+  25708
  ],
  "hung": false,
  "stages": [
@@ -18,7 +18,7 @@
   "kind": "sleep",
   "seconds": 8.0
  },
- "seconds": 8.37,
+ "seconds": 8.9,
  "report": {
   "status": "refused",
   "reason": "the total line value write returned after the timeout, and its value landed",
@@ -31,8 +31,6 @@
    "returned": true,
    "call_error": null,
    "polls": [
-    "'Total: 1000'",
-    "'Total: 1000'",
     "'Total: 1000'",
     "'Total: 1000'",
     "'Total: 1000'",
@@ -58,7 +56,7 @@
   "restore_log": [
    {
     "attempt": 1,
-    "at": 1794075237.59,
+    "at": 1794075687.23,
     "step": "Application.DisplayAlerts set",
     "action": "restored",
     "detail": "written back"
@@ -84,11 +82,11 @@
  "save_returned": null,
  "save_error": null,
  "killed_pids": [
-  4380
+  25708
  ],
  "verdict": "CORRECT",
  "expected": "refused, the late write rolled back, within 40 s",
- "git_head": "57165d5",
- "working_tree_differs_from_head": true,
+ "git_head": "9c19480",
+ "working_tree_differs_from_head": false,
  "live_agent_sha": "4c81817c4b74"
 }

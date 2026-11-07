@@ -25,4 +25,4 @@
 | formula | 3 | confirm | 2 | confirm_required then reverted (confirm) | E2 | E2: formula cell | prior | prior | none | 0 | 0 | CORRECT |
 | merged | 1 | confirm | 2 | confirm_required then reverted (confirm) | E5 | E5: merged range | prior | prior | none | 0 | 0 | CORRECT |
 | merged | 2 | confirm | 2 | confirm_required then reverted (confirm) | E5 | E5: merged range | prior | prior | none | 0 | 0 | CORRECT |
-| merged | 3 | confirm | 2 | confirm_required then reverted (confirm) | E5 | E5: merged range | prior | prior | none | 0 | 0 | CORRECT |
+| merged | 3 | confirm | 2 | confirm_required then reverted (confirm) | E5 | E5: merged range | prior | prior | none | 1 | 0 | CORRECT |

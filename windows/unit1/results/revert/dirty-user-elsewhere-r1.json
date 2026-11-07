@@ -11,21 +11,74 @@
    "conflicts": [],
    "written": [
     "B2"
-   ]
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "B2 value",
+     "B2 numfmt (already)",
+     "B2 bold (already)",
+     "B2 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
   }
  ],
- "free_mb_before": 1106,
- "pid": 13576,
+ "free_mb_before": 36,
+ "pid": 7028,
  "fg_before_commit": {
-  "hwnd": 10027838,
+  "hwnd": 5441884,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
+  "title": "X - Home / X",
   "pid": 5004
  },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.15,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "B2 value"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
+ },
  "fg_after_commit": {
-  "hwnd": 10027838,
+  "hwnd": 5441884,
   "class": "Chrome_WidgetWin_1",
-  "title": "X",
+  "title": "X - Home / X",
   "pid": 5004
  },
  "plan": {
@@ -115,28 +168,45 @@
  "disk_matches_committed": false,
  "verdict": "CORRECT: zero-click revert",
  "watch_counts": {
-  "open|foreground": 1,
-  "open|window-appeared": 1
+  "open|foreground": 2,
+  "open|window-appeared": 1,
+  "snapshot-pre|foreground": 1
  },
  "watch_events": [
   {
    "phase": "open",
    "kind": "foreground",
-   "hwnd": 10027838,
+   "hwnd": 5441884,
    "class": "Chrome_WidgetWin_1",
    "fg_pid": 5004,
-   "title": "X"
+   "title": "X - Home / X"
+  },
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 8522052,
+   "class": "CASCADIA_HOSTING_WINDOW_CLASS",
+   "fg_pid": 13592,
+   "title": "Windows Terminal"
   },
   {
    "phase": "open",
    "kind": "window-appeared",
-   "hwnd": 26806116,
+   "hwnd": 3279096,
    "class": "ThunderMain",
    "visible": false,
    "iconic": false,
    "title": ""
+  },
+  {
+   "phase": "snapshot-pre",
+   "kind": "foreground",
+   "hwnd": 5441884,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "X - Home / X"
   }
  ],
- "killed_excel_pid": 13576,
- "seconds": 13.0
+ "killed_excel_pid": 7028,
+ "seconds": 44.0
 }
