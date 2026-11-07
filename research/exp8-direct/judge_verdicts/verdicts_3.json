@@ -1,0 +1,72 @@
+{
+  "84d28b1c5688": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3's main picture remains unchanged while all seven small agenda icons are stretched to 20 cm tall."
+  },
+  "8ab37de36a62": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the correctly labeled revenue and expense totals of 867786 and 411686, with the source data unchanged."
+  },
+  "8c19026ea4ec": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the requested headers and correct SUM formulas yielding 867786 and 411686 without changing Sheet1."
+  },
+  "8ee85506bb17": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All rows containing N/A are hidden while their cells, formulas, and other table data are preserved without filtering."
+  },
+  "927c21778126": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3's main picture is not resized, and its seven small agenda icons are incorrectly stretched to 20 cm tall."
+  },
+  "99659dd78d69": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "C27 contains 'Puip-fre' rather than 'Puip-Fre', leaving the word after the hyphen without its requested initial capital."
+  },
+  "a40dff26ee92": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Only the fully uppercase text was lowercased, leaving uppercase letters throughout the title, mixed-case paragraphs, and table."
+  },
+  "a7b264822d1c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all 19 revenue values copied correctly, with Sheet1 unchanged."
+  },
+  "a7e69144b708": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The slide's content paragraph now has a bullet, with its text, title, and other shown properties unchanged."
+  },
+  "a893766a188c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve transition is added only to the first slide, with the remaining presentation unchanged in the dump."
+  },
+  "adb6735a166b": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The first two entries of the Overview list have single strikethrough, and all remaining shown text and formatting are preserved."
+  },
+  "af7320c2d388": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All shown text on slide 5 is changed to exact yellow FFFF00 without other shown changes."
+  },
+  "b1ef2ff1f427": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All slide-5 text is exact yellow FFFF00, and removing explicit no-bullet markers does not establish visible damage elsewhere."
+  },
+  "b449eafdbc3c": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "Every row containing N/A is hidden without deleting cells, altering their contents, or applying a filter."
+  }
+}

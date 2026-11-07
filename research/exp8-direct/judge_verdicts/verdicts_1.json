@@ -1,0 +1,72 @@
+{
+  "264aaa42bea8": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Feb–Jun Growth formulas and both chart types are correct, although the dump does not expose chart titles or source ranges."
+  },
+  "284b99a24c87": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlight styles become transparent while the document text and other displayed formatting remain unchanged."
+  },
+  "2a9b2d5ecedb": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Revenue correctly uses price, quantity, and discount and Sheet2 contains matching product totals, although the dump cannot confirm a real pivot-table object."
+  },
+  "2d6db767b20e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlight styles become transparent without changing the document text or other displayed formatting."
+  },
+  "33aacf1b10c4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty paragraph after the opening-page content and one additional page break suggest the requested blank page, though rendered pagination is not shown."
+  },
+  "3511fd7a3d42": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The AutoSave configuration is enabled with a three-minute interval and no unrelated changes are shown."
+  },
+  "3afe32db0fb0": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A new empty five-row, seven-column table is present and existing content is preserved, although the dump cannot verify its location against the cursor."
+  },
+  "3b51aa8e3a56": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The first two body lines on active slide 5 receive single strikethrough while the remaining content stays unchanged apart from apparently equivalent bullet serialization."
+  },
+  "3bbcc10b7986": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The existing slide content remains unbulleted and only a new empty bulleted paragraph is added."
+  },
+  "3f65d20e2552": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty paragraph after the opening-page content and one additional page break suggest the requested blank page with existing content preserved, though pagination is not rendered."
+  },
+  "4851f85cffdc": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "C27 contains 'Puip-fre' instead of capitalizing the hyphen-separated word as 'Puip-Fre'."
+  },
+  "4dd583ac3964": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All displayed text on slide 5 changes to exact yellow FFFF00 while other slides and content remain unchanged."
+  },
+  "4e367bca72f9": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Only the first two body lines on active slide 5 receive single strikethrough."
+  },
+  "5351880fffb1": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "C27 contains 'Puip-fre' instead of capitalizing the hyphen-separated word as 'Puip-Fre'."
+  }
+}

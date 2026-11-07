@@ -1,0 +1,72 @@
+{
+  "54cce197ae1c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All seven sentences in the first paragraph are separated by empty lines while the remaining document content and formatting are preserved."
+  },
+  "56d2334a957b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all nineteen revenue values, with Sheet1 unchanged."
+  },
+  "5b18693351c3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although revenue calculations and a product summary were added, the existing Type formulas were replaced with constants and unrelated date and header formatting was changed."
+  },
+  "5b2e90456dea": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table was added after the original table without visible damage, although the dump does not establish its exact position relative to the cursor paragraph."
+  },
+  "5de1680cd910": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the complete Revenue column including its header, and the original sheet is unchanged."
+  },
+  "5f636fa84036": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Slide 1 now has a dissolve transition, with no other changes visible in the presentation dump."
+  },
+  "67418b818e41": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Revenue header and every revenue value were copied to the new Sheet2 without altering Sheet1."
+  },
+  "68dfe6383058": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3's seven small agenda icons were enlarged into overlapping twenty-centimeter pictures while its main image remained unchanged, rather than resizing the intended picture."
+  },
+  "70434fc4daf2": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested empty five-row, seven-column table was added after the existing table without other visible changes, but the dump cannot verify placement at the exact cursor paragraph."
+  },
+  "70aebe863cac": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All shown yellow highlighting was replaced with transparent backgrounds while text, bold, and italic formatting were preserved."
+  },
+  "72e2a87c15f6": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "Only the first two overview-list items received strikethrough, matching the most likely intended first and second lines."
+  },
+  "80ecd67d0379": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The dissolve transition was added, but unrelated text boxes and other objects across numerous slides were resized or repositioned."
+  },
+  "8184f15ea601": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table was added without visible changes to existing content, although cursor location and exact insertion placement cannot be verified."
+  },
+  "83d340ef5f38": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Growth rows contain correct formulas and a bar chart and line chart were added, but chart titles and source ranges including omission of January are not exposed."
+  }
+}
