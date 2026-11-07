@@ -72,7 +72,9 @@ def ods_cells(path, sheet=None):
             style = sprops.get(sname, (sname, False, ()))[2] if sname else ()
             cells.append((c, crep, val, style))
             c += crep
-        if rrep > 1000:
+        # Empty rows repeated to the end of the sheet are skipped. A repeated block that holds values is read in full,
+        # so duplicate labels in it are seen (an anchor must match exactly one row).
+        if rrep > 1000 and not any(val is not None for _, _, val, _ in cells):
             r += rrep
             continue
         for k in range(rrep):
@@ -136,15 +138,74 @@ def ods_set_cell(path, ref, value):
                 p = ET.SubElement(cell, X + "p"); p.text = str(value)
             break
         c += crep
+    _save_content(path, items, root)
+
+def _save_content(path, items, root):
+    """Write content.xml back in place; every other entry of the zip is copied unchanged."""
     new = ET.tostring(root, xml_declaration=True, encoding="UTF-8")
     tmp = path + ".tmp"
     with zipfile.ZipFile(tmp, "w") as z:
         for info, data in items:
             if info.filename == "content.xml":
                 data = new
-            ct = zipfile.ZIP_STORED if info.filename == "mimetype" else zipfile.ZIP_DEFLATED
-            z.writestr(info.filename, data, compress_type=ct)
+            z.writestr(info, data)
     os.replace(tmp, path)
+
+def ods_insert_row(path, idx):
+    """Insert an empty row before row idx (0-based) of the first sheet; the rows below move down one."""
+    with zipfile.ZipFile(path) as z:
+        items = [(i, z.read(i.filename)) for i in z.infolist()]
+    content = dict((i.filename, d) for i, d in items)["content.xml"]
+    _register_ns(content)
+    root = ET.fromstring(content)
+    table = next(root.iter(T + "table"))
+    parent_of = {c: p for p in root.iter() for c in p}
+    r = 0
+    for row in list(table.iter(T + "table-row")):
+        rrep = int(row.get(T + "number-rows-repeated", "1"))
+        if r <= idx < r + rrep:
+            if rrep > 1:
+                raise ValueError("repeated row split not supported in prototype")
+            new = ET.Element(T + "table-row")
+            ET.SubElement(new, T + "table-cell", {T + "number-columns-repeated": "1024"})
+            parent = parent_of[row]
+            parent.insert(list(parent).index(row), new)
+            break
+        r += rrep
+    else:
+        raise ValueError(f"row {idx} is past the end of the sheet")
+    _save_content(path, items, root)
+
+def anchor_of(path, ref):
+    """Name a cell by its row label (column A of its row) and column header (row 1 of its column)."""
+    cells = ods_cells(path)
+    row, col = ref_to_rc(ref)
+    return (cells.get(f"A{row + 1}", (None,))[0], cells.get(f"{col_name(col)}1", (None,))[0])
+
+def find_anchor(path, anchor):
+    """The address of the one cell with this row label and column header, or None if there is not exactly one."""
+    label, header = anchor
+    if label is None or header is None:
+        return None
+    cells = ods_cells(path)
+    rows = [k[1:] for k, (v, _) in cells.items() if re.fullmatch(r"A\d+", k) and v == label]
+    cols = [k[:-1] for k, (v, _) in cells.items() if re.fullmatch(r"[A-Z]+1", k) and v == header]
+    if len(rows) != 1 or len(cols) != 1:
+        return None
+    return f"{cols[0]}{rows[0]}"
+
+def ods_append_block(path, label, count):
+    """Append count identical rows, each with label in column A, stored as one repeated row block (what pasting identical rows writes)."""
+    with zipfile.ZipFile(path) as z:
+        items = [(i, z.read(i.filename)) for i in z.infolist()]
+    content = dict((i.filename, d) for i, d in items)["content.xml"]
+    _register_ns(content)
+    root = ET.fromstring(content)
+    table = next(root.iter(T + "table"))
+    row = ET.SubElement(table, T + "table-row", {T + "number-rows-repeated": str(count)})
+    cell = ET.SubElement(row, T + "table-cell", {O + "value-type": "string"})
+    ET.SubElement(cell, X + "p").text = label
+    _save_content(path, items, root)
 
 def pdf_text(path):
     return subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, text=True).stdout

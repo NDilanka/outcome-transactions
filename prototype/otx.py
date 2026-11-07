@@ -14,6 +14,7 @@ TXN = {"committed": False}
 MODE = sys.argv[2] if len(sys.argv) > 2 else "normal"
 CONFLICT = MODE in ("conflict", "same_cell")
 CLEAR = MODE == "clear_cell"
+INSERT = MODE in ("insert_row", "insert_row_same_b2")
 FAULT = MODE in ("fault_postcommit", "race_rollback")
 RACE = MODE in ("race_commit", "race_rollback")
 T0 = time.monotonic()
@@ -37,6 +38,9 @@ EXPECT = {
     "fault_postcommit": dict(outcome="post_commit_failed", committed=False, released=[], rolled_back=True),
     "race_commit": dict(outcome="aborted_user_edit", committed=False, released=[], needs_user=[], user_c3_kept=True),
     "race_rollback": dict(outcome="post_commit_failed", committed=False, released=[], needs_user=["budget.ods"], user_c3_kept=True, rolled_back=False),
+    "insert_row": dict(outcome="anchor_mismatch", committed=False, real_b2=None),
+    "insert_row_same_b2": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "dup_label": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
 }
 
 def write_report(rep):
@@ -142,6 +146,9 @@ def main():
     base_hashes = R.tree_hashes(SNAP)
     spec_hash = hashlib.sha256(json.dumps(SPEC, sort_keys=True).encode()).hexdigest()[:12]
     log("spec frozen", spec_hash=spec_hash)
+    # The spec's target cell, named by its row label and column header rather than by its address.
+    anchor = R.anchor_of(f"{SNAP}/budget.ods", "B2")
+    log("target anchored", anchor=anchor, address=R.find_anchor(f"{SNAP}/budget.ods", anchor))
 
     # 2. Mutation-test the spec before any search.
     mt = mutation_test()
@@ -170,6 +177,12 @@ def main():
     if CLEAR:
         R.ods_set_cell(f"{REAL}/budget.ods", "B2", None)
         log("user cleared real budget.ods B2 during search (same file as the task)")
+    if INSERT:
+        R.ods_insert_row(f"{REAL}/budget.ods", 1); log("user inserted a row above row 2 in real budget.ods during search")
+        if MODE == "insert_row_same_b2":
+            R.ods_set_cell(f"{REAL}/budget.ods", "B2", 3); log("user typed 3 into the new B2")
+    if MODE == "dup_label":
+        R.ods_append_block(f"{REAL}/budget.ods", "item0", 1001); log("user pasted 1001 identical rows labelled item0 below the data during search")
     for th in ths: th.join()
     search_s = time.monotonic() - t_search
     nv = view_of("f0_null")
@@ -207,6 +220,14 @@ def main():
         conflicts = [f for f in results[winner]["changed"] if now.get(f) != base_hashes.get(f)]
         log("merge check", winner=winner, conflicts=conflicts,
             user_changes_since_fork=[f for f in now if now.get(f) != base_hashes.get(f)])
+        # The winner wrote the cell its row label and column header name in its own copy. If the user moved
+        # either one, the transplant would write a different cell, so refuse.
+        base_addr, now_addr = R.find_anchor(f"{SNAP}/budget.ods", anchor), R.find_anchor(f"{pre}/budget.ods", anchor)
+        if now_addr != base_addr:
+            log("anchor moved: the target row or column changed; nothing committed", anchor=anchor, was=base_addr, now=now_addr)
+            abort("anchor_mismatch", level, anchor=anchor, base_address=base_addr, now_address=now_addr,
+                  real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0], forks=results)
+            return
         if not conflicts: break
         # Semantic merge test: the same file changed on both sides, but did the same cells?
         user_cells = R.changed_cells(f"{SNAP}/budget.ods", f"{pre}/budget.ods")
@@ -277,7 +298,8 @@ def main():
                   search_seconds=round(search_s, 1), total_seconds=round(time.monotonic() - T0, 1), replays=replays, log=LOG)
     try:
         report.update(real_notes_preserved="user typed this" in open(f"{REAL}/notes.txt").read(),
-                      user_c3_kept=(R.ods_cells(f"{REAL}/budget.ods").get("C3", (None,))[0] in ("77", 77, "77.0")) if CONFLICT or RACE else None)
+                      user_c3_kept=(R.ods_cells(f"{REAL}/budget.ods").get("C3", (None,))[0] in ("77", 77, "77.0")) if CONFLICT or RACE else None,
+                      real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0])
     except Exception as ex:
         log("report state unreadable", error=f"{type(ex).__name__}: {ex}")
     write_report(report)
