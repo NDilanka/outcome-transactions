@@ -7,7 +7,7 @@ private, gitignored file. Labels are joined later by blind_score.py, after decis
 Usage: blind_run.py <out_dir> [endstates_dir]
   (writes <out_dir>/decisions.json and the private blind_map.json; endstates_dir defaults to endstates/)
 """
-import json, os, sys, time, traceback
+import hashlib, json, os, sys, time, traceback
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -59,7 +59,8 @@ def main():
     with open(os.path.join(out_dir, 'decisions.json'), 'w', encoding='utf-8') as fh:
         json.dump(decisions, fh, indent=1, ensure_ascii=False, default=str)
     with open(os.path.join(out_dir, 'run_config.json'), 'w', encoding='utf-8') as fh:
-        json.dump({'endstates': ENDSTATES, 'executor_fixes': sorted(specexec.FIXES)}, fh, indent=1)
+        json.dump({'endstates': ENDSTATES, 'executor_sha256': hashlib.sha256(open(specexec.__file__, 'rb').read()).hexdigest()},
+                  fh, indent=1)
     with open(os.path.join(HERE, 'blind_map.json'), 'w', encoding='utf-8') as fh:
         json.dump(blind_map, fh, indent=1)
     print(f'done: {len(decisions)} states')

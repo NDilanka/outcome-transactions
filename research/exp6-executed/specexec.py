@@ -8,17 +8,21 @@ Scope (deliberately small): only the predicate grammar and readers that the Exp 
   (the executor cannot decide, so it never accepts by skipping a predicate); ACCEPT if all PASS.
 - Footprint items are prose in these specs. They are reported as NOT_EXECUTED, not checked.
 """
-import collections, functools, hashlib, os, re, stat, subprocess, tempfile, codecs
+import collections, functools, hashlib, os, re, stat, subprocess, tempfile, codecs, zipfile
 
 import openpyxl
 from openpyxl.utils import range_boundaries, get_column_letter
 from docx import Document
+from docx.oxml.ns import qn
 from pptx import Presentation
 from lxml import etree
 from pypdf import PdfReader
 
-# Executor fixes that only a separate rerun enables (EXP6_FIXES=table_rows). The frozen primary run sets none.
-FIXES = frozenset(filter(None, os.environ.get('EXP6_FIXES', '').split(',')))
+EMU_PER_CM = 360000
+# ODF namespaces (Clark notation) for .odt files
+T_NS = '{urn:oasis:names:tc:opendocument:xmlns:text:1.0}'
+TB_NS = '{urn:oasis:names:tc:opendocument:xmlns:table:1.0}'
+OF_NS = '{urn:oasis:names:tc:opendocument:xmlns:office:1.0}'
 
 
 class Unsupported(Exception):
@@ -320,6 +324,10 @@ class CalcFile:
         sh = CalcSheet(self, name)
         CURRENT['sheet'] = sh  # a bare range('B1:C29') in the same predicate refers to this sheet
         return sh
+    @property
+    def charts(self):
+        """Charts of every sheet, in sheet order (openpyxl reads them from the file)."""
+        return [ChartObj(ch, self) for ws in self.fwb.worksheets for ch in getattr(ws, '_charts', [])]
 
 
 class CalcSheet:
@@ -353,6 +361,40 @@ class CalcSheet:
 
 class CalcCell:
     def __init__(self, value, formula): self.value, self.formula = value, formula
+
+
+class ChartObj:
+    """A chart in a workbook. type: 'column' or 'bar' (bar chart direction), 'line', or the chart kind."""
+    def __init__(self, ch, book): self.ch, self.book = ch, book
+    @property
+    def type(self):
+        name = type(self.ch).__name__
+        if name == 'BarChart': return 'column' if self.ch.type == 'col' else 'bar'
+        if name == 'LineChart': return 'line'
+        return name.replace('Chart', '').lower()
+    @property
+    def title(self):
+        t = self.ch.title
+        if t is None or isinstance(t, str): return t
+        if t.tx is None or t.tx.rich is None: return None
+        return ''.join(r.t for p in t.tx.rich.p for r in (p.r or []))
+    @property
+    def series(self): return [SeriesObj(s, self.book) for s in self.ch.series]
+
+
+class SeriesObj:
+    def __init__(self, s, book): self.s, self.book = s, book
+    @property
+    def values(self):
+        """Plotted values, read from the cells the series refers to (row-major for a 2-D range)."""
+        ref = getattr(self.s, 'val', None) or getattr(self.s, 'yVal', None)
+        f = ref.numRef.f if ref is not None and ref.numRef is not None else None
+        if not f or '!' not in f: return None
+        sheet_part, rng = f.rsplit('!', 1)
+        sheet_name = sheet_part[1:-1].replace("''", "'") if sheet_part.startswith("'") else sheet_part
+        ws = self.book.vwb[sheet_name]
+        c0, r0, c1, r1 = range_boundaries(rng.replace('$', ''))
+        return [v for row in ws.iter_rows(min_row=r0, max_row=r1, min_col=c0, max_col=c1, values_only=True) for v in row]
 
 
 class CalcRange:
@@ -413,6 +455,14 @@ class DocxFile:
     def paragraphs(self): return Seq([ParaObj(i + 1, p.text) for i, p in enumerate(self.doc.paragraphs)])
     @functools.cached_property
     def tables(self): return Seq([TableObj(i + 1, t) for i, t in enumerate(self.doc.tables)])
+    @property
+    def body_order(self):
+        """Body paragraphs and tables in document order, as the same objects paragraphs and tables return."""
+        out, pi, ti = [], 0, 0
+        for el in self.doc.element.body.iterchildren():
+            if el.tag == qn('w:p'): out.append(self.paragraphs[pi]); pi += 1
+            elif el.tag == qn('w:tbl'): out.append(self.tables[ti]); ti += 1
+        return Seq(out)
     def paragraph(self, n): return self.paragraphs.at(n)
     def table(self, n): return self.tables.at(n)
     @property
@@ -432,6 +482,86 @@ class DocxFile:
         return PageList(_render_pdf(self.path, self.stamp))
 
 
+def _odt_text(el):
+    """Visible text of an ODF paragraph: character data, text:s spaces, tabs, and line breaks. Notes are skipped."""
+    out = [el.text or '']
+    for ch in el:
+        local = etree.QName(ch).localname
+        if local in ('note', 'annotation'): pass
+        elif local == 's': out.append(' ' * int(ch.get(T_NS + 'c', '1')))
+        elif local == 'tab': out.append('\t')
+        elif local == 'line-break': out.append('\n')
+        else: out.append(_odt_text(ch))
+        out.append(ch.tail or '')
+    return ''.join(out)
+
+
+def _repeat(el, attr):
+    """Number of times an ODF element repeats (table:number-*-repeated). Capped so a blank tail cannot blow up memory."""
+    return min(int(el.get(TB_NS + attr, '1')), 1024)
+
+
+class OdtCell:
+    def __init__(self, paras): self.text = '\n'.join(paras)
+
+
+class OdtRow:
+    def __init__(self, cells): self.cells = cells
+
+
+class OdtTable:
+    """Table with the python-docx surface TableObj uses: rows (each with cells), and columns (grid columns)."""
+    def __init__(self, el):
+        self.columns = [None] * sum(_repeat(c, 'number-columns-repeated') for c in self._col_elems(el))
+        self.rows = [OdtRow(self._cells(r)) for r in self._row_elems(el)]
+    @staticmethod
+    def _col_elems(el):
+        for ch in el:
+            if ch.tag == TB_NS + 'table-column': yield ch
+            elif ch.tag in (TB_NS + 'table-column-group', TB_NS + 'table-header-columns'):
+                yield from OdtTable._col_elems(ch)
+    @staticmethod
+    def _row_elems(el):
+        for ch in el:
+            if ch.tag == TB_NS + 'table-row':
+                for _ in range(_repeat(ch, 'number-rows-repeated')): yield ch
+            elif ch.tag in (TB_NS + 'table-header-rows', TB_NS + 'table-row-group', TB_NS + 'table-rows'):
+                yield from OdtTable._row_elems(ch)
+    @staticmethod
+    def _cells(row):
+        out = []
+        for c in row:
+            if c.tag not in (TB_NS + 'table-cell', TB_NS + 'covered-table-cell'): continue
+            paras = [_odt_text(p) for p in c if p.tag in (T_NS + 'p', T_NS + 'h')]
+            out.extend([OdtCell(paras)] * _repeat(c, 'number-columns-repeated'))
+        return out
+
+
+class OdtFile(DocxFile):
+    """ODF text document (.odt). Same surface as DocxFile: body paragraphs (lists and sections are flattened into
+    the body, as Word does), body tables, all_text, and rendered_pages. Text runs and body_order are not read."""
+    def __init__(self, path):
+        self.path = path
+        self.stamp = (os.path.getmtime(path), os.path.getsize(path))
+        with zipfile.ZipFile(path) as z:
+            self.root = etree.fromstring(z.read('content.xml'))
+        self.body = self.root.find(f'{OF_NS}body/{OF_NS}text')
+        self.blocks = list(self._blocks(self.body))
+    @staticmethod
+    def _blocks(el):
+        for ch in el:
+            if ch.tag in (T_NS + 'p', T_NS + 'h'): yield ('p', ch)
+            elif ch.tag == TB_NS + 'table': yield ('t', ch)
+            elif ch.tag in (T_NS + 'list', T_NS + 'list-item', T_NS + 'list-header', T_NS + 'section'):
+                yield from OdtFile._blocks(ch)
+    @functools.cached_property
+    def paragraphs(self):
+        return Seq([ParaObj(i + 1, _odt_text(e)) for i, (kind, e) in enumerate(p for p in self.blocks if p[0] == 'p')])
+    @functools.cached_property
+    def tables(self):
+        return Seq([TableObj(i + 1, OdtTable(e)) for i, (kind, e) in enumerate(t for t in self.blocks if t[0] == 't')])
+
+
 class ParaObj:
     def __init__(self, index, text): self.index, self.text = index, text
     def __eq__(self, o): return isinstance(o, ParaObj) and o.text == self.text
@@ -447,6 +577,8 @@ class TableObj:
     @property
     def rows(self):
         return RowList([Seq([CellObj(c.text) for c in r.cells]) for r in self.t.rows])
+    @property
+    def columns(self): return len(self.t.columns)
     @property
     def cells(self): return Seq([c for r in self.rows for c in r])
     def __eq__(self, o):
@@ -496,6 +628,10 @@ class ShapeObj:
     def text(self): return self.sh.text_frame.text if self.sh.has_text_frame else ''
     @property
     def has_text(self): return bool(self.text.strip())
+    @property
+    def height_cm(self): return None if self.sh.height is None else self.sh.height / EMU_PER_CM
+    @property
+    def width_cm(self): return None if self.sh.width is None else self.sh.width / EMU_PER_CM
     @property
     def paragraphs(self):
         if not self.sh.has_text_frame: return Seq()
@@ -572,12 +708,16 @@ class OsTree:
         return Seq([OsFile(f, ub) for f, ub in sorted(self._walk(), key=lambda x: x[1]) if os.path.isfile(f) and not os.path.islink(f)])
 
 
+def writer_file(path):
+    return OdtFile(path) if path.lower().endswith('.odt') else DocxFile(path)
+
+
 class LibreOfficeRoot:
     def __init__(self, ctx): self.ctx = ctx
     @property
     def calc(self): return _Namespace(file=lambda p: CalcFile(self.ctx.resolve(p)))
     @property
-    def writer(self): return _Namespace(file=lambda p: DocxFile(self.ctx.resolve(p)))
+    def writer(self): return _Namespace(file=lambda p: writer_file(self.ctx.resolve(p)))
     @property
     def impress(self): return _Namespace(file=lambda p: PptxFile(self.ctx.resolve(p)))
 
@@ -653,7 +793,7 @@ def ev(n, env, ctx):
     if k == 'cmp':
         a, b = ev(n[2], env, ctx), ev(n[3], env, ctx)
         op = n[1]
-        if 'table_rows' in FIXES and isinstance(a, RowList) and isinstance(b, int) and not isinstance(b, bool):
+        if isinstance(a, RowList) and isinstance(b, int) and not isinstance(b, bool):
             a = len(a)  # table(n).rows == 5 counts the rows; the projection rule below would test each row against 5
         # A projection (list) compared with a scalar is a universal condition over its items
         # (writer_conventions.txt); an empty projection is satisfied vacuously.
