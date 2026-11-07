@@ -1,0 +1,9 @@
+I am checking our soccer club's to-do list for the last semester and adding strike-through sign on the line we have already accomplished. Could you help me add a strike-through on the first and second line?
+
+Live UI state:
+- LibreOffice Impress has this presentation open in Normal view.
+- Slide 5 of 7 is the active slide (selected in the slide panel).
+- Nothing is selected on the slide.
+
+Files (number, path inside the state, folders that hold its pages):
+f01  New_Club_Spring_2018_Training.pptx  start, end

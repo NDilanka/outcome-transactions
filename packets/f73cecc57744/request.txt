@@ -1,0 +1,9 @@
+Hey, can you throw in a blank page right after this one?
+
+Live UI state:
+- LibreOffice Writer has this document open.
+- The text cursor is at the start of the document (page 1).
+- Nothing is selected.
+
+Files (number, path inside the state, folders that hold its pages):
+f01  Sample_Statutory_Declaration.docx  start, end

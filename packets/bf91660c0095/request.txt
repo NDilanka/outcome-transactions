@@ -1,0 +1,4 @@
+Could you help me add slide transition "dissolve" to my first page?
+
+Files (number, path inside the state, folders that hold its pages):
+f01  Ch4 Video Effect.pptx  start, end

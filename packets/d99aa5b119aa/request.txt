@@ -1,0 +1,9 @@
+Add a bullet point to the content of this slide.
+
+Live UI state:
+- LibreOffice Impress has this presentation open in Normal view.
+- Slide 1 of 1 is the active slide.
+- Nothing is selected on the slide.
+
+Files (number, path inside the state, folders that hold its pages):
+f01  69_4.pptx  start, end

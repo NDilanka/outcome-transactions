@@ -1,0 +1,4 @@
+Could you help me insert a 7(columns)*5(rows) empty table at the point of cursor?
+
+Files (number, path inside the state, folders that hold its pages):
+f01  Table_Of_Work_Effort_Instructions.docx  start, end

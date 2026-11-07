@@ -1,0 +1,9 @@
+Could you help me insert a 7(columns)*5(rows) empty table at the point of cursor?
+
+Live UI state:
+- LibreOffice Writer has this document open.
+- The text cursor is in the empty last paragraph of the document, below the table titled "TABLE OF WORK EFFORT". The table is above the cursor.
+- Nothing is selected.
+
+Files (number, path inside the state, folders that hold its pages):
+f01  Table_Of_Work_Effort_Instructions.docx  start, end
