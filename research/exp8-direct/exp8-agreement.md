@@ -15,6 +15,7 @@ Scripts and outputs: `research/exp8-direct/agreement.py` (output in `agreement_o
 - Of the 12 wrong end states in the primary set, agreement avoids two wrong commits that A or B make (083c86e1 and 02d030c7). It does not avoid the third (de97694c), which A, B, Bs, C and D all commit. **Measured.**
 - Two GT labels look wrong or inconsistent: ecc2413d (the render check contradicts the GT for all four candidates) and a6cac88c versus 699226e8 (same document text, opposite labels). Either can change results. GT v3 is not changed here. This needs a ruling. **Measured.**
 - Judge self-consistency key (verified against the second Sol pass, commit 29fc5bd): accept only if both passes accept. Four of 84 verdicts flip, all accept to reject. Only arm A changes: 14 correct and 2 wrong becomes 15 and 1, because one flip removes the wrong auto-save accept. B, Bs, C and D do not change. Three of the four flips removed correct accepts. The key filters variance, not bias: four wrong accepts survive it. **Measured.**
+- Post hoc, the key moves arm A's G0 point estimate from 78% to 83% (15 of 18; Clopper-Pearson 95% interval 59% to 96%, against 52% to 94% for 14 of 18). The key was chosen after the primary results were seen, so the primary verdict in `exp8-results.md` does not change. **Measured.**
 
 ## Method
 

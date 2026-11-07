@@ -2,7 +2,7 @@
 
 Owner: T3 (Exp 8 real-agent executor). Branch `exp8-direct-agent`. Judge: Sol (orchestrator judge agent). I did not judge.
 Labels: **measured** (read from a run file or script output), **inferred** (derived from timestamps or a rule), **guess** (estimate, not measured).
-Version 2. Changes from version 1: the strict auto-save reading is the primary GT (orchestrator ruling); the UI-block scope is stated; the agreement analysis is linked; new GT issues and limits are listed.
+Version 3. Changes from version 2: a second Sol judge pass is verified (commit 29fc5bd) and its post-hoc key is reported in the answer, gate verdict, GT issues, limits and open items. The primary verdicts are unchanged.
 
 ## Answer first
 
@@ -12,6 +12,7 @@ Version 2. Changes from version 1: the strict auto-save reading is the primary G
 - Speed fails G3 by a wide margin. Median time per attempt is about 39 s before the judge and about 54 s with a rough judge estimate. Per request (slowest of four candidates) the median is 98 s before the judge. Generation of solve.py dominates. **Measured for the executor parts, inferred for generation, guess for judge time.**
 - The auto-save task (2cd43775) is unresolved. Under the strict reading, A commits a wrong profile (083c86e1). The judge split near-identical profiles, and the harness could not observe auto-save. **Measured.**
 - Post-hoc agreement policies (hypothesis, see `exp8-agreement.md`): policy C commits 11 of 18 correctly with 1 wrong, and policy D commits 9 of 18 with 1 wrong. Agreement cuts wrong commits by one, but it loses three correct commits. It cannot catch a wrong state that two methods wrote identically. **Measured, hypothesis.**
+- Post hoc, a second Sol judge pass (verified, commit 29fc5bd) changes arm A only. If a judge accept needs both passes, A commits 15 of 18 correctly with 1 wrong (83%, 95% CI 59% to 96%). The key was not pre-registered, so the primary verdict stays at 78%. The four wrong accepts that both passes make remain. See `exp8-agreement.md`. **Measured, post hoc.**
 - Two GT issues need a ruling. The render check contradicts GT v3 on ecc2413d. Two d53ff5ee candidates have identical document text and opposite labels. GT v3 is not changed. **Measured.**
 
 ## What ran
@@ -180,16 +181,17 @@ The last column tags B's abstentions (blank when B commits). For 66399b0d, GT re
 14. The CONFIRM tag AMBIGUOUS uses GT flags, which a running system does not have (see Arms).
 15. GT labels for ecc2413d and for the d53ff5ee pair (a6cac88c and 699226e8) conflict with the inspection evidence (see GT issues).
 16. The agreement analysis is post-hoc (see `exp8-agreement.md`).
+17. The judge ran twice with the same prompt. Four of 84 verdicts flip, all accept to reject. The post-hoc key changes arm A only, and four wrong accepts survive it. **Measured.** See `exp8-agreement.md`.
 
 ## GT issues (not changed in GT v3; need a ruling)
 
 1. **ecc2413d.** The request asks for "a blank page right after this one", with the cursor on page 1. The LibreOffice render shows that only m3 (02d030c7) adds a blank page after page 1. m1, m2 and m4 render at 7 pages, with page text identical to the input. GT v3 says m3 is wrong, because the extra break moved the disclaimer onto page 2. The render does not show that: page 1 is unchanged, and m3's page 2 is blank. If the render is right, GT v3 is inverted for this request. Under that reading A commits a wrong state (m1), B commits the correct one (m3), and C commits m1 (wrong). **Measured (render), inferred (what it means for GT).**
-2. **d53ff5ee, a6cac88c and 699226e8.** The two attempts have identical document text (every paragraph, including table cells). Their inspector views differ only in one run-boundary marker in one paragraph. GT v3 labels a6cac88c wrong and 699226e8 correct. The judge also accepted 699226e8 (medium) and rejected a6cac88c (medium). **Measured.** The two labels cannot both stand. Either one is wrong, or the GT note for a6cac88c (table text lowercased) is wrong.
+2. **d53ff5ee, a6cac88c and 699226e8.** The two attempts have identical document text (every paragraph, including table cells). Their inspector views differ only in one run-boundary marker in one paragraph. GT v3 labels a6cac88c wrong and 699226e8 correct. The judge also accepted 699226e8 (medium) and rejected a6cac88c (medium) in the first pass. In the second pass it rejected both (medium). **Measured.** The two labels cannot both stand. Either one is wrong, or the GT note for a6cac88c (table text lowercased) is wrong.
 3. **Auto-save family.** See above.
 
 ## Gate verdict
 
-- G0: point estimate for A is 78%, below the 80% target. The CI includes 80%. B and Bs fail. **Measured.**
+- G0: point estimate for A is 78%, below the 80% target. The CI includes 80%. B and Bs fail. Post hoc, with the judge self-consistency key, A is 83% (15 of 18, 95% CI 59% to 96%). The primary verdict does not change, because the key was chosen after the primary results were seen. **Measured.**
 - G1: not met by any arm. Not testable at this sample size. **Measured.**
 - G2: A misses the 10% CONFIRM cap by one request. B and Bs miss the cap and the GAP cap. **Measured.**
 - G3: not met (median well above 10 s). The 5x comparison is open. **Measured.**
@@ -205,3 +207,4 @@ The last column tags B's abstentions (blank when B commits). For 66399b0d, GT re
 - Run at least 300 requests for G1, and collect more wrong end states for the sensitivity gate.
 - Wire the private salt into `build_judge_packets.py` for future runs only, without changing existing blind ids.
 - Agreement: test on more requests with independent method hints before any use (see `exp8-agreement.md`).
+- Judge key: decide whether a both-passes key is used in any later run. It is post hoc here. It does not remove the four wrong accepts that both passes make (e6b4b156, de97694c, b9d8b59c, 02d030c7).
