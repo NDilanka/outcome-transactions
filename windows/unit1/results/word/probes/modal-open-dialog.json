@@ -1,0 +1,55 @@
+{
+ "case": "modal-open-dialog",
+ "description": "Word Open dialog up in the instance: readiness reads, then the write",
+ "outcome": "raised com_error(-2147418111, 'Call was rejected by callee.', None, None)",
+ "hung": false,
+ "pids": [
+  25352,
+  21240
+ ],
+ "stages": [
+  "launched",
+  "helper",
+  "dialog-up",
+  "reads",
+  "call-start",
+  "result"
+ ],
+ "dialogs": [
+  {
+   "cls": "#32770",
+   "title": "Open",
+   "text": [
+    "NamespaceTreeControl: Namespace Tree Control",
+    "Static: Namespace Tree Control",
+    "SysTreeView32: Navigation Pane",
+    "Shell Preview Extension Host: Shell Preview Extension Host",
+    "SHELLDLL_DefView: ShellView",
+    "Static: File &name:",
+    "Static: Files of &type:",
+    "ToolbarWindow32: Too&ls",
+    "Button: &Open",
+    "Button: Cancel",
+    "Button: &Help",
+    "ToolbarWindow32: Navigation buttons"
+   ]
+  }
+ ],
+ "dialog_waited_s": 3.32,
+ "reads": {
+  "app_name": {
+   "value": "Microsoft Word",
+   "seconds": 0.33
+  },
+  "paragraph2": {
+   "error": "com_error(-2147418111, 'Call was rejected by callee.', None, None)",
+   "seconds": 0.6
+  }
+ },
+ "call": "write Paragraphs(2).Range.Text",
+ "seconds": 0.0,
+ "hung_dialogs": [],
+ "killed_pids": [
+  25352
+ ]
+}

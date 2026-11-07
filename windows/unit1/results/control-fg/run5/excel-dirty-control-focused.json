@@ -1,0 +1,187 @@
+{
+ "run": "excel-dirty-control-focused",
+ "app": "excel",
+ "state": "dirty",
+ "method": "control-focused",
+ "status": "ok",
+ "free_mb_before": 1000,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 23344,
+ "holders_open": [
+  [
+   23344,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_open": {
+  "size": 165,
+  "readable": false
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_user_edit": false,
+ "mem_after_user_edit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run5\\excel-dirty-control-focused\\budget.xlsx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run5\\excel-dirty-control-focused\\budget.xlsx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "focus_ok": true,
+ "fg_before_commit": {
+  "hwnd": 23726078,
+  "class": "XLMAIN",
+  "title": "budget - Excel",
+  "pid": 23344
+ },
+ "commit": {
+  "method": "control-focused",
+  "steps": [
+   "control: no commit, same waits"
+  ],
+  "write_ok": true,
+  "error": null,
+  "com_rejections": null
+ },
+ "fg_after_commit": {
+  "hwnd": 23726078,
+  "class": "XLMAIN",
+  "title": "budget - Excel",
+  "pid": 23344
+ },
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   23344,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 165,
+  "readable": false
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run5\\excel-dirty-control-focused\\budget.xlsx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\control-fg\\run5\\excel-dirty-control-focused\\budget.xlsx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   23344,
+   "Microsoft Excel"
+  ]
+ ],
+ "verdict": "CONTROL: no commit, measures focus drift only",
+ "undo_probe": {
+  "before": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "activated_for_probe": false,
+  "undo_error": null,
+  "reverted": [],
+  "redo_error": "RuntimeError('Excel is not the foreground window')",
+  "restored_after_redo": true
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1,
+  "focus|foreground": 1,
+  "probe|foreground": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "\u2022 Discord | #clouders | GMI Cloud and 7 more pages - Personal - Microsoft\u200b Edge"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 16517240,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 23726078,
+   "class": "XLMAIN",
+   "fg_pid": 23344,
+   "title": "budget - Excel"
+  },
+  {
+   "phase": "probe",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "\u2022 Discord | #clouders | GMI Cloud and 7 more pages - Personal - Microsoft\u200b Edge"
+  }
+ ],
+ "quit_ok": true,
+ "killed_office_pid": 23344,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 10.7
+}

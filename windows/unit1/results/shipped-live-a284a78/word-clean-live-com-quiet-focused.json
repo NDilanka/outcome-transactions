@@ -1,0 +1,208 @@
+{
+ "run": "word-clean-live-com-quiet-focused",
+ "app": "word",
+ "state": "clean",
+ "method": "live-com-quiet-focused",
+ "status": "ok",
+ "free_mb_before": 1059,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Word 16.0 build 16.0.14326",
+ "pid": 20108,
+ "holders_open": [
+  [
+   20108,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_open": {
+  "size": 162,
+  "readable": true
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": true,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\word-clean-live-com-quiet-focused\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": true,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\word-clean-live-com-quiet-focused\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": false,
+   "others_ok": true
+  }
+ },
+ "focus_ok": true,
+ "fg_before_commit": {
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Test Acan with Factory Droid and Devin Agents / X and 6 more pages - Personal - ",
+  "pid": 5004
+ },
+ "commit": {
+  "method": "live-com-quiet-focused",
+  "steps": [
+   "in-app COM edit, no save, no activation"
+  ],
+  "write_ok": true,
+  "error": null,
+  "com_rejections": null
+ },
+ "fg_after_commit": {
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Test Acan with Factory Droid and Devin Agents / X and 6 more pages - Personal - ",
+  "pid": 5004
+ },
+ "mem_after_commit": {
+  "agent": true,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   20108,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 162,
+  "readable": true
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\word-clean-live-com-quiet-focused\\budget.docx",
+  "state": {
+   "agent": true,
+   "user": false,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\shipped-live\\word-clean-live-com-quiet-focused\\budget.docx",
+  "mem_after": {
+   "agent": true,
+   "user": false,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": true,
+  "user": false,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": true,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   20108,
+   "Microsoft Word"
+  ]
+ ],
+ "verdict": "PASS: disk correct after the user's save",
+ "undo_probe": {
+  "before": {
+   "agent": true,
+   "user": false,
+   "others_ok": true
+  },
+  "activated_for_probe": false,
+  "undo_error": null,
+  "reverted": [
+   "agent"
+  ],
+  "redo_error": null,
+  "restored_after_redo": true
+ },
+ "watch_counts": {
+  "open|foreground": 2,
+  "open|window-appeared": 2,
+  "focus|foreground": 2,
+  "focus|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 10027838,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "X"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 18548802,
+   "class": "OpusApp",
+   "visible": false,
+   "iconic": false,
+   "title": "Word"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 24053602,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "Test Acan with Factory Droid and Devin Agents / X and 6 more pages - Personal - "
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 19138256,
+   "class": "OpusApp",
+   "fg_pid": 20108,
+   "title": "budget - Word"
+  },
+  {
+   "phase": "focus",
+   "kind": "window-appeared",
+   "hwnd": 24184698,
+   "class": "MSCTFIME UI",
+   "visible": false,
+   "iconic": false,
+   "title": "MSCTFIME UI"
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "Test Acan with Factory Droid and Devin Agents / X and 6 more pages - Personal - "
+  }
+ ],
+ "quit_ok": true,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 15.8
+}

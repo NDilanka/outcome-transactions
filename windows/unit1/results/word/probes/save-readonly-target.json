@@ -1,0 +1,29 @@
+{
+ "case": "save-readonly-target",
+ "description": "SaveAs2 onto a read-only file, alerts on (save prompt)",
+ "outcome": "HUNG: no result within 25 s (last stage: call-start)",
+ "hung": true,
+ "pids": [
+  25484
+ ],
+ "stages": [
+  "launched",
+  "call-start"
+ ],
+ "call": "SaveAs2 onto readonly-target.docx",
+ "hung_dialogs": [
+  {
+   "pid": 25484,
+   "cls": "#32770",
+   "title": "Microsoft Word",
+   "text": [
+    "Button: OK",
+    "Static: We can\u2019t save this file because it\u2019s read-only.\nTo keep your changes, you'll need to save the document with a new name or in a different location.\r (D:\\dev\\ic-win\\...\\readonly-target.docx)",
+    "MSOUNISTAT: 200518"
+   ]
+  }
+ ],
+ "killed_pids": [
+  25484
+ ]
+}

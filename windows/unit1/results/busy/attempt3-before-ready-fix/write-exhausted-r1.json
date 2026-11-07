@@ -1,0 +1,119 @@
+{
+ "run": "write-exhausted-r1",
+ "case": "write-exhausted",
+ "rep": 1,
+ "expect": "write-exhausted",
+ "status": "ok",
+ "dialog_windows": [
+  {
+   "when": "before-first-write",
+   "classes": [
+    "#32770"
+   ],
+   "busy_probe": {
+    "busy": false,
+    "tries": 49,
+    "last_error": null
+   }
+  }
+ ],
+ "free_mb_before": 768,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 13560,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "commit_seconds": 16.19,
+ "commit": {
+  "status": "unknown",
+  "done": [
+   "Application.DisplayAlerts set"
+  ],
+  "refused_at": "B2 value",
+  "reason": "Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away))",
+  "message": "Outcome unknown: Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away)). Check B2 before you save, because a write may still complete. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": {
+   "state": "unchanged",
+   "detail": "1000.0",
+   "call_error": "RuntimeError"
+  },
+  "reconcile": {
+   "step": "B2 value",
+   "state": "unknown",
+   "detail": "the call returned, but the target could not be read back: AttributeError (member lookup turned away)",
+   "returned": true,
+   "call_error": "RuntimeError",
+   "polls": [
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))"
+   ]
+  },
+  "rollback": [],
+  "app_restore": [
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "restored",
+    "reason": "written back"
+   }
+  ],
+  "app_restore_state": "restored",
+  "restore_log": [
+   {
+    "attempt": 1,
+    "at": 1794070232.28,
+    "step": "Application.DisplayAlerts set",
+    "action": "restored",
+    "detail": "written back"
+   }
+  ],
+  "left": [],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.02,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [
+  "#32770"
+ ],
+ "helper_exit": "exit 0",
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": 15.94,
+ "alerts_wait_s": 0.25,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "WRONG: {\"commit\": {\"status\": \"unknown\", \"done\": [\"Application.DisplayAlerts set\"], \"refused_at\": \"B2 value\", \"reason\": \"Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away))\", \"message\": \"Outcome unknown: Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away)). Check B2 before you save, because a write may still complete. Excel alerts are temporarily off. The commit turns them back on when Excel answers.\", \"rejections",
+ "quit_ok": true,
+ "killed_excel_pid": 13560
+}

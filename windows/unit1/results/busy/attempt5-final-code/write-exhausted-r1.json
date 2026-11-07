@@ -1,0 +1,115 @@
+{
+ "run": "write-exhausted-r1",
+ "case": "write-exhausted",
+ "rep": 1,
+ "expect": "write-exhausted",
+ "status": "ok",
+ "dialog_windows": [
+  {
+   "when": "before-first-write",
+   "classes": [
+    "#32770"
+   ],
+   "busy_probe": {
+    "busy": true,
+    "tries": 1,
+    "last_error": "Application.Ready is False"
+   }
+  }
+ ],
+ "free_mb_before": 477,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 12860,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "commit_seconds": 16.01,
+ "commit": {
+  "status": "refused",
+  "done": [
+   "Application.DisplayAlerts set"
+  ],
+  "refused_at": "B2 value",
+  "reason": "busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (Excel turned the call away); the value is unconfirmed",
+  "message": "Refused: busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (Excel turned the call away); the value is unconfirmed. Check B2 before you save: the write was turned away, and its value could not be read back. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+  "rejections": 1,
+  "checks": [
+   "unreadable (Excel turned the call away)"
+  ],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": [
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "restored",
+    "reason": "written back"
+   }
+  ],
+  "app_restore_state": "restored",
+  "restore_log": [
+   {
+    "attempt": 1,
+    "at": 1794073277.73,
+    "step": "Application.DisplayAlerts set",
+    "action": "turned away",
+    "detail": "Excel turned the call away"
+   },
+   {
+    "attempt": 2,
+    "at": 1794073278.61,
+    "step": "Application.DisplayAlerts set",
+    "action": "restored",
+    "detail": "written back"
+   }
+  ],
+  "left": [],
+  "unconfirmed": [
+   "B2"
+  ],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.06,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [
+  "#32770"
+ ],
+ "helper_exit": "exit 0",
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": 15.54,
+ "alerts_wait_s": 0.51,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "CORRECT: write rejected, retry budget spent, commit refused, file and user edit unchanged, alerts restored after the dialog closed",
+ "closed_in_cleanup": [],
+ "quit_ok": true,
+ "killed_excel_pid": 12860
+}

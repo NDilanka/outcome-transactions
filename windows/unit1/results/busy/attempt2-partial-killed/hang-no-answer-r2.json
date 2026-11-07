@@ -1,0 +1,172 @@
+{
+ "run": "hang-no-answer-r2",
+ "case": "hang-no-answer",
+ "rep": 2,
+ "expect": "unknown",
+ "status": "ok",
+ "dialog_windows": [],
+ "free_mb_before": 747,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 24972,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "alerts_seen_in_write": false,
+ "injected_prompt_at": 1794067720.79,
+ "scratch_saved": false,
+ "commit_seconds": 25.18,
+ "commit": {
+  "status": "unknown",
+  "done": [
+   "Application.DisplayAlerts set"
+  ],
+  "refused_at": "B2 value",
+  "reason": "Excel did not return from the B2 value write (the call had not returned after 20 s; last read unreadable (AttributeError (member lookup turned away)))",
+  "message": "Outcome unknown: Excel did not return from the B2 value write (the call had not returned after 20 s; last read unreadable (AttributeError (member lookup turned away))). Check B2 before you save, because a write may still complete.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "reconcile": {
+   "step": "B2 value",
+   "state": "unknown",
+   "detail": "the call had not returned after 20 s; last read unreadable (AttributeError (member lookup turned away))",
+   "returned": false,
+   "call_error": null,
+   "polls": [
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))"
+   ]
+  },
+  "rollback": [],
+  "app_restore": [
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "already",
+    "reason": null
+   }
+  ],
+  "left": [],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.03,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [],
+ "answer_after_commit": [
+  "No"
+ ],
+ "save_error": "com_error(-2147352567, 'Exception occurred.', (0, 'Microsoft Excel', 'SaveAs method of Workbook class failed', 'xlmain11.chm', 0, -2146827284), None)",
+ "mem_after_answer": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "helper_exit": null,
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": null,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "CORRECT: write timed out with no answer: outcome reported unknown, prompt then declined, nothing landed, alerts restored when the call returned",
+ "quit_ok": true,
+ "killed_excel_pid": 24972
+}

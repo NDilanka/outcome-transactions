@@ -1,0 +1,90 @@
+{
+ "run": "write-retry-ok-r3",
+ "case": "write-retry-ok",
+ "rep": 3,
+ "expect": "retry-ok",
+ "status": "ok",
+ "dialog_windows": [
+  {
+   "when": "before-first-write",
+   "classes": [
+    "#32770"
+   ],
+   "busy_probe": {
+    "busy": false,
+    "tries": 1,
+    "last_error": "com_error(-2147417842, 'The application called an interface that was marshalled for a different thread.', None, None)"
+   }
+  }
+ ],
+ "free_mb_before": 930,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 18844,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "commit_seconds": 12.06,
+ "commit": {
+  "status": "refused_partial",
+  "done": [
+   "Application.DisplayAlerts set"
+  ],
+  "refused_at": "B2 value",
+  "reason": "write error: RuntimeError; rollback of Application.DisplayAlerts set refused: target unreadable before the write: AttributeError (member lookup turned away)",
+  "message": "Refused, and not fully rolled back: write error: RuntimeError; rollback of Application.DisplayAlerts set refused: target unreadable before the write: AttributeError (member lookup turned away). Check the workbook.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "reconcile": null,
+  "rollback": [
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "refused",
+    "reason": "target unreadable before the write: AttributeError (member lookup turned away)"
+   }
+  ],
+  "app_restore": null,
+  "left": [],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.02,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [
+  "#32770"
+ ],
+ "helper_exit": "exit 0",
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": 11.66,
+ "display_alerts_final": false,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "WRONG: {\"commit\": {\"status\": \"refused_partial\", \"done\": [\"Application.DisplayAlerts set\"], \"refused_at\": \"B2 value\", \"reason\": \"write error: RuntimeError; rollback of Application.DisplayAlerts set refused: target unreadable before the write: AttributeError (member lookup turned away)\", \"message\": \"Refused, and not fully rolled back: write error: RuntimeError; rollback of Application.DisplayAlerts set refused: target unreadable before the write: AttributeError (member lookup turned away). Check the workbook.\", \"rejections\": 0, \"checks\": [], \"late_landing\": null, \"reconcile\": null, \"rollback\": [{\"step\"",
+ "quit_ok": true,
+ "killed_excel_pid": 18844
+}

@@ -1,0 +1,20 @@
+{
+ "case": "changed-on-disk",
+ "description": "write, file replaced on disk after it was opened (mtime moved)",
+ "outcome": "returned",
+ "hung": false,
+ "pids": [
+  23784
+ ],
+ "stages": [
+  "launched",
+  "call-start",
+  "result"
+ ],
+ "call": "write Paragraphs(2).Range.Text",
+ "seconds": 0.37,
+ "hung_dialogs": [],
+ "killed_pids": [
+  23784
+ ]
+}

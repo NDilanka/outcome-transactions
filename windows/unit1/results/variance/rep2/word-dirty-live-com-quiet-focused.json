@@ -1,0 +1,197 @@
+{
+ "run": "word-dirty-live-com-quiet-focused",
+ "app": "word",
+ "state": "dirty",
+ "method": "live-com-quiet-focused",
+ "status": "ok",
+ "free_mb_before": 702,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Word 16.0 build 16.0.14326",
+ "pid": 12888,
+ "holders_open": [
+  [
+   12888,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_open": {
+  "size": 162,
+  "readable": true
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_user_edit": false,
+ "mem_after_user_edit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-live-com-quiet-focused\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-live-com-quiet-focused\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "focus_ok": true,
+ "fg_before_commit": {
+  "hwnd": 23594840,
+  "class": "OpusApp",
+  "title": "budget - Word",
+  "pid": 12888
+ },
+ "commit": {
+  "method": "live-com-quiet-focused",
+  "steps": [
+   "in-app COM edit, no save, no activation"
+  ],
+  "write_ok": true,
+  "error": null
+ },
+ "fg_after_commit": {
+  "hwnd": 23594840,
+  "class": "OpusApp",
+  "title": "budget - Word",
+  "pid": 12888
+ },
+ "mem_after_commit": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   12888,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 162,
+  "readable": true
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-live-com-quiet-focused\\budget.docx",
+  "state": {
+   "agent": true,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-live-com-quiet-focused\\budget.docx",
+  "mem_after": {
+   "agent": true,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   12888,
+   "Microsoft Word"
+  ]
+ ],
+ "verdict": "PASS: disk correct after the user's save",
+ "undo_probe": {
+  "before": {
+   "agent": true,
+   "user": true,
+   "others_ok": true
+  },
+  "activated_for_probe": false,
+  "undo_error": null,
+  "reverted": [
+   "agent"
+  ],
+  "redo_error": null,
+  "restored_after_redo": true
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 2,
+  "focus|foreground": 1,
+  "focus|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 25691834,
+   "class": "CASCADIA_HOSTING_WINDOW_CLASS",
+   "fg_pid": 18464,
+   "title": "C:\\Program Files\\nodejs\\node.exe"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 19007212,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 23201636,
+   "class": "OpusApp",
+   "visible": false,
+   "iconic": false,
+   "title": "Word"
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 23594840,
+   "class": "OpusApp",
+   "fg_pid": 12888,
+   "title": "budget - Word"
+  },
+  {
+   "phase": "focus",
+   "kind": "window-appeared",
+   "hwnd": 8914912,
+   "class": "MSCTFIME UI",
+   "visible": false,
+   "iconic": false,
+   "title": "MSCTFIME UI"
+  }
+ ],
+ "quit_ok": true,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 12.3
+}

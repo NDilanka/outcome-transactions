@@ -1,0 +1,198 @@
+{
+ "run": "word-dirty-control-focused",
+ "app": "word",
+ "state": "dirty",
+ "method": "control-focused",
+ "status": "ok",
+ "free_mb_before": 843,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Word 16.0 build 16.0.14326",
+ "pid": 5452,
+ "holders_open": [
+  [
+   5452,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_open": {
+  "size": 162,
+  "readable": true
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_user_edit": false,
+ "mem_after_user_edit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-dirty-control-focused\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-dirty-control-focused\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "focus_ok": true,
+ "fg_before_commit": {
+  "hwnd": 7014094,
+  "class": "OpusApp",
+  "title": "budget - Word",
+  "pid": 5452
+ },
+ "commit": {
+  "method": "control-focused",
+  "steps": [
+   "control: no commit, same waits"
+  ],
+  "write_ok": true,
+  "error": null
+ },
+ "fg_after_commit": {
+  "hwnd": 7014094,
+  "class": "OpusApp",
+  "title": "budget - Word",
+  "pid": 5452
+ },
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   5452,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 162,
+  "readable": true
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-dirty-control-focused\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\word-dirty-control-focused\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   5452,
+   "Microsoft Word"
+  ]
+ ],
+ "verdict": "CONTROL: no commit, measures focus drift only",
+ "undo_probe": {
+  "before": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "activated_for_probe": false,
+  "undo_error": null,
+  "reverted": [
+   "user"
+  ],
+  "redo_error": null,
+  "restored_after_redo": true
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 2,
+  "focus|foreground": 1,
+  "focus|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394868,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 14064,
+   "title": "Interface-compiler - Factory"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 8259352,
+   "class": "OpusApp",
+   "visible": false,
+   "iconic": false,
+   "title": "Word"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 12584844,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 7014094,
+   "class": "OpusApp",
+   "fg_pid": 5452,
+   "title": "budget - Word"
+  },
+  {
+   "phase": "focus",
+   "kind": "window-appeared",
+   "hwnd": 10092796,
+   "class": "MSCTFIME UI",
+   "visible": false,
+   "iconic": false,
+   "title": "MSCTFIME UI"
+  }
+ ],
+ "quit_ok": true,
+ "killed_office_pid": 5452,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 13.1
+}

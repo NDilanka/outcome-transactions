@@ -1,0 +1,79 @@
+{
+ "case": "modal-dialog",
+ "label": "fixed",
+ "outcome": "returned",
+ "pids": [
+  23384,
+  6440
+ ],
+ "hung": false,
+ "stages": [
+  "launched",
+  "helper",
+  "dialog-up",
+  "commit-start",
+  "result",
+  "answered-after-report",
+  "after"
+ ],
+ "dialogs": [
+  {
+   "cls": "#32770",
+   "title": "Open",
+   "text": [
+    "NamespaceTreeControl: Namespace Tree Control",
+    "Static: Namespace Tree Control",
+    "SysTreeView32: Navigation Pane",
+    "Shell Preview Extension Host: Shell Preview Extension Host",
+    "SHELLDLL_DefView: ShellView",
+    "Static: File &name:",
+    "Static: Files of &type:",
+    "ToolbarWindow32: Too&ls",
+    "Button: &Open",
+    "Button: Cancel",
+    "Button: &Help",
+    "ToolbarWindow32: Navigation buttons"
+   ]
+  }
+ ],
+ "dialog_waited_s": 4.42,
+ "seconds": 5.0,
+ "report": {
+  "status": "refused",
+  "reason": "Word busy",
+  "message": "Refused: Word busy. Nothing written.",
+  "rejections": 0,
+  "reconcile": null,
+  "late_landing": null,
+  "late_outcome": null,
+  "rollback": [],
+  "app_restore_state": null,
+  "restore_log": null,
+  "gate": {
+   "ok": false,
+   "reason": "Word busy",
+   "tries": 17,
+   "seconds": 5.0,
+   "last_error": "the application turned the call away"
+  },
+  "unconfirmed": null
+ },
+ "error": null,
+ "alerts_after": -1,
+ "para2": "Total: 1000",
+ "late": {
+  "late_outcome": null,
+  "late_landing": null,
+  "app_restore_state": null
+ },
+ "save_returned": null,
+ "save_error": null,
+ "killed_pids": [
+  23384
+ ],
+ "verdict": "CORRECT",
+ "expected": "refused by the gate as Word busy, nothing written, within 6.5 s",
+ "git_head": "9c19480",
+ "working_tree_differs_from_head": false,
+ "live_agent_sha": "4c81817c4b74"
+}

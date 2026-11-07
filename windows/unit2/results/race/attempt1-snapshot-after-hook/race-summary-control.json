@@ -1,0 +1,15 @@
+{
+ "run": "control",
+ "excel_held_file": false,
+ "outcome": "committed",
+ "holders_at_replace": [],
+ "lock_at_replace": null,
+ "replace_error": null,
+ "write_ok": true,
+ "budget_sha_before": "c2ba2b701f61419d",
+ "budget_sha_after": "b2a9177034589bce",
+ "file_overwritten": true,
+ "real_B2": 5000.0,
+ "notes_preserved": true,
+ "verdict": "CONTROL: committed with no holder"
+}

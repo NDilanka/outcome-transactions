@@ -1,0 +1,66 @@
+{
+ "run": "gate-busy-r2",
+ "case": "gate-busy",
+ "rep": 2,
+ "expect": "gate-busy",
+ "status": "ok",
+ "dialog_windows": [
+  {
+   "when": "before-gate",
+   "classes": [
+    "#32770"
+   ]
+  }
+ ],
+ "free_mb_before": 820,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 20772,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "commit_seconds": 5.0,
+ "commit": {
+  "status": "refused",
+  "reason": "Excel busy",
+  "message": "Refused: Excel busy. Nothing written.",
+  "done": [],
+  "rollback": [],
+  "rejections": 0,
+  "checks": [],
+  "gate": {
+   "ok": false,
+   "reason": "Excel busy",
+   "tries": 17,
+   "seconds": 5.0,
+   "last_error": "Excel turned the call away"
+  }
+ },
+ "closed_by_harness": [
+  "#32770"
+ ],
+ "helper_exit": "exit 0",
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": 6.19,
+ "alerts_wait_s": 0.0,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "CORRECT: refused by the gate, no write tried, file and user edit unchanged",
+ "closed_in_cleanup": [],
+ "quit_ok": true,
+ "killed_excel_pid": 20772
+}

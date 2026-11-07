@@ -1,0 +1,211 @@
+{
+ "run": "formula-r1",
+ "case": "formula",
+ "rep": 1,
+ "expect": "confirm",
+ "status": "ok",
+ "calls": [
+  {
+   "status": "confirm_required",
+   "confirm": false,
+   "conflicts": [],
+   "written": []
+  },
+  {
+   "status": "reverted",
+   "confirm": true,
+   "conflicts": [],
+   "written": [
+    "E2"
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "E2 formula",
+     "E2 numfmt (already)",
+     "E2 bold (already)",
+     "E2 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
+  }
+ ],
+ "free_mb_before": 420,
+ "pid": 7156,
+ "fg_before_commit": {
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "NDilanka/outcome-transactions: Outcome transactions: AI computer use by forking,",
+  "pid": 5004
+ },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.04,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "E2 formula"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
+ },
+ "fg_after_commit": {
+  "hwnd": 394858,
+  "class": "Chrome_WidgetWin_1",
+  "title": "NDilanka/outcome-transactions: Outcome transactions: AI computer use by forking,",
+  "pid": 5004
+ },
+ "plan": {
+  "footprint": [
+   "E2"
+  ],
+  "confirm_reasons": [
+   "E2: formula cell"
+  ],
+  "prior": {
+   "E2": {
+    "value": 2000.0,
+    "formula": "=B2*2",
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": false
+   }
+  },
+  "committed": {
+   "E2": {
+    "value": 3000.0,
+    "formula": "=B2*3",
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": false
+   }
+  }
+ },
+ "mem_after_first_call": {
+  "E2": {
+   "value": 3000.0,
+   "formula": "=B2*3",
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "mem_after_revert": {
+  "E2": {
+   "value": 2000.0,
+   "formula": "=B2*2",
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "mem_user": {
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "comments_after_revert": [],
+ "disk": {
+  "E2": {
+   "value": 2000.0,
+   "formula": "B2*2",
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "disk_matches_prior": true,
+ "disk_matches_committed": false,
+ "verdict": "CORRECT: confirm needed, revert done on confirm",
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394858,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "NDilanka/outcome-transactions: Outcome transactions: AI computer use by forking,"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 22939454,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  }
+ ],
+ "killed_excel_pid": 7156,
+ "seconds": 7.2
+}

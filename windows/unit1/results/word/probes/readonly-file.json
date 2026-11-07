@@ -1,0 +1,20 @@
+{
+ "case": "readonly-file",
+ "description": "write, file read-only on disk when opened",
+ "outcome": "returned",
+ "hung": false,
+ "pids": [
+  26040
+ ],
+ "stages": [
+  "launched",
+  "call-start",
+  "result"
+ ],
+ "call": "write Paragraphs(2).Range.Text",
+ "seconds": 0.58,
+ "hung_dialogs": [],
+ "killed_pids": [
+  26040
+ ]
+}

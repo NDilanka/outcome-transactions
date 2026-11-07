@@ -1,0 +1,80 @@
+{
+ "run": "guard-no-prompt-r1",
+ "case": "guard-no-prompt",
+ "rep": 1,
+ "expect": "guard-no-prompt",
+ "status": "ok",
+ "dialog_windows": [],
+ "free_mb_before": 1006,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 11184,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "alerts_seen_in_write": false,
+ "scratch_saved": true,
+ "commit_seconds": 0.36,
+ "commit": {
+  "status": "committed",
+  "done": [
+   "Application.DisplayAlerts set",
+   "B2 value",
+   "Application.DisplayAlerts restored"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null,
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.02,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [],
+ "helper_exit": null,
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": null,
+ "alerts_wait_s": 0.0,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "CORRECT: guard kept alerts off: the save over an existing file raised no prompt, and the commit committed",
+ "closed_in_cleanup": [],
+ "quit_ok": true,
+ "killed_excel_pid": 11184
+}

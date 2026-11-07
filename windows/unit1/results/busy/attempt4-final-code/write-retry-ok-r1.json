@@ -1,0 +1,108 @@
+{
+ "run": "write-retry-ok-r1",
+ "case": "write-retry-ok",
+ "rep": 1,
+ "expect": "retry-ok",
+ "status": "error",
+ "dialog_windows": [],
+ "free_mb_before": 302,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 12504,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "commit_seconds": 28.61,
+ "commit": {
+  "status": "unknown",
+  "done": [
+   "Application.DisplayAlerts set"
+  ],
+  "refused_at": "B2 value",
+  "reason": "Excel did not return from the B2 value write (the call returned, but the target could not be read back: not responding (read B2 value did not return within 5 s))",
+  "message": "Outcome unknown: Excel did not return from the B2 value write (the call returned, but the target could not be read back: not responding (read B2 value did not return within 5 s)). Check B2 before you save, because a write may still complete. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": {
+   "state": "unreadable",
+   "detail": "not responding (poll B2 value did not return within 5 s)",
+   "call_error": "RuntimeError"
+  },
+  "reconcile": {
+   "step": "B2 value",
+   "state": "unknown",
+   "detail": "the call returned, but the target could not be read back: not responding (read B2 value did not return within 5 s)",
+   "returned": true,
+   "call_error": "RuntimeError",
+   "polls": [
+    "1000.0",
+    "1000.0",
+    "1000.0",
+    "1000.0",
+    "1000.0",
+    "1000.0",
+    "1000.0",
+    "unreadable (not responding (poll B2 value did not return within 5 s))",
+    "unreadable (not responding (poll B2 value did not return within 5 s))"
+   ]
+  },
+  "rollback": [],
+  "app_restore": [
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "turned away",
+    "reason": "Excel turned the call away"
+   }
+  ],
+  "app_restore_state": "pending",
+  "restore_log": [
+   {
+    "attempt": 1,
+    "at": 1794071880.23,
+    "step": "Application.DisplayAlerts set",
+    "action": "turned away",
+    "detail": "Excel turned the call away"
+   },
+   {
+    "attempt": 2,
+    "at": 1794071888.27,
+    "step": "Application.DisplayAlerts set",
+    "action": "turned away",
+    "detail": "Excel turned the call away"
+   }
+  ],
+  "left": [],
+  "unconfirmed": null,
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 1.04,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [],
+ "helper_exit": null,
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": null,
+ "alerts_wait_s": 15.29,
+ "display_alerts_final": false,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "traceback": "Traceback (most recent call last):\n  File \"D:\\dev\\ic-win\\windows\\unit1\\busy_test.py\", line 414, in run\n    rec[\"mem_after_commit\"] = adapter.mem_state()\n                              ~~~~~~~~~~~~~~~~~^^\n  File \"D:\\dev\\ic-win\\windows\\unit1\\open_doc_experiment.py\", line 261, in mem_state\n    r = self.wb.Worksheets(\"Budget\").Range\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\<user>\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\win32com\\client\\dynamic.py\", line 631, in __getattr__\n    raise AttributeError(f\"{self._username_}.{attr}\")\nAttributeError: __call__.Range\n",
+ "quit_ok": false,
+ "quit_error": "com_error(-2146777998, 'OLE error 0x800ac472', None, None)",
+ "killed_excel_pid": 12504
+}

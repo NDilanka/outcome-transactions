@@ -1,0 +1,211 @@
+{
+ "run": "merged-r2",
+ "case": "merged",
+ "rep": 2,
+ "expect": "confirm",
+ "status": "ok",
+ "calls": [
+  {
+   "status": "confirm_required",
+   "confirm": false,
+   "conflicts": [],
+   "written": []
+  },
+  {
+   "status": "reverted",
+   "confirm": true,
+   "conflicts": [],
+   "written": [
+    "E5"
+   ],
+   "steps": {
+    "status": "committed",
+    "done": [
+     "E5 value",
+     "E5 numfmt (already)",
+     "E5 bold (already)",
+     "E5 fill (already)"
+    ],
+    "refused_at": null,
+    "reason": null,
+    "message": "Committed.",
+    "rejections": 0,
+    "checks": [],
+    "late_landing": null,
+    "late_outcome": null,
+    "reconcile": null,
+    "rollback": [],
+    "app_restore": null,
+    "app_restore_state": null,
+    "restore_log": [],
+    "left": [],
+    "unconfirmed": null
+   }
+  }
+ ],
+ "free_mb_before": 1070,
+ "pid": 18192,
+ "fg_before_commit": {
+  "hwnd": 66800,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Activity - Factory - Slack",
+  "pid": 17588
+ },
+ "gate_before_commit": {
+  "ok": true,
+  "reason": null,
+  "tries": 1,
+  "seconds": 0.02,
+  "last_error": null
+ },
+ "commit_guard_before": {
+  "DisplayAlerts": false
+ },
+ "commit": {
+  "status": "committed",
+  "done": [
+   "E5 value"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "late_outcome": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "app_restore_state": null,
+  "restore_log": [],
+  "left": [],
+  "unconfirmed": null
+ },
+ "fg_after_commit": {
+  "hwnd": 66800,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Activity - Factory - Slack",
+  "pid": 17588
+ },
+ "plan": {
+  "footprint": [
+   "E5"
+  ],
+  "confirm_reasons": [
+   "E5: merged range"
+  ],
+  "prior": {
+   "E5": {
+    "value": "merged note",
+    "formula": null,
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": true
+   }
+  },
+  "committed": {
+   "E5": {
+    "value": "agent note",
+    "formula": null,
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": true
+   }
+  }
+ },
+ "mem_after_first_call": {
+  "E5": {
+   "value": "agent note",
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": true
+  }
+ },
+ "mem_after_revert": {
+  "E5": {
+   "value": "merged note",
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": true
+  }
+ },
+ "mem_user": {
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "comments_after_revert": [],
+ "disk": {
+  "E5": {
+   "value": "merged note",
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": true
+  },
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "disk_matches_prior": true,
+ "disk_matches_committed": false,
+ "verdict": "CORRECT: confirm needed, revert done on confirm",
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 66800,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 17588,
+   "title": "Activity - Factory - Slack"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 27919016,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  }
+ ],
+ "killed_excel_pid": 18192,
+ "seconds": 6.7
+}

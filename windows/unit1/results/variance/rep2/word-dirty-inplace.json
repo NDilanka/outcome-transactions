@@ -1,0 +1,178 @@
+{
+ "run": "word-dirty-inplace",
+ "app": "word",
+ "state": "dirty",
+ "method": "inplace",
+ "status": "ok",
+ "free_mb_before": 1068,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Word 16.0 build 16.0.14326",
+ "pid": 21524,
+ "holders_open": [
+  [
+   21524,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_open": {
+  "size": 162,
+  "readable": true
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_user_edit": false,
+ "mem_after_user_edit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-inplace\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-inplace\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "fg_before_commit": {
+  "hwnd": 10027838,
+  "class": "Chrome_WidgetWin_1",
+  "title": "X",
+  "pid": 5004
+ },
+ "commit": {
+  "method": "inplace",
+  "steps": [
+   "FAILED: PermissionError winerror=None: Permission denied"
+  ],
+  "write_ok": false,
+  "error": "PermissionError winerror=None: Permission denied"
+ },
+ "fg_after_commit": {
+  "hwnd": 10027838,
+  "class": "Chrome_WidgetWin_1",
+  "title": "X",
+  "pid": 5004
+ },
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   21524,
+   "Microsoft Word"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 162,
+  "readable": true
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-inplace\\budget.docx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep2\\word-dirty-inplace\\budget.docx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   21524,
+   "Microsoft Word"
+  ]
+ ],
+ "verdict": "REFUSED: write failed, nothing committed",
+ "undo_probe": {
+  "before": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "activated_for_probe": false,
+  "undo_error": null,
+  "reverted": [
+   "user"
+  ],
+  "redo_error": null,
+  "restored_after_redo": true
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 2
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 10027838,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 5004,
+   "title": "X"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 7931998,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 8585466,
+   "class": "OpusApp",
+   "visible": false,
+   "iconic": false,
+   "title": "Word"
+  }
+ ],
+ "quit_ok": true,
+ "killed_office_pid": 21524,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 9.2
+}

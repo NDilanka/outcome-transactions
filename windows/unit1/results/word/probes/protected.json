@@ -1,0 +1,20 @@
+{
+ "case": "protected",
+ "description": "write, document protected for reading only",
+ "outcome": "raised com_error(-2147352567, 'Exception occurred.', (0, 'Microsoft Word', 'You are not allowed to edit this selection because it is protected.', 'wdmain11.chm', 25604",
+ "hung": false,
+ "pids": [
+  13400
+ ],
+ "stages": [
+  "launched",
+  "call-start",
+  "result"
+ ],
+ "call": "write Paragraphs(2).Range.Text",
+ "seconds": 0.69,
+ "hung_dialogs": [],
+ "killed_pids": [
+  13400
+ ]
+}

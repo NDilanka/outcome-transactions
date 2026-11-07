@@ -1,0 +1,20 @@
+{
+ "case": "baseline",
+ "description": "write, file as copied",
+ "outcome": "returned",
+ "hung": false,
+ "pids": [
+  26196
+ ],
+ "stages": [
+  "launched",
+  "call-start",
+  "result"
+ ],
+ "call": "write Paragraphs(2).Range.Text",
+ "seconds": 0.54,
+ "hung_dialogs": [],
+ "killed_pids": [
+  26196
+ ]
+}

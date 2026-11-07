@@ -1,0 +1,170 @@
+[
+ {
+  "state": "dialog not open",
+  "call": "pre-bound Application.Ready",
+  "outcome": "ok True",
+  "seconds": 0.001
+ },
+ {
+  "state": "dialog not open",
+  "call": "pre-bound Application.Name",
+  "outcome": "ok 'Microsoft Excel'",
+  "seconds": 0.0
+ },
+ {
+  "state": "dialog not open",
+  "call": "pre-bound Range(B2).Value read",
+  "outcome": "ok 1000.0",
+  "seconds": 0.17
+ },
+ {
+  "state": "dialog not open",
+  "call": "pre-bound Range(B2).Value write 1000 (unchanged value)",
+  "outcome": "ok None",
+  "seconds": 0.026
+ },
+ {
+  "state": "dialog not open",
+  "call": "excel_ready_probe on pre-bound view",
+  "outcome": "ok True",
+  "seconds": 0.02
+ },
+ {
+  "state": "dialog not open",
+  "call": "wait_busy on pre-bound Application",
+  "outcome": "ok {'busy': False, 'tries': 20, 'last_error': None}",
+  "seconds": 2.066
+ },
+ {
+  "state": "dialog not open",
+  "call": "fresh GetObject(path).Application",
+  "outcome": "ok <win32com.gen_py.None.Application>",
+  "seconds": 0.012
+ },
+ {
+  "state": "Open dialog up",
+  "call": "pre-bound Application.Ready",
+  "outcome": "ok False",
+  "seconds": 0.378
+ },
+ {
+  "state": "Open dialog up",
+  "call": "pre-bound Application.Name",
+  "outcome": "ok 'Microsoft Excel'",
+  "seconds": 0.503
+ },
+ {
+  "state": "Open dialog up",
+  "call": "pre-bound Range(B2).Value read",
+  "outcome": "ok 1000.0",
+  "seconds": 0.159
+ },
+ {
+  "state": "Open dialog up",
+  "call": "pre-bound Range(B2).Value write 1000 (unchanged value)",
+  "outcome": "error com_error 0x800AC472",
+  "seconds": 0.018
+ },
+ {
+  "state": "Open dialog up",
+  "call": "excel_ready_probe on pre-bound view",
+  "outcome": "ok False",
+  "seconds": 0.015
+ },
+ {
+  "state": "Open dialog up",
+  "call": "wait_busy on pre-bound Application",
+  "outcome": "ok {'busy': True, 'tries': 1, 'last_error': 'Application.Rea",
+  "seconds": 0.002
+ },
+ {
+  "state": "Open dialog up",
+  "call": "fresh GetObject(path).Application",
+  "outcome": "error Excel turned the call away",
+  "seconds": 0.036
+ },
+ {
+  "state": "Open dialog up (second round)",
+  "call": "pre-bound Application.Ready",
+  "outcome": "ok False",
+  "seconds": 0.001
+ },
+ {
+  "state": "Open dialog up (second round)",
+  "call": "pre-bound Application.Name",
+  "outcome": "ok 'Microsoft Excel'",
+  "seconds": 0.004
+ },
+ {
+  "state": "Open dialog up (second round)",
+  "call": "pre-bound Range(B2).Value read",
+  "outcome": "ok 1000.0",
+  "seconds": 0.098
+ },
+ {
+  "state": "Open dialog up (second round)",
+  "call": "pre-bound Range(B2).Value write 1000 (unchanged value)",
+  "outcome": "error com_error 0x800AC472",
+  "seconds": 0.008
+ },
+ {
+  "state": "Open dialog up (second round)",
+  "call": "excel_ready_probe on pre-bound view",
+  "outcome": "ok False",
+  "seconds": 0.006
+ },
+ {
+  "state": "Open dialog up (second round)",
+  "call": "wait_busy on pre-bound Application",
+  "outcome": "ok {'busy': True, 'tries': 1, 'last_error': 'Application.Rea",
+  "seconds": 0.0
+ },
+ {
+  "state": "Open dialog up (second round)",
+  "call": "fresh GetObject(path).Application",
+  "outcome": "error Excel turned the call away",
+  "seconds": 0.003
+ },
+ {
+  "state": "dialog closed",
+  "call": "pre-bound Application.Ready",
+  "outcome": "ok True",
+  "seconds": 0.001
+ },
+ {
+  "state": "dialog closed",
+  "call": "pre-bound Application.Name",
+  "outcome": "ok 'Microsoft Excel'",
+  "seconds": 0.0
+ },
+ {
+  "state": "dialog closed",
+  "call": "pre-bound Range(B2).Value read",
+  "outcome": "ok 1000.0",
+  "seconds": 0.005
+ },
+ {
+  "state": "dialog closed",
+  "call": "pre-bound Range(B2).Value write 1000 (unchanged value)",
+  "outcome": "ok None",
+  "seconds": 0.006
+ },
+ {
+  "state": "dialog closed",
+  "call": "excel_ready_probe on pre-bound view",
+  "outcome": "ok True",
+  "seconds": 0.005
+ },
+ {
+  "state": "dialog closed",
+  "call": "wait_busy on pre-bound Application",
+  "outcome": "ok {'busy': False, 'tries': 20, 'last_error': None}",
+  "seconds": 2.027
+ },
+ {
+  "state": "dialog closed",
+  "call": "fresh GetObject(path).Application",
+  "outcome": "ok <win32com.gen_py.None.Application>",
+  "seconds": 0.002
+ }
+]

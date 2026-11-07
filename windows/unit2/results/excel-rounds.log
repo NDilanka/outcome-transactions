@@ -1,0 +1,9 @@
+== round 1 exit=0 2026-11-07T18:28:02.7382089+05:30
+{"mode": "excel", "new_office_pids_during_run": {"EXCEL.EXE": [], "WINWORD.EXE": []}, "outcomes": {"normal": "committed", "conflict": "committed", "same_cell": "true_conflict"}}
+
+== round 2 exit=0 2026-11-07T18:28:41.5117939+05:30
+{"mode": "excel", "new_office_pids_during_run": {"EXCEL.EXE": [], "WINWORD.EXE": []}, "outcomes": {"normal": "committed", "conflict": "committed", "same_cell": "true_conflict"}}
+
+== round 3 exit=0 2026-11-07T18:29:14.2122235+05:30
+{"mode": "excel", "new_office_pids_during_run": {"EXCEL.EXE": [], "WINWORD.EXE": []}, "outcomes": {"normal": "committed", "conflict": "committed", "same_cell": "true_conflict"}}
+

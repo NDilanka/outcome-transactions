@@ -1,0 +1,32 @@
+{
+ "case": "save-file-in-use",
+ "description": "SaveAs2 onto a file a second instance holds open (File In Use)",
+ "outcome": "HUNG: no result within 25 s (last stage: call-start)",
+ "hung": true,
+ "pids": [
+  21816,
+  16204
+ ],
+ "stages": [
+  "launched",
+  "launched",
+  "call-start"
+ ],
+ "call": "SaveAs2 onto budget.docx",
+ "hung_dialogs": [
+  {
+   "pid": 21816,
+   "cls": "#32770",
+   "title": "Microsoft Word",
+   "text": [
+    "Button: OK",
+    "Static: Word cannot save this file because it is already open elsewhere.\r (D:\\dev\\ic-win\\windows\\...\\budget.docx)",
+    "MSOUNISTAT: 200576"
+   ]
+  }
+ ],
+ "killed_pids": [
+  21816,
+  16204
+ ]
+}

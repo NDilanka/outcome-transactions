@@ -1,0 +1,16 @@
+saved_dirty: False
+focus_ok: True
+findcontrol128: ok
+findcontrol128_B2_after: 5000.0
+findcontrol128_D1_after: user note
+execmso_undo: com_error(-2147352567, 'Exception occurred.', (0, None, None, None, 0, -2147467259), None)
+execmso_undo_B2_after: 5000.0
+execmso_undo_D1_after: user note
+sendkeys_ctrl_z: ok
+sendkeys_ctrl_z_B2_after: 5000.0
+sendkeys_ctrl_z_D1_after: user note
+ui_typed_E1: ui edit
+ui_typed_E1_after_ctrl_z: None
+ui_edit_undone_by_ctrl_z: True
+saveas_dialog_raised: com_error(-2147352567, 'Exception occurred.', (0, 'Microsoft Excel', 'SaveAs method of Workbook class failed', 'xlmain11.chm', 0, -2146827284), None)
+dialog_events: ['Microsoft Excel']

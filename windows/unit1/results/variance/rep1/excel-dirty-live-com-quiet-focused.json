@@ -1,0 +1,187 @@
+{
+ "run": "excel-dirty-live-com-quiet-focused",
+ "app": "excel",
+ "state": "dirty",
+ "method": "live-com-quiet-focused",
+ "status": "ok",
+ "free_mb_before": 1075,
+ "holders_before_open": [],
+ "lock_before_open": null,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 11488,
+ "holders_open": [
+  [
+   11488,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_open": {
+  "size": 165,
+  "readable": false
+ },
+ "saved_open": true,
+ "mem_open": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "saved_after_user_edit": false,
+ "mem_after_user_edit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "snapshot_pre": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep1\\excel-dirty-live-com-quiet-focused\\budget.xlsx",
+  "state": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep1\\excel-dirty-live-com-quiet-focused\\budget.xlsx",
+  "mem_after": {
+   "agent": false,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "focus_ok": true,
+ "fg_before_commit": {
+  "hwnd": 21038912,
+  "class": "XLMAIN",
+  "title": "budget - Excel",
+  "pid": 11488
+ },
+ "commit": {
+  "method": "live-com-quiet-focused",
+  "steps": [
+   "in-app COM edit, no save, no activation"
+  ],
+  "write_ok": true,
+  "error": null
+ },
+ "fg_after_commit": {
+  "hwnd": 21038912,
+  "class": "XLMAIN",
+  "title": "budget - Excel",
+  "pid": 11488
+ },
+ "mem_after_commit": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "saved_after_commit": false,
+ "disk_after_commit": {
+  "agent": false,
+  "user": false,
+  "others_ok": true
+ },
+ "holders_after_commit": [
+  [
+   11488,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_after_commit": {
+  "size": 165,
+  "readable": false
+ },
+ "snapshot_post": {
+  "saved_before": false,
+  "fullname_before": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep1\\excel-dirty-live-com-quiet-focused\\budget.xlsx",
+  "state": {
+   "agent": true,
+   "user": true,
+   "others_ok": true
+  },
+  "error": null,
+  "saved_after": false,
+  "fullname_after": "D:\\dev\\ic-win\\windows\\unit1\\work\\variance\\rep1\\excel-dirty-live-com-quiet-focused\\budget.xlsx",
+  "mem_after": {
+   "agent": true,
+   "user": true,
+   "others_ok": true
+  }
+ },
+ "save_error": null,
+ "mem_after_save": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_save": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "holders_after_save": [
+  [
+   11488,
+   "Microsoft Excel"
+  ]
+ ],
+ "verdict": "PASS: disk correct after the user's save",
+ "undo_probe": {
+  "probe_error": "com_error(-2147418111, 'Call was rejected by callee.', None, None)"
+ },
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1,
+  "focus|foreground": 1,
+  "user-save|foreground": 1,
+  "probe|foreground": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394868,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 14064,
+   "title": "Write viral X post for Acan pre-launch - Factory"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 3279068,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  },
+  {
+   "phase": "focus",
+   "kind": "foreground",
+   "hwnd": 21038912,
+   "class": "XLMAIN",
+   "fg_pid": 11488,
+   "title": "budget - Excel"
+  },
+  {
+   "phase": "user-save",
+   "kind": "foreground",
+   "hwnd": 394868,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 14064,
+   "title": "Write viral X post for Acan pre-launch - Factory"
+  },
+  {
+   "phase": "probe",
+   "kind": "foreground",
+   "hwnd": 21038912,
+   "class": "XLMAIN",
+   "fg_pid": 11488,
+   "title": "budget - Excel"
+  }
+ ],
+ "quit_ok": false,
+ "quit_error": "com_error(-2147418111, 'Call was rejected by callee.', None, None)",
+ "killed_office_pid": 11488,
+ "holders_after_close": [],
+ "lock_after_close": null,
+ "seconds": 9.6
+}
