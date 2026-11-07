@@ -1,0 +1,473 @@
+{
+ "group_A": [
+  {
+   "bid": "a8fbf0b3b234",
+   "task": "57667013-ea97-417c-9dce-2713091e6e2a",
+   "state": "state_19",
+   "verdict": "reject",
+   "reason": "Slide 5's text is missing instead of being recolored yellow.",
+   "registered_renderable": false,
+   "amended_renderable": true,
+   "cursor": false,
+   "state_17": false
+  },
+  {
+   "bid": "4beef515ad40",
+   "task": "57667013-ea97-417c-9dce-2713091e6e2a",
+   "state": "state_20",
+   "verdict": "reject",
+   "reason": "Slide 5's text uses a dark olive-yellow shade rather than the exact yellow requested.",
+   "registered_renderable": false,
+   "amended_renderable": true,
+   "cursor": false,
+   "state_17": false
+  },
+  {
+   "bid": "74b242964003",
+   "task": "57667013-ea97-417c-9dce-2713091e6e2a",
+   "state": "state_22",
+   "verdict": "reject",
+   "reason": "Although the text is yellow, slide 5's background was also changed from light blue to dark blue without being requested.",
+   "registered_renderable": true,
+   "amended_renderable": true,
+   "cursor": false,
+   "state_17": false
+  },
+  {
+   "bid": "de1bd8e7ae98",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "state": "state_01",
+   "verdict": "reject",
+   "reason": "The end state has an additional blank page but no visible 7-column by 5-row empty table.",
+   "registered_renderable": false,
+   "amended_renderable": false,
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "bid": "636fb34a5521",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "state": "state_02",
+   "verdict": "accept",
+   "reason": "An empty seven-column, five-row table is added without visible changes to existing content, although the original cursor position cannot be verified from the images.",
+   "registered_renderable": false,
+   "amended_renderable": false,
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "bid": "949931eec4c4",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "state": "state_03",
+   "verdict": "reject",
+   "reason": "The end state adds a blank third page but shows no identifiable empty seven-column, five-row table.",
+   "registered_renderable": false,
+   "amended_renderable": false,
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "bid": "ba7caa4f782d",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "state": "state_04",
+   "verdict": "reject",
+   "reason": "The end state adds a blank third page rather than showing a 7-column, 5-row table at the original cursor position.",
+   "registered_renderable": false,
+   "amended_renderable": false,
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "bid": "3f63b43c36ef",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "state": "state_17",
+   "verdict": "reject",
+   "reason": "The only visible addition is a blank third page, with no visible 7-column, 5-row empty table at the insertion point.",
+   "registered_renderable": false,
+   "amended_renderable": false,
+   "cursor": false,
+   "state_17": true
+  }
+ ],
+ "G1_registered": {
+  "states": [
+   "state_22"
+  ],
+  "pass": true
+ },
+ "G1_amended": {
+  "states": [
+   "state_19",
+   "state_20",
+   "state_22"
+  ],
+  "pass": true
+ },
+ "G1_headline_pass": true,
+ "group_A_not_counted_toward_G1": [
+  {
+   "state": "state_01",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "verdict": "reject",
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "state": "state_02",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "verdict": "accept",
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "state": "state_03",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "verdict": "reject",
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "state": "state_04",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "verdict": "reject",
+   "cursor": true,
+   "state_17": false
+  },
+  {
+   "state": "state_17",
+   "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+   "verdict": "reject",
+   "cursor": false,
+   "state_17": true
+  }
+ ],
+ "group_A_rejects": 7,
+ "G2": {
+  "render_BD": {
+   "k": 5,
+   "n": 30,
+   "rate": 0.1667,
+   "ci95": [
+    0.0564,
+    0.3472
+   ]
+  },
+  "sol_BD": {
+   "k": 9,
+   "n": 30,
+   "rate": 0.3,
+   "ci95": [
+    0.1473,
+    0.494
+   ]
+  },
+  "pass": true,
+  "render_B": {
+   "k": 0,
+   "n": 5,
+   "rate": 0.0,
+   "ci95": [
+    0.0,
+    0.5218
+   ]
+  },
+  "sol_B": {
+   "k": 1,
+   "n": 5,
+   "rate": 0.2,
+   "ci95": [
+    0.0051,
+    0.7164
+   ]
+  },
+  "render_D": {
+   "k": 5,
+   "n": 25,
+   "rate": 0.2,
+   "ci95": [
+    0.0683,
+    0.407
+   ]
+  },
+  "sol_D": {
+   "k": 8,
+   "n": 25,
+   "rate": 0.32,
+   "ci95": [
+    0.1495,
+    0.535
+   ]
+  },
+  "undecided_BD": 0
+ },
+ "BD_rejected_states": [
+  {
+   "group": "D",
+   "task": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+   "state": "state_14",
+   "verdict": "reject",
+   "reason": "An unrequested duplicate presentation was added, while the unchanged static renders cannot establish whether the first slide has the requested dissolve transition."
+  },
+  {
+   "group": "D",
+   "task": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+   "state": "state_14",
+   "verdict": "reject",
+   "reason": "The pictures on slides 3 and 6 also move upward to the slide's top edge, changing their placement beyond the requested height adjustments."
+  },
+  {
+   "group": "D",
+   "task": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+   "state": "state_02",
+   "verdict": "reject",
+   "reason": "The comma-separated content is arranged into a table, but the original underlining in the example words has been removed."
+  },
+  {
+   "group": "D",
+   "task": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+   "state": "state_01",
+   "verdict": "reject",
+   "reason": "Uppercase letters remain in the title, body paragraphs, and table, so the requested lowercase conversion is incomplete."
+  },
+  {
+   "group": "D",
+   "task": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+   "state": "state_17",
+   "verdict": "reject",
+   "reason": "The main uppercase paragraph is lowercased, but the uppercase course code CHIN9505 remains unchanged."
+  }
+ ],
+ "C": {
+  "render_reject": {
+   "k": 34,
+   "n": 40,
+   "rate": 0.85,
+   "ci95": [
+    0.7016,
+    0.9429
+   ]
+  },
+  "undecided": 0,
+  "sol_reject": {
+   "k": 35,
+   "n": 40,
+   "rate": 0.875,
+   "ci95": [
+    0.732,
+    0.9581
+   ]
+  },
+  "rejects": [
+   {
+    "bid": "4d53a324ae6d",
+    "task": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+    "state": "state_04",
+    "reason": "The Total bar chart plots individual sales data across five numbered categories instead of the six monthly totals."
+   },
+   {
+    "bid": "3f040f40fcd6",
+    "task": "0326d92d-d218-48a8-9ca1-981cd6d064c7",
+    "state": "state_05",
+    "reason": "The total row and its chart are labeled \"Total Sales\" instead of the explicitly requested \"Total\"."
+   },
+   {
+    "bid": "4dd5b44d7741",
+    "task": "1273e544-688f-496b-8d89-3e0f40aa0606",
+    "state": "state_09",
+    "reason": "The Revenue data is pasted horizontally across a row rather than copied as a column with its header on Sheet2."
+   },
+   {
+    "bid": "9ebc8b365bd2",
+    "task": "1273e544-688f-496b-8d89-3e0f40aa0606",
+    "state": "state_15",
+    "reason": "The Revenue column is copied into an unrequested separate workbook while the original workbook remains unchanged without the requested new sheet."
+   },
+   {
+    "bid": "6177bbd5a738",
+    "task": "1273e544-688f-496b-8d89-3e0f40aa0606",
+    "state": "state_22",
+    "reason": "Sheet2 contains the Revenue header and only the first ten values, leaving out the remaining Revenue entries."
+   },
+   {
+    "bid": "6e72c01943fb",
+    "task": "21760ecb-8f62-40d2-8d85-0cee5725cb72",
+    "state": "state_18",
+    "reason": "The first slide's title and logo disappeared and its background layout changed, causing unrequested damage beyond adding a dissolve transition."
+   },
+   {
+    "bid": "5c03cce7d3a4",
+    "task": "42e0a640-4f19-4b28-973d-729602b5a4a7",
+    "state": "state_07",
+    "reason": "Both summary cells display #NAME? errors instead of the requested revenue and expense sums."
+   },
+   {
+    "bid": "f85a09bb7d2c",
+    "task": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+    "state": "state_06",
+    "reason": "The revenue summary shows zero for every product and the total despite nonzero revenues in the new sales column."
+   },
+   {
+    "bid": "436bc7ec603d",
+    "task": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+    "state": "state_20",
+    "reason": "The revenue and summary are split into new files rather than added to the original workbook, and the sales copy's Type column is corrupted with formula text."
+   },
+   {
+    "bid": "ffd53d541e65",
+    "task": "51719eea-10bc-4246-a428-ac7c433dd4b3",
+    "state": "state_22",
+    "reason": "The product revenue summary incorrectly reports zero for every product despite nonzero revenues, and the last sales row also has an incorrect zero revenue."
+   },
+   {
+    "bid": "56a6510faa1e",
+    "task": "550ce7e7-747b-495f-b122-acdc4d0b8e54",
+    "state": "state_12",
+    "reason": "Strikethrough is applied to the Finance Meetings heading and the first task rather than to the first two tasks."
+   },
+   {
+    "bid": "de7c2769fec2",
+    "task": "57667013-ea97-417c-9dce-2713091e6e2a",
+    "state": "state_14",
+    "reason": "Slide 5's title remains green and its subtitle remains white instead of yellow."
+   },
+   {
+    "bid": "f44d89885a83",
+    "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+    "state": "state_08",
+    "reason": "The inserted seven-column, five-row table contains repeated Column 1 through Column 7 text instead of being empty."
+   },
+   {
+    "bid": "0b3b4898d2e2",
+    "task": "66399b0d-8fda-4618-95c4-bfc6191617e9",
+    "state": "state_12",
+    "reason": "The end state adds a blank page without a visible new 7-column, 5-row table, so the requested insertion cannot be verified."
+   },
+   {
+    "bid": "e41f54361acc",
+    "task": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+    "state": "state_11",
+    "reason": "Yellow highlighting remains and has been expanded across the document instead of being removed."
+   },
+   {
+    "bid": "0115623e881a",
+    "task": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+    "state": "state_15",
+    "reason": "The original ODT still contains yellow highlights, while an unrequested DOCX copy changes the formatting and pagination."
+   },
+   {
+    "bid": "056ea2af680f",
+    "task": "6a33f9b9-0a56-4844-9c3f-96ec3ffb3ba2",
+    "state": "state_21",
+    "reason": "Highlights are removed, but the end state also removes the original bold formatting from the Study Team labels and introductory emphasis."
+   },
+   {
+    "bid": "4b462954d9bd",
+    "task": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+    "state": "state_02",
+    "reason": "The pictures on slides 3, 4, and 6 appear unchanged, making the requested height changes unlikely although exact dimensions are not visible."
+   },
+   {
+    "bid": "2998dc6da38e",
+    "task": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+    "state": "state_04",
+    "reason": "The pictures appear flattened to a common height rather than the distinct 20, 30, and 25 cm heights requested."
+   },
+   {
+    "bid": "320ea4931b8c",
+    "task": "7ae48c60-f143-4119-b659-15b8f485eb9a",
+    "state": "state_06",
+    "reason": "The pictures are resized horizontally rather than vertically, leaving their heights unchanged instead of applying the requested heights on slides 3, 4, and 6."
+   },
+   {
+    "bid": "eb5586a1be48",
+    "task": "88fe4b2d-3040-4c70-9a70-546a47764b48",
+    "state": "state_07",
+    "reason": "The first paragraph is split at commas as well as sentence endings, inserting unrequested empty lines within several sentences."
+   },
+   {
+    "bid": "59bee28ee174",
+    "task": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+    "state": "state_11",
+    "reason": "The text was arranged into a table, but the original underlining identifying graphemes in the example words was removed."
+   },
+   {
+    "bid": "370b5de8c8de",
+    "task": "936321ce-5236-426a-9a20-e0e3c5dc536f",
+    "state": "state_12",
+    "reason": "The comma-separated entries remain together rather than being split into separate table columns."
+   },
+   {
+    "bid": "c8032c889f69",
+    "task": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+    "state": "state_18",
+    "reason": "The destination titles retain redundant whitespace and mixed capitalization, while the source column was also changed unnecessarily."
+   },
+   {
+    "bid": "3ecf7a3c1078",
+    "task": "a9f325aa-8c05-4e4f-8341-9e4358565f4f",
+    "state": "state_20",
+    "reason": "The original XLSX still has an empty Clean Movie Titles column, while an unrequested ODS file was added with altered formatting."
+   },
+   {
+    "bid": "0237af1854bd",
+    "task": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+    "state": "state_05",
+    "reason": "Most of the original text was deleted and uppercase text remains, so this is not a faithful lowercase conversion."
+   },
+   {
+    "bid": "986268a5037c",
+    "task": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+    "state": "state_18",
+    "reason": "Uppercase text is lowercased, but the title and ordinary body text also have unrequested font and size changes."
+   },
+   {
+    "bid": "85ce9d4edb47",
+    "task": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+    "state": "state_19",
+    "reason": "The conversion deletes numbers such as 9505, 2-3, and 10 and removes punctuation rather than merely changing letter case."
+   },
+   {
+    "bid": "007b5d24bf5f",
+    "task": "d53ff5ee-3b1a-431e-b2be-30ed2673079b",
+    "state": "state_21",
+    "reason": "Much of the document's original text was deleted instead of being preserved and converted to lowercase."
+   },
+   {
+    "bid": "46596e052775",
+    "task": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+    "state": "state_09",
+    "reason": "The end document still has seven nonblank pages, with no requested blank page inserted."
+   },
+   {
+    "bid": "336e99b593a0",
+    "task": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+    "state": "state_12",
+    "reason": "The inserted page contains the unrequested text 'This page intentionally left blank' instead of being blank."
+   },
+   {
+    "bid": "e52a78b96c6a",
+    "task": "ecc2413d-8a48-416e-a3a2-d30106ca36cb",
+    "state": "state_21",
+    "reason": "Although a blank page was added, the final Exhibit C page's heading, instruction, and bullet have disappeared."
+   },
+   {
+    "bid": "e0a5922ceb7a",
+    "task": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+    "state": "state_05",
+    "reason": "The slide's paragraph indentation changed, but no visible bullet point was added to its content."
+   },
+   {
+    "bid": "d3a6bb5d67ac",
+    "task": "f23acfd2-c485-4b7c-a1e7-d4303ddfe864",
+    "state": "state_12",
+    "reason": "The original PPTX remains unchanged, while the bullet was saved only to an unrequested new ODP file."
+   }
+  ]
+ },
+ "undecided_total": 0,
+ "verdict_counts": {
+  "accept": 32,
+  "reject": 46,
+  "undecided": 0
+ }
+}

@@ -1,0 +1,22 @@
+{
+  "336e99b593a0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The inserted page contains the unrequested text 'This page intentionally left blank' instead of being blank."
+  },
+  "370b5de8c8de": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-separated entries remain together rather than being split into separate table columns."
+  },
+  "38c24aff521e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible yellow highlights have been removed while the document's text and formatting are preserved."
+  },
+  "3ecf7a3c1078": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original XLSX still has an empty Clean Movie Titles column, while an unrequested ODS file was added with altered formatting."
+  }
+}

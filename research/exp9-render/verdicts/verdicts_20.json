@@ -1,0 +1,12 @@
+{
+  "b5140553d423": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All missing-data rows are out of view and the remaining entries are preserved, although the images cannot distinguish hiding from deletion or filtering."
+  },
+  "b8dc9f4f7363": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The added revenue column and product totals appear correct with existing content preserved, although the images cannot confirm a real Pivot Table or the Sheet2 name."
+  }
+}

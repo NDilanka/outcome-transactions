@@ -1,0 +1,22 @@
+{
+  "e0a5922ceb7a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide's paragraph indentation changed, but no visible bullet point was added to its content."
+  },
+  "e41f54361acc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Yellow highlighting remains and has been expanded across the document instead of being removed."
+  },
+  "e52a78b96c6a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although a blank page was added, the final Exhibit C page's heading, instruction, and bullet have disappeared."
+  },
+  "e8a101a04721": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Revenue header and values appear copied onto a second sheet with the original content preserved, although the images do not reveal its sheet name."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "59bee28ee174": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The text was arranged into a table, but the original underlining identifying graphemes in the example words was removed."
+  },
+  "5b234d5c922b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A bullet was added to the slide's body text while preserving its content and the title."
+  },
+  "5c03cce7d3a4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both summary cells display #NAME? errors instead of the requested revenue and expense sums."
+  },
+  "5c08ebd9a1f0": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible yellow highlighting was removed from both pages without changing the document's text or other formatting."
+  }
+}

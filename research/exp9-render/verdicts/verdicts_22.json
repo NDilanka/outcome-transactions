@@ -1,0 +1,7 @@
+{
+  "c83b96d6f281": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All slide images are unchanged, consistent with adding only a first-slide dissolve transition, but static images cannot verify the transition."
+  }
+}

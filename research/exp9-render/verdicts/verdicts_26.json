@@ -1,0 +1,7 @@
+{
+  "eb5586a1be48": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph is split at commas as well as sentence endings, inserting unrequested empty lines within several sentences."
+  }
+}
