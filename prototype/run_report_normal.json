@@ -90,12 +90,12 @@
   "f2_direct": {
    "method": "direct",
    "rc": 0,
-   "seconds": 1.2,
-   "finished_at": 2.88,
+   "seconds": 1.6,
+   "finished_at": 5.02,
    "divergence_bytes": 78170,
    "held_effects": [
     {
-     "t": 1793972844.7628381,
+     "t": 1794039354.3994846,
      "method": "POST",
      "url": "http://reports.example.com/notify",
      "body": "Q3 budget updated (direct)"
@@ -116,12 +116,12 @@
   "f4_wrong": {
    "method": "wrong",
    "rc": 0,
-   "seconds": 1.2,
-   "finished_at": 2.88,
+   "seconds": 1.6,
+   "finished_at": 5.02,
    "divergence_bytes": 78162,
    "held_effects": [
     {
-     "t": 1793972844.7633352,
+     "t": 1794039354.4026268,
      "method": "POST",
      "url": "http://reports.example.com/notify",
      "body": "Q3 budget updated (wrong)"
@@ -145,12 +145,12 @@
   "f3_roundtrip": {
    "method": "roundtrip",
    "rc": 0,
-   "seconds": 1.8,
-   "finished_at": 3.48,
+   "seconds": 2.6,
+   "finished_at": 6.0,
    "divergence_bytes": 74225,
    "held_effects": [
     {
-     "t": 1793972845.3800983,
+     "t": 1794039355.3886516,
      "method": "POST",
      "url": "http://reports.example.com/notify",
      "body": "Q3 budget updated (roundtrip)"
@@ -177,12 +177,12 @@
   "f1_gui": {
    "method": "gui",
    "rc": 0,
-   "seconds": 11.6,
-   "finished_at": 13.2,
-   "divergence_bytes": 83122,
+   "seconds": 11.8,
+   "finished_at": 15.23,
+   "divergence_bytes": 83124,
    "held_effects": [
     {
-     "t": 1793972855.071282,
+     "t": 1794039364.6089375,
      "method": "POST",
      "url": "http://reports.example.com/notify",
      "body": "Q3 budget updated (gui)"
@@ -205,8 +205,8 @@
   "f0_null": {
    "method": "gui",
    "rc": 0,
-   "seconds": 11.7,
-   "finished_at": 13.3,
+   "seconds": 11.8,
+   "finished_at": 15.23,
    "divergence_bytes": 17847,
    "held_effects": [],
    "stderr": ""
@@ -216,15 +216,21 @@
   ]
  },
  "winner": "f2_direct",
- "agreement": "verified",
- "search_seconds": 11.7,
- "total_seconds": 13.4,
+ "level": "verified",
+ "committed": true,
+ "outcome": "committed",
+ "released": [
+  "Q3 budget updated (direct)"
+ ],
+ "rolled_back": false,
+ "search_seconds": 11.8,
+ "total_seconds": 15.4,
  "real_notes_preserved": true,
  "real_user_cell_preserved": null,
  "replays": 0,
  "log": [
   {
-   "t": 0.36,
+   "t": 0.73,
    "msg": "workspace ready",
    "files": [
     "budget.ods",
@@ -233,12 +239,12 @@
    ]
   },
   {
-   "t": 0.37,
+   "t": 0.74,
    "msg": "spec frozen",
    "spec_hash": "ae1161102e6a"
   },
   {
-   "t": 1.63,
+   "t": 3.43,
    "msg": "spec mutation tests",
    "results": {
     "start_state": [
@@ -268,70 +274,70 @@
    }
   },
   {
-   "t": 2.88,
+   "t": 5.02,
    "msg": "fork finished",
    "fork": "f2_direct",
    "method": "direct",
-   "seconds": 1.2,
+   "seconds": 1.6,
    "divergence_bytes": 78170,
    "held_effects": 1
   },
   {
-   "t": 2.88,
+   "t": 5.02,
    "msg": "fork finished",
    "fork": "f4_wrong",
    "method": "wrong",
-   "seconds": 1.2,
+   "seconds": 1.6,
    "divergence_bytes": 78162,
    "held_effects": 1
   },
   {
-   "t": 3.48,
+   "t": 6.0,
    "msg": "fork finished",
    "fork": "f3_roundtrip",
    "method": "roundtrip",
-   "seconds": 1.8,
+   "seconds": 2.6,
    "divergence_bytes": 74225,
    "held_effects": 1
   },
   {
-   "t": 4.63,
+   "t": 6.44,
    "msg": "user edited real notes.txt during search"
   },
   {
-   "t": 13.2,
-   "msg": "fork finished",
-   "fork": "f1_gui",
-   "method": "gui",
-   "seconds": 11.6,
-   "divergence_bytes": 83122,
-   "held_effects": 1
-  },
-  {
-   "t": 13.3,
+   "t": 15.23,
    "msg": "fork finished",
    "fork": "f0_null",
    "method": "gui",
-   "seconds": 11.7,
+   "seconds": 11.8,
    "divergence_bytes": 17847,
    "held_effects": 0
   },
   {
-   "t": 13.3,
+   "t": 15.23,
+   "msg": "fork finished",
+   "fork": "f1_gui",
+   "method": "gui",
+   "seconds": 11.8,
+   "divergence_bytes": 83124,
+   "held_effects": 1
+  },
+  {
+   "t": 15.24,
    "msg": "null control fork",
    "noise": [
     ".~lock.budget.ods#"
    ]
   },
   {
-   "t": 13.33,
+   "t": 15.27,
    "msg": "verified",
    "fork": "f2_direct",
    "passed": true,
    "reasons": []
   },
   {
-   "t": 13.35,
+   "t": 15.3,
    "msg": "verified",
    "fork": "f4_wrong",
    "passed": false,
@@ -341,7 +347,7 @@
    ]
   },
   {
-   "t": 13.37,
+   "t": 15.33,
    "msg": "verified",
    "fork": "f3_roundtrip",
    "passed": false,
@@ -352,14 +358,14 @@
    ]
   },
   {
-   "t": 13.39,
+   "t": 15.36,
    "msg": "verified",
    "fork": "f1_gui",
    "passed": true,
    "reasons": []
   },
   {
-   "t": 13.39,
+   "t": 15.36,
    "msg": "agreement",
    "passing": [
     "f2_direct",
@@ -368,7 +374,7 @@
    "level": "verified"
   },
   {
-   "t": 13.39,
+   "t": 15.36,
    "msg": "merge check",
    "winner": "f2_direct",
    "conflicts": [],
@@ -377,8 +383,8 @@
    ]
   },
   {
-   "t": 13.41,
-   "msg": "committed",
+   "t": 15.38,
+   "msg": "transplanted",
    "winner": "f2_direct",
    "post_commit_verified": true,
    "reasons": [],
@@ -388,12 +394,14 @@
    ]
   },
   {
-   "t": 13.42,
+   "t": 15.39,
    "msg": "effects released",
    "released": [
     "Q3 budget updated (direct)"
    ],
-   "discarded": 3
+   "discarded": 3,
+   "rolled_back": false
   }
- ]
+ ],
+ "mismatches": {}
 }
