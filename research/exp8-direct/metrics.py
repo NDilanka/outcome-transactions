@@ -25,6 +25,10 @@ EXEC = '/home/factory-user/exp8/exec'
 MAP = '/home/factory-user/exp8/private/map.json'
 JUDGE = '/home/factory-user/exp8/judge/judge_by_code.tsv'
 CONF = {'low': 1, 'medium': 2, 'high': 3}
+# Auto-save family (2cd43775). The end-state profiles of 083c86e1, 81a65c80 and a9e34228 do not set
+# UserAutoSaveEnabled to true (76604199 does). The strict reading counts those three as wrong. This is the PRIMARY
+# reading (orchestrator ruling). GT v3 as adjudicated (all four C) is the sensitivity reading: load_attempts({}).
+AUTOSAVE_STRICT_W = {'083c86e1': 'W', '81a65c80': 'W', 'a9e34228': 'W'}
 # Judge phase, from commit times on origin: packets 307ced3 at 10:53:04 UTC, verdicts dbc95e0 at 11:14:04 UTC.
 # 21 min for 84 packets (six batches of 14, two batches rerun). The per-packet judge time was not measured.
 # If the packets were judged one after another, that is 15 s each (JUDGE_EST_S). If the six batches ran in
@@ -43,8 +47,10 @@ def load_gt():
     return out
 
 
-def load_attempts():
+def load_attempts(gt_overrides=AUTOSAVE_STRICT_W):
     gt = load_gt()
+    for c, v in gt_overrides.items():
+        gt[c] = (v, gt[c][1])
     judge = {r['code']: (r['verdict'], CONF[r['confidence']]) for r in
              csv.DictReader(open(JUDGE), delimiter='\t')}
     rows = []
@@ -253,9 +259,11 @@ def crosstab(rows):
 
 
 if __name__ == '__main__':
-    rows = load_attempts()
+    rows = load_attempts()           # PRIMARY: strict auto-save reading (AUTOSAVE_STRICT_W)
+    lenient = load_attempts({})      # sensitivity: GT v3 as adjudicated
     primary = [a for a in rows if a['condition'] in ('none', 'ui')]
     wrong = [a for a in rows if a['gt'] == 'W']
+    print('GT reading: PRIMARY = strict auto-save (083c86e1, 81a65c80, a9e34228 wrong)')
     print('attempts', len(rows), 'primary', len(primary), 'ablation', len(rows) - len(primary))
     print('GT C/W (all 84):', sum(a['gt'] == 'C' for a in rows), sum(a['gt'] == 'W' for a in rows),
           'ambiguous Y:', sum(a['amb'] == 'Y' for a in rows))
@@ -292,12 +300,10 @@ if __name__ == '__main__':
     print('G7 per request (4 candidates, primary): CPU-s median', round(statistics.median(cpu_req), 2),
           'max', round(max(cpu_req), 2), '| peak RSS median', round(statistics.median(rss_req), 1),
           'max', round(max(rss_req), 1))
-    # Sensitivity: auto-save family (2cd43775). The end-state profiles of 083c86e1, 81a65c80 and a9e34228 do not set
-    # UserAutoSaveEnabled to true (76604199 does). Count those three as wrong to test the strict reading.
-    strict_wrong = {'083c86e1', '81a65c80', 'a9e34228'}
-    alt = [dict(a, gt='W') if a['code'] in strict_wrong else a for a in primary]
+    # Sensitivity: GT v3 as adjudicated, all four auto-save candidates C (not the PRIMARY reading).
+    lenient_primary = [a for a in lenient if a['condition'] in ('none', 'ui')]
     for arm in ('A', 'B', 'Bs'):
-        r = arm_report(alt, arm)
-        print('SENSITIVITY autosave strict', arm, 'correct', r['correct_zero_click'], 'wrong', r['wrong_commit'],
+        r = arm_report(lenient_primary, arm)
+        print('SENSITIVITY GT v3 as adjudicated', arm, 'correct', r['correct_zero_click'], 'wrong', r['wrong_commit'],
               'confirm', r['confirm'], r['wrong_commit_tasks'])
     print(per_request_table(primary))
