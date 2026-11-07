@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Outcome-transaction prototype: freeze a spec, mutation-test it, fork the workspace,
 search in parallel forks behind an effect firewall, verify, check agreement, merge-check, commit."""
-import os, sys, json, time, shutil, subprocess, threading, http.server, hashlib, urllib.request
+import os, sys, json, time, shutil, subprocess, threading, http.server, hashlib, traceback, urllib.request
 
 CODE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, CODE)
@@ -10,10 +10,12 @@ import readers as R, spec as SP
 H = "/root/otx"
 REAL, SNAP = f"{H}/real", f"{H}/snap"
 LOG = []
+TXN = {"committed": False}
 MODE = sys.argv[2] if len(sys.argv) > 2 else "normal"
 CONFLICT = MODE in ("conflict", "same_cell")
 CLEAR = MODE == "clear_cell"
-FAULT = MODE == "fault_postcommit"
+FAULT = MODE in ("fault_postcommit", "race_rollback")
+RACE = MODE in ("race_commit", "race_rollback")
 T0 = time.monotonic()
 def log(msg, **kw):
     e = dict(t=round(time.monotonic() - T0, 2), msg=msg, **kw); LOG.append(e); print(json.dumps(e), flush=True)
@@ -32,7 +34,9 @@ EXPECT = {
     "conflict": dict(committed=True, level="verified"),
     "same_cell": dict(outcome="true_conflict", committed=False),
     "clear_cell": dict(outcome="true_conflict", committed=False),
-    "fault_postcommit": dict(committed=False, released=[], rolled_back=True),
+    "fault_postcommit": dict(outcome="post_commit_failed", committed=False, released=[], rolled_back=True),
+    "race_commit": dict(outcome="aborted_user_edit", committed=False, released=[], needs_user=[], user_c3_kept=True),
+    "race_rollback": dict(outcome="post_commit_failed", committed=False, released=[], needs_user=["budget.ods"], user_c3_kept=True, rolled_back=False),
 }
 
 def write_report(rep):
@@ -43,20 +47,31 @@ def write_report(rep):
         print("expectation failed", json.dumps(rep["mismatches"]), flush=True); sys.exit(1)
 
 def abort(outcome, level, **kw):
-    write_report(dict(mode=MODE, outcome=outcome, committed=False, released=[], level=level, rolled_back=False, log=LOG, **kw))
+    write_report(dict(mode=MODE, outcome=outcome, committed=False, released=[], level=level, rolled_back=False, needs_user=[], log=LOG, **kw))
 
-def sync_file(f, src_root):
-    """Make REAL's copy of f match src_root's copy, or remove it if src_root has none."""
+def fsha(p):
+    return R.sha(p) if os.path.exists(p) else None
+
+def sync_file(f, src_root, expect, landed, mutate=None):
+    """Make REAL's copy of f match src_root's copy, or remove it if src_root has none. REAL is replaced only
+    while it still holds sha `expect` (None: absent); landed[f] records the sha now in REAL (None if removed).
+    The check and the replace are two steps: a user write in that window is overwritten. Returns False and
+    leaves REAL alone when the check fails."""
     src, dst = f"{src_root}/{f}", f"{REAL}/{f}"
-    if os.path.exists(src):
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        tmp = dst + ".otx"
-        try:
-            shutil.copy2(src, tmp); os.replace(tmp, dst)
-        finally:
-            if os.path.exists(tmp): os.remove(tmp)
-    elif os.path.exists(dst):
-        os.remove(dst)
+    tmp = dst + ".otx"
+    try:
+        if os.path.exists(src):
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copy2(src, tmp)
+            if mutate: mutate(tmp)
+        if fsha(dst) != expect: return False
+        sha = fsha(tmp) if os.path.exists(src) else None
+        if os.path.exists(src): os.replace(tmp, dst)
+        elif os.path.exists(dst): os.remove(dst)
+        landed[f] = sha
+        return True
+    finally:
+        if os.path.exists(tmp): os.remove(tmp)
 
 def pdf_of(ws):
     prof = f"file:///tmp/lo_mut_{hashlib.md5(ws.encode()).hexdigest()[:8]}"
@@ -183,15 +198,18 @@ def main():
     winner = passing[0]
 
     # 6. Merge check: did the user change anything inside the winner's footprint since the fork?
-    now = R.tree_hashes(REAL)
-    conflicts = [f for f in results[winner]["changed"] if now.get(f) != base_hashes.get(f)]
-    log("merge check", winner=winner, conflicts=conflicts,
-        user_changes_since_fork=[f for f in now if now.get(f) != base_hashes.get(f)])
+    # Each pass copies the real state first. That copy is the transplant baseline, so the check and the commit see the same state.
     v = f"{H}/views/{winner}"
     replays = 0
-    while conflicts:
+    while True:
+        pre = f"{H}/precommit"; shutil.rmtree(pre, ignore_errors=True); shutil.copytree(REAL, pre)
+        now = R.tree_hashes(pre)
+        conflicts = [f for f in results[winner]["changed"] if now.get(f) != base_hashes.get(f)]
+        log("merge check", winner=winner, conflicts=conflicts,
+            user_changes_since_fork=[f for f in now if now.get(f) != base_hashes.get(f)])
+        if not conflicts: break
         # Semantic merge test: the same file changed on both sides, but did the same cells?
-        user_cells = R.changed_cells(f"{SNAP}/budget.ods", f"{REAL}/budget.ods")
+        user_cells = R.changed_cells(f"{SNAP}/budget.ods", f"{pre}/budget.ods")
         win_cells = R.changed_cells(f"{SNAP}/budget.ods", f"{v}/budget.ods")
         overlap = sorted(user_cells & win_cells)
         log("semantic merge test", user_cells=sorted(user_cells), winner_cells=sorted(win_cells), overlap=overlap)
@@ -204,7 +222,7 @@ def main():
         # verify against the same frozen spec, and commit only if the real state did not move again.
         replays += 1
         run(f"umount {H}/views/*")
-        shutil.rmtree(SNAP); shutil.copytree(REAL, SNAP); base_hashes = R.tree_hashes(SNAP)
+        shutil.rmtree(SNAP); shutil.copytree(pre, SNAP); base_hashes = R.tree_hashes(SNAP)
         name = f"{winner}_replay{replays}"
         fork_and_run(name, 20 + replays, results[winner]["method"], results)
         v = view_of(name)
@@ -215,40 +233,60 @@ def main():
             log("replay failed the frozen spec; nothing committed")
             abort("replay_failed", level, forks=results); return
         winner = name
-        now = R.tree_hashes(REAL)
-        conflicts = [f for f in changed if now.get(f) != base_hashes.get(f)]
 
     # 7. Commit by result transplant, then re-verify on the real workspace.
-    pre = f"{H}/precommit"; shutil.copytree(REAL, pre)
+    if MODE == "race_commit":
+        R.ods_set_cell(f"{REAL}/budget.ods", "C3", 77); log("user edited real budget.ods C3 after the precommit copy")
     moved = results[winner]["changed"]
+    mutate = {"budget.ods": lambda p: R.ods_set_cell(p, "B2", 4999)} if FAULT else {}
+    landed, edited = {}, None
     try:
-        for f in moved: sync_file(f, v)
-        if FAULT: R.ods_set_cell(f"{REAL}/budget.ods", "B2", 4999)
-        ok, reasons, changed = SP.evaluate(SPEC, pre, REAL)
+        for f in moved:
+            if not sync_file(f, v, fsha(f"{pre}/{f}"), landed, mutate.get(f)):
+                edited = f; break
+        ok, reasons, changed = (False, [f"user edited {edited} during the transplant"], []) if edited else SP.evaluate(SPEC, pre, REAL)
     except Exception as ex:
         ok, reasons, changed = False, [f"{type(ex).__name__}: {ex}"], []
+    committed = TXN["committed"] = ok
     log("transplanted", winner=winner, post_commit_verified=ok, reasons=reasons, changed=changed)
 
-    # 8. Release the winner's held effects only if the re-verify passed; otherwise restore the moved files and discard all.
-    committed, rolled_back = ok, False
+    # 8. Release the winner's held effects only if the re-verify passed; otherwise put back the files this commit landed.
+    outcome = "committed" if committed else ("aborted_user_edit" if edited else "post_commit_failed")
+    needs_user, rolled_back = [], False
     if not committed:
-        for f in moved: sync_file(f, pre)
-        now, before = R.tree_hashes(REAL), R.tree_hashes(pre)
-        rolled_back = all(now.get(f) == before.get(f) for f in moved)
+        if MODE == "race_rollback":
+            R.ods_set_cell(f"{REAL}/budget.ods", "C3", 77); log("user edited real budget.ods C3 before the rollback")
+        for f in landed:
+            try:
+                restored = sync_file(f, pre, landed[f], {})
+            except Exception as ex:
+                restored = False; log("restore failed", file=f, error=f"{type(ex).__name__}: {ex}")
+            if not restored: needs_user.append(f)
+        rolled_back = not needs_user and all(fsha(f"{REAL}/{f}") == fsha(f"{pre}/{f}") for f in moved)
     effects = results[winner]["held_effects"] if committed else []
-    for e in effects:
-        urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:9900/release", data=e["body"].encode(), method="POST"))
+    try:
+        for e in effects:
+            urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:9900/release", data=e["body"].encode(), method="POST"))
+    except Exception as ex:
+        outcome = "committed_release_failed"; log("effect release failed", error=f"{type(ex).__name__}: {ex}")
     discarded = sum(len(r["held_effects"]) for r in results.values()) - len(effects)
     log("effects released", released=list(Sink.received), discarded=discarded, rolled_back=rolled_back)
 
     report = dict(spec=SPEC, spec_hash=spec_hash, mutation_tests=mt, forks=results, null_control=dict(control, noise=sorted(noise)), winner=winner, level=level,
-                  committed=committed, outcome="committed" if committed else "post_commit_failed", released=list(Sink.received), rolled_back=rolled_back,
-                  search_seconds=round(search_s, 1), total_seconds=round(time.monotonic() - T0, 1),
-                  real_notes_preserved="user typed this" in open(f"{REAL}/notes.txt").read(),
-                  real_user_cell_preserved=(R.ods_cells(f"{REAL}/budget.ods").get("C3", (None,))[0] in ("77", 77, "77.0")) if CONFLICT else None,
-                  replays=replays, log=LOG)
+                  committed=committed, outcome=outcome, released=list(Sink.received), rolled_back=rolled_back, needs_user=needs_user,
+                  search_seconds=round(search_s, 1), total_seconds=round(time.monotonic() - T0, 1), replays=replays, log=LOG)
+    try:
+        report.update(real_notes_preserved="user typed this" in open(f"{REAL}/notes.txt").read(),
+                      user_c3_kept=(R.ods_cells(f"{REAL}/budget.ods").get("C3", (None,))[0] in ("77", 77, "77.0")) if CONFLICT or RACE else None)
+    except Exception as ex:
+        log("report state unreadable", error=f"{type(ex).__name__}: {ex}")
     write_report(report)
     sink.shutdown()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as ex:
+        traceback.print_exc()
+        write_report(dict(mode=MODE, outcome="error", error=f"{type(ex).__name__}: {ex}", committed=TXN["committed"], released=list(Sink.received), rolled_back=False, needs_user=[], log=LOG))
+        sys.exit(1)

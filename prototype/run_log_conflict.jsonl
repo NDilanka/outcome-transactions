@@ -1,22 +1,23 @@
-{"t": 0.49, "msg": "workspace ready", "files": ["budget.ods", "notes.txt", "out/.keep"]}
-{"t": 0.49, "msg": "spec frozen", "spec_hash": "ae1161102e6a"}
-{"t": 2.0, "msg": "spec mutation tests", "results": {"start_state": [false, true], "wrong_value": [false, true], "no_pdf": [false, true], "collateral_cell": [false, true], "outside_footprint": [false, true], "positive_control": [true, true]}}
-{"t": 3.35, "msg": "fork finished", "fork": "f4_wrong", "method": "wrong", "seconds": 1.3, "divergence_bytes": 78162, "held_effects": 1}
-{"t": 3.35, "msg": "fork finished", "fork": "f2_direct", "method": "direct", "seconds": 1.3, "divergence_bytes": 78170, "held_effects": 1}
-{"t": 3.95, "msg": "fork finished", "fork": "f3_roundtrip", "method": "roundtrip", "seconds": 1.9, "divergence_bytes": 74225, "held_effects": 1}
-{"t": 5.01, "msg": "user edited real notes.txt during search"}
-{"t": 5.02, "msg": "user edited real budget.ods C3 during search (same file as the task)"}
-{"t": 13.57, "msg": "fork finished", "fork": "f1_gui", "method": "gui", "seconds": 11.6, "divergence_bytes": 83120, "held_effects": 1}
-{"t": 13.77, "msg": "fork finished", "fork": "f0_null", "method": "gui", "seconds": 11.8, "divergence_bytes": 17847, "held_effects": 0}
-{"t": 13.78, "msg": "null control fork", "noise": [".~lock.budget.ods#"]}
-{"t": 13.81, "msg": "verified", "fork": "f4_wrong", "passed": false, "reasons": ["must budget.ods:B2 == 5000, got 3", "preserve: budget.ods:B3 changed ('6', ()) -> ('5000', ())"]}
-{"t": 13.84, "msg": "verified", "fork": "f2_direct", "passed": true, "reasons": []}
-{"t": 13.87, "msg": "verified", "fork": "f3_roundtrip", "passed": false, "reasons": ["footprint violation: notes.txt changed", "preserve: budget.ods:A1 changed ('Item', (('text-properties:font-weight', 'bold'),)) -> ('Item', ())", "preserve: budget.ods:B1 changed ('Q1', (('text-properties:font-weight', 'bold'),)) -> ('Q1', ())"]}
-{"t": 13.9, "msg": "verified", "fork": "f1_gui", "passed": true, "reasons": []}
-{"t": 13.9, "msg": "agreement", "passing": ["f2_direct", "f1_gui"], "level": "verified"}
-{"t": 13.9, "msg": "merge check", "winner": "f2_direct", "conflicts": ["budget.ods"], "user_changes_since_fork": ["notes.txt", "budget.ods"]}
-{"t": 13.9, "msg": "semantic merge test", "user_cells": ["C3"], "winner_cells": ["B2"], "overlap": []}
-{"t": 15.05, "msg": "fork finished", "fork": "f2_direct_replay1", "method": "direct", "seconds": 1.1, "divergence_bytes": 78169, "held_effects": 1}
-{"t": 15.07, "msg": "replay verified", "fork": "f2_direct_replay1", "passed": true, "reasons": []}
-{"t": 15.1, "msg": "transplanted", "winner": "f2_direct_replay1", "post_commit_verified": true, "reasons": [], "changed": ["budget.ods", "out/q3.pdf"]}
-{"t": 15.11, "msg": "effects released", "released": ["Q3 budget updated (direct)"], "discarded": 4, "rolled_back": false}
+{"t": 0.63, "msg": "workspace ready", "files": ["budget.ods", "notes.txt", "out/.keep"]}
+{"t": 0.64, "msg": "spec frozen", "spec_hash": "ae1161102e6a"}
+{"t": 3.56, "msg": "spec mutation tests", "results": {"start_state": [false, true], "wrong_value": [false, true], "no_pdf": [false, true], "collateral_cell": [false, true], "outside_footprint": [false, true], "positive_control": [true, true]}}
+{"t": 5.13, "msg": "fork finished", "fork": "f4_wrong", "method": "wrong", "seconds": 1.6, "divergence_bytes": 78162, "held_effects": 1}
+{"t": 5.13, "msg": "fork finished", "fork": "f2_direct", "method": "direct", "seconds": 1.6, "divergence_bytes": 78170, "held_effects": 1}
+{"t": 6.14, "msg": "fork finished", "fork": "f3_roundtrip", "method": "roundtrip", "seconds": 2.6, "divergence_bytes": 74225, "held_effects": 1}
+{"t": 6.57, "msg": "user edited real notes.txt during search"}
+{"t": 6.58, "msg": "user edited real budget.ods C3 during search (same file as the task)"}
+{"t": 16.72, "msg": "fork finished", "fork": "f0_null", "method": "gui", "seconds": 12.5, "divergence_bytes": 17847, "held_effects": 0}
+{"t": 23.39, "msg": "fork finished", "fork": "f1_gui", "method": "gui", "seconds": 18.5, "divergence_bytes": 83123, "held_effects": 1}
+{"t": 23.96, "msg": "null control fork", "noise": [".~lock.budget.ods#"]}
+{"t": 25.23, "msg": "verified", "fork": "f4_wrong", "passed": false, "reasons": ["must budget.ods:B2 == 5000, got 3", "preserve: budget.ods:B3 changed ('6', ()) -> ('5000', ())"]}
+{"t": 25.58, "msg": "verified", "fork": "f2_direct", "passed": true, "reasons": []}
+{"t": 25.75, "msg": "verified", "fork": "f3_roundtrip", "passed": false, "reasons": ["footprint violation: notes.txt changed", "preserve: budget.ods:A1 changed ('Item', (('text-properties:font-weight', 'bold'),)) -> ('Item', ())", "preserve: budget.ods:B1 changed ('Q1', (('text-properties:font-weight', 'bold'),)) -> ('Q1', ())"]}
+{"t": 26.14, "msg": "verified", "fork": "f1_gui", "passed": true, "reasons": []}
+{"t": 26.17, "msg": "agreement", "passing": ["f2_direct", "f1_gui"], "level": "verified"}
+{"t": 26.22, "msg": "merge check", "winner": "f2_direct", "conflicts": ["budget.ods"], "user_changes_since_fork": ["notes.txt", "budget.ods"]}
+{"t": 26.27, "msg": "semantic merge test", "user_cells": ["C3"], "winner_cells": ["B2"], "overlap": []}
+{"t": 50.41, "msg": "fork finished", "fork": "f2_direct_replay1", "method": "direct", "seconds": 22.9, "divergence_bytes": 78169, "held_effects": 1}
+{"t": 52.06, "msg": "replay verified", "fork": "f2_direct_replay1", "passed": true, "reasons": []}
+{"t": 52.13, "msg": "merge check", "winner": "f2_direct_replay1", "conflicts": [], "user_changes_since_fork": []}
+{"t": 52.33, "msg": "transplanted", "winner": "f2_direct_replay1", "post_commit_verified": true, "reasons": [], "changed": ["budget.ods", "out/q3.pdf"]}
+{"t": 53.35, "msg": "effects released", "released": ["Q3 budget updated (direct)"], "discarded": 4, "rolled_back": false}

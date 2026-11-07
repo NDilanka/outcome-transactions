@@ -5,9 +5,10 @@
  "released": [],
  "level": "verified",
  "rolled_back": false,
+ "needs_user": [],
  "log": [
   {
-   "t": 0.46,
+   "t": 0.9,
    "msg": "workspace ready",
    "files": [
     "budget.ods",
@@ -16,12 +17,12 @@
    ]
   },
   {
-   "t": 0.48,
+   "t": 0.91,
    "msg": "spec frozen",
    "spec_hash": "ae1161102e6a"
   },
   {
-   "t": 1.9,
+   "t": 3.65,
    "msg": "spec mutation tests",
    "results": {
     "start_state": [
@@ -51,74 +52,67 @@
    }
   },
   {
-   "t": 3.16,
-   "msg": "fork finished",
-   "fork": "f2_direct",
-   "method": "direct",
-   "seconds": 1.2,
-   "divergence_bytes": 78170,
-   "held_effects": 1
+   "t": 6.66,
+   "msg": "user edited real notes.txt during search"
   },
   {
-   "t": 3.16,
+   "t": 6.68,
+   "msg": "user cleared real budget.ods B2 during search (same file as the task)"
+  },
+  {
+   "t": 8.21,
    "msg": "fork finished",
    "fork": "f4_wrong",
    "method": "wrong",
-   "seconds": 1.2,
+   "seconds": 4.5,
    "divergence_bytes": 78162,
    "held_effects": 1
   },
   {
-   "t": 3.86,
+   "t": 8.34,
+   "msg": "fork finished",
+   "fork": "f2_direct",
+   "method": "direct",
+   "seconds": 4.5,
+   "divergence_bytes": 78170,
+   "held_effects": 1
+  },
+  {
+   "t": 10.79,
    "msg": "fork finished",
    "fork": "f3_roundtrip",
    "method": "roundtrip",
-   "seconds": 1.9,
+   "seconds": 7.1,
    "divergence_bytes": 74225,
    "held_effects": 1
   },
   {
-   "t": 4.91,
-   "msg": "user edited real notes.txt during search"
-  },
-  {
-   "t": 4.92,
-   "msg": "user cleared real budget.ods B2 during search (same file as the task)"
-  },
-  {
-   "t": 13.48,
+   "t": 18.51,
    "msg": "fork finished",
    "fork": "f1_gui",
    "method": "gui",
-   "seconds": 11.6,
-   "divergence_bytes": 83123,
+   "seconds": 14.8,
+   "divergence_bytes": 83122,
    "held_effects": 1
   },
   {
-   "t": 13.68,
+   "t": 18.88,
    "msg": "fork finished",
    "fork": "f0_null",
    "method": "gui",
-   "seconds": 11.8,
+   "seconds": 15.2,
    "divergence_bytes": 17847,
    "held_effects": 0
   },
   {
-   "t": 13.69,
+   "t": 18.94,
    "msg": "null control fork",
    "noise": [
     ".~lock.budget.ods#"
    ]
   },
   {
-   "t": 13.72,
-   "msg": "verified",
-   "fork": "f2_direct",
-   "passed": true,
-   "reasons": []
-  },
-  {
-   "t": 13.75,
+   "t": 19.19,
    "msg": "verified",
    "fork": "f4_wrong",
    "passed": false,
@@ -128,7 +122,14 @@
    ]
   },
   {
-   "t": 13.78,
+   "t": 19.42,
+   "msg": "verified",
+   "fork": "f2_direct",
+   "passed": true,
+   "reasons": []
+  },
+  {
+   "t": 19.57,
    "msg": "verified",
    "fork": "f3_roundtrip",
    "passed": false,
@@ -139,14 +140,14 @@
    ]
   },
   {
-   "t": 13.81,
+   "t": 19.96,
    "msg": "verified",
    "fork": "f1_gui",
    "passed": true,
    "reasons": []
   },
   {
-   "t": 13.81,
+   "t": 19.96,
    "msg": "agreement",
    "passing": [
     "f2_direct",
@@ -155,7 +156,7 @@
    "level": "verified"
   },
   {
-   "t": 13.81,
+   "t": 19.97,
    "msg": "merge check",
    "winner": "f2_direct",
    "conflicts": [
@@ -167,7 +168,7 @@
    ]
   },
   {
-   "t": 13.81,
+   "t": 19.98,
    "msg": "semantic merge test",
    "user_cells": [
     "B2"
@@ -180,7 +181,7 @@
    ]
   },
   {
-   "t": 13.82,
+   "t": 19.98,
    "msg": "true conflict: show the user both versions; nothing committed",
    "real_B2": null,
    "held_effects_released": 0
@@ -190,41 +191,15 @@
   "B2"
  ],
  "forks": {
-  "f2_direct": {
-   "method": "direct",
-   "rc": 0,
-   "seconds": 1.2,
-   "finished_at": 3.16,
-   "divergence_bytes": 78170,
-   "held_effects": [
-    {
-     "t": 1794039959.0401225,
-     "method": "POST",
-     "url": "http://reports.example.com/notify",
-     "body": "Q3 budget updated (direct)"
-    }
-   ],
-   "stderr": "",
-   "passed": true,
-   "reasons": [],
-   "changed": [
-    "budget.ods",
-    "out/q3.pdf"
-   ],
-   "outcome": {
-    "budget.ods:B2": "5000",
-    "other_cells_changed": 0
-   }
-  },
   "f4_wrong": {
    "method": "wrong",
    "rc": 0,
-   "seconds": 1.2,
-   "finished_at": 3.16,
+   "seconds": 4.5,
+   "finished_at": 8.21,
    "divergence_bytes": 78162,
    "held_effects": [
     {
-     "t": 1794039959.0417888,
+     "t": 1794050520.719004,
      "method": "POST",
      "url": "http://reports.example.com/notify",
      "body": "Q3 budget updated (wrong)"
@@ -245,15 +220,41 @@
     "other_cells_changed": 1
    }
   },
+  "f2_direct": {
+   "method": "direct",
+   "rc": 0,
+   "seconds": 4.5,
+   "finished_at": 8.34,
+   "divergence_bytes": 78170,
+   "held_effects": [
+    {
+     "t": 1794050520.8653944,
+     "method": "POST",
+     "url": "http://reports.example.com/notify",
+     "body": "Q3 budget updated (direct)"
+    }
+   ],
+   "stderr": "",
+   "passed": true,
+   "reasons": [],
+   "changed": [
+    "budget.ods",
+    "out/q3.pdf"
+   ],
+   "outcome": {
+    "budget.ods:B2": "5000",
+    "other_cells_changed": 0
+   }
+  },
   "f3_roundtrip": {
    "method": "roundtrip",
    "rc": 0,
-   "seconds": 1.9,
-   "finished_at": 3.86,
+   "seconds": 7.1,
+   "finished_at": 10.79,
    "divergence_bytes": 74225,
    "held_effects": [
     {
-     "t": 1794039959.7260003,
+     "t": 1794050523.7365854,
      "method": "POST",
      "url": "http://reports.example.com/notify",
      "body": "Q3 budget updated (roundtrip)"
@@ -280,12 +281,12 @@
   "f1_gui": {
    "method": "gui",
    "rc": 0,
-   "seconds": 11.6,
-   "finished_at": 13.48,
-   "divergence_bytes": 83123,
+   "seconds": 14.8,
+   "finished_at": 18.51,
+   "divergence_bytes": 83122,
    "held_effects": [
     {
-     "t": 1794039969.352962,
+     "t": 1794050531.336619,
      "method": "POST",
      "url": "http://reports.example.com/notify",
      "body": "Q3 budget updated (gui)"

@@ -1,0 +1,19 @@
+{"t": 0.46, "msg": "workspace ready", "files": ["budget.ods", "notes.txt", "out/.keep"]}
+{"t": 0.47, "msg": "spec frozen", "spec_hash": "ae1161102e6a"}
+{"t": 1.86, "msg": "spec mutation tests", "results": {"start_state": [false, true], "wrong_value": [false, true], "no_pdf": [false, true], "collateral_cell": [false, true], "outside_footprint": [false, true], "positive_control": [true, true]}}
+{"t": 3.11, "msg": "fork finished", "fork": "f2_direct", "method": "direct", "seconds": 1.2, "divergence_bytes": 78170, "held_effects": 1}
+{"t": 3.11, "msg": "fork finished", "fork": "f4_wrong", "method": "wrong", "seconds": 1.2, "divergence_bytes": 78162, "held_effects": 1}
+{"t": 3.7, "msg": "fork finished", "fork": "f3_roundtrip", "method": "roundtrip", "seconds": 1.8, "divergence_bytes": 74225, "held_effects": 1}
+{"t": 4.86, "msg": "user edited real notes.txt during search"}
+{"t": 15.87, "msg": "fork finished", "fork": "f0_null", "method": "gui", "seconds": 13.9, "divergence_bytes": 17847, "held_effects": 0}
+{"t": 16.56, "msg": "fork finished", "fork": "f1_gui", "method": "gui", "seconds": 14.7, "divergence_bytes": 83123, "held_effects": 1}
+{"t": 16.64, "msg": "null control fork", "noise": [".~lock.budget.ods#"]}
+{"t": 16.93, "msg": "verified", "fork": "f2_direct", "passed": true, "reasons": []}
+{"t": 17.0, "msg": "verified", "fork": "f4_wrong", "passed": false, "reasons": ["must budget.ods:B2 == 5000, got 3", "preserve: budget.ods:B3 changed ('6', ()) -> ('5000', ())"]}
+{"t": 17.09, "msg": "verified", "fork": "f3_roundtrip", "passed": false, "reasons": ["footprint violation: notes.txt changed", "preserve: budget.ods:A1 changed ('Item', (('text-properties:font-weight', 'bold'),)) -> ('Item', ())", "preserve: budget.ods:B1 changed ('Q1', (('text-properties:font-weight', 'bold'),)) -> ('Q1', ())"]}
+{"t": 17.18, "msg": "verified", "fork": "f1_gui", "passed": true, "reasons": []}
+{"t": 17.18, "msg": "agreement", "passing": ["f2_direct", "f1_gui"], "level": "verified"}
+{"t": 17.2, "msg": "merge check", "winner": "f2_direct", "conflicts": [], "user_changes_since_fork": ["notes.txt"]}
+{"t": 17.25, "msg": "transplanted", "winner": "f2_direct", "post_commit_verified": false, "reasons": ["must budget.ods:B2 == 5000, got 4999"], "changed": ["budget.ods", "out/q3.pdf"]}
+{"t": 17.26, "msg": "user edited real budget.ods C3 before the rollback"}
+{"t": 17.26, "msg": "effects released", "released": [], "discarded": 4, "rolled_back": false}
