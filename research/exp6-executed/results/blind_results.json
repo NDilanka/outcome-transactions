@@ -204,6 +204,37 @@
    "ecc2413d"
   ]
  },
+ "file_families": {
+  "states": 119,
+  "wrong": 86,
+  "correct": 33,
+  "wrong_exec": {
+   "UNDECIDED": 24,
+   "REJECT": 60,
+   "ACCEPT": 2
+  },
+  "correct_exec": {
+   "UNDECIDED": 12,
+   "ACCEPT": 15,
+   "REJECT": 6
+  },
+  "wrong_accept": 2,
+  "wrong_accept_pct": 2.33,
+  "wrong_accept_ub95_pct": 8.15,
+  "correct_reject_pct": 18.2,
+  "correct_undecided_pct": 36.4,
+  "correct_not_accepted_pct": 54.5,
+  "wrong_official": {
+   "FAIL": 75,
+   "PASS": 6,
+   "NOT_RUNNABLE": 5
+  },
+  "correct_official": {
+   "FAIL": 11,
+   "PASS": 20,
+   "NOT_RUNNABLE": 2
+  }
+ },
  "families": [
   [
    "gimp",

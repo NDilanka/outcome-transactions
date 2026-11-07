@@ -97,6 +97,10 @@ def main():
     res['ablation'] = {'gate_pass': summarize(gp), 'gate_fail': summarize(gf),
                        'gate_pass_tasks_in_blind_set': sorted({v['task8'] for v in gp})}
 
+    # The executor has readers only for the LibreOffice families. Elsewhere it cannot accept, so the all-family rate is diluted.
+    file_fams = {'libreoffice_calc', 'libreoffice_impress', 'libreoffice_writer'}
+    res['file_families'] = summarize([v for v in adjv if v['family'] in file_fams])
+
     fam_rows = []
     for f in sorted({r['family'] for r in rows}):
         sub = [v for v in adjv if v['family'] == f]
@@ -146,6 +150,10 @@ def write_md(res):
              f"{B['wrong_accept_ub95_pct']}%.")
     L.append(f"- Wrong accepts, if the a9f325aa formula state counts as wrong: {pct(S['wrong_accept'], S['wrong'])}; "
              f"upper bound {S['wrong_accept_ub95_pct']}%.")
+    F = res['file_families']
+    L.append(f"- Wrong accepts in the three LibreOffice families only (the executor has readers there; other families are "
+             f"UNDECIDED or NOT_RUNNABLE by construction): {pct(F['wrong_accept'], F['wrong'])}; upper bound "
+             f"{F['wrong_accept_ub95_pct']}%.")
     L.append(f"- Correct states rejected by the executor, after corrections: {pct(B['correct_exec'].get('REJECT', 0), B['correct'])}. "
              f"Of these, 2 come from an executor bug, 1 from a spec contradiction, 2 from a renderer question, and 1 from an "
              f"ambiguous reading.")
