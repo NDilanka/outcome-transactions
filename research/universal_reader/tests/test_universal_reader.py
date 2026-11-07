@@ -643,5 +643,27 @@ class XcfTests(unittest.TestCase):
         self.assertEqual(res['predicates'][0]['status'], 'FAIL')
 
 
+class GimpTextLayerTests(unittest.TestCase):
+    """A text layer's text is the (text "...") field of its parasite, not the whole settings block."""
+
+    def test_text_field_is_decoded_and_the_settings_are_dropped(self):
+        blob = b'(text "Thanks World")\n(font "Sans-serif")\n(font-size 62)\n(hinting yes)\n\x00\x00'
+        self.assertEqual(readers_image._gimp_text_string(blob), 'Thanks World')
+
+    def test_scheme_escapes_inside_the_text_are_decoded(self):
+        blob = b'(text "say \\"hi\\"\\nline two")\n(font "x")'
+        self.assertEqual(readers_image._gimp_text_string(blob), 'say "hi"\nline two')
+
+    def test_no_text_field_gives_none(self):
+        self.assertIsNone(readers_image._gimp_text_string(b'(font "Sans-serif")\n(font-size 12)'))
+
+    def test_snapshot_text_layer_reads_its_text(self):
+        matches = glob.glob(os.path.join(SNAP, '*', 'home', 'user', 'Desktop', 'orange_background.xcf'))
+        if not matches:
+            self.skipTest('snapshot not fetched')
+        layers = readers_image.read_xcf(matches[0], None)['layers']
+        self.assertIn('Thanks World', [layer['text'] for layer in layers.values()])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -54,7 +54,7 @@ snapshot tree, as in specexec.
 | `image.file(p)` / `image(p)` | raster or XCF node at `p` | `.format`, `.width`, `.height`, `.sha256` (of decoded pixels) |
 | `gimp.live_document(p)` / `gimp.document(p)` | the **saved** file at `p` (XCF or raster) | Proxy: the live document is not visible. Results are counted as proxy evidence |
 | `.size`, `.base_type`, `.colormap` | XCF/raster node | `colormap` is UNSUPPORTED on a non-indexed image |
-| `.layer(name)`, `.layers.names`, `.layer(n).offsets / .size / .text / .pixels` | XCF `layers` | Pixels from the XCF tiles |
+| `.layer(name)`, `.layers.names`, `.layer(n).offsets / .size / .text / .pixels` | XCF `layers` | `.text` is the `(text "...")` field of the `gimp-text-layer` parasite (not its font or colour settings). `.pixels` is UNSUPPORTED until the tile decoder is validated against GIMP output (`TILE_DECODE_VALIDATED`) |
 | `.composite.pixels` | composited XCF (normal blend over white) | |
 | `gimp.ui`, `gimp.preferences` | no reader | Live GIMP state |
 | `video.file(p).stream(1).frame_at(t)` | no reader | Only container metadata (ffprobe) is read; no frames |

@@ -12,6 +12,7 @@ field after the base type; earlier versions use 32-bit pointers and no precision
 """
 import functools
 import hashlib
+import re
 import struct
 
 import numpy as np
@@ -190,9 +191,25 @@ def _read_layer(data, offset, compression):
         pars = _parasites(props[PROP_PARASITES])
         layer['parasites'] = {k: len(v) for k, v in pars.items()}
         if 'gimp-text-layer' in pars:
-            layer['text'] = pars['gimp-text-layer'].decode('utf-8', 'replace')
+            layer['text'] = _gimp_text_string(pars['gimp-text-layer'])
     layer['_hier'] = hier_off
     return layer
+
+
+_GIMP_TEXT_FIELD = re.compile(r'\(text "((?:[^"\\]|\\.)*)"\)')
+_SCHEME_ESCAPES = {'n': '\n', 't': '\t', 'r': '\r'}
+
+
+def _gimp_text_string(blob):
+    """The text of a GIMP text layer: the (text "...") field of its gimp-text-layer parasite.
+
+    The parasite also holds font, size, colour and box settings, which are not the text. Scheme escapes in the
+    string are decoded. None when the field is absent.
+    """
+    m = _GIMP_TEXT_FIELD.search(blob.decode('utf-8', 'replace'))
+    if m is None:
+        return None
+    return re.sub(r'\\(.)', lambda e: _SCHEME_ESCAPES.get(e.group(1), e.group(1)), m.group(1))
 
 
 def _rle_plane(data, pos, n):
