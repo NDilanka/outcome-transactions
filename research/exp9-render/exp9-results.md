@@ -11,6 +11,8 @@ Both gates pass as written, so under section 5 of the prereg the render represen
 - Group A: the render judge rejected 7 of the 8 corrected wrong accepts. Sol accepted all 8 in Exp 7. The one accept is a cursor state (66399b0d state_02), which is reported separately.
 - Group C: the render judge rejected 34 of 40 wrong states (85.0%). Sol rejected 35 of the same 40 (87.5%). On this sample the render judge did not do better than Sol.
 
+The caveats in section 9 apply to these results. Section 5a gives the joint table with Sol.
+
 ## 2. Gates
 
 | Gate | Rule (prereg) | Result | Outcome |
@@ -40,9 +42,9 @@ Adjudicated properties are from prereg section 4. Reasons are the judge's text, 
 
 Notes on the reasons:
 - state_19 and state_20: the reason names the adjudicated property.
-- state_22: the verdict matches the adjudicated property. The render shows the light blue slide 5 shapes filled solid black in the end state. The reason calls the change a background change to dark blue, so it misnames the object and the colour. G1 counts verdicts, so this reject counts.
+- state_22: the verdict matches the adjudicated property. The render shows the light blue slide 5 shapes filled solid black in the end state. The reason calls the change a background change to dark blue, so it misnames the object and the color. G1 counts verdicts, so this reject counts.
 - state_17: the reason names the missing table, not the merged row. This fits Amendment 2, which records that no render can show this error.
-- Cursor states: no reason cites table placement at the end of the document, so none is a placement reading (prereg section 5). The reasons describe a blank page or no visible table. None names the cursor property directly.
+- Cursor states: no reason cites table placement at the end of the document, so none is a placement reading (prereg section 5). The reasons describe a blank page or no visible table. None names the cursor property directly. Caveat 2 in section 9 has the render check.
 
 ## 4. Group B and D: cost
 
@@ -64,6 +66,8 @@ The five false rejects, all on states whose corrected label is CORRECT:
 | d53ff5ee state_01 | D | Medium | "Uppercase letters remain in the title, body paragraphs, and table, so the requested lowercase conversion is incomplete." |
 | d53ff5ee state_17 | D | High | "The main uppercase paragraph is lowercased, but the uppercase course code CHIN9505 remains unchanged." |
 
+Every one of these five is also a Sol false reject (section 5a).
+
 The labels were not re-adjudicated in this scoring. The two d53ff5ee reasons name uppercase text left in place, so those labels are the first to check if a label error is suspected.
 
 ## 5. Group C: 40 corrected wrong states outside group A
@@ -80,6 +84,33 @@ The labels were not re-adjudicated in this scoring. The two d53ff5ee reasons nam
 
 The full reject list with reasons is in `exp9-score.json`.
 
+## 5a. Joint table: render key and Sol on the same states
+
+Sol's column is its Exp 7 primary verdict on the same state. Group A is defined as the corrected wrong accepts of the combined policy, which includes Sol. So every group A state has a Sol accept. Those rows are selected on Sol's miss.
+
+Wrong states (corrected WRONG):
+
+| Set | Both reject | Render only | Sol only | Both miss | Total |
+|---|---|---|---|---|---|
+| Group C (random sample) | 33 | 1 | 2 | 4 | 40 |
+| Groups A and C | 33 | 8 | 2 | 5 | 48 |
+
+- Totals: render rejects 34 of C and 41 of A plus C. Sol rejects 35 of C and 35 of A plus C.
+- Group C, render only: 0326d92d state_04.
+- Group C, Sol only: 21760ecb state_06, 51719eea state_03.
+- Group C, both miss: 550ce7e7 state_02, 550ce7e7 state_10, 6054afcb state_05, f23acfd2 state_02.
+- Group A, render only: 57667013 state_19, state_20, state_22; 66399b0d state_01, state_03, state_04, state_17.
+- Group A, both miss: 66399b0d state_02.
+
+Correct states (corrected CORRECT, B plus D, 30 states):
+
+| | Sol reject | Sol accept |
+|---|---|---|
+| Render reject | 5 | 0 |
+| Render accept | 4 | 21 |
+
+Every render false reject is also a Sol false reject. Sol has 4 false rejects that render accepts.
+
 ## 6. Renderer and run facts
 
 - 78 states: group A 8, B 5, C 40, D 25. 723 page PNGs, one per page, at 150 dpi.
@@ -91,6 +122,7 @@ The full reject list with reasons is in `exp9-score.json`.
 - 29 batches. Verdict files: 78 entries, one per id. Totals: 32 accept, 46 reject. Confidence: 51 high, 5 medium, 22 low.
 - Protocol deviation (reported by the orchestrator): batches 23, 24, 25, 28 and 29 ran at once at the tail, not 4 at a time. The prompts were unchanged. No batch failed or was rerun.
 - Per-batch judge timing was not measured.
+- Prompt check, done after the run. Prereg section 3 asks for the comparison of `sol_prompt_exp7.txt` with the orchestrator's runner copy before batch 1. It was not done before batch 1. It was done after the run. The sha256 of `sol_prompt_exp7.txt` is 7b230f87ab17b6c0f68271759178fc18e7ac4c54165bb9158272f8852256e5f8. It equals the runner copy recovered from the orchestrator's session transcript, character for character, once the three paths are replaced by placeholders. The render prompt (242c0e16) was checked before batch 1, and every batch used it. The Exp 7 template was not used in Exp 9, so the late check has no effect on any verdict.
 
 ## 7. Post hoc changes and exposure
 
@@ -115,12 +147,25 @@ Salt, revealed after scoring:
 
 ## 9. Caveats
 
-- G1 rests on 3 renderable states (1 as registered). Under the prereg it is a mechanism check, not a rate.
+1. G1 rests on 3 states (1 as registered), from one task (57667013) and one property family (slide text color and fill). It shows that the mechanism works on these states. It does not show how often the mechanism works. The state_22 reason misnames the object and the color. It describes a change from light blue to dark blue background. The render shows the blue slide 5 shapes filled solid black.
+
+2. The cursor family (66399b0d, five wrong states). The render judge rejected 4 of 5 (01, 03, 04 and 17) and accepted 02. None of the four reasons cites placement. All of them say that no table is visible. Render check, one state each:
+   - state_02 (wrong, accepted): its new table has grid borders, so page 3 shows a grid. The grid has 3 rows on that page. The table has 5 rows in the file, and I did not find why 2 rows are not drawn.
+   - state_01, 03 and 04 (wrong, rejected): the new table has no borders. Page 3 of the end render is blank.
+   - state_06 (correct, accepted): the new table is at the document start, with no borders. The render shows blank space above the title. The judge accepted it, and its reason says invisible borders prevent confirming seven columns.
+   - The other new tables in this family (state_08, state_12 and state_17) also have no borders.
+
+   So in this pipeline an empty table shows only if it has borders. Without borders, its presence shows only as blank space or a blank page. The rejects of 01, 03 and 04 are right on the start-of-document reading, but the render shows only an extra blank page at the end of the document. A correct empty table inserted at the end would look the same. This sample has no correct mid-document cursor insert, so whether a correct insert gets falsely rejected is an open question. The verdicts follow visibility, not placement: state_02 has the same end placement and was accepted. State_17 is a merged-row error. The render cannot show it (Amendment 2), so its reject is not a detection of the merge.
+
+3. The render key and Sol overlap heavily on group C (34 vs 35 of 40). Of the 40, 33 are rejected by both keys, 1 by render only, 2 by Sol only, and 4 are missed by both (section 5a). Across the 48 wrong states of groups A and C, the render key catches 41 and Sol catches 35. Both catch 33. Render alone catches 8, Sol alone catches 2, and both miss 5. Seven of the 8 render-only catches are group A states that Sol accepted by selection, since the combined policy that defines group A includes Sol. On the random sample the two keys make nearly the same calls. So this result does not yet show that rendering is a different representation in general.
+
+Other limits:
+
+- Under the prereg, G1 is a mechanism check, not a rate.
 - Ground truth is the Exp 7 corrected label. Those labels were not re-adjudicated here. The cursor states (66399b0d 01 to 04) rest on the start-of-document reading recorded in Exp 7.
 - The executor is my Exp 7 implementation. It was not independently verified.
 - The render is LibreOffice print output. Transitions and animations do not appear in PDFs, so 21760ecb transition states cannot be checked by render.
 - The render judge and the dump judge are the same model (Sol). The prompts differ in two sentences.
-- Open item: prereg section 3 asks the orchestrator to compare the sha256 of `sol_prompt_exp7.txt` with its runner copy before batch 1. That comparison is not in the report this file was built from.
 
 ## 10. Files
 
