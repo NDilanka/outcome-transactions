@@ -1,0 +1,72 @@
+{
+  "b6350f5f647e": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All all-uppercase text blocks in the document (paragraphs p1 and p7) were converted to lowercase with no unintended changes to other content or formatting."
+  },
+  "b6de405c1594": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "An empty 5-row by 7-column table was inserted at the cursor position at the end of the document below the existing table."
+  },
+  "b88830a85d6b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Single strikethrough was added to the first and second lines of the list on the active slide (slide 5) with no unrequested changes."
+  },
+  "b8c75416f987": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All 13 rows containing N/A values were hidden without deleting any cells or applying a filter."
+  },
+  "bab88f120679": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each sentence in the first paragraph was separated into its own paragraph followed by one empty line, preserving the rest of the document."
+  },
+  "bad8acd79d8e": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The 5x7 empty table was inserted as table0 before the existing topmost table rather than at the cursor position."
+  },
+  "bd13e9bf54f1": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The comma-separated paragraphs (p4 to p8) were converted into a 5x4 table with all other content and tables preserved."
+  },
+  "bfe06e941562": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The comma-separated text in paragraphs p4 to p8 was converted into a 5x4 table without damaging any other document content."
+  },
+  "c6dc444c4f25": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Growth rows with accurate formulas and percentage formatting were added along with a BarChart and LineChart, though the dump does not show chart titles or series ranges."
+  },
+  "c834f2a0e231": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All movie titles were copied to the Clean Movie Titles column with redundant whitespace removed and words capitalized while leaving other cells untouched."
+  },
+  "d0868ba7dfe1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "On slide 3, the seven small 1.1cm bullet icon pictures were resized to 20cm height while the main image was left unchanged."
+  },
+  "e10352e65426": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "Only a single page break was added without a new paragraph while the cursor was at the start of page 1, which either inserts a break before page 1 or fails to create a blank page after page 1."
+  },
+  "e19a3fedae35": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Single strikethrough was applied to the first and second lines of the list on the active slide (slide 5) with no other modifications."
+  },
+  "e30003791d68": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve slide transition was added to the first slide with no unrequested changes to the presentation."
+  }
+}

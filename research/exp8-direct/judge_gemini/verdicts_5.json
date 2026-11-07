@@ -1,0 +1,72 @@
+{
+  "e3bbbfede77b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Enabled AutoSave with a 3-minute interval in registrymodifications.xcu with no unrequested changes."
+  },
+  "e55e4bfd055c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Added a new paragraph with placeholder text 'New bullet point' instead of adding a bullet point to the existing slide content, leaving the existing paragraph without a bullet."
+  },
+  "e733c0f77bb1": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Enabled AutoSave with a 3-minute interval in registrymodifications.xcu with no unrequested changes."
+  },
+  "e90652ffe644": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Removed all yellow background highlights from text styles T5 and T9 while preserving all document text and other formatting."
+  },
+  "ecd19a22ac93": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Set the font color of all text paragraphs on slide 5 to pure yellow (FFFF00) without altering other slides or formatting."
+  },
+  "ef096f014d54": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Separated each of the seven sentences in the first paragraph into its own paragraph followed by an empty line while preserving the rest of the document."
+  },
+  "f6572edea7f3": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Added the Total and Growth rows with accurate formulas and created both a BarChart and a LineChart, though the dump does not expose the internal chart data ranges or titles."
+  },
+  "f795fd545760": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Created Sheet2 with the headers 'Total Revenue' and 'Total Expenses' and accurate SUM formulas referencing Sheet1."
+  },
+  "f85aa657ba46": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Applied single strikethrough formatting to the first and second lines of the list on slide 2 with no unrequested changes."
+  },
+  "f8ff99443124": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Inserted an empty 5-row by 7-column table at the cursor position below the existing table without modifying other content."
+  },
+  "f9175197ce79": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Created a static table with SUMIF formulas on Sheet2 instead of a Pivot Table, and left all formula cells with no cached values."
+  },
+  "f9d1a0e61ecf": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Enabled AutoSave and UserAutoSaveEnabled with a 3-minute interval in registrymodifications.xcu with no unrequested changes."
+  },
+  "fd17a72546fc": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Added the dissolve slide transition to slide 1 of the presentation."
+  },
+  "ff376badedd3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Inserted the 5x7 table before the existing table instead of at the cursor position below the existing table."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "84d28b1c5688": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The height of all PICTURE shapes on slides 3, 4, and 6 was changed to 20.0cm, 30.0cm, and 25.0cm respectively with no unrequested changes."
+  },
+  "8ab37de36a62": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The sums of Revenue and Total Expenses were accurately computed and placed under Total Revenue and Total Expenses columns in a new Sheet2."
+  },
+  "8c19026ea4ec": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A new Sheet2 was created with Total Revenue and Total Expenses headers and accurate SUM formulas referencing Sheet1."
+  },
+  "8ee85506bb17": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All 13 rows containing #N/A values were hidden without deleting any cells or applying a filter."
+  },
+  "927c21778126": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The height of all PICTURE shapes on slides 3, 4, and 6 was changed to 20.0cm, 30.0cm, and 25.0cm respectively with no unrequested changes."
+  },
+  "99659dd78d69": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All movie titles were copied to the Clean Movie Titles column with redundant whitespace removed and words capitalized without touching other cells."
+  },
+  "a40dff26ee92": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only two all-caps paragraphs were lowercased while uppercase letters remain in the title, body paragraphs, and table, and Calibri font formatting was stripped."
+  },
+  "a7b264822d1c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Revenue column including its header was accurately copied to a new sheet named Sheet2 without modifying Sheet1."
+  },
+  "a7e69144b708": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A bullet point was added to the content paragraph on slide 1 with no unrequested changes."
+  },
+  "a893766a188c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve slide transition was added to slide 1 with no other modifications to the presentation."
+  },
+  "adb6735a166b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Single strikethrough formatting was applied to the first and second lines of the list on slide 2 with no unrequested changes."
+  },
+  "af7320c2d388": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All textboxes on slide 5 had their font color changed to pure yellow (FFFF00) with no other modifications."
+  },
+  "b1ef2ff1f427": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All textboxes on slide 5 had their font color changed to pure yellow (FFFF00) with only harmless Impress round-trip serialization differences."
+  },
+  "b449eafdbc3c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All 13 rows containing #N/A values were hidden without deleting any cells or applying a filter."
+  }
+}

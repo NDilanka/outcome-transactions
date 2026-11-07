@@ -1,0 +1,72 @@
+{
+  "264aaa42bea8": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Growth rows with correct formulas and formatting and both a BarChart and LineChart are present, though chart titles and series ranges cannot be verified from the dump."
+  },
+  "284b99a24c87": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlight styles (#ffff00) were changed to transparent while preserving all text and other formatting."
+  },
+  "2a9b2d5ecedb": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Revenue column is accurately calculated on Sheet1 using product retail price, quantity, and discount, and Sheet2 contains the Pivot Table summarizing revenue by product."
+  },
+  "2d6db767b20e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlights (#ffff00) were removed by setting the background color of styles T5 and T9 to transparent without altering any text or other formatting."
+  },
+  "33aacf1b10c4": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A new empty paragraph and page break were inserted right after page 1 (after p4), creating a blank second page without damaging document content."
+  },
+  "3511fd7a3d42": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "AutoSave is enabled with a 3-minute interval in registrymodifications.xcu with no unintended changes."
+  },
+  "3afe32db0fb0": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "An empty 5-row by 7-column table was added to the document without altering existing text or tables, though exact cursor placement cannot be verified from the dump."
+  },
+  "3b51aa8e3a56": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Single strikethrough formatting was applied to the first and second lines of the list on the active slide (Slide 5)."
+  },
+  "3bbcc10b7986": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The existing content paragraph on the slide still has no bullet (buNone), and an empty bulleted paragraph was appended instead."
+  },
+  "3f65d20e2552": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A blank page (an empty paragraph and page break) was inserted immediately after page 1 with no unrequested changes."
+  },
+  "4851f85cffdc": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All movie titles were copied to the Clean Movie Titles column with redundant whitespace removed and words properly capitalized without touching other cells."
+  },
+  "4dd583ac3964": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All textboxes on slide 5 had their font color set to exact yellow (FFFF00) with no other modifications."
+  },
+  "4e367bca72f9": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Strikethrough formatting was cleanly added to the first and second lines of the list on Slide 5 with no unintended changes."
+  },
+  "5351880fffb1": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All movie titles in the Clean Movie Titles column were populated with normalized whitespace and capitalized words without modifying any other regions."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "54cce197ae1c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each sentence in the first paragraph is separated into its own paragraph with an empty line after each, while preserving all formatting and the rest of the document."
+  },
+  "56d2334a957b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Revenue column and its header were accurately copied to a new sheet named Sheet2 without altering Sheet1."
+  },
+  "5b18693351c3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains a static summary table rather than a Pivot Table, and saving overwrote existing formulas in Column D, changed date formats in Sheet1, and stripped header fill formatting in Retail Price."
+  },
+  "5b2e90456dea": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "An empty 5-row by 7-column table was inserted at the end of the document where the cursor was located without modifying existing content."
+  },
+  "5de1680cd910": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Revenue column and its header were accurately copied to a new sheet named Sheet2 with no unintended changes to Sheet1."
+  },
+  "5f636fa84036": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve slide transition was added to the first slide with no other changes to the presentation."
+  },
+  "67418b818e41": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Revenue column including its header was accurately copied to a new sheet named Sheet2 while leaving Sheet1 intact."
+  },
+  "68dfe6383058": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "On slide 3, seven small 1.1cm bullet icon pictures were resized to 20.2x20.0cm instead of the main image, corrupting the slide layout."
+  },
+  "70434fc4daf2": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "An empty 5-row by 7-column table was inserted at the cursor position at the end of the document without affecting existing content."
+  },
+  "70aebe863cac": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlight background colors (#ffff00) were changed to transparent while preserving all text and other character styles."
+  },
+  "72e2a87c15f6": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Single strikethrough formatting was applied to the first and second lines of the overview list on slide 2 with no unintended modifications."
+  },
+  "80ecd67d0379": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve transition was added to slide 1, with only standard LibreOffice Impress save normalization across the presentation."
+  },
+  "8184f15ea601": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty 5-row by 7-column table was inserted as table1 without damaging existing content, though the packet lacks UI cursor state to confirm the exact insertion point."
+  },
+  "83d340ef5f38": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Growth rows with correct formulas and percentage formatting as well as a BarChart and LineChart were added, though the dump does not expose chart titles or series ranges."
+  }
+}
