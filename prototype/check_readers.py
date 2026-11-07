@@ -104,6 +104,17 @@ R.ods_replace_cell(merged_away, "C3", '<table:table-cell table:number-columns-sp
 R.ods_replace_cell(merged_away, "D3", '<table:covered-table-cell/>')
 check("D3 a merge in another row and column leaves the anchor (control)", R.find_anchor(merged_away, R.anchor_of(merged_away, "MergeA!B2")) == "MergeA!B2",
       f"resolved to {R.find_anchor(merged_away, R.anchor_of(merged_away, 'MergeA!B2'))}")
+# Labels that LibreOffice shows alike but the file stores differently: the displayed text decides.
+shown_value = lo_ods("shown_value", table("Shown", [HDR, row(sv("p"), fv(3)), row(sv("q"), fv(4))]))
+R.ods_replace_cell(shown_value, "A2", '<table:table-cell office:value-type="float" office:value="1.0"><text:p>1</text:p></table:table-cell>')
+R.ods_replace_cell(shown_value, "A3", '<table:table-cell office:value-type="float" office:value="1"><text:p>1</text:p></table:table-cell>')
+check("C3 a stored 1.0 and a stored 1 that both show as 1 are a duplicate", R.find_anchor(shown_value, R.anchor_of(shown_value, "Shown!B2")) is None,
+      f"resolved to {R.find_anchor(shown_value, R.anchor_of(shown_value, 'Shown!B2'))}")
+footnote = lo_ods("footnote", table("Note", [HDR, row(sv("p"), fv(3)), row(sv("q"), fv(4))]))
+R.ods_replace_cell(footnote, "A2", '<table:table-cell office:value-type="string"><text:p>R<text:note text:id="ftn1" text:note-class="footnote"><text:note-citation>1</text:note-citation><text:note-body><text:p>one</text:p></text:note-body></text:note></text:p></table:table-cell>')
+R.ods_replace_cell(footnote, "A3", '<table:table-cell office:value-type="string"><text:p>R<text:note text:id="ftn2" text:note-class="footnote"><text:note-citation>2</text:note-citation><text:note-body><text:p>two</text:p></text:note-body></text:note></text:p></table:table-cell>')
+check("C4 labels that differ only in a footnote body are a duplicate as shown", R.find_anchor(footnote, R.anchor_of(footnote, "Note!B2")) is None,
+      f"resolved to {R.find_anchor(footnote, R.anchor_of(footnote, 'Note!B2'))}")
 
 shutil.rmtree(WORK, ignore_errors=True)
 failed = [n for n, ok in RESULTS if not ok]
