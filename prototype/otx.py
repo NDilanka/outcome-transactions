@@ -18,6 +18,7 @@ INSERT = MODE in ("insert_row", "insert_row_same_b2")
 FAULT = MODE in ("fault_postcommit", "race_rollback")
 RACE = MODE in ("race_commit", "race_rollback", "race_window")
 WINDOW = MODE == "race_window"
+READ_SET = MODE == "read_set"
 T0 = time.monotonic()
 def log(msg, **kw):
     e = dict(t=round(time.monotonic() - T0, 2), msg=msg, **kw); LOG.append(e); print(json.dumps(e), flush=True)
@@ -49,6 +50,7 @@ EXPECT = {
     "dup_space": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_sheet": dict(outcome="committed", committed=True, real_b2="5000", real_b2_by_sheet={"Q3": "5000", "Q3 copy": "3"}),
     "dup_sheet_renamed": dict(outcome="anchor_mismatch", committed=False, real_b2=None, real_b2_by_sheet={"FY2026": "3"}),
+    "read_set": dict(committed=False, real_b2="3"),
 }
 
 def sheet_b2s():
@@ -155,6 +157,8 @@ def main():
     if MODE == "dup_space":
         R.ods_replace_cell(f"{REAL}/budget.ods", "A2", '<table:table-cell office:value-type="string"><text:p>item 0</text:p></table:table-cell>')
         log("frozen target row relabelled 'item 0' before the fork")
+    if READ_SET:
+        open(f"{REAL}/notes.txt", "w").write("target 5000\n"); log("real notes.txt says target 5000 before the fork")
     sink = http.server.ThreadingHTTPServer(("127.0.0.1", 9900), Sink)
     threading.Thread(target=sink.serve_forever, daemon=True).start()
 
@@ -178,6 +182,7 @@ def main():
     # 3. Search: parallel forks, each behind its own effect firewall (no network, held outbox).
     t_search = time.monotonic()
     methods = [("f1_gui", "gui"), ("f2_direct", "direct"), ("f3_roundtrip", "roundtrip"), ("f4_wrong", "wrong")]
+    if READ_SET: methods = [("f2_derive", "derive"), ("f3_derive", "derive")]
     results = {}
     ths = [threading.Thread(target=fork_and_run, args=(n, i, m, results)) for i, (n, m) in enumerate(methods, 1)]
     # Null control fork: the same app opened and closed with no task. Whatever it changes
@@ -188,6 +193,9 @@ def main():
     # The user keeps working on the real machine during the search.
     time.sleep(3); open(f"{REAL}/notes.txt", "a").write("user typed this during the search\n")
     log("user edited real notes.txt during search")
+    if READ_SET:
+        txt = open(f"{REAL}/notes.txt").read(); open(f"{REAL}/notes.txt", "w").write(txt.replace("target 5000", "target 4000", 1))
+        log("user changed the target in real notes.txt from 5000 to 4000 during search; the fork read 5000 from its snapshot")
     if CONFLICT:
         cell = "B2" if MODE == "same_cell" else "C3"
         R.ods_set_cell(f"{REAL}/budget.ods", cell, 77)
