@@ -1,0 +1,23 @@
+{
+ "run": "race-3",
+ "excel_held_file": true,
+ "outcome": "refused",
+ "holders_at_replace": [
+  [
+   10844,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_at_replace": {
+  "size": 165,
+  "readable": false
+ },
+ "replace_error": "PermissionError winerror=5: Access is denied",
+ "write_ok": false,
+ "budget_sha_before": "830dc0ea1fd90b93",
+ "budget_sha_after": "830dc0ea1fd90b93",
+ "file_overwritten": false,
+ "real_B2": 1000.0,
+ "notes_preserved": true,
+ "verdict": "REFUSED loudly: replace failed, file unchanged"
+}

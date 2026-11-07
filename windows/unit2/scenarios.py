@@ -265,12 +265,18 @@ class Scenario:
         self.res["commit_preflight"] = dict(holders=holders, lock_file=lock)
         if holders != [] or lock is not None:
             return "routed_to_owner"
+        if before is None:
+            before = os.path.join(self.root, "pre")
+            try:
+                with self.timed("commit"):
+                    B.snapshot(self.real, before)
+            except (OSError, RuntimeError) as e:
+                # A file in the live tree became locked after preflight, so the before-state cannot be read.
+                self.res["commit_refused"] = repr(e)
+                return "refused"
         if self.before_replace is not None:
             self.before_replace(self.real)
         with self.timed("commit"):
-            if before is None:
-                before = os.path.join(self.root, "pre")
-                B.snapshot(self.real, before)
             saved = {f: _read_or_none(os.path.join(self.real, f)) for f in changed}
             writes = self._transplant(fd, changed)
             self.res["commit_writes"] = writes

@@ -1,0 +1,23 @@
+{
+ "run": "race-1",
+ "excel_held_file": true,
+ "outcome": "error",
+ "holders_at_replace": [
+  [
+   14104,
+   "Microsoft Excel"
+  ]
+ ],
+ "lock_at_replace": {
+  "size": 165,
+  "readable": false
+ },
+ "replace_error": null,
+ "write_ok": null,
+ "budget_sha_before": "8730edca2ab7ecbe",
+ "budget_sha_after": "8730edca2ab7ecbe",
+ "file_overwritten": false,
+ "real_B2": 1000.0,
+ "notes_preserved": true,
+ "verdict": "CHECK: outcome error"
+}
