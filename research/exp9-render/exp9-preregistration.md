@@ -1,6 +1,6 @@
 # Experiment 9 preregistration: do rendered pages catch what the file dumps drop?
 
-Status: LOCKED by commit 2e9eac4, which adds this file with the scripts, prompts and input manifest listed in section 9. Amendment 1 (section 10) was made after the lock and before any render. Amendment 2 (section 11) is post hoc: it was made after the group A renders and before any judge run. The lock commit hash is in the message to the orchestrator and in the results. Written before any Exp 9 render or judge call. The image-input probe (section 3) ran before the lock. No Exp 9 render or judge output exists yet.
+Status: LOCKED by commit 2e9eac4, which adds this file with the scripts, prompts and input manifest listed in section 9. Amendment 1 (section 10) was made after the lock and before any render. Amendment 2 (section 11) is post hoc: it was made after the group A renders and before any judge run. Amendment 3 (section 12) changes how a page over the 5 MiB read limit is written, and was made before the render restart and before any judge run. The lock commit hash is in the message to the orchestrator and in the results. Written before any Exp 9 render or judge call. The image-input probe (section 3) ran before the lock. No Exp 9 render or judge output exists yet.
 
 ## 0. Decisions settled before the lock (changes from draft v1)
 
@@ -170,3 +170,18 @@ G1 under both readings. The judge decides nothing until the batches run, so thes
 - 66399b0d state_17 is judged like every group A state. Its verdict is not counted toward G1 under either reading. It is reported with the cursor states as errors no current representation shows.
 
 Renderer note. During the 74-state render, PyMuPDF printed "cannot create appearance stream for Screen annotations" for several PDFs. These are form-field annotations in LibreOffice output. The pages are rendered as PyMuPDF produces them. The count of such warnings is reported with the results.
+
+## 12. Amendment 3 (made before the render restart and before any judge run)
+
+Why. `render_all.py` stopped at state 4b462954d9bd: its start side, page 6 (`f01_p006.png`, 3000×1688 px), was 5,525,955 bytes, over the 5 MiB read limit of section 3. The stop was as registered. No judge had run, and no batch files were written. The orchestrator ruled on the remedy below.
+
+Rule, for every packet page:
+1. The page is written by PyMuPDF at 150 dpi, as in section 3. If the file is at most 5 MiB (5,242,880 bytes), it is kept as written. Nothing else changes.
+2. A page over 5 MiB is re-encoded losslessly (PIL, optimize, zlib level 9). The decoded pixels must equal the rendered pixels exactly, or the run stops. If the re-encoded file is at most 5 MiB, it is kept.
+3. A page still over 5 MiB after re-encoding is split losslessly into horizontal tiles: full-width strips, cut top to bottom at equal row heights. The number of strips is the smallest K from 2, up to 64, for which every strip is at most 5 MiB. Strips are named `fNN_pNNN_tK.png`, with K counted from 1 from the top. Each strip's decoded pixels must equal its row band of the rendered page. The strips together must equal the rendered page exactly. The unsplit `fNN_pNNN.png` is removed.
+4. The judge input notes each tiled page in `request.txt`, under a "Notes:" heading after the file list. The note reads, for example: "start/f03_p001 is shown as 3 horizontal tiles, start/f03_p001_t1 to start/f03_p001_t3, from top to bottom. Together they make one page." This note is the only change to the judge's input text.
+5. No downscaling, no lossy compression, no dropped or truncated page. The page count per file and per side is the count section 3 reports.
+6. Scope. Rule 2 applies only to pages over the limit. Other packet PNGs are kept byte-identical to what PyMuPDF wrote. The group A packets from `renderability_checks.py` are all under the limit (largest 2,158,326 bytes), so they are not changed by this amendment. Re-encoding every PNG would change bytes, not pixels, and was not done.
+7. Reporting. Per state, `stats.json` records the pages kept, re-encoded and tiled, and the tile count. The results report the number of files re-encoded and the number tiled, and name each tiled page. The four renderable group A states were rendered before this amendment and are not rendered again. Their stats gain these keys from their files (`kept_stats` in `render_all.py`): each file is one PNG per page, named as section 3 says, and at most the limit, so each page counts as kept.
+
+Interpretation to confirm. "Horizontal tiles" is read here as full-width strips stacked top to bottom. A split into side-by-side columns would be a different representation and is not what this rule states.

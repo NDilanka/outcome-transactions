@@ -8,6 +8,9 @@ The judge packet is one directory per blind id:
     <out>/<bid>/start/fNN_pNNN.png   pages of the starting state
     <out>/<bid>/end/fNN_pNNN.png     pages of the end state
 
+A page over the judge read limit is re-encoded losslessly, and if it is still over, split into horizontal
+strips fNN_pNNN_tK.png (Amendment 3, exp9-preregistration.md section 12). Pixels are checked at every step.
+
 fNN numbers the files in sorted order of the relative paths present in either state. pNNN is the page
 number inside that file, from 1. A file present on one side only has pages on that side only.
 Inputs are read only: they are hashed before and after the render, and the run stops on any change.
@@ -20,6 +23,7 @@ import subprocess
 import time
 
 import pymupdf
+from PIL import Image
 
 SOFFICE = '/usr/bin/soffice'
 DPI = 150
@@ -28,6 +32,7 @@ OFFICE_EXT = {'.docx', '.pptx', '.xlsx', '.odt', '.ods', '.odp'}
 PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
 PNG_CHUNKS_ALLOWED = {'IHDR', 'pHYs', 'IDAT', 'IEND'}  # no text or metadata chunks
 READ_LIMIT_BYTES = 5 * 1024 * 1024  # the judge's Read tool limit for images
+MAX_TILES = 64  # Amendment 3: a page is cut into at most this many horizontal strips
 CONVERT_TIMEOUT = 180
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SNAPSHOTS = os.path.join(REPO, 'research', 'exp5-grounded', 'snapshots')
@@ -102,6 +107,55 @@ def soffice_to_pdf(src, out_dir, profile_dir):
     return pdf
 
 
+def pixels_of(path):
+    """Decoded RGB bytes of a PNG file."""
+    with Image.open(path) as im:
+        if im.mode != 'RGB':
+            raise ValueError(f'{path}: mode {im.mode}, expected RGB')
+        return im.tobytes()
+
+
+def fit_page(pix, base):
+    """Write one rendered page as PNG files that are each under READ_LIMIT_BYTES (Amendment 3).
+
+    Returns (paths, action). 'kept': PyMuPDF output as written, the normal case. 'reencoded': the same pixels
+    written again losslessly (zlib level 9). 'tiled': the page cut into horizontal strips, top to bottom, each
+    written losslessly and each under the limit. Every write is decoded and compared with the rendered pixels.
+    """
+    if pix.n != 3 or pix.alpha or pix.stride != pix.width * 3:
+        raise ValueError('expected an RGB pixmap without alpha and without row padding')
+    raw = pix.samples
+    path = base + '.png'
+    pix.save(path)
+    if os.path.getsize(path) <= READ_LIMIT_BYTES:
+        return [path], 'kept'
+    img = Image.frombytes('RGB', (pix.width, pix.height), raw)
+    img.save(path, 'PNG', optimize=True, compress_level=9)
+    if pixels_of(path) != raw:
+        raise ValueError(f'{path}: re-encoded pixels differ from the render')
+    if os.path.getsize(path) <= READ_LIMIT_BYTES:
+        return [path], 'reencoded'
+    os.remove(path)
+    row = pix.width * 3
+    for k in range(2, MAX_TILES + 1):
+        if k > pix.height:
+            break  # every strip needs at least one row
+        cuts = [round(i * pix.height / k) for i in range(k + 1)]
+        paths = []
+        for t in range(k):
+            tile = f'{base}_t{t + 1}.png'
+            paths.append(tile)
+            img.crop((0, cuts[t], pix.width, cuts[t + 1])).save(tile, 'PNG', optimize=True, compress_level=9)
+        if all(os.path.getsize(p) <= READ_LIMIT_BYTES for p in paths):
+            for t, p in enumerate(paths):
+                if pixels_of(p) != raw[cuts[t] * row:cuts[t + 1] * row]:
+                    raise ValueError(f'{p}: tile pixels differ from the render')
+            return paths, 'tiled'
+        for p in paths:
+            os.remove(p)
+    raise ValueError(f'{base}: no tiling into up to {MAX_TILES} strips fits the read limit')
+
+
 def render_state(before_root, after_root, bid, request_text, out_root, work_root):
     """Render both sides of one state into the packet directory out_root/bid.
 
@@ -123,6 +177,8 @@ def render_state(before_root, after_root, bid, request_text, out_root, work_root
     os.makedirs(packet)
 
     pdfs, pages, png_bytes, pngs = {}, {'start': 0, 'end': 0}, 0, 0
+    actions = {'kept': 0, 'reencoded': 0, 'tiled': 0}
+    tiles, tile_notes = 0, []
     t0 = time.perf_counter()
     for side in ('start', 'end'):
         os.makedirs(os.path.join(packet, side))
@@ -136,14 +192,18 @@ def render_state(before_root, after_root, bid, request_text, out_root, work_root
             pdfs[(side, rel)] = pdf
             doc = pymupdf.open(pdf)
             for p in range(doc.page_count):
-                out_png = os.path.join(packet, side, f'f{n:02d}_p{p + 1:03d}.png')
-                doc[p].get_pixmap(matrix=SCALE, alpha=False).save(out_png)
-                check_png(out_png)
-                size = os.path.getsize(out_png)
-                if size > READ_LIMIT_BYTES:
-                    raise ValueError(f'{out_png} is {size} bytes, over the judge read limit')
-                png_bytes = max(png_bytes, size)
-                pngs += 1
+                name = f'{side}/f{n:02d}_p{p + 1:03d}'
+                paths, action = fit_page(doc[p].get_pixmap(matrix=SCALE, alpha=False),
+                                         os.path.join(packet, side, f'f{n:02d}_p{p + 1:03d}'))
+                for path in paths:
+                    check_png(path)
+                    png_bytes = max(png_bytes, os.path.getsize(path))
+                    pngs += 1
+                actions[action] += 1
+                if action == 'tiled':
+                    tiles += len(paths)
+                    tile_notes.append(f'{name} is shown as {len(paths)} horizontal tiles, {name}_t1 to '
+                                      f'{name}_t{len(paths)}, from top to bottom. Together they make one page.')
                 pages[side] += 1
             doc.close()
     seconds = time.perf_counter() - t0
@@ -156,10 +216,14 @@ def render_state(before_root, after_root, bid, request_text, out_root, work_root
     for rel in rels:
         sides = [s for s in ('start', 'end') if rel in present[s]]
         lines.append(f'f{num[rel]:02d}  {rel}  {", ".join(sides)}')
+    if tile_notes:
+        lines += ['', 'Notes:'] + tile_notes
     with open(os.path.join(packet, 'request.txt'), 'w', encoding='utf-8') as fh:
         fh.write('\n'.join(lines) + '\n')
 
     stats = {'bid': bid, 'files_start': len(present['start']), 'files_end': len(present['end']),
              'pages_start': pages['start'], 'pages_end': pages['end'], 'pngs': pngs,
-             'max_png_bytes': png_bytes, 'seconds': round(seconds, 3)}
+             'max_png_bytes': png_bytes, 'seconds': round(seconds, 3),
+             'pages_kept': actions['kept'], 'pages_reencoded': actions['reencoded'],
+             'pages_tiled': actions['tiled'], 'tiles': tiles}
     return stats, pdfs

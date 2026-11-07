@@ -11,10 +11,14 @@ A state alone over the cap is its own batch. Splits depend only on PNG counts.
 
 Usage: render_all.py --salt-file FILE --sample FILE --states DIR --packets DIR --work DIR --a-result FILE
                      --stats FILE --batches DIR
+
+Amendment 3 (exp9-preregistration.md section 12): the renderability_checks.py states keep their packets, and
+their stats gain the Amendment 3 keys, derived from their files (kept_stats).
 """
 import argparse
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -23,6 +27,22 @@ import render_lib as rl  # noqa: E402
 MAX_PNG_PER_BATCH = 40
 BATCH_SIZE = 4
 EXPECTED_STATES = 78
+
+
+def kept_stats(packet, st):
+    """Amendment 3 keys for a state rendered before Amendment 3, by renderability_checks.py.
+
+    That code wrote every page as PyMuPDF wrote it. The files are checked here: one PNG per page, named as
+    section 3 says, each at most the read limit. Under section 12 such pages are kept as written.
+    """
+    names = [os.path.join(side, f) for side in ('start', 'end') for f in sorted(os.listdir(os.path.join(packet, side)))]
+    if len(names) != st['pngs'] or st['pages_start'] + st['pages_end'] != st['pngs']:
+        raise SystemExit(f"{st['bid']}: packet files do not match the render stats")
+    if not all(re.fullmatch(r'f\d{2}_p\d{3}\.png', os.path.basename(n)) for n in names):
+        raise SystemExit(f"{st['bid']}: unexpected file name in packet")
+    if any(os.path.getsize(os.path.join(packet, n)) > rl.READ_LIMIT_BYTES for n in names):
+        raise SystemExit(f"{st['bid']}: a page is over the read limit")
+    return dict(st, pages_kept=st['pngs'], pages_reencoded=0, pages_tiled=0, tiles=0)
 
 
 def make_batches(bids, pngs):
@@ -63,7 +83,8 @@ def main():
     stats = {}
     for r in a_rows:
         if r['check'] is not None:
-            stats[r['bid']] = r['render']  # rendered by renderability_checks.py, reused as is (pass or fail)
+            # rendered by renderability_checks.py, packets reused as is (pass or fail)
+            stats[r['bid']] = kept_stats(os.path.join(args.packets, r['bid']), r['render'])
 
     todo = [(r['bid'], r['task'], r['state']) for r in a_rows if r['check'] is None]
     todo += [(rl.bid9(salt, item['task'], item['state']), item['task'], item['state'])
