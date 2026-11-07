@@ -54,6 +54,43 @@ def _cached(cell):
             return cell.get(O + a)
     return None
 
+DRAW = "{urn:oasis:names:tc:opendocument:xmlns:drawing:1.0}"
+SKIP = (O + "annotation", O + "annotation-end")
+
+def _collapse(s):
+    """ODF collapses each run of whitespace in a text node to one space. Spaces that count are text:s elements."""
+    return re.sub(r"[ \t\r\n]+", " ", s)
+
+def _inline(el):
+    """The text of one paragraph: text:s is a run of spaces, text:tab a tab, text:line-break a newline."""
+    out = [_collapse(el.text or "")]
+    for ch in el:
+        if ch.tag == X + "s":
+            out.append(" " * int(ch.get(X + "c", "1")))
+        elif ch.tag == X + "tab":
+            out.append("\t")
+        elif ch.tag == X + "line-break":
+            out.append("\n")
+        elif ch.tag not in SKIP and not ch.tag.startswith(DRAW):
+            out.append(_inline(ch))
+        out.append(_collapse(ch.tail or ""))
+    return "".join(out)
+
+def _paragraphs(el):
+    """The paragraphs of a cell's content. Annotations (comments) and drawn shapes are not cell text."""
+    for ch in el:
+        if ch.tag in SKIP or ch.tag.startswith(DRAW):
+            continue
+        if ch.tag in (X + "p", X + "h"):
+            yield ch
+        else:
+            yield from _paragraphs(ch)
+
+def _text(cell):
+    """A cell's text, paragraphs joined by newlines, or "" if every paragraph is empty."""
+    texts = [_inline(p) for p in _paragraphs(cell)]
+    return "\n".join(texts) if any(texts) else ""
+
 def ods_cells(path, sheet=None):
     """Return {ref: (value, formatting)} for non-empty cells of the first (or named) sheet."""
     with zipfile.ZipFile(path) as z:
@@ -73,8 +110,7 @@ def ods_cells(path, sheet=None):
             crep = int(cell.get(T + "number-columns-repeated", "1"))
             val = _cached(cell)
             if val is None:
-                txt = "".join("".join(p.itertext()) for p in cell.iter(X + "p"))
-                val = txt if txt else None
+                val = _text(cell) or None
             sname = cell.get(T + "style-name") or row.get(T + "default-cell-style-name")
             style = sprops.get(sname, (sname, False, ()))[2] if sname else ()
             cells.append((c, crep, val, style))
