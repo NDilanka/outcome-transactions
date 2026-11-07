@@ -1,0 +1,56 @@
+{
+ "case": "modal-dialog",
+ "label": "head",
+ "outcome": "raised",
+ "pids": [
+  26272,
+  1344
+ ],
+ "hung": false,
+ "stages": [
+  "launched",
+  "helper",
+  "dialog-up",
+  "commit-start",
+  "result",
+  "answered-after-report",
+  "after"
+ ],
+ "dialogs": [
+  {
+   "cls": "#32770",
+   "title": "Open",
+   "text": [
+    "NamespaceTreeControl: Namespace Tree Control",
+    "Static: Namespace Tree Control",
+    "SysTreeView32: Navigation Pane",
+    "Shell Preview Extension Host: Shell Preview Extension Host",
+    "SHELLDLL_DefView: ShellView",
+    "Static: File &name:",
+    "Static: Files of &type:",
+    "ToolbarWindow32: Too&ls",
+    "Button: &Open",
+    "Button: Cancel",
+    "Button: &Help",
+    "ToolbarWindow32: Navigation buttons"
+   ]
+  }
+ ],
+ "dialog_waited_s": 1.02,
+ "seconds": 0.63,
+ "report": null,
+ "error": "com_error(-2147418111, 'Call was rejected by callee.', None, None)",
+ "alerts_after": -1,
+ "para2": "Total: 1000",
+ "late": null,
+ "save_returned": null,
+ "save_error": null,
+ "killed_pids": [
+  26272
+ ],
+ "verdict": "WRONG: the commit raised an unclassified error",
+ "expected": "refused by the gate as Word busy, nothing written, within 6.5 s",
+ "git_head": "57165d5",
+ "working_tree_differs_from_head": true,
+ "live_agent_sha": "eb98e94d63c8"
+}

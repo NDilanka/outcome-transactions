@@ -1,0 +1,9 @@
+{
+ "commit": "Word.live_agent at HEAD 57165d5, replace prompt raised inside its write",
+ "outcome": "returned: returned",
+ "seconds": 0.35,
+ "word_pid": 19420,
+ "alerts_default": 0,
+ "alerts_in_commit": -1,
+ "killed_word_pid": 19420
+}

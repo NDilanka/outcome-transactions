@@ -1,0 +1,100 @@
+{
+ "run": "write-exhausted-r3",
+ "case": "write-exhausted",
+ "rep": 3,
+ "expect": "write-exhausted",
+ "status": "ok",
+ "dialog_windows": [
+  {
+   "when": "before-first-write",
+   "classes": [
+    "#32770"
+   ],
+   "busy_probe": {
+    "busy": false,
+    "tries": 1,
+    "last_error": "com_error(-2147417842, 'The application called an interface that was marshalled for a different thread.', None, None)"
+   }
+  }
+ ],
+ "free_mb_before": 751,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 25392,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "commit_seconds": 20.55,
+ "commit": {
+  "status": "unknown",
+  "done": [
+   "Application.DisplayAlerts set"
+  ],
+  "refused_at": "B2 value",
+  "reason": "Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away))",
+  "message": "Outcome unknown: Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away)). Check B2 before you save, because a write may still complete.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "reconcile": {
+   "step": "B2 value",
+   "state": "unknown",
+   "detail": "the call returned, but the target could not be read back: AttributeError (member lookup turned away)",
+   "returned": true,
+   "call_error": "RuntimeError",
+   "polls": [
+    "unreadable (AttributeError (member lookup turned away))",
+    "unreadable (AttributeError (member lookup turned away))"
+   ]
+  },
+  "rollback": [],
+  "app_restore": [
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "written",
+    "reason": null
+   }
+  ],
+  "left": [],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.12,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [
+  "#32770"
+ ],
+ "helper_exit": "exit 0",
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": 20.01,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "WRONG: {\"commit\": {\"status\": \"unknown\", \"done\": [\"Application.DisplayAlerts set\"], \"refused_at\": \"B2 value\", \"reason\": \"Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away))\", \"message\": \"Outcome unknown: Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away)). Check B2 before you save, because a write may still complete.\", \"rejections\": 0, \"checks\": [], \"late_landing\": null, \"reconcile\": {\"step\": \"B2 value\", \"state\":",
+ "quit_ok": true,
+ "killed_excel_pid": 25392
+}

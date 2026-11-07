@@ -1,0 +1,94 @@
+{
+ "case": "delay-landed-late",
+ "label": "fixed",
+ "outcome": "returned",
+ "pids": [
+  4380
+ ],
+ "hung": false,
+ "stages": [
+  "launched",
+  "commit-start",
+  "injected",
+  "result",
+  "answered-after-report",
+  "after"
+ ],
+ "injected": {
+  "kind": "sleep",
+  "seconds": 8.0
+ },
+ "seconds": 8.37,
+ "report": {
+  "status": "refused",
+  "reason": "the total line value write returned after the timeout, and its value landed",
+  "message": "Refused: the total line value write returned after the timeout, and its value landed. Finished steps were rolled back.",
+  "rejections": 0,
+  "reconcile": {
+   "step": "total line value",
+   "state": "landed",
+   "detail": "'Total: 5000'",
+   "returned": true,
+   "call_error": null,
+   "polls": [
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'",
+    "'Total: 1000'"
+   ]
+  },
+  "late_landing": "landed after the timeout, rolled back",
+  "late_outcome": null,
+  "rollback": [
+   {
+    "step": "total line value",
+    "status": "written",
+    "reason": null
+   }
+  ],
+  "app_restore_state": "restored",
+  "restore_log": [
+   {
+    "attempt": 1,
+    "at": 1794075237.59,
+    "step": "Application.DisplayAlerts set",
+    "action": "restored",
+    "detail": "written back"
+   }
+  ],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.02,
+   "last_error": null
+  },
+  "unconfirmed": null
+ },
+ "error": null,
+ "alerts_after": -1,
+ "para2": "Total: 1000",
+ "late": {
+  "late_outcome": null,
+  "late_landing": "landed after the timeout, rolled back",
+  "app_restore_state": "restored"
+ },
+ "save_returned": null,
+ "save_error": null,
+ "killed_pids": [
+  4380
+ ],
+ "verdict": "CORRECT",
+ "expected": "refused, the late write rolled back, within 40 s",
+ "git_head": "57165d5",
+ "working_tree_differs_from_head": true,
+ "live_agent_sha": "4c81817c4b74"
+}

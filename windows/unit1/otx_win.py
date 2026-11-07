@@ -127,17 +127,6 @@ def image_pids(image):
     return pids
 
 
-def new_image_pid(image, before, timeout_s=15):
-    """PID of the one process of this image that appeared after `before` was taken."""
-    t0 = time.time()
-    while time.time() - t0 < timeout_s:
-        new = image_pids(image) - before
-        if new:
-            return min(new)
-        time.sleep(0.2)
-    raise RuntimeError(f"no new {image} process")
-
-
 def pid_alive(pid):
     out = subprocess.run(["tasklist", "/FI", f"PID eq {pid}", "/NH"], capture_output=True, text=True).stdout
     return str(pid) in out

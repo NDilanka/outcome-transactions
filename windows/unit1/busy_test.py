@@ -37,8 +37,8 @@ import traceback
 import win32gui
 import win32process
 
-from com_gate import ready_gate
-from open_doc_experiment import BASE, Excel, xlsx_state
+from com_gate import describe, is_busy, ready_gate, remote_error
+from open_doc_experiment import BASE, Excel, excel_ready_probe, xlsx_state
 from otx_win import free_mb, kill_pid, pid_alive, redact, wait_for_memory
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -69,17 +69,19 @@ def sha(path):
         return hashlib.sha256(f.read()).hexdigest()
 
 
-def excel_windows(pid):
-    """Visible top-level windows of one Excel process, other than its main window."""
+def excel_windows(pid, visible_only=True):
+    """Top-level windows of one Excel process, other than its main window. Hidden windows are listed only when asked,
+    so a dialog that never showed can be diagnosed."""
     found = []
 
     def visit(hwnd, _):
-        if not win32gui.IsWindowVisible(hwnd):
+        visible = bool(win32gui.IsWindowVisible(hwnd))
+        if visible_only and not visible:
             return
         _, wpid = win32process.GetWindowThreadProcessId(hwnd)
         cls = win32gui.GetClassName(hwnd)
         if wpid == pid and cls != "XLMAIN":
-            found.append(dict(hwnd=hwnd, cls=cls, title=win32gui.GetWindowText(hwnd)))
+            found.append(dict(hwnd=hwnd, cls=cls, title=win32gui.GetWindowText(hwnd), visible=visible))
 
     win32gui.EnumWindows(visit, None)
     return found
@@ -150,6 +152,21 @@ def hold(path, log_path):
     note(f"Show returned {result}")
 
 
+class HolderError(RuntimeError):
+    """The Open dialog did not show. diag says what the harness could see: the helper's state and log, and every
+    window of the Excel process, hidden ones included."""
+
+    def __init__(self, msg, diag):
+        super().__init__(msg)
+        self.diag = diag
+
+
+def helper_diag(p, log_path, pid):
+    return dict(helper_alive=p.poll() is None, helper_log=_read(log_path),
+                excel_windows=[dict(cls=w["cls"], visible=w["visible"])
+                               for w in excel_windows(pid, visible_only=False)])
+
+
 def start_holder(path, pid, log_path):
     if os.path.exists(log_path):
         os.remove(log_path)
@@ -160,13 +177,14 @@ def start_holder(path, pid, log_path):
     t0 = time.time()
     while time.time() - t0 < 15:
         if p.poll() is not None:
-            raise RuntimeError(f"dialog helper exited {p.returncode}; log: {_read(log_path)}")
+            raise HolderError(f"dialog helper exited {p.returncode}", helper_diag(p, log_path, pid))
         seen = excel_windows(pid)
         if any(is_dialog(w) for w in seen):
             return p, [w["cls"] for w in seen]
         time.sleep(0.2)
+    diag = helper_diag(p, log_path, pid)
     p.kill()
-    raise RuntimeError(f"the Excel dialog did not open within 15 s; helper log: {_read(log_path)}")
+    raise HolderError("the Excel dialog did not open within 15 s", diag)
 
 
 def _read(path):
@@ -189,19 +207,25 @@ def dialog_seconds(log_path):
     return round(end - start, 2) if start and end else None
 
 
-def wait_busy(app, budget_s=5.0):
-    """Poll Excel until it turns a call away. The dialog window can appear a moment before Excel enters its modal
-    loop, so the write must not start before a call is actually rejected."""
+def wait_busy(app, budget_s=2.0):
+    """Poll Excel until it is busy: a call is turned away, or Application.Ready is False. With a modal dialog open,
+    Excel answers Ready = False with no error (results/busy/unit1-modal-probe.md), so a check for exceptions alone
+    misses it. The probe runs inside the commit's write call, so its budget stays well under CALL_BUDGET_S."""
     t0 = time.time()
     tries = 0
     while time.time() - t0 < budget_s:
         tries += 1
         try:
-            app.Ready
+            ready = app.Ready
         except Exception as e:
-            if getattr(e, "hresult", None) in (-2147418111, -2147417846):
-                return dict(busy=True, tries=tries, last_error=f"com_error 0x{e.hresult & 0xFFFFFFFF:08X}")
+            # pywin32 reports a turned-away member lookup as AttributeError with no code, so the classification is
+            # the gate's (com_gate.is_busy), not a check of hresult alone.
+            r = remote_error(e)
+            if is_busy(r):
+                return dict(busy=True, tries=tries, last_error=describe(r))
             return dict(busy=False, tries=tries, last_error=repr(e)[:120])
+        if not ready:
+            return dict(busy=True, tries=tries, last_error="Application.Ready is False")
         time.sleep(0.1)
     return dict(busy=False, tries=tries, last_error=None)
 
@@ -217,6 +241,15 @@ def display_alerts(adapter):
         return bool(adapter.app.DisplayAlerts)
     except Exception as e:
         return f"unreadable: {repr(e)[:80]}"
+
+
+def mem_or_unreadable(adapter):
+    """adapter.mem_state(), or a record that the state could not be read. Excel turns reads away while a dialog is
+    open, so a failed read after the commit fails the verdict instead of ending the run."""
+    try:
+        return adapter.mem_state()
+    except Exception as e:
+        return dict(agent=None, user=None, others_ok=None, unreadable=repr(e)[:160])
 
 
 def finish_helper(p):
@@ -251,7 +284,8 @@ def verdict(spec, rec):
               and rc.get("state") == "unknown" and rc.get("returned") is False
               and rec["commit_seconds"] < 35 and rec.get("answer_after_commit") == ["No"]
               and rec.get("alerts_seen_in_write") is False and rec.get("scratch_saved") is False
-              and [x["status"] for x in restore] in (["written"], ["already"])  # already: the injected write set it
+              and [x["status"] for x in restore] == ["restored"]  # already: the injected write had set it back on
+              and (c.get("late_outcome") or {}).get("state") == "unchanged"
               and rec.get("mem_after_answer", {}).get("agent") is False
               and not disk["agent"] and not mem["agent"] and base_ok)
         label = ("write timed out with no answer: outcome reported unknown, prompt then declined, nothing landed, "
@@ -273,12 +307,15 @@ def verdict(spec, rec):
         label = "refused by the gate, no write tried, file and user edit unchanged"
     else:
         # A read-back during the dialog is either unchanged (1000.0) or unreadable (busy); the harness reads the
-        # file and the cell again after the dialog closes.
+        # file and the cell again after the dialog closes. The alert setting was off while Excel was busy, so the
+        # refusal says so, and the restore lands once the dialog closes.
         ok = (c["status"] == "refused" and c["rejections"] >= 1
               and (c["reason"].startswith("busy: rejected") or c["reason"].startswith("rejected ("))
               and all(x == repr(1000.0) or x.startswith("unreadable") for x in c["checks"])
+              and "temporarily off" in (c.get("message") or "") and c.get("app_restore_state") == "restored"
               and not disk["agent"] and not mem["agent"] and base_ok)
-        label = "write rejected, retry budget spent, commit refused, file and user edit unchanged"
+        label = ("write rejected, retry budget spent, commit refused, file and user edit unchanged, alerts "
+                 "restored after the dialog closed")
     if ok:
         return "CORRECT: " + label
     return "WRONG: " + json.dumps(dict(commit=c, disk=disk, mem=mem, sha_same=rec["sha_after_commit"] == rec["sha_before"]),
@@ -312,11 +349,17 @@ def run(case, rep):
         rec["mem_before_commit"] = adapter.mem_state()
         rec["sha_before"] = sha(path)
 
-        def open_dialog_before_write():
-            """Runs inside the first write call: after the pre-write read, before Excel sees the write."""
+        def open_dialog_before_write(app):
+            """Runs inside the first write call, on the commit's worker thread: after the pre-write read, before Excel
+            sees the write. app is the worker's own Application object. A COM object made on the main thread cannot be
+            called here (Excel answers RPC_E_WRONG_THREAD), so the probe would read the dialog as absent."""
             nonlocal holder, closer
-            holder, seen = start_holder(path, adapter.pid, os.path.join(d, "holder.log"))
-            probe = wait_busy(adapter.app)
+            try:
+                holder, seen = start_holder(path, adapter.pid, os.path.join(d, "holder.log"))
+            except HolderError as e:
+                rec["dialog_windows"].append(dict(when="before-first-write", error=str(e), diag=e.diag))
+                raise
+            probe = wait_busy(app)
             rec["dialog_windows"].append(dict(when="before-first-write", classes=seen, busy_probe=probe))
             if not probe["busy"]:
                 raise RuntimeError(f"Excel was not busy with the dialog open: {probe}")
@@ -330,7 +373,7 @@ def run(case, rep):
             def write(view, v):
                 if armed[0]:
                     armed[0] = False
-                    open_dialog_before_write()
+                    open_dialog_before_write(view.Application)
                 return real_write(view, v)
             return step._replace(write=write)
 
@@ -373,7 +416,11 @@ def run(case, rep):
             return step._replace(write=write)
 
         if spec["dialog"] == "before-gate":
-            holder, seen = start_holder(path, adapter.pid, os.path.join(d, "holder.log"))
+            try:
+                holder, seen = start_holder(path, adapter.pid, os.path.join(d, "holder.log"))
+            except HolderError as e:
+                rec["dialog_windows"].append(dict(when="before-gate", error=str(e), diag=e.diag))
+                raise
             rec["dialog_windows"].append(dict(when="before-gate", classes=seen))
         wrap_fn = {"before-write": wrap, "prompt-in-write": prompt_in_write}.get(spec["dialog"])
         t_commit = time.monotonic()
@@ -391,10 +438,15 @@ def run(case, rep):
         rec["answerer_exit"] = finish_helper(answerer)
         rec["answer_log"] = _read(os.path.join(d, "answer.log"))
         rec["dialog_open_s"] = dialog_seconds(os.path.join(d, "holder.log"))
-        time.sleep(0.5)
+        # The restore of Excel's alert setting may run on a background thread after the commit returns. Wait for it,
+        # up to 15 s, before the value is read.
+        t_alerts = time.monotonic()
+        while time.monotonic() - t_alerts < 15 and display_alerts(adapter) is not True:
+            time.sleep(0.25)
+        rec["alerts_wait_s"] = round(time.monotonic() - t_alerts, 2)
         rec["display_alerts_final"] = display_alerts(adapter)
         rec["sha_after_commit"] = sha(path)
-        rec["mem_after_commit"] = adapter.mem_state()
+        rec["mem_after_commit"] = mem_or_unreadable(adapter)
         adapter.save()
         time.sleep(1)
         rec["disk_after_user_save"] = xlsx_state(path)
@@ -406,6 +458,10 @@ def run(case, rep):
         for p in HELPERS + [closer]:
             if p is not None and p.poll() is None:
                 p.kill()
+        pid = getattr(adapter, "pid", None)
+        if pid is not None:
+            # A dialog that a failed run left open would keep Excel busy, so it is closed before the quit.
+            rec["closed_in_cleanup"] = close_dialogs(pid)
         try:
             # An unanswered prompt leaves an unsaved scratch workbook behind. With alerts off, Quit does not ask.
             adapter.app.DisplayAlerts = False
@@ -415,7 +471,6 @@ def run(case, rep):
         except Exception as e:
             rec["quit_ok"] = False
             rec["quit_error"] = repr(e)[:200]
-        pid = getattr(adapter, "pid", None)
         if pid is not None:
             time.sleep(1)
             if pid_alive(pid):
@@ -786,9 +841,88 @@ def old_commit():
     print(redact(text))
 
 
+MODAL_PROBE_MD = os.path.join(RESULTS, "unit1-modal-probe.md")
+
+
+def modal_probe_rows(state, path, app, ws):
+    """Calls made with Excel's Open dialog up (or not). pre-bound: objects bound before the dialog opened, as the
+    commit's write holds them. fresh: a new binding made now, as a readiness probe or read makes it."""
+    import win32com.client
+    rows = []
+
+    def add(name, fn):
+        t0 = time.time()
+        try:
+            out = f"ok {fn()!r}"[:60]
+        except Exception as e:
+            out = f"error {describe(remote_error(e))}"
+        rows.append(dict(state=state, call=name, outcome=out, seconds=round(time.time() - t0, 3)))
+
+    add("pre-bound Application.Ready", lambda: app.Ready)
+    add("pre-bound Application.Name", lambda: app.Name)
+    add("pre-bound Range(B2).Value read", lambda: ws.Range("B2").Value)
+    add("pre-bound Range(B2).Value write 1000 (unchanged value)", lambda: setattr(ws.Range("B2"), "Value", 1000))
+    add("excel_ready_probe on pre-bound view", lambda: excel_ready_probe(ws))
+    add("wait_busy on pre-bound Application", lambda: wait_busy(app))
+    add("fresh GetObject(path).Application", lambda: win32com.client.GetObject(path).Application)
+    return rows
+
+
+def modal_probe():
+    """Records how Excel answers this harness's calls with its Open dialog up. Evidence for the readiness gate and
+    the write-busy classification (com_gate.BUSY_CODES). Excel only; writes nothing to the workbook except B2 = 1000,
+    its own value, on a scratch copy."""
+    import pythoncom
+    os.makedirs(RESULTS, exist_ok=True)
+    d = os.path.join(WORK, "modal-probe")
+    shutil.rmtree(d, ignore_errors=True)
+    os.makedirs(d)
+    path = os.path.join(d, "budget.xlsx")
+    shutil.copy(os.path.join(BASE, "budget.xlsx"), path)
+    pythoncom.CoInitialize()
+    a = Excel()
+    holder = None
+    rows = []
+    try:
+        a.launch()
+        a.open(path)
+        time.sleep(1)
+        rows += modal_probe_rows("dialog not open", path, a.app, a.ws)
+        holder, seen = start_holder(path, a.pid, os.path.join(d, "holder.log"))
+        rows += modal_probe_rows("Open dialog up", path, a.app, a.ws)
+        rows += modal_probe_rows("Open dialog up (second round)", path, a.app, a.ws)
+        closed = close_dialogs(a.pid)
+        helper = finish_helper(holder)
+        holder = None
+        rows += modal_probe_rows("dialog closed", path, a.app, a.ws)
+    finally:
+        try:
+            a.app.DisplayAlerts = False
+            a.app.Quit()
+        except Exception:
+            pass
+        if holder is not None and holder.poll() is None:
+            holder.kill()
+        if a.pid and pid_alive(a.pid):
+            kill_pid(a.pid)
+        pythoncom.CoUninitialize()
+    lines = ["## Excel answers with its Open dialog up (measured)", "",
+             f"Dialog windows seen: {seen}. Closed by the harness: {closed}. Helper: {helper}.", "",
+             "| state | call | outcome | seconds |", "|---|---|---|---|"]
+    lines += [f"| {r['state']} | {r['call']} | {r['outcome']} | {r['seconds']} |" for r in rows]
+    text = "\n".join(lines) + "\n"
+    with open(MODAL_PROBE_MD, "w") as f:
+        f.write(redact(text))
+    with open(os.path.join(RESULTS, "unit1-modal-probe.json"), "w") as f:
+        json.dump(rows, f, indent=1)
+    print(redact(text))
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
-    if cmd == "run":
+    if cmd == "modal-probe":
+        modal_probe()
+    elif cmd == "run":
         result = run(sys.argv[2], int(sys.argv[3]))
         print(json.dumps({"run": result.get("run"), "status": result.get("status"), "verdict": result.get("verdict")}))
     elif cmd == "matrix":

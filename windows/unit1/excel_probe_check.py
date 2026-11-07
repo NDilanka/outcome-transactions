@@ -13,7 +13,8 @@ import time
 
 import win32com.client
 
-from otx_win import Watchdog, force_foreground, image_pids, kill_pid, new_image_pid, pid_alive
+from office_guard import own_pid
+from otx_win import Watchdog, force_foreground, image_pids, kill_pid, pid_alive
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WORK = os.path.join(HERE, "work", "excel-probe-check")
@@ -30,7 +31,7 @@ def main():
     before = image_pids("EXCEL.EXE")
     app = win32com.client.DispatchEx("Excel.Application")
     app.Visible = True
-    pid = new_image_pid("EXCEL.EXE", before)
+    pid = own_pid(app.Hwnd, before)
     wd = Watchdog(pid)
     wd.start()
     out = {}

@@ -1,0 +1,88 @@
+{
+ "case": "prompt-answer-8s",
+ "label": "fixed",
+ "outcome": "returned",
+ "pids": [
+  26548
+ ],
+ "hung": false,
+ "stages": [
+  "launched",
+  "commit-start",
+  "injected",
+  "result",
+  "answered-after-report",
+  "after"
+ ],
+ "injected": {
+  "kind": "save-prompt",
+  "answer_after_s": 8.0
+ },
+ "seconds": 8.28,
+ "report": {
+  "status": "refused",
+  "reason": "Word did not answer the total line value write within 5 s, and the call returned later with nothing landed",
+  "message": "Refused: Word did not answer the total line value write within 5 s, and the call returned later with nothing landed. Nothing was written.",
+  "rejections": 0,
+  "reconcile": {
+   "step": "total line value",
+   "state": "unchanged",
+   "detail": "'Total: 1000'",
+   "returned": true,
+   "call_error": "com_error 0x800A1423",
+   "polls": [
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)",
+    "unreadable (the application turned the call away)"
+   ]
+  },
+  "late_landing": null,
+  "late_outcome": null,
+  "rollback": [],
+  "app_restore_state": "restored",
+  "restore_log": [
+   {
+    "attempt": 1,
+    "at": 1794075213.06,
+    "step": "Application.DisplayAlerts set",
+    "action": "restored",
+    "detail": "already at the original value"
+   }
+  ],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.03,
+   "last_error": null
+  },
+  "unconfirmed": null
+ },
+ "error": null,
+ "alerts_after": -1,
+ "para2": "Total: 1000",
+ "late": {
+  "late_outcome": null,
+  "late_landing": null,
+  "app_restore_state": "restored"
+ },
+ "save_returned": null,
+ "save_error": "com_error(-2147352567, 'Exception occurred.', (0, 'Microsoft Word', \"We can\u2019t save this file because it\u2019s read-only.\\nTo keep your changes, you'll need to save ",
+ "killed_pids": [
+  26548
+ ],
+ "verdict": "CORRECT",
+ "expected": "refused: the call returned later with nothing landed, within 40 s",
+ "git_head": "57165d5",
+ "working_tree_differs_from_head": true,
+ "live_agent_sha": "4c81817c4b74"
+}

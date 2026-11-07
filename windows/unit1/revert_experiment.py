@@ -33,8 +33,9 @@ sys.path.insert(0, HERE)
 
 import xlsx_props as XP  # noqa: E402
 from com_gate import NotResponding, RemoteError, Step, describe, guard, ready_gate, run_steps, timed  # noqa: E402
+from office_guard import own_pid  # noqa: E402
 from open_doc_experiment import excel_props, excel_ready_probe, scrub_author  # noqa: E402
-from otx_win import (Watchdog, foreground_desc, free_mb, image_pids, kill_pid, new_image_pid,  # noqa: E402
+from otx_win import (Watchdog, foreground_desc, free_mb, image_pids, kill_pid,  # noqa: E402
                      pid_alive, redact, wait_for_memory)
 
 BASE = os.path.join(HERE, "base", "revert.xlsx")
@@ -247,7 +248,7 @@ def fixture():
     app = win32com.client.DispatchEx("Excel.Application")
     app.Visible = False
     app.DisplayAlerts = False
-    pid = new_image_pid("EXCEL.EXE", before)
+    pid = own_pid(app.Hwnd, before)
     try:
         wb = app.Workbooks.Add()
         ws = wb.Worksheets(1)
@@ -297,7 +298,7 @@ def _launch():
     app = win32com.client.DispatchEx("Excel.Application")
     app.Visible = True
     app.DisplayAlerts = False
-    return app, new_image_pid("EXCEL.EXE", before)
+    return app, own_pid(app.Hwnd, before)
 
 
 def run(case, rep):

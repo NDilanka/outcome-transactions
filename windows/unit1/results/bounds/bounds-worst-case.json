@@ -1,0 +1,111 @@
+{
+ "budgets": {
+  "forward_s": 30.0,
+  "answer_s": 40.0,
+  "ready_s": 5.0,
+  "write_s": 10.0,
+  "call_s": 5.0,
+  "reconcile_s": 20.0
+ },
+ "rows": [
+  {
+   "scenario": "gate-busy",
+   "seconds_to_answer": 5.0,
+   "status": "refused",
+   "reason": "Excel busy",
+   "message": "Refused: Excel busy. Nothing written.",
+   "restore_state_at_answer": null,
+   "late_outcome_at_answer": null,
+   "rollback": null,
+   "note": "Excel turned away every readiness probe"
+  },
+  {
+   "scenario": "gate-hang",
+   "seconds_to_answer": 5.0,
+   "status": "refused",
+   "reason": "Excel not responding",
+   "message": "Refused: Excel not responding. Nothing written.",
+   "restore_state_at_answer": null,
+   "late_outcome_at_answer": null,
+   "rollback": null,
+   "note": "the readiness probe does not return"
+  },
+  {
+   "scenario": "unknown-at-forward-deadline",
+   "seconds_to_answer": 30.01,
+   "status": "unknown",
+   "reason": "Excel did not return from the E2 value write (the call had not returned by the end of the reconcile window; last read 2)",
+   "message": "Outcome unknown: Excel did not return from the E2 value write (the call had not returned by the end of the reconcile window; last read 2). Check B2 and E2 before you save, because a write may still complete. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+   "restore_state_at_answer": "pending",
+   "late_outcome_at_answer": {
+    "state": "pending",
+    "detail": "the write had not returned when the outcome was reported"
+   },
+   "rollback": [],
+   "note": "E2 write hangs after about 9.5 s of rejections, then lands when released",
+   "after_release": {
+    "late_outcome": {
+     "state": "landed",
+     "detail": "6",
+     "call_error": null
+    },
+    "app_restore_state": "restored",
+    "cells": {
+     "B2": 5000,
+     "E2": 6
+    }
+   }
+  },
+  {
+   "scenario": "refused-write-start-limit",
+   "seconds_to_answer": 34.91,
+   "status": "refused_partial",
+   "reason": "busy: rejected 24 times, target unchanged; rollback of E2 value not_responding: write E2 value did not return within 5 s",
+   "message": "Refused, and not fully rolled back: busy: rejected 24 times, target unchanged; rollback of E2 value not_responding: write E2 value did not return within 5 s. Check B2 and E2 and E3. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+   "restore_state_at_answer": "pending",
+   "late_outcome_at_answer": null,
+   "rollback": [
+    {
+     "step": "E2 value",
+     "status": "not_responding",
+     "reason": "write E2 value did not return within 5 s"
+    }
+   ],
+   "note": "rejection stops at the write start limit (25 s); rollback write hangs with Excel turned away; restore turned away to the answer deadline",
+   "after_release": {
+    "app_restore_state": "restored",
+    "cells": {
+     "B2": 5000,
+     "E2": 6,
+     "E3": 3
+    }
+   }
+  },
+  {
+   "scenario": "refused-read-hang-at-forward-end",
+   "seconds_to_answer": 39.02,
+   "status": "refused_partial",
+   "reason": "Excel not responding before the G2 value write (read G2 value did not return within 5 s); rollback of F2 value not_responding: write F2 value did not return within 5 s",
+   "message": "Refused, and not fully rolled back: Excel not responding before the G2 value write (read G2 value did not return within 5 s); rollback of F2 value not_responding: write F2 value did not return within 5 s. Check B2 and E2 and F2 and G2. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+   "restore_state_at_answer": "pending",
+   "late_outcome_at_answer": null,
+   "rollback": [
+    {
+     "step": "F2 value",
+     "status": "not_responding",
+     "reason": "write F2 value did not return within 5 s"
+    }
+   ],
+   "note": "pre-write read of G2 hangs to the forward deadline; rollback and restore as in the previous scenario",
+   "after_release": {
+    "app_restore_state": "restored",
+    "cells": {
+     "B2": 5000,
+     "E2": 6,
+     "F2": 7,
+     "G2": 4
+    }
+   }
+  }
+ ]
+}

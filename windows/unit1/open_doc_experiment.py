@@ -21,10 +21,13 @@ import traceback
 import zipfile
 
 import win32com.client
+import win32process
 
-from com_gate import NotResponding, RemoteError, Step, describe, guard, ready_gate, run_steps, timed
+from com_gate import (ANSWER_BUDGET_S, CALL_BUDGET_S, FORWARD_BUDGET_S, NotResponding, RemoteError, Step, describe,
+                      guard, is_busy, ready_gate, run_steps, timed)
+from office_guard import own_pid
 from otx_win import (Watchdog, docx_paras, flat_opc_paras, foreground_desc, force_foreground, free_mb,
-                     image_pids, kill_pid, lock_info, new_image_pid, pid_alive, redact, rm_holders,
+                     image_pids, kill_pid, lock_info, pid_alive, redact, rm_holders,
                      wait_for_memory, xlsx_cells)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -198,7 +201,7 @@ class _Office:
         before = image_pids(self.image)
         self.app = win32com.client.DispatchEx(self.prog)
         self.app.Visible = True
-        self.pid = new_image_pid(self.image, before)
+        self.pid = own_pid(self.app.Hwnd, before)
         self.version = f"{self.app.Name} {self.app.Version} build {self.app.Build}"
 
 
@@ -232,7 +235,9 @@ class Excel(_Office):
         ScreenUpdating when quiet) off for the commit, restored as checked steps; every COM call timed, with
         reconciliation of a timed-out write. The commit never calls Close, Save, SaveAs or Quit on the user's
         workbook. wrap(step) -> step lets the busy and hang tests act between the pre-write read and the write."""
-        gate = ready_gate(self.open_view, excel_ready_probe)
+        t0 = time.monotonic()
+        forward_until, answer_until = t0 + FORWARD_BUDGET_S, t0 + ANSWER_BUDGET_S
+        gate = ready_gate(self.open_view, excel_ready_probe, until=forward_until)
         if not gate["ok"]:
             return dict(status="refused", reason=gate["reason"], message=f"Refused: {gate['reason']}. Nothing written.",
                         done=[], rollback=[], rejections=0, checks=[], gate=gate)
@@ -240,14 +245,16 @@ class Excel(_Office):
         if quiet:
             during["ScreenUpdating"] = False
         try:
-            befores = timed(lambda: excel_props(self.open_view(), list(during)))
+            befores = timed(lambda: excel_props(self.open_view(), list(during)),
+                            max(0.0, min(CALL_BUDGET_S, forward_until - time.monotonic())))
         except (NotResponding, RemoteError) as e:
             reason = "Excel not responding" if isinstance(e, NotResponding) else f"Excel busy ({describe(e)})"
             return dict(status="refused", reason=reason, message=f"Refused: {reason}. Nothing written.", done=[],
                         rollback=[], rejections=0, checks=[], gate=gate)
         step = excel_b2_step()
         core = [wrap(step) if wrap else step]
-        rep = run_steps(guard(core, befores, during), self.open_view)
+        rep = run_steps(guard(core, befores, during), self.open_view, app_alive=lambda: pid_alive(self.pid),
+                        forward_until=forward_until, answer_until=answer_until)
         rep["gate"] = gate
         rep["guard"] = dict(before=befores, during=during)
         return rep
@@ -293,8 +300,48 @@ class Excel(_Office):
         self.app.Quit()
 
 
+WD_ALERTS_NONE = 0  # WdAlertLevel.wdAlertsNone (a DispatchEx instance starts with this value, measured)
+
+
+def word_ready_probe(doc):
+    """The gate's no-op read: the application's name and the total line. Word turns the paragraph read away while a
+    dialog is up (RPC_E_CALL_REJECTED), and the name read still answers, so the paragraph read is the one that decides."""
+    doc.Application.Name
+    doc.Paragraphs(2).Range.Text
+    return True
+
+
+def word_props(doc, names):
+    return {n: getattr(doc.Application, n) for n in names}
+
+
+def word_b2_step():
+    """The agent's in-app edit: the total line, Total: 1000 -> Total: 5000, without its paragraph mark. Read back
+    after the write, as Excel's B2 step is."""
+    def read(doc):
+        return doc.Paragraphs(2).Range.Text.rstrip("\r\x07")
+
+    def write(doc, v):
+        r = doc.Paragraphs(2).Range
+        r.MoveEnd(1, -1)  # wdCharacter: keeps the paragraph mark
+        r.Text = v
+
+    return Step("total line value", read, write, "Total: 5000")
+
+
 class Word(_Office):
     prog, ext, image = "Word.Application", "docx", "WINWORD.EXE"
+
+    def launch(self):
+        """Word's Application has no Hwnd. The PID comes from the window of a blank document that this launch opens
+        and closes; the document belongs to the instance just started."""
+        before = image_pids(self.image)
+        self.app = win32com.client.DispatchEx(self.prog)
+        self.app.Visible = True
+        probe = self.app.Documents.Add()
+        self.pid = own_pid(probe.ActiveWindow.Hwnd, before)
+        probe.Close(0)
+        self.version = f"{self.app.Name} {self.app.Version} build {self.app.Build}"
 
     def open(self, path):
         self.path = path
@@ -314,16 +361,44 @@ class Word(_Office):
         end = self.doc.Content.End - 1
         self.doc.Range(end, end).InsertAfter("\rUser note")
 
-    def live_agent(self, quiet=False):
+    def open_view(self):
+        """Runs on a worker thread (com_gate.timed): a fresh binding to the open document, found by its path. The
+        binding must belong to this instance, by PID, so a document open in another Word is never written."""
+        doc = win32com.client.GetObject(os.path.abspath(self.path))
+        pid = win32process.GetWindowThreadProcessId(doc.ActiveWindow.Hwnd)[1]
+        if pid != self.pid:
+            raise RuntimeError(f"the bound document is in Word PID {pid}, not the harness's {self.pid}")
+        return doc
+
+    def live_agent(self, quiet=False, wrap=None):
+        """The agent's in-app edit under the three layers in com_gate.py, as Excel.live_agent does it: the readiness
+        gate; DisplayAlerts (and ScreenUpdating when quiet) off for the write, restored as checked steps; every COM call
+        timed, with read-back and reconciliation of a timed-out write. The commit never calls Save, SaveAs, Close or
+        Quit on the user's document. wrap(step) -> step lets a test act inside the write call."""
+        t0 = time.monotonic()
+        forward_until, answer_until = t0 + FORWARD_BUDGET_S, t0 + ANSWER_BUDGET_S
+        gate = ready_gate(self.open_view, word_ready_probe, until=forward_until, app="Word")
+        if not gate["ok"]:
+            return dict(status="refused", reason=gate["reason"], message=f"Refused: {gate['reason']}. Nothing written.",
+                        done=[], rollback=[], rejections=0, checks=[], gate=gate)
+        during = {"DisplayAlerts": WD_ALERTS_NONE}
         if quiet:
-            self.app.ScreenUpdating = False
+            during["ScreenUpdating"] = False
         try:
-            r = self.doc.Paragraphs(2).Range
-            r.MoveEnd(1, -1)
-            r.Text = "Total: 5000"
-        finally:
-            if quiet:
-                self.app.ScreenUpdating = True
+            befores = timed(lambda: word_props(self.open_view(), list(during)),
+                            max(0.0, min(CALL_BUDGET_S, forward_until - time.monotonic())))
+        except (NotResponding, RemoteError) as e:
+            reason = "Word not responding" if isinstance(e, NotResponding) else (
+                f"Word busy ({describe(e)})" if is_busy(e) else f"Word error: {describe(e)}")
+            return dict(status="refused", reason=reason, message=f"Refused: {reason}. Nothing written.", done=[],
+                        rollback=[], rejections=0, checks=[], gate=gate)
+        step = word_b2_step()
+        core = [wrap(step) if wrap else step]
+        rep = run_steps(guard(core, befores, during), self.open_view, app_alive=lambda: pid_alive(self.pid),
+                        forward_until=forward_until, answer_until=answer_until, app="Word")
+        rep["gate"] = gate
+        rep["guard"] = dict(before=befores, during=during)
+        return rep
 
     def mem_state(self):
         paras = [self.doc.Paragraphs(i).Range.Text.rstrip("\r\x07") for i in range(1, self.doc.Paragraphs.Count + 1)]
@@ -533,7 +608,7 @@ def bases():
     xl = win32com.client.DispatchEx("Excel.Application")
     xl.Visible = False
     xl.DisplayAlerts = False
-    pid = new_image_pid("EXCEL.EXE", before)
+    pid = own_pid(xl.Hwnd, before)
     try:
         wb = xl.Workbooks.Add()
         ws = wb.Worksheets(1)
@@ -555,7 +630,9 @@ def bases():
     wd_app = win32com.client.DispatchEx("Word.Application")
     wd_app.Visible = False
     wd_app.DisplayAlerts = 0
-    pid = new_image_pid("WINWORD.EXE", before)
+    probe = wd_app.Documents.Add()  # Word's Application has no Hwnd: the PID comes from this blank document's window
+    pid = own_pid(probe.ActiveWindow.Hwnd, before)
+    probe.Close(0)
     try:
         doc = wd_app.Documents.Add()
         doc.Content.Text = "Budget report\rTotal: 1000\rFood: 250"

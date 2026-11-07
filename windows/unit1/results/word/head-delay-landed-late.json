@@ -1,0 +1,37 @@
+{
+ "case": "delay-landed-late",
+ "label": "head",
+ "outcome": "returned",
+ "pids": [
+  10832
+ ],
+ "hung": false,
+ "stages": [
+  "launched",
+  "commit-start",
+  "injected",
+  "result",
+  "answered-after-report",
+  "after"
+ ],
+ "injected": {
+  "kind": "sleep",
+  "seconds": 8.0
+ },
+ "seconds": 8.02,
+ "report": null,
+ "error": null,
+ "alerts_after": -1,
+ "para2": "Total: 5000",
+ "late": null,
+ "save_returned": null,
+ "save_error": null,
+ "killed_pids": [
+  10832
+ ],
+ "verdict": "WRONG",
+ "expected": "refused, the late write rolled back, within 40 s",
+ "git_head": "57165d5",
+ "working_tree_differs_from_head": true,
+ "live_agent_sha": "eb98e94d63c8"
+}

@@ -5,9 +5,9 @@
  "expect": "late-landed",
  "status": "ok",
  "dialog_windows": [],
- "free_mb_before": 976,
+ "free_mb_before": 876,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 25580,
+ "pid": 24528,
  "mem_before_commit": {
   "agent": false,
   "user": true,
@@ -15,9 +15,9 @@
  },
  "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
  "alerts_seen_in_write": false,
- "injected_prompt_at": 1794067642.32,
+ "injected_prompt_at": 1794073357.13,
  "scratch_saved": true,
- "commit_seconds": 8.69,
+ "commit_seconds": 8.75,
  "commit": {
   "status": "refused",
   "done": [
@@ -29,6 +29,7 @@
   "rejections": 0,
   "checks": [],
   "late_landing": "landed after the timeout, rolled back",
+  "late_outcome": null,
   "reconcile": {
    "step": "B2 value",
    "state": "landed",
@@ -36,19 +37,19 @@
    "returned": true,
    "call_error": null,
    "polls": [
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))"
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)",
+    "unreadable (Excel turned the call away)"
    ]
   },
   "rollback": [
@@ -56,20 +57,32 @@
     "step": "B2 value",
     "status": "written",
     "reason": null
-   },
-   {
-    "step": "Application.DisplayAlerts set",
-    "status": "already",
-    "reason": null
    }
   ],
-  "app_restore": null,
+  "app_restore": [
+   {
+    "step": "Application.DisplayAlerts set",
+    "status": "restored",
+    "reason": "already at the original value"
+   }
+  ],
+  "app_restore_state": "restored",
+  "restore_log": [
+   {
+    "attempt": 1,
+    "at": 1794073365.79,
+    "step": "Application.DisplayAlerts set",
+    "action": "restored",
+    "detail": "already at the original value"
+   }
+  ],
   "left": [],
+  "unconfirmed": null,
   "gate": {
    "ok": true,
    "reason": null,
    "tries": 1,
-   "seconds": 0.03,
+   "seconds": 0.02,
    "last_error": null
   },
   "guard": {
@@ -85,8 +98,9 @@
  "helper_exit": null,
  "closer_exit": null,
  "answerer_exit": "exit 0",
- "answer_log": "1794067650.60 answer pid 7028: clicked Yes on ['Yes']\n",
+ "answer_log": "1794073365.41 answer pid 25716: clicked Yes on ['Yes']\n",
  "dialog_open_s": null,
+ "alerts_wait_s": 0.0,
  "display_alerts_final": true,
  "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
  "mem_after_commit": {
@@ -100,6 +114,7 @@
   "others_ok": true
  },
  "verdict": "CORRECT: write timed out, prompt answered, the late landing caught and rolled back, file and user edit unchanged",
+ "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 25580
+ "killed_excel_pid": 24528
 }

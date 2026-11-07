@@ -11,58 +11,71 @@
     "#32770"
    ],
    "busy_probe": {
-    "busy": false,
+    "busy": true,
     "tries": 1,
-    "last_error": "com_error(-2147417842, 'The application called an interface that was marshalled for a different thread.', None, None)"
+    "last_error": "Application.Ready is False"
    }
   }
  ],
- "free_mb_before": 751,
+ "free_mb_before": 863,
  "office": "Microsoft Excel 16.0 build 14326.0",
- "pid": 25392,
+ "pid": 24484,
  "mem_before_commit": {
   "agent": false,
   "user": true,
   "others_ok": true
  },
  "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
- "commit_seconds": 20.55,
+ "commit_seconds": 15.36,
  "commit": {
-  "status": "unknown",
+  "status": "refused",
   "done": [
    "Application.DisplayAlerts set"
   ],
   "refused_at": "B2 value",
-  "reason": "Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away))",
-  "message": "Outcome unknown: Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away)). Check B2 before you save, because a write may still complete.",
-  "rejections": 0,
-  "checks": [],
+  "reason": "busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (Excel turned the call away); the value is unconfirmed",
+  "message": "Refused: busy: rejected (com_error 0x800AC472), and no read-back of the target was possible within the write budget (Excel turned the call away); the value is unconfirmed. Check B2 before you save: the write was turned away, and its value could not be read back. Excel alerts are temporarily off. The commit turns them back on when Excel answers.",
+  "rejections": 1,
+  "checks": [
+   "unreadable (Excel turned the call away)"
+  ],
   "late_landing": null,
-  "reconcile": {
-   "step": "B2 value",
-   "state": "unknown",
-   "detail": "the call returned, but the target could not be read back: AttributeError (member lookup turned away)",
-   "returned": true,
-   "call_error": "RuntimeError",
-   "polls": [
-    "unreadable (AttributeError (member lookup turned away))",
-    "unreadable (AttributeError (member lookup turned away))"
-   ]
-  },
+  "late_outcome": null,
+  "reconcile": null,
   "rollback": [],
   "app_restore": [
    {
     "step": "Application.DisplayAlerts set",
-    "status": "written",
-    "reason": null
+    "status": "restored",
+    "reason": "written back"
+   }
+  ],
+  "app_restore_state": "restored",
+  "restore_log": [
+   {
+    "attempt": 1,
+    "at": 1794073806.87,
+    "step": "Application.DisplayAlerts set",
+    "action": "turned away",
+    "detail": "Excel turned the call away"
+   },
+   {
+    "attempt": 2,
+    "at": 1794073807.61,
+    "step": "Application.DisplayAlerts set",
+    "action": "restored",
+    "detail": "written back"
    }
   ],
   "left": [],
+  "unconfirmed": [
+   "B2"
+  ],
   "gate": {
    "ok": true,
    "reason": null,
    "tries": 1,
-   "seconds": 0.12,
+   "seconds": 0.02,
    "last_error": null
   },
   "guard": {
@@ -81,7 +94,8 @@
  "closer_exit": null,
  "answerer_exit": null,
  "answer_log": "(no log)",
- "dialog_open_s": 20.01,
+ "dialog_open_s": 14.91,
+ "alerts_wait_s": 0.5,
  "display_alerts_final": true,
  "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
  "mem_after_commit": {
@@ -94,7 +108,8 @@
   "user": true,
   "others_ok": true
  },
- "verdict": "WRONG: {\"commit\": {\"status\": \"unknown\", \"done\": [\"Application.DisplayAlerts set\"], \"refused_at\": \"B2 value\", \"reason\": \"Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away))\", \"message\": \"Outcome unknown: Excel did not return from the B2 value write (the call returned, but the target could not be read back: AttributeError (member lookup turned away)). Check B2 before you save, because a write may still complete.\", \"rejections\": 0, \"checks\": [], \"late_landing\": null, \"reconcile\": {\"step\": \"B2 value\", \"state\":",
+ "verdict": "CORRECT: write rejected, retry budget spent, commit refused, file and user edit unchanged, alerts restored after the dialog closed",
+ "closed_in_cleanup": [],
  "quit_ok": true,
- "killed_excel_pid": 25392
+ "killed_excel_pid": 24484
 }

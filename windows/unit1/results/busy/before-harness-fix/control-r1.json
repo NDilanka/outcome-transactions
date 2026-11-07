@@ -1,0 +1,72 @@
+{
+ "run": "control-r1",
+ "case": "control",
+ "rep": 1,
+ "expect": "control",
+ "status": "ok",
+ "dialog_windows": [],
+ "free_mb_before": 712,
+ "office": "Microsoft Excel 16.0 build 14326.0",
+ "pid": 3024,
+ "mem_before_commit": {
+  "agent": false,
+  "user": true,
+  "others_ok": true
+ },
+ "sha_before": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "commit_seconds": 0.5,
+ "commit": {
+  "status": "committed",
+  "done": [
+   "Application.DisplayAlerts set",
+   "B2 value",
+   "Application.DisplayAlerts restored"
+  ],
+  "refused_at": null,
+  "reason": null,
+  "message": "Committed.",
+  "rejections": 0,
+  "checks": [],
+  "late_landing": null,
+  "reconcile": null,
+  "rollback": [],
+  "app_restore": null,
+  "left": [],
+  "gate": {
+   "ok": true,
+   "reason": null,
+   "tries": 1,
+   "seconds": 0.11,
+   "last_error": null
+  },
+  "guard": {
+   "before": {
+    "DisplayAlerts": true
+   },
+   "during": {
+    "DisplayAlerts": false
+   }
+  }
+ },
+ "closed_by_harness": [],
+ "helper_exit": null,
+ "closer_exit": null,
+ "answerer_exit": null,
+ "answer_log": "(no log)",
+ "dialog_open_s": null,
+ "display_alerts_final": true,
+ "sha_after_commit": "23525c33b8d9ad170f77e1f01badbb6ba4b43ef7e4501e0df54dddbeb0ca26aa",
+ "mem_after_commit": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "disk_after_user_save": {
+  "agent": true,
+  "user": true,
+  "others_ok": true
+ },
+ "verdict": "CORRECT: committed",
+ "quit_ok": true,
+ "killed_excel_pid": 3024
+}
