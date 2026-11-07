@@ -292,6 +292,20 @@ def ods_copy_sheet_first(path, name):
     parent.insert(list(parent).index(first), dup)
     _save_content(path, items, root)
 
+def sheet_names(path):
+    """The sheet names of a workbook, in order."""
+    with zipfile.ZipFile(path) as z:
+        root = ET.fromstring(z.read("content.xml"))
+    return [t.get(T + "name") for t in root.iter(T + "table")]
+
+def ods_rename_sheet(path, old, new):
+    """Rename a sheet, as a user does."""
+    items, root = _load_content(path)
+    named = [t for t in root.iter(T + "table") if t.get(T + "name") == old]
+    assert len(named) == 1
+    named[0].set(T + "name", new)
+    _save_content(path, items, root)
+
 def pdf_text(path):
     return subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, text=True).stdout
 

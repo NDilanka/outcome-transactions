@@ -46,8 +46,14 @@ EXPECT = {
     "dup_cached": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_comment": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_space": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
-    "dup_sheet": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
+    "dup_sheet": dict(outcome="committed", committed=True, real_b2="5000", real_b2_by_sheet={"Q3": "5000", "Q3 copy": "3"}),
+    "dup_sheet_renamed": dict(outcome="anchor_mismatch", committed=False, real_b2=None, real_b2_by_sheet={"FY2026": "3"}),
 }
+
+def sheet_b2s():
+    """B2 of every sheet in the real workbook, by sheet name."""
+    p = f"{REAL}/budget.ods"
+    return {n: R.ods_cells(p, n).get("B2", (None,))[0] for n in R.sheet_names(p)}
 
 def write_report(rep):
     rep["mismatches"] = {k: [v, rep.get(k)] for k, v in EXPECT.get(MODE, {}).items() if rep.get(k) != v}
@@ -204,6 +210,8 @@ def main():
         log("user pasted a row labelled 'item 0' with a text:s space, during search")
     if MODE == "dup_sheet":
         R.ods_copy_sheet_first(f"{REAL}/budget.ods", "Q3 copy"); log("user copied sheet Q3 and moved the copy ahead of it, during search")
+    if MODE == "dup_sheet_renamed":
+        R.ods_rename_sheet(f"{REAL}/budget.ods", "Q3", "FY2026"); log("user renamed sheet Q3 to FY2026 during search")
     for th in ths: th.join()
     search_s = time.monotonic() - t_search
     nv = view_of("f0_null")
@@ -247,7 +255,7 @@ def main():
         if now_addr != base_addr:
             log("anchor moved: the target row or column changed; nothing committed", anchor=anchor, was=base_addr, now=now_addr)
             abort("anchor_mismatch", level, anchor=anchor, base_address=base_addr, now_address=now_addr,
-                  real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0], forks=results)
+                  real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0], real_b2_by_sheet=sheet_b2s(), forks=results)
             return
         if not conflicts: break
         # Semantic merge test: the same file changed on both sides, but did the same cells?
@@ -322,7 +330,7 @@ def main():
     try:
         report.update(real_notes_preserved="user typed this" in open(f"{REAL}/notes.txt").read(),
                       user_c3_kept=(R.ods_cells(f"{REAL}/budget.ods").get("C3", (None,))[0] in ("77", 77, "77.0")) if CONFLICT or RACE else None,
-                      real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0])
+                      real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0], real_b2_by_sheet=sheet_b2s())
     except Exception as ex:
         log("report state unreadable", error=f"{type(ex).__name__}: {ex}")
     write_report(report)
