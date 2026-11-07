@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The total goes in the Balance column E9 (the running balance total), or separate income and expense totals are added at the bottom.",
+  "reading_followed": "One net total of the Amount column is placed in D9 with label 'Total' in A9, equal to -210, and nothing else in the workbook changes.",
+  "notes": "The request does not say which column to total, and the Balance column is already a running total, so a total there would be redundant. The chosen reading is the net sum of the Amount column, which matches the balance movement from 1000 to 790."
+}

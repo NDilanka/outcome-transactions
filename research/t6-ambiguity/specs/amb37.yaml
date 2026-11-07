@@ -1,0 +1,21 @@
+- id: amb37
+  must:
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 1').text_runs subset_of ['FFC000']"
+    - "trim(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 1').text) == before(trim(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 1').text))"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 2').text_runs subset_of ['3F3F3F']"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 2').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 2').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide_count == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide_count)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').text_runs subset_of ['FFC000']"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).transition.type == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).transition.type)"
+  footprint:
+    - "Slide 2 title placeholder 'PlaceHolder 1' text colour changed from 3F3F3F to FFC000 (the colour of the title slide heading)"
+  fuzzy:
+    - "The overview heading already matches the title slide heading in bold, 72 pt Oswald typeface and centred alignment; no change to those attributes is needed or expected, and a person may judge the colour change alone as the full match."
+    - "The overview heading text 'Overview' and the body bullets on slide 2 must not be edited; a person matching the heading would not change them."
+  assumptions:
+    - "'Headings' refers to the title placeholder of the overview slide (slide 2), which is the only heading on that slide."
+    - "'Title slide' is slide 1, whose heading 'New Club and Organization Training' is in colour FFC000."
+    - "Colour is the only attribute of the slide 2 heading that differs from the title slide heading in the starting file."
+    - "Bullet text colours on slide 2 (3F3F3F) are not part of the request and stay unchanged."
+  grounding_used: "inspection.md: slide 1 'PlaceHolder 1' runs colour FFC000 bold; slide 2 'PlaceHolder 1' 'Overview' run colour 3F3F3F bold; slide 2 'PlaceHolder 2' bullets colour 3F3F3F; slide 2 transition present. Starting XML (read-only snapshot home/user/Desktop/New_Club_Spring_2018_Training.pptx, ppt/slides/slide1.xml and slide2.xml): both title runs are b=1, sz=7200, latin/ea typeface Oswald, algn=ctr, anchor=b; only srgbClr differs (ffc000 vs 3f3f3f)."
+  confidence: high

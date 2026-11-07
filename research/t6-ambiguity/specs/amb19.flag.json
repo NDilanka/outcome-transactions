@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Move the whole Apologies block above the 'Attendees:' heading so that apologies come before the attendee list.",
+  "reading_followed": "The 'Apologies:' heading and 'Lisa Green' line are moved to sit directly under the last attendee, 'Michael Brown', with the blank separator removed or moved to the end, and the rest of the document is unchanged.",
+  "notes": "In the starting file the Apologies block already follows the attendees with one blank paragraph between, so the only plausible change is closing that gap or repositioning above the attendees. The spec checks sampled unchanged paragraphs rather than all 28, because the reader has no paragraph-list slice."
+}

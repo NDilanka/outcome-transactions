@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Clean up means standard title case in which articles, short prepositions and conjunctions (of, the, and, with, from, in) stay lowercase except at the start, which would give different cell values.",
+  "reading_followed": "Every whitespace-separated word of each garbage title is capitalised with the rest lowercased (as proper_case does), whitespace is collapsed, and the typed letters are otherwise kept, written into C2:C29.",
+  "notes": "The request does not say how to treat small words or obvious misspellings, so the spec picks the literal every-word capitalisation and flags those choices as fuzzy. Column B and the C1 header are required to stay unchanged."
+}

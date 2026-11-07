@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Hide the rows whose Actual value is #N/A instead of deleting them, as the workbook filename 'HideNA' suggests.",
+  "reading_followed": "The #N/A rows are deleted from Sheet1, with the remaining rows shifting up and nothing else changed.",
+  "notes": "'Get rid of' most literally means delete, but the filename 'Date_Budget_Variance_HideNA.xlsx' points toward hiding, and the reader exposes hidden_rows. The two readings give different end states on these files."
+}

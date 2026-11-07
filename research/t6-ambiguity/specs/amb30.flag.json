@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Only the bracketed bracket-delimited instruction text (such as the bracketed sentence in the 'Okay' reply) counts as a stage direction, so only that passage is italicized and the branch headings and instruction sentences stay roman.",
+  "reading_followed": "Stage directions are all non-spoken instruction text to the caller, including the bracketed instruction and the conditional branch lines, and all of these are italicized while spoken 'Study Team:' lines are left alone.",
+  "notes": "The reader cannot read italic, so no must predicate can verify the formatting change; the spec guards text identity and file existence and leaves the italic judgment to fuzzy criteria. Confidence is low because the stage-direction boundary is ambiguous and unverifiable."
+}

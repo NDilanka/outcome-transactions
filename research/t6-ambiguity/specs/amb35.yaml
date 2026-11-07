@@ -1,0 +1,30 @@
+- id: amb35
+  must:
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide_count == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide_count)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').text_runs == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').text_runs)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').width_cm == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').width_cm)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').height_cm == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 1').height_cm)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 2').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 2').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 2').text_runs == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).shape('PlaceHolder 2').text_runs)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).transition.type == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(1).transition.type)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(2).shape('PlaceHolder 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(3).shape('Google Shape;100;p 1').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(3).shape('Google Shape;100;p 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(4).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(4).shape('PlaceHolder 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(5).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(5).shape('PlaceHolder 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(6).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(6).shape('PlaceHolder 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 1').text)"
+  footprint:
+    - "Horizontal paragraph alignment of the text in slide 1 shape 'PlaceHolder 1' (the title), set to centered."
+    - "Package bookkeeping from saving the .pptx (ZIP ordering, timestamps, producer metadata, derived relationship IDs)."
+  fuzzy:
+    - "When slide 1 is rendered, the title 'New Club and Organization Training' (two lines) appears horizontally centered on the slide."
+    - "Slide 1 title and subtitle are visually unchanged apart from the horizontal centering of the title; nothing else on the slide looks moved or restyled."
+  assumptions:
+    - "'The title' means slide 1 shape 'PlaceHolder 1' (the title placeholder), not the subtitle 'PlaceHolder 2' ('SPRING 2018')."
+    - "'Center' means horizontal centering only; vertical placement and the title's text colour and bold formatting are not changed."
+    - "Centering is done as text alignment (reading 1) rather than by moving or resizing the title box; the box is already close to horizontally centred (x=6.5 cm, w=20.8 cm on a 33.9 cm slide), so the box geometry is required to stay the same."
+    - "The reader surface cannot read paragraph alignment or shape position, so the centering requirement cannot be checked by a must predicate and is carried by the fuzzy item only."
+    - "Slide 1 transition and slide 2-7 titles are not part of the request and must be unchanged; the must predicates check text, colour runs, box size, and transition for these."
+  grounding_used: "Inspection report for 550ce7e7-747b-495f-b122-acdc4d0b8e54: 7 slides, 33.9x19.1 cm; slide 1 layout 'Title, 2 Content over Content' with a p:transition; 'PlaceHolder 1' title text 'New Club and Organization\x0b Training' at x=6.5 y=5.0 w=20.8 h=8.5 cm with text runs coloured FFC000 and bold; 'PlaceHolder 2' subtitle 'SPRING 2018 ' at x=3.7 y=15.4 w=25.4 h=3.2 cm; slide titles 2-7 ('Overview', 'Director of Student Organizations', 'What I do:', 'Club Rights, Responsibilities, and Resources ', 'Clubs and Organizations Have the Right to... '); slide 3 shape 'Google Shape;100;p 1' text. Reader reference: text, text_runs (with colour), width_cm/height_cm, transition.type and slide_count are readable; paragraph alignment and shape x/y are not."
+  confidence: low

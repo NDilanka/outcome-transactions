@@ -1,0 +1,19 @@
+- id: amb07
+  must:
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == ['Minions In Black', 'The Dragon With The Girl Tattoo', 'Hairy Potter', 'Enemy Of The Stuke', 'Silence Of Thf Fans', '21 Pump Street', 'The Longest Yard', 'The Bune Collector', 'Dump Fiction', 'Eternal Sunshine Of The Mindless Spot', 'Fifty Shaucks Of Black', 'Star Shrek', 'Lord Of The Cringe', 'Thf Godfathr', 'Buck From The Future', 'Hug Club', 'Planet Of The Grades', 'Top Bun', 'Gone With The Wink', 'The Good, The Better And The Best', 'Doodlefuls', 'I Am Batmun', 'Doctor Norrml', 'Bud Would Hunting', 'If Yesterday', 'Edge Of Puip-Fre Fiction', 'Funkirk', 'Dumblodore: Dumb And Dumber']"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').cell('C1').value == 'Clean Movie Titles'"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:B29').values == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:B29').values)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').nonempty_cells subset_of range('B1:C29')"
+  footprint:
+    - "Sheet1 cells C2:C29 of /home/user/Movie_title_garbage_clean.xlsx, which receive the cleaned movie title text"
+  fuzzy:
+    - "Whether the cleaned titles should capitalise small words (of, the, and, with, from, in) as in standard title case; the must list capitalises every word"
+    - "Whether obvious misspellings in the source (tHF, Shaucks, Godfathr, Norrml, Doodlefuls, Batmun, Funkirk, Dumblodore, Shrek, Puip-Fre) should be corrected; the must list keeps the letters as typed"
+    - "Whether a sheet cell value should be judged on visual cleanliness rather than exact text; the must list checks exact text"
+  assumptions:
+    - "Clean up means fill column C beside each garbage title with that title in proper case with whitespace collapsed and trimmed"
+    - "Column B and the header in C1 are left as they start"
+    - "Formatting such as fill, bold, and column widths is not readable and is not checked"
+  grounding_used: "inspection.md lists Sheet1 dims B1:C29 with 30 non-empty cells, meaning B1 to B29 are filled and C2:C29 are empty; C1 already holds 'Clean Movie Titles'. The 28 B-cell strings were each whitespace-collapsed and given proper_case capitalisation (every alphabetic run capitalised, rest lowercased), with the letters otherwise unchanged. Reader reference confirms range().values, cell().value, sheet_names, nonempty_cells subset_of, and before()."
+  confidence: low

@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Only the word 'LAUNCH' is replaced, so the title becomes 'BIG Launch day' while 'BIG' is kept.",
+  "reading_followed": "The entire title text of the last slide is replaced by 'Launch day', removing 'BIG LAUNCH' completely.",
+  "notes": "The request says 'change the title to', which most naturally means replacing the whole title text, but keeping 'BIG' is a plausible reading that would give a different end state. The 'Launch day' case and trailing period are also judgment calls, handled as fuzzy."
+}

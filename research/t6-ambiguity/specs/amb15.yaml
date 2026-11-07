@@ -1,0 +1,21 @@
+- id: amb15
+  must:
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('A9').value == 'Total'"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D9').value within(0.01) [-210]"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:E8').values == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:E8').values)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A9:E9').nonempty_cells subset_of ['A9', 'D9']"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet_names)"
+    - "os.tree('/home/user/Desktop').paths == before(os.tree('/home/user/Desktop').paths)"
+  footprint:
+    - "Sheet1 of /home/user/Desktop/my_bookkeeping.xlsx: new total row only, cell A9 (label 'Total') and cell D9 (sum of Amount column D3:D8)"
+    - "Cell D9 may hold a formula =SUM(D3:D8) with its cached value"
+  fuzzy:
+    - "Label text of A9 may be a close variant of 'Total' (for example 'TOTAL' or 'Total Amount'), though the spec checks 'Total' exactly"
+    - "Any bold or number-format styling applied to the total row is acceptable"
+  assumptions:
+    - "'A total' means one net total of the Amount column (D), the only numeric column that is a per-transaction amount; the Balance column E is a running balance and its bottom value is already E8 = 790"
+    - "Net total is -150 + 500 - 60 + 300 - 700 - 100 = -210, which is consistent with the balance movement from the implied opening balance 1000 (E3 + 150) to E8 = 790"
+    - "The total row is placed directly below the last data row, row 9, with no blank row, because the data occupies A3:E8"
+    - "No other sheet, cell, file, or desktop item is to change"
+  grounding_used: "inspection.md: Sheet1 dims A1:E8, header row 2 (Description, Category, Type, Amount, Balance), data rows 3-8, Amount column D holds -150, 500, -60, 300, -700, -100 (sum -210), Balance column E is a running formula chain ending E8 = 790 (cached); merged title A1:E1; sibling receipt files on Desktop are not touched. Used as-is, no extra file reads."
+  confidence: medium

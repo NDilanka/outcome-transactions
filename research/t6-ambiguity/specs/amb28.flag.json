@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Enlarge all example text, including the 'Examples of ... graphemes' headings and the bold category labels (for example 'Magic E', 'Consonant digraphs'), as well as the tables.",
+  "reading_followed": "Increase the font size of the text inside the 13 example tables only, while every paragraph, heading and bold label outside the tables keeps its starting size and all text and table contents stay unchanged.",
+  "notes": "The request does not say which parts of the document count as 'the examples', and font size cannot be read, so the size change is checked only by fuzzy judgment. Confidence is medium because the scope of 'examples' is ambiguous."
+}

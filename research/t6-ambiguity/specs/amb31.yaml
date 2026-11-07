@@ -1,0 +1,27 @@
+- id: amb31
+  must:
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide_count == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide_count)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').text_runs == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').text_runs)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').paragraph(1).bullet.type == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').paragraph(1).bullet.type)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').text == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').text_runs == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').text_runs)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraph(1).bullet.type == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraph(1).bullet.type)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').width_cm == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').width_cm)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').height_cm == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').height_cm)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).transition.type == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).transition.type)"
+  footprint:
+    - "Font size of the text in shape 'PlaceHolder 1' (the title 'The History of Art') on slide 1 of /home/user/Desktop/69_4.pptx is increased."
+    - "The box of shape 'PlaceHolder 1' may change size only as needed to hold the larger title text."
+    - "Package bookkeeping and producer metadata from saving the file."
+  fuzzy:
+    - "The title text is visibly larger on slide 1 than in the starting file (font size, not a stretched box alone)."
+    - "The title is still larger than or equal in visual weight to the body text and does not overlap the body text or run off the slide."
+    - "The title keeps its original text, colour, and position relative to the slide."
+  assumptions:
+    - "'Bigger' refers to the font size of the title text, the only size property a person would change for a title."
+    - "The title is the shape named 'PlaceHolder 1' on slide 1, which holds 'The History of Art'."
+    - "The body text, slide count, and slide transition are not part of the request and must not change."
+    - "Font size is not readable by the reader surface, so the size increase is verified only through fuzzy judgment, not a must predicate."
+  grounding_used: "Inspection report: slide 1 has 'PlaceHolder 1' (title, 'The History of Art', 22.9 x 3.2 cm, one paragraph) and 'PlaceHolder 2' (body, 22.9 x 12.6 cm), 1 slide total, slow transition with p14:dur=2000. Reader reference: font size is not readable (predicate would be UNSUPPORTED), so only text, text_runs, bullet type, box dimensions, slide count and transition type are used as must checks."
+  confidence: low

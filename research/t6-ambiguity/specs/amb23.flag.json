@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Create a new .docx file containing only the work-effort table and leave the original instructions document unchanged.",
+  "reading_followed": "Remove the instruction paragraphs from the existing Table_Of_Work_Effort_Instructions.docx in place, keeping the work-effort table intact.",
+  "notes": "'Drop the instructions' can mean editing this file or saving a table-only copy, and the request does not say which, so the in-place reading was chosen. The spec does not check for a new file or for the heading paragraph."
+}

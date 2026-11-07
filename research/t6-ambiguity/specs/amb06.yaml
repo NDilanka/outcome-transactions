@@ -1,0 +1,21 @@
+- id: amb06
+  must:
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:B20').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:B20').values)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('C2:C20').values within(0.0001) [0.271181, 0.270397, 0.562768, 0.580077, 0.287103, 0.734018, 0.527391, 0.425077, 0.629266, 0.924778, 0.77124, 0.432084, 0.539766, 0.540371, 0.559018, 0.242941, 0.342704, 0.347835, 0.437311]"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('D1:Z100').nonempty_cells == []"
+  footprint:
+    - "Sheet1 cells C1:C20 only: a new column C with a header in C1 and the expense-to-revenue ratio for each data row in C2:C20 (Total Expenses divided by Revenue, stored as a fraction)."
+    - "No other cell, sheet, chart, or sheet setting in /home/user/NetIncome.xlsx changes. Package bookkeeping and recalculation caches are allowed."
+  fuzzy:
+    - "The header text in C1 should clearly name the expense-to-revenue percentage (for example 'Expenses % of Revenue'). Exact wording is not checked."
+    - "The C2:C20 cells should display as percentages (percent number format). Number format is not readable by the reader, so this is judged by a person."
+    - "Whether the ratios are shown as live formulas (=B2/A2 style) or as values is a judgment call; the must predicates accept either."
+  assumptions:
+    - "'Expenses' means the Total Expenses column (B) and 'revenue' means the Revenue column (A), as labelled in row 1."
+    - "The expected values are Total Expenses / Revenue for rows 2-20, computed from the starting values in the inspection report (39929/10828 for row 2 through 58782/25706 for row 20)."
+    - "A percent is stored as a fraction (0.27 for 27 percent), which is how a percent-formatted cell stores it. A per-row column is the reading followed; a single overall total ratio is not required."
+    - "Rounding to 4 decimal places is an acceptable tolerance."
+    - "No chart is requested; none is required."
+  grounding_used: "Inspection report for NetIncome.xlsx, sheet Sheet1, dims A1:B20: A1='Revenue', B1='Total Expenses', rows 2-20 numeric in A and B, 40 non-empty cells, nothing in columns C onward. The 19 expected ratios were computed in Python from those A and B values."
+  confidence: medium

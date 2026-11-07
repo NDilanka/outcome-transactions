@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Enlarge the title text box (its width and height) on slide 1 without changing the font size of the title text.",
+  "reading_followed": "Increase the font size of the title text 'The History of Art' on slide 1, leaving the title and body text, body box size, slide count and transition unchanged.",
+  "notes": "Font size is not readable by the reader surface, so the size increase can only be checked through fuzzy judgment; the must predicates guard against collateral changes. The writer conventions file contained no YAML example, so the YAML item uses the key order given in the task."
+}

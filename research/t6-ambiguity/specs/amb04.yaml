@@ -1,0 +1,21 @@
+- id: amb04
+  must:
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:B20').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:B20').values)"
+    - "lower(trim(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').cell('C1').value)) == \"net income\""
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('C2:C20').values within(0.001) [29101, 40412, 23036, 20782, 27289, 7980, 26615, 31546, 14631, 1969, 7348, 34004, 19438, 25326, 15863, 39308, 27916, 30460, 33076]"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').nonempty_cells subset_of range('A1:C20')"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').hidden_columns == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').hidden_columns)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').hidden_rows == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').hidden_rows)"
+  footprint:
+    - "Sheet1 cells C1:C20 of /home/user/NetIncome.xlsx: header in C1 and one net income value per data row in C2:C20 (net income = Revenue in column A minus Total Expenses in column B for the same row)"
+  fuzzy:
+    - "Number format, font styling, and column width of the new column C cells"
+    - "Whether C2:C20 hold static values or formulas referencing A and B; either is acceptable"
+  assumptions:
+    - "Net income for each row is Revenue minus Total Expenses for that row (A minus B), rows 2 to 20 only"
+    - "The next column after the last used column B is column C"
+    - "The header label should be Net Income, which is the only label the must checks"
+    - "No total or summary cell is added, since the nonempty-cells check limits content to A1:C20"
+  grounding_used: "Inspection report for /home/user/NetIncome.xlsx: single visible sheet Sheet1, dimensions A1:B20, 40 non-empty cells, headers A1='Revenue' and B1='Total Expenses', numeric values in rows 2 to 20 with no content in column C. Per-row differences were computed in Python from the report values (A minus B) and gave the 19 values in the C2:C20 predicate. The starting snapshot .xlsx was not parsed directly because openpyxl is not installed."
+  confidence: medium

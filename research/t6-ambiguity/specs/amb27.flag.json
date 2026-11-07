@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Bold the first column of the second table (the row labels p, pet, etc.) instead of the top row, since the table's left column could be read as its header.",
+  "reading_followed": "Bold the top row of the second table (the p, b, t, d, k c, g row, counting tables in body order), leaving the other row and all other content unchanged.",
+  "notes": "Bold is not readable by the reader surface, so the must predicates only confirm text and table structure are unchanged; the bold change is covered by fuzzy review. Confidence is medium because the header target is clear but the bold effect is unverifiable by predicates."
+}

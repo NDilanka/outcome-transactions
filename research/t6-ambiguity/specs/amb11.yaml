@@ -1,0 +1,25 @@
+- id: amb11
+  must:
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').cell('D37').value == 57930"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('A1:E36').values == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('A1:E36').values)"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('A1:E36').formulas == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('A1:E36').formulas)"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('A37:E37').nonempty_cells subset_of ['B37', 'D37']"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows)"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_columns == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_columns)"
+  footprint:
+    - "Sheet1 cell D37 (new, empty in the starting file): a formula or value equal to the sum of the numeric Actual values in D2:D36"
+    - "Sheet1 cell B37 (new, empty in the starting file): a text label for the total"
+    - "No other cell, sheet, row, column, or setting in the workbook changes"
+  fuzzy:
+    - "The label text in B37 (for example 'Total' or 'Sum of Actual') is a free choice"
+    - "Number format, bold, or other styling of the new cells is not checked"
+    - "Whether the total is entered as a SUM-type formula or as a typed value is a free choice, provided D37 holds 57930"
+  assumptions:
+    - "'Actuals' means the Actual column D, rows 2 to 36 (the data rows under the header)"
+    - "Cells showing #N/A are not numeric actuals and are excluded from the total; a plain SUM would return #N/A, which a person would not accept as the answer"
+    - "The total goes in the first empty row directly below the data, row 37, in column D, with a label in B37"
+    - "The 13 #N/A cells in D and their Difference formulas in E are left as they are"
+    - "The total of the 22 numeric actuals is 57930 (hand-summed from the report values)"
+  grounding_used: "Inspection report for 6054afcb: sheet Sheet1 with header row 1 (B Date, C Budget, D Actual, E Difference) and data rows 2 to 36; 13 Actual cells are =NA() (D3, D6, D8, D9, D12, D14, D18, D19, D20, D24, D27, D32, D33) and 22 are numeric; the numeric actuals sum to 57930; row 37 is empty in the report, so no existing total is present; E column formulas are =D-C per row."
+  confidence: low

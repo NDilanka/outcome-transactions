@@ -1,0 +1,32 @@
+- id: amb28
+  must:
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').all_text)"
+    - "count(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs) == before(count(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs))"
+    - "count(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables) == before(count(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables))"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(2).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(2).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(3).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(3).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(4).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(4).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(5).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(5).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(6).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(6).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(7).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(7).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(8).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(8).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(9).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(9).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(10).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(10).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(11).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(11).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(12).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(12).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(13).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(13).rows)"
+  footprint:
+    - "Font size of the text runs inside the 13 grapheme example tables of /home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx (tables 1 to 13, one-based in body order)"
+    - "Row heights and column widths of those 13 tables, only as far as needed to fit the larger text"
+  fuzzy:
+    - "Text inside the 13 example tables is visibly larger than in the starting file, and the enlargement is applied to the example content rather than to a single cell."
+    - "Paragraphs, headings and bold category labels outside the tables keep their starting font size and appearance."
+    - "Enlarged table text is not clipped, cut off, or overlapping neighbouring cells, and the tables still read as a grid."
+  assumptions:
+    - "'The examples' means the example grapheme and word tables under the 'Examples of ... graphemes' headings, not the headings or the bold category labels."
+    - "Font size is the setting meant by 'bigger'; the readers cannot measure font size, so that part is judged by the fuzzy criteria only."
+    - "Text content, paragraph count, table count and table cell text must not change; only formatting and table geometry may change."
+    - "The reader cannot see font size, so the must list only protects content and structure; no must predicate checks that the text is larger."
+  grounding_used: "Inspection report: the document has 43 paragraphs and 13 tables; tables 0-12 (one-based 1-13) hold the example graphemes and words (vowel, consonant, digraph, trigraph, long-vowel, r-controlled, diphthong and schwa examples). Paragraphs p15-p42 hold the 'Examples of ...' headings and bold category labels, which are outside the tables. Reader reference: text, paragraph and table rows are readable; font size, bold and fill are not readable, so size is covered only by fuzzy criteria."
+  confidence: medium

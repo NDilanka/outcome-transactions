@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "\"The title\" means the whole heading block, 'Presentation Instruction' together with the 'CHIN9505' course line, so both lines should be enlarged.",
+  "reading_followed": "Only the first line, 'Presentation Instruction' (paragraph 1), should be enlarged, and all other content should stay unchanged.",
+  "notes": "Font size is not readable by the reader surface, so size is checked by fuzzy judgment only and must predicates guard text and structure. Confidence is medium because the title scope is ambiguous and the size change cannot be tested directly."
+}

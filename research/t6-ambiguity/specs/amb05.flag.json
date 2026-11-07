@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Sort the revenue rows in descending order (largest revenue first), which is also a common convention for revenue reports.",
+  "reading_followed": "Sort data rows 2-20 by the Revenue column in ascending order (smallest first, Excel's default sort direction), keeping each Total Expenses value on the same row as its Revenue value.",
+  "notes": "The request does not state a direction, so the ascending default was chosen and confidence is low. The reader cannot check that each expense stays paired with its revenue, so that is left to fuzzy judgment."
+}

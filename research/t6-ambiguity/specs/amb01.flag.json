@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": false,
+  "other_reading": null,
+  "reading_followed": "The header row A1:G1 of Sheet1 in /home/user/SalesRep.xlsx is bolded and saved in place, with no other content changes.",
+  "notes": "Bold cannot be read by the reader surface, so the must predicates only verify that values, formulas, non-empty cells and sheet names are unchanged; the bold requirement is fuzzy. The conventions file had no YAML example, so the standard YAML list form was used."
+}

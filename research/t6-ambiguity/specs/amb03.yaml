@@ -1,0 +1,19 @@
+- id: amb03
+  must:
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:A11').values == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:A11').values)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('B1:G1').values == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('B1:G1').values)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('B2:G11').values within(0.001) before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('B2:G11').values)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').nonempty_cells == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').nonempty_cells)"
+  footprint:
+    - "Numeric display format of the cells B2:G11 on Sheet1 of /home/user/SalesRep.xlsx may be changed to show whole numbers (no decimals). No stored value may change."
+  fuzzy:
+    - "Whether B2:G11 was given a whole-number display format is not checked by the readers. Accept either no format change or a whole-number display format on B2:G11."
+    - "Any rounding of the displayed numbers to whole numbers is acceptable, because every stored value is already a whole number."
+  assumptions:
+    - "The target is /home/user/SalesRep.xlsx, sheet Sheet1 (the only sheet). Its data block is A1:G11: one header row, 10 sales reps in A2:A11, and monthly integer values Jan to Jun in B2:G11."
+    - "All 60 numeric cells are stored as whole-number integers with no formulas, so rounding to whole numbers leaves stored values unchanged."
+    - "Rounding is read as rounding the displayed numbers to whole numbers, not rounding stored values to a coarser unit such as tens or hundreds."
+    - "No other settings, sheets, charts or cells are required to change."
+  grounding_used: "Inspection report: Sheet1 dims A1:G11, 77 non-empty cells, B2:G11 all integers (for example 696, 420), headers in row 1 and names in column A. Direct XML read of the snapshot sheet1.xml: no formulas (count of '<f' is 0), all numeric cells have no style attribute, and cellXfs count is 1 so the cells use the General format. This means the integers already display with no decimals, so a whole-number reading changes no stored value."
+  confidence: low

@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The PDF should be saved to a different folder or under a different file name than the source document, or the request means the PDF replaces the .docx as the saved file.",
+  "reading_followed": "A new PDF named Meeting-Agenda.pdf is created beside Meeting-Agenda.docx on the Desktop, and the .docx is left unchanged.",
+  "notes": "The request names no location or file name, so the same-folder, same-base-name copy was chosen as the default. The reader cannot read PDF text, so PDF content is covered only by a fuzzy criterion."
+}

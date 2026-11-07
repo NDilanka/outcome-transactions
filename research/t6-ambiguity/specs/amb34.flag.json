@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": false,
+  "other_reading": null,
+  "reading_followed": "The spec requires that the presentation at /home/user/Desktop/1_2.pptx has one fewer slide, the original slide 2 removed, and the remaining slides and their shapes kept in order.",
+  "notes": "The request names a single unambiguous target (the second slide) and the inspection shows one presentation on the desktop. Shape-level checks use the starting-state shape names from the inspection report."
+}

@@ -1,0 +1,21 @@
+- id: amb32
+  must:
+    - "os.file('/home/user/Desktop/69_4.pdf').exists == true"
+    - "os.tree('/home/user/Desktop').paths includes '/home/user/Desktop/69_4.pdf'"
+    - "os.file('/home/user/Desktop/69_4.pptx').exists == true"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide_count == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide_count)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').text == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').text == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).transition.type == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).transition.type)"
+  footprint:
+    - "Create one new file: /home/user/Desktop/69_4.pdf, a PDF export of the one-slide deck /home/user/Desktop/69_4.pptx"
+    - "Application lifecycle files only (lock files, caches, temporary bookkeeping) created while the export runs"
+  fuzzy:
+    - "The PDF visually shows the same single slide as the deck: the title 'The History of Art', the body paragraph, and the same layout (a person judges this from the PDF; the reader surface cannot read PDF text)"
+  assumptions:
+    - "'it' refers to the only file in the request context, /home/user/Desktop/69_4.pptx"
+    - "'too' means the original .pptx stays in place and unchanged; the PDF is an added copy"
+    - "The PDF uses the default name produced by Save As PDF, which keeps the source stem: 69_4.pdf"
+    - "No content, formatting, or slide edits are requested, so the deck's text, slide count, and transition must equal the starting state"
+  grounding_used: "Inspection report: /home/user/Desktop/69_4.pptx, 1 slide, Blank Slide layout, shapes 'PlaceHolder 1' (title 'The History of Art') and 'PlaceHolder 2' (body paragraph), transition spd=slow. Used these to write the unchanged-state checks and the shape names. The request text is one sentence: 'Save it as a PDF too, on the Desktop.'"
+  confidence: medium

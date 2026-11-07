@@ -1,0 +1,12 @@
+- id: amb22
+  must:
+    - "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).rows == before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).rows)"
+    - "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text)"
+  footprint: []
+  fuzzy: []
+  assumptions:
+    - "The marks are the numeric values in the grading table: the header cells 'Grammar 5%' and 'Pronunciation, Tones and Fluency 5 %', whose maxima sum to 10 in the starting state."
+    - "Because the starting values already sum to 10, the request is satisfied without edits, so the table and all document text must remain unchanged."
+    - "No other file, paragraph, or setting is in scope."
+  grounding_used: "Inspection report for d53ff5ee-3b1a-431e-b2be-30ed2673079b: table0 is 2x2 with header cells 'Grammar  5%' and 'Pronunciation, Tones and Fluency  5 %' (5 + 5 = 10) and deduction cells (Max -5% each). Cell text was confirmed by reading word/document.xml from the read-only snapshot. The document path is /home/user/Desktop/presentation_instruction_2023_Feb.docx."
+  confidence: medium

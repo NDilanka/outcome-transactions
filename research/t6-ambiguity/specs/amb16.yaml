@@ -1,0 +1,23 @@
+- id: amb16
+  must:
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:E8').values == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:E8').values)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:E8').formulas == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:E8').formulas)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').nonempty_cells set_equal before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').nonempty_cells)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').hidden_rows == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').hidden_rows)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').hidden_columns == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').hidden_columns)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').autofilter == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').autofilter)"
+  footprint:
+    - "Bold formatting on the header cells A2:E2 (Description, Category, Type, Amount, Balance) of Sheet1 in /home/user/Desktop/my_bookkeeping.xlsx; formatting only, with no change to values, formulas, rows, columns, or sheets"
+    - "Workbook package bookkeeping and recalculation caches that a normal save produces"
+  fuzzy:
+    - "The header cells A2:E2 are bold in the final workbook. Bold is not readable by the reader, so a judge must check the formatting directly. The starting inspection shows these cells already bold, so the expected result is that they remain bold."
+    - "The title cell A1 (merged A1:E1, 'Bookkeeping simple') may also be bold. It is already bold in the starting state, so either outcome is acceptable."
+    - "No other formatting is changed (fill, font size, number format, alignment, borders), judged by a person viewing the sheet."
+  assumptions:
+    - "'The headers' refers to the column-label row of the only spreadsheet on the Desktop, my_bookkeeping.xlsx, which is row 2."
+    - "The receipt images and the receipt PDF have no header rows to bold, so they are out of scope."
+    - "'Bold' means set bold weight, not toggle it. The headers are already bold, so the final state should keep them bold."
+    - "No values, formulas, or layout are to be changed."
+  grounding_used: "From inspection.md: my_bookkeeping.xlsx Sheet1 A1:E8, merged A1:E1 title 'Bookkeeping simple' (bold), row 2 labels Description/Category/Type/Amount/Balance (all bold), data rows 3-8 with formulas in E4:E8, no hidden rows or columns reported, no autofilter reported. Receipt files are JPEG/PDF with no headers. From reader-reference.txt: bold is not readable, so formatting goes in fuzzy; values, formulas, nonempty_cells, hidden_rows, hidden_columns, and autofilter are readable. From the request text: 'Bold the headers.'"
+  confidence: medium

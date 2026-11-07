@@ -1,0 +1,275 @@
+{
+ "amb01/A": {
+  "home/user/SalesRep.xlsx": "95edd339cde95b4a86d0cf49bd6b66fb8c14d759f3387cce9a643182f2e4dc2f"
+ },
+ "amb01/B": {
+  "home/user/SalesRep.xlsx": "095894f4681888046f00726217a05562d5d3d0411217b6bce8046d092dfb097b"
+ },
+ "amb02/A": {
+  "home/user/SalesRep.xlsx": "7abaa1f6a4d28525974d9817adb3586aa8e45350c09907b8fb7aa0b6273be7e5"
+ },
+ "amb02/B": {
+  "home/user/SalesRep.xlsx": "97c55ee8fd3dc9a0a53a990d302a55595e47d376949bfccacb6d4de0a982060e"
+ },
+ "amb03/A": {
+  "home/user/SalesRep.xlsx": "f4e54c5b2394e7c7dc5975d1f0bea29f93227aa435827d6649ce86b64734428f"
+ },
+ "amb03/B": {
+  "home/user/SalesRep.xlsx": "7b0a7d3644fdd4607e829c6d02db7b02eabea5707eb65e71a2c8a20dcc549877"
+ },
+ "amb04/A": {
+  "home/user/NetIncome.xlsx": "9c74c2ae2cdb0312fe75e59952e7f4c44ef7b22fa013a1ea4ecd5f59e750e64b"
+ },
+ "amb04/B": {
+  "home/user/NetIncome.xlsx": "f3b00bd3b016ce8968eff40f0f6bab3f4b8f26746d09763d24516b4d8fd03dea"
+ },
+ "amb05/A": {
+  "home/user/NetIncome.xlsx": "c7115eb38563790c9b346aecd88607f182516698eb7c7960a9f519be692074e2"
+ },
+ "amb05/B": {
+  "home/user/NetIncome.xlsx": "dfc0e55655d4924d636244381cf1fc475689bea4de0da86f473434600a0e1470"
+ },
+ "amb06/A": {
+  "home/user/NetIncome.xlsx": "9285443291a2c56ed5dd653e475b749ef656eb8fb533a885534a3f32f01586fd"
+ },
+ "amb06/B": {
+  "home/user/NetIncome.xlsx": "52831c750bdbfb198cd6c703a3298534cb59e49758c1dfd41da1e90ceae625dd"
+ },
+ "amb07/A": {
+  "home/user/Movie_title_garbage_clean.xlsx": "7d2d0ba27309b811ed67071e7b2fce849be6b6e9bb716d516cfc885994902a3c"
+ },
+ "amb07/B": {
+  "home/user/Movie_title_garbage_clean.xlsx": "8612e778b3bd107d834f02dd1f22a148bac73b038aba74b3b91700ef08abeaec"
+ },
+ "amb08/A": {
+  "home/user/Movie_title_garbage_clean.xlsx": "b075ad59510b85b851b64fce84b6b467b4e35869d3157a2b94b87c2fe529ee12"
+ },
+ "amb08/B": {
+  "home/user/Movie_title_garbage_clean.xlsx": "f7f07331896674427e7b20d442206a4a53481ffe427dffdcaf1a22967a3e0a48"
+ },
+ "amb09/A": {
+  "home/user/Date_Budget_Variance_HideNA.xlsx": "4286d4356db2fefec23a0ee03d5d36e02712c64c1fbed40a1c6129881fc6dee0"
+ },
+ "amb09/B": {
+  "home/user/Date_Budget_Variance_HideNA.xlsx": "930fda284f7ee69c0eea4c360607b1716d190acbed7dd206e628f5b0a30736bd"
+ },
+ "amb10/A": {
+  "home/user/Date_Budget_Variance_HideNA.xlsx": "efcfcd895b440df20481f565033331d4a9f8df00a5c391943aa22cd4cb17bc6f"
+ },
+ "amb10/B": {
+  "home/user/Date_Budget_Variance_HideNA.xlsx": "2a78bb6cde28cf38941f4296161107af7e29f7efce04047c23ef7b44e13a7d4f"
+ },
+ "amb11/A": {
+  "home/user/Date_Budget_Variance_HideNA.xlsx": "6d95a3f7a5e2fead54c103ec3c2b324fb8ed5715a8064a2a11819d7c2f7f22e6"
+ },
+ "amb11/B": {
+  "home/user/Date_Budget_Variance_HideNA.xlsx": "c4c0578c577000d5f55cc54bbc3f6dc02b97ab1221e8cb7bc86699513971ac10"
+ },
+ "amb12/A": {
+  "home/user/BoomerangSales.xlsx": "487c3610cfaaf4d23efdd12c4721d73238d9a98cb2aee46c226a8329aea6238d"
+ },
+ "amb12/B": {
+  "home/user/BoomerangSales.xlsx": "a633325729643e45b7c78dc3d078ff6a9068da4d0d50d76983170c19dcf115ca"
+ },
+ "amb13/A": {
+  "home/user/BoomerangSales.xlsx": "35158d93ea14c5f9e322da8e54f77661aa661c8df7f1b6a8d42c4420cb522105"
+ },
+ "amb13/B": {
+  "home/user/BoomerangSales.xlsx": "fc27e6335084a62871a6d9cb35738b9f39c36e6edb63bc95ca0d1f67acc28c34"
+ },
+ "amb14/A": {
+  "home/user/BoomerangSales.xlsx": "a294cdb9b6b650694ef617f7fa55822e7a4078c750354fe42aad2335557de124"
+ },
+ "amb14/B": {
+  "home/user/BoomerangSales.xlsx": "9962eddeb2e47c89d67374922dce5065a65e233bd806eb024506b4c6647bd6b2"
+ },
+ "amb15/A": {
+  "home/user/Desktop/my_bookkeeping.xlsx": "947011f85a8f29d398e8bd53d309471c65dca79c50ae2a5df53368f782789688",
+  "home/user/Desktop/receipt_0.jpeg": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+  "home/user/Desktop/receipt_1.jpg": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+  "home/user/Desktop/receipt_2.jpg": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+  "home/user/Desktop/receipt_3.pdf": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+  "home/user/Desktop/receipt_4.jpg": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d"
+ },
+ "amb15/B": {
+  "home/user/Desktop/my_bookkeeping.xlsx": "7dd5c1ad665d1ab511234fd3e81d9252ce2b5ee215b41fa244ea678ad1e31b3b",
+  "home/user/Desktop/receipt_0.jpeg": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+  "home/user/Desktop/receipt_1.jpg": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+  "home/user/Desktop/receipt_2.jpg": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+  "home/user/Desktop/receipt_3.pdf": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+  "home/user/Desktop/receipt_4.jpg": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d"
+ },
+ "amb16/A": {
+  "home/user/Desktop/my_bookkeeping.xlsx": "6791db3e5410ed6b54e10e591e542d431d331e83b7e893512f18e45c85569e10",
+  "home/user/Desktop/receipt_0.jpeg": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+  "home/user/Desktop/receipt_1.jpg": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+  "home/user/Desktop/receipt_2.jpg": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+  "home/user/Desktop/receipt_3.pdf": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+  "home/user/Desktop/receipt_4.jpg": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d"
+ },
+ "amb16/B": {
+  "home/user/Desktop/my_bookkeeping.xlsx": "6791db3e5410ed6b54e10e591e542d431d331e83b7e893512f18e45c85569e10",
+  "home/user/Desktop/receipt_0.jpeg": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+  "home/user/Desktop/receipt_1.jpg": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+  "home/user/Desktop/receipt_2.jpg": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+  "home/user/Desktop/receipt_3.pdf": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+  "home/user/Desktop/receipt_4.jpg": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d"
+ },
+ "amb17/A": {
+  "home/user/Desktop/my_bookkeeping.xlsx": "00ccdbb924d92caa3cbf2ab54bbacfbbb0439368c6dc45fb104e6053cf520cd6",
+  "home/user/Desktop/receipt_0.jpeg": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+  "home/user/Desktop/receipt_1.jpg": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+  "home/user/Desktop/receipt_2.jpg": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+  "home/user/Desktop/receipt_3.pdf": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+  "home/user/Desktop/receipt_4.jpg": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d"
+ },
+ "amb17/B": {
+  "home/user/Desktop/my_bookkeeping.xlsx": "280cceab5fd93c296d7be427b8a92f97acc9634ce9b168718298b2b7f85bf70c",
+  "home/user/Desktop/receipt_0.jpeg": "b35ff62057908666a54a88e82362a326ca8611a534dd7291b5c2e93d6e1dc1f0",
+  "home/user/Desktop/receipt_1.jpg": "ecd4a6db51ded9b9f62bbc32a31bbfbb86b2b7c8dacd59ebe0ee350ea012204d",
+  "home/user/Desktop/receipt_2.jpg": "bd3a2b3d17750b4fe687074e3e767b734f8c5aeecc1dbbc3405e9875473b8e83",
+  "home/user/Desktop/receipt_3.pdf": "48deb476a3c75fffaf1f231add391db5aa53a359754bfd6bd112672d4879260b",
+  "home/user/Desktop/receipt_4.jpg": "942845ec6310d852bc93510383a57bb5210c71bc89f31ea7ed60e5c1ec6f1d3d"
+ },
+ "amb18/A": {
+  "home/user/Desktop/Meeting-Agenda.docx": "ec82745f1593c2943185cd3f868151e3357fc8893403cca3dc17782592069061"
+ },
+ "amb18/B": {
+  "home/user/Desktop/Meeting-Agenda.docx": "cf7caac2af807dae9c89dd528e637a77aabfa4d6536406e56d22f4a9106ccf75"
+ },
+ "amb19/A": {
+  "home/user/Desktop/Meeting-Agenda.docx": "1847d0a7bafb2b04777061d4be2c12203766a19a72adf655692cc12ad4611374"
+ },
+ "amb19/B": {
+  "home/user/Desktop/Meeting-Agenda.docx": "1207a943f17369b7128ff4997d1a3beb1023682264bd5250b70d6af49f11902f"
+ },
+ "amb20/A": {
+  "home/user/Desktop/Meeting-Agenda.docx": "89c0499971170ac3ae1c777393d535689055d0aa254eb7bd169a4cce3939f479",
+  "home/user/Desktop/Meeting-Agenda.pdf": "fa50493b000d96243a40154dd24fbf1e62ac83fa5b6f366a415b032779bd736d"
+ },
+ "amb20/B": {
+  "home/user/Desktop/Meeting-Agenda.docx": "89c0499971170ac3ae1c777393d535689055d0aa254eb7bd169a4cce3939f479",
+  "home/user/Meeting-Agenda.pdf": "fa50493b000d96243a40154dd24fbf1e62ac83fa5b6f366a415b032779bd736d"
+ },
+ "amb21/A": {
+  "home/user/Desktop/presentation_instruction_2023_Feb.docx": "adf73bac8011a6fe7043bddcffb15fc03f4d048276661b3100201c5d63ca156a"
+ },
+ "amb21/B": {
+  "home/user/Desktop/presentation_instruction_2023_Feb.docx": "0ea15f42b2c112bce2cd140e3ca310f230db50eccb8b50b14a086aa55ef96a63"
+ },
+ "amb22/A": {
+  "home/user/Desktop/presentation_instruction_2023_Feb.docx": "28116f51df09c63e689f7ab1df05ebe739f8bc40178293c29651847e91e79e96"
+ },
+ "amb22/B": {
+  "home/user/Desktop/presentation_instruction_2023_Feb.docx": "b969a63c9b0e54fa233fd5e16ee2645264ba1555726d2b433f8ff41e843451a6"
+ },
+ "amb23/A": {
+  "home/user/Desktop/Table_Of_Work_Effort_Instructions.docx": "77876aaea650e2f27596c24742e71c6ad96a26813fb6fd3b4b41d123d9e1a19e"
+ },
+ "amb23/B": {
+  "home/user/Desktop/Table_Of_Work_Effort_Instructions.docx": "319b1c1940055090cf07fb8ecb9964d18b70cc73bdaa96c5d2c830f57277d9ba"
+ },
+ "amb24/A": {
+  "home/user/Desktop/Table_Of_Work_Effort_Instructions.docx": "69550c72aca332f946ceb368fe369cca8ab611ad949c4142b971f9ef3ed42678"
+ },
+ "amb24/B": {
+  "home/user/Desktop/Table_Of_Work_Effort_Instructions.docx": "14d023f279aa0c354b04e2b357c20e13be94bc0ebc77f35f6d5e18cb23150166"
+ },
+ "amb25/A": {
+  "home/user/Desktop/CCCH9003_Tutorial_guidelines.docx": "b0753ca50e8806130c56d3cc3ec607ba58bb9cf2c77d3d384c71afb582a3bfce"
+ },
+ "amb25/B": {
+  "home/user/Desktop/CCCH9003_Tutorial_guidelines.docx": "331050e87ff6f5063742a544bf15fa2bd0204b39883a2d5f331477824eac7fd5"
+ },
+ "amb26/A": {
+  "home/user/Desktop/CCCH9003_Tutorial_guidelines.docx": "b0753ca50e8806130c56d3cc3ec607ba58bb9cf2c77d3d384c71afb582a3bfce"
+ },
+ "amb26/B": {
+  "home/user/Desktop/CCCH9003_Tutorial_guidelines.docx": "73dd4ff5867f0fdb609b522750ef50c546de3f4fe65e3710c478997ab41fda3e"
+ },
+ "amb27/A": {
+  "home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx": "7f5b6bdbb8d0f59830369167ecb0420583884660fe0827f8dfb93a12c95b610e"
+ },
+ "amb27/B": {
+  "home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx": "a58536ea18e6bf56333c297346b351eab6b7f90739036e7c45ea9dd4f37c9567"
+ },
+ "amb28/A": {
+  "home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx": "176924b44e8349ad719ff84359f92b4b777ce61b18f834448c653bdbd8679f85"
+ },
+ "amb28/B": {
+  "home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx": "2902c6ad61bcc7218591062eaea741cad4304c861b403ce663741ea6dfc0bd1d"
+ },
+ "amb29/A": {
+  "home/user/Desktop/sample-recruitment-phone-script.odt": "65ad08eb990beff6d29c82b97537b67f097024b6c9f311dfbcccc45b15a6070b"
+ },
+ "amb29/B": {
+  "home/user/Desktop/sample-recruitment-phone-script.odt": "655c8347946d02ca19aaf19f168378fc80627490409d6b4632d2f6a917d38001"
+ },
+ "amb30/A": {
+  "home/user/Desktop/sample-recruitment-phone-script.odt": "338274b980688bb260d0d98799bd3498f547e4fceefd01a88a06c57483a3b61c"
+ },
+ "amb30/B": {
+  "home/user/Desktop/sample-recruitment-phone-script.odt": "07d388308f2c2d2d38e26b3602ab205b3bfe64572de18d7c0ae22f70a4dbf39f"
+ },
+ "amb31/A": {
+  "home/user/Desktop/69_4.pptx": "ec0f4a2dd78f6d2ca168b54c8bb50bd3782d77e9728a675a53058396a459858e"
+ },
+ "amb31/B": {
+  "home/user/Desktop/69_4.pptx": "4385eaa847d8d1e2bdad0c2358606883022da3db1b09f58195252eaa3d72eba8"
+ },
+ "amb32/A": {
+  "home/user/Desktop/69_4.pdf": "8c6564baac15576a3118d68e719591b7c446ad33fe1417a7b4cad75882f4b688",
+  "home/user/Desktop/69_4.pptx": "c443ffe641805559b1ac6e97882a1ae68cd337ac453554c8da44532d9d7b8fbb"
+ },
+ "amb32/B": {
+  "home/user/Desktop/69_4.pdf": "8c6564baac15576a3118d68e719591b7c446ad33fe1417a7b4cad75882f4b688"
+ },
+ "amb33/A": {
+  "home/user/Desktop/1_2.pptx": "06f5ce68af5b07df1a27852be4fcb3942a0d7c1853b651785e9f2050c5bceabd"
+ },
+ "amb33/B": {
+  "home/user/Desktop/1_2.pptx": "98d0d6fdc60f28a98cc1152fbe77bcea48c317fc1247c45f90d985db1c55155d"
+ },
+ "amb34/A": {
+  "home/user/Desktop/1_2.pptx": "8f71f9c6032308025a34f8b666affdbd4c181fbe95e32b0681205f2173776de7"
+ },
+ "amb34/B": {
+  "home/user/Desktop/1_2.pptx": "3ad44c5f2a5bd9dc46915b3ad935dd4fd812354e7d9abcd97497f45a5e99ffcb"
+ },
+ "amb35/A": {
+  "home/user/Desktop/New_Club_Spring_2018_Training.pptx": "676f878effc61b0b29075ac43114266c956afce6ed210f6c957bdc96fffae5dd"
+ },
+ "amb35/B": {
+  "home/user/Desktop/New_Club_Spring_2018_Training.pptx": "93ca48e88693f2ebda0803bbd5248349f8e1af0f6e3ab4c93ab2fac3e90981de"
+ },
+ "amb36/A": {
+  "home/user/Desktop/New_Club_Spring_2018_Training.pptx": "fd1df5ba8c58d324ca6cf0a50536591a8a619d80e6600f9c06391d9bfdd727a0"
+ },
+ "amb36/B": {
+  "home/user/Desktop/New_Club_Spring_2018_Training.pptx": "27a165d7e85358b9aea057fe87e9dae69a4e33e2dab0b9df0bcd514c15b2850a"
+ },
+ "amb37/A": {
+  "home/user/Desktop/New_Club_Spring_2018_Training.pptx": "94f1f56baf21e30c7b6b36e7591def7fc06e99770208823853abcf7ad32332a8"
+ },
+ "amb37/B": {
+  "home/user/Desktop/New_Club_Spring_2018_Training.pptx": "aac7b53c7bbe49db2b09f53fc9a79b58d4795173869b8f5906436a3e022ec8db"
+ },
+ "amb38/A": {
+  "home/user/Desktop/30_1.pptx": "559ac7b146314db531cf3019d0e824bbb5752b9405744b4044f716a223c4e50a"
+ },
+ "amb38/B": {
+  "home/user/Desktop/30_1.pptx": "94f5264c6a06a960f5a81b26af07555c1543dff8392ad309aeea8061119dccdf"
+ },
+ "amb39/A": {
+  "home/user/Desktop/30_1.pptx": "fb1ae41fa6e39099a98bfb21ee89e5c3c085ef897d9f4db482f1071f9b0be845"
+ },
+ "amb39/B": {
+  "home/user/Desktop/30_1.pptx": "98cafe8c65eb78c81f053381b012ade3b40bf11cee8b40b3c24ba87cbdabea24"
+ },
+ "amb40/A": {
+  "home/user/Desktop/Ch4 Video Effect.pptx": "c973d86c78be895ce8f87b389a72ab247723cab3664450927058d06f7ddba808"
+ },
+ "amb40/B": {
+  "home/user/Desktop/Ch4 Video Effect.pptx": "f7eb7ae601ae1b0f67d34dd1894c499760c6f6ca35a71697e20568f8485b77dd"
+ }
+}

@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": false,
+  "other_reading": null,
+  "reading_followed": "Only the six URL text shapes on slide 24 (Rectangle 1, 2, 3, 10, 11, 12) become hyperlinks to the URLs they display; all text, slide count, and other slides stay unchanged.",
+  "notes": "Hyperlink targets are not readable by the reader surface, so link status can only be judged as a fuzzy criterion. The text predicates guard against unintended edits to slide 24 and other slides."
+}

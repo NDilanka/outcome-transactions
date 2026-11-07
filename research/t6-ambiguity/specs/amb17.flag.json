@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Increase the on-screen font size of the amount figures in the bookkeeping spreadsheet, leaving the numeric values unchanged.",
+  "reading_followed": "Each Amount value in D3:D8 of Sheet1 in my_bookkeeping.xlsx is changed so its magnitude grows, with signs kept, and the rest of the sheet is unchanged.",
+  "notes": "The font-size reading cannot be checked with the available readers, so the spec covers only the numeric-value reading. Confidence is low because the request names no growth amount and no target beyond the word amounts."
+}

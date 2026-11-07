@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Show one overall ratio (total expenses divided by total revenue) in a single cell, or show the ratios in a chart, instead of a per-row column.",
+  "reading_followed": "Add a column C with a header and the expenses-to-revenue ratio for each data row 2-20, leaving columns A and B and everything else unchanged.",
+  "notes": "The request does not say where the percentages go or whether a chart is wanted, so the per-row column is the most direct reading of 'show'. Percent number formatting is not checkable with the reader, so it is left to fuzzy judgment."
+}

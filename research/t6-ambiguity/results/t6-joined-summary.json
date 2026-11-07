@@ -1,0 +1,58 @@
+{
+ "summary": {
+  "spec_both_frozen": [
+   "amb01",
+   "amb08",
+   "amb12",
+   "amb16",
+   "amb18",
+   "amb29",
+   "amb30"
+  ],
+  "spec_both_sens": [
+   "amb01",
+   "amb08",
+   "amb12",
+   "amb16",
+   "amb18",
+   "amb25",
+   "amb27",
+   "amb28",
+   "amb29",
+   "amb30",
+   "amb31",
+   "amb35"
+  ],
+  "judge_both": [
+   "amb03",
+   "amb05",
+   "amb10",
+   "amb16",
+   "amb20",
+   "amb23",
+   "amb26",
+   "amb30",
+   "amb31",
+   "amb33",
+   "amb35",
+   "amb37"
+  ],
+  "frozen_and_judge_both": [
+   "amb16",
+   "amb30"
+  ],
+  "sens_and_judge_both": [
+   "amb16",
+   "amb30",
+   "amb31",
+   "amb35"
+  ]
+ },
+ "counts": {
+  "judgeA_accept": 37,
+  "judgeB_accept": 14,
+  "judge_both_accept": 12,
+  "frozen_both_accept": 7,
+  "sens_both_accept": 12
+ }
+}

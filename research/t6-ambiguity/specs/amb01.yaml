@@ -1,0 +1,17 @@
+- id: amb01
+  must:
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').values == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').values)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').formulas == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').formulas)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').nonempty_cells == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').nonempty_cells)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet_names)"
+  footprint:
+    - "Bold font formatting of the header cells A1:G1 on Sheet1 ('Sales Rep', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun') in /home/user/SalesRep.xlsx"
+    - "Package bookkeeping and producer metadata of /home/user/SalesRep.xlsx caused by saving the edited workbook"
+  fuzzy:
+    - "Each header cell A1:G1 is bold in the saved file. Bold is not readable by the reader, so judge it by inspecting the saved file. Data cells A2:G11 are not newly bolded."
+  assumptions:
+    - "The headers are row 1 of Sheet1 (A1:G1). Sheet1 is the only sheet and the only header row in the starting file (dims A1:G11)."
+    - "The edited workbook is saved back to /home/user/SalesRep.xlsx in place."
+    - "No other formatting, values, or sheets are changed."
+  grounding_used: "inspection.md: file /home/user/SalesRep.xlsx, one visible sheet Sheet1, dims A1:G11, row 1 holds the labels 'Sales Rep', 'Jan' through 'Jun' in A1:G1, rows 2-11 hold rep names and integer values, 77 non-empty cells. reader-reference.txt: bold is not readable, so the must predicates check that all values, formulas, non-empty cells and sheet names equal their starting state."
+  confidence: medium

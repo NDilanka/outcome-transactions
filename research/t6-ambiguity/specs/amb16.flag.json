@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": false,
+  "other_reading": null,
+  "reading_followed": "The header cells A2:E2 of Sheet1 in my_bookkeeping.xlsx are bolded (already bold at start, so they remain bold) and no values, formulas, or layout change.",
+  "notes": "The only header row is in my_bookkeeping.xlsx; the title A1 is already bold, so reading the title in or out gives the same end state. Bold is not readable by the reader, so the formatting requirement is carried as fuzzy and cannot be machine-checked."
+}

@@ -1,0 +1,19 @@
+- id: amb29
+  must:
+    - "libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text == before(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text)"
+    - "count(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').paragraphs) == before(count(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').paragraphs))"
+    - "count(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').tables) == before(count(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').tables))"
+  footprint:
+    - "Removal of the yellow background highlight (fo:background-color #ffff00) from the eight highlighted text runs in /home/user/Desktop/sample-recruitment-phone-script.odt: 'UCSF ' (paragraph 12, 'This is [name] calling from the UCSF [name of group]'), 'UCSF' (paragraph 13, 'a [physician/researcher/coordinator] working with Dr. [UCSF researcher's name]', italic run), 'UCSF's' (paragraph 22), 'UCSF' (paragraph 26), 'bronchoscopy' and 'Bronchoscopy' (paragraph 32), 'UCSF' and ' bronchoscopy' (paragraph 34)"
+    - "Paragraph and character formatting of those runs may change only by removing the background highlight; the italic on the 'UCSF' run in paragraph 13 stays"
+  fuzzy:
+    - "The yellow highlight is cleared on the highlighted runs listed in footprint, and no other run in the document is highlighted afterwards"
+    - "No text is added, removed, or retyped; bold labels such as 'Study Team:', italics on bracketed placeholders, and the italic on 'UCSF' in paragraph 13 are unchanged"
+    - "Highlight is not removed from any run that was not highlighted in the starting file"
+  assumptions:
+    - "'Highlighting' means the yellow (#ffff00) background highlight on character runs, not bold, italic, or other emphasis"
+    - "The script is the single file /home/user/Desktop/sample-recruitment-phone-script.odt"
+    - "Paragraph numbers are 1-based in reader terms (inspection report indices are 0-based, so report p11 is paragraph 12)"
+    - "Background colour is not readable by any reader, so highlight removal can only be judged fuzzily; must predicates check text and structure preservation only"
+  grounding_used: "inspection.md lists yellow-background styles T5 (italic plus #ffff00, one span) and T9 (#ffff00, seven spans) and the paragraph texts; I confirmed in the read-only starting ODT content.xml and styles.xml that the yellow styles are T4, T5, T8, T9 and that only T5 and T9 are used in text spans (T4 and T8 unused); the highlighted runs are 'UCSF ', 'UCSF', 'UCSF's', 'UCSF', 'bronchoscopy', 'Bronchoscopy', 'UCSF', ' bronchoscopy'. Reader reference confirms background colour and italic are not readable, so the must list relies on all_text and paragraph/table counts."
+  confidence: medium
