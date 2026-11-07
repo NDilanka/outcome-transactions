@@ -1,0 +1,20 @@
+- id: amb21
+  must:
+    - "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraph(1).text == 'Presentation Instruction'"
+    - "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs.count == before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs.count)"
+    - "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text)"
+    - "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').body_order == before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').body_order)"
+    - "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).rows == before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).rows)"
+    - "os.tree('/home/user/Desktop').paths == before(os.tree('/home/user/Desktop').paths)"
+  footprint:
+    - "Font size of the title paragraph 'Presentation Instruction' (paragraph 1) in /home/user/Desktop/presentation_instruction_2023_Feb.docx is increased from its starting size, with the run's font size set explicitly."
+    - "The document file /home/user/Desktop/presentation_instruction_2023_Feb.docx is saved in place; no other paragraph, table, or file is changed."
+  fuzzy:
+    - "The title 'Presentation Instruction' is visibly larger than before and visibly larger than the body text, while the other paragraphs (including the 'CHIN9505' line) keep their starting size and appearance."
+    - "The title remains centered and is not otherwise restyled (font, colour, bold state unchanged unless a person would naturally keep them)."
+  assumptions:
+    - "'The title' means the line 'Presentation Instruction' (paragraph 1), not the 'CHIN9505' course line beneath it."
+    - "The only open file is the Desktop docx; 'bigger' means a larger font size, not a larger page or table."
+    - "Font size is not readable by the reader surface, so the size increase is checked only by fuzzy judgment; must predicates verify that the text and structure are unchanged."
+  grounding_used: "Inspection report: p0 'Presentation Instruction' is the first paragraph, centered, with no explicit size listed (inherits default); p1 'CHIN9505' centered; body paragraphs are 12pt Calibri; one 2x2 table. Read the docx XML directly: the title run has only rtl=0 and no w:sz, so it inherits the default size. Reader reference states font size is not readable, so no must predicate can test size."
+  confidence: medium

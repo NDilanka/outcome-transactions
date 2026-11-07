@@ -1,0 +1,21 @@
+- id: amb18
+  must:
+    - "os.file('/home/user/Desktop/Meeting-Agenda.docx').exists == true"
+    - "libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').all_text)"
+    - "count(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').paragraphs) == before(count(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').paragraphs))"
+    - "count(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').tables) == before(count(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').tables))"
+  footprint:
+    - "Bold emphasis applied to the text of the five agenda section heading paragraphs 4, 8, 11, 15 and 18 of /home/user/Desktop/Meeting-Agenda.docx (Opening, Review of Previous Meeting Minutes, Project Updates, New Business, Closing)"
+    - "Saving /home/user/Desktop/Meeting-Agenda.docx in place with the same name and format (package bookkeeping only)"
+  fuzzy:
+    - "Each of paragraphs 4, 8, 11, 15 and 18 is visibly bold in the saved document"
+    - "Body and sub-item paragraphs (for example Welcome and Introduction, Project A Update, Date, Time, Location, and the attendee and apology names) are not bolded"
+    - "The Attendees: and Apologies: labels may be bold or not bold; either is acceptable"
+    - "No text was retyped, reworded, reordered or deleted"
+  assumptions:
+    - "Headings means the five timed agenda section titles, which are the only standalone section lines of the agenda body"
+    - "Attendees: and Apologies: are treated as optional headings; the spec does not require them to be bold"
+    - "Bold is not readable by the reader surface, so the must predicates only protect text and structure; the bold change itself is checked by fuzzy judgment"
+    - "Paragraph text in the starting file is all size 13.0 with style normal, so no existing heading style is available to rely on"
+  grounding_used: "From inspection.md: paragraph list p0 to p31 of /home/user/Desktop/Meeting-Agenda.docx with texts, 1 section, 32 paragraphs, 0 tables, 0 page breaks, 0 inline images; all paragraphs style normal and size 13.0. Section titles at p4, p8, p11, p15, p18 and labels at p23 and p30. From reader-reference: bold is not readable, so only text, paragraph count, and table count predicates are used, with before() for unchanged state. Request text: 'Bold the headings.'"
+  confidence: low

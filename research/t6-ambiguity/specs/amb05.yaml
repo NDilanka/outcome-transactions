@@ -1,0 +1,22 @@
+- id: "amb05"
+  must:
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A2:A20').values ordered_by ascending"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A2:A20').values multiset_equal before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A2:A20').values)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('B2:B20').values multiset_equal before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('B2:B20').values)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').cell('A1').value == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').cell('A1').value)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').cell('B1').value == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').cell('B1').value)"
+    - "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').nonempty_cells == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').nonempty_cells)"
+  footprint:
+    - "Sheet1 rows 2-20, columns A:B: the row order changes so that Revenue (column A) ascends; each row keeps its Revenue and Total Expenses values together"
+    - "Nothing else changes: header cells A1:B1, all cell values and formulas, the set of non-empty cells, sheet names, charts, and any other file"
+  fuzzy:
+    - "Each Total Expenses value (column B) stays on the same row as its Revenue value (column A) after the sort; the reader cannot check row pairing, so a judge must confirm that every original (Revenue, Total Expenses) pair still appears together"
+    - "Sorting is done in the Sheet1 data block only (no sort applied to the header row, no extra formatting or selection changes that alter cell content)"
+  assumptions:
+    - "'Sort by the revenue column' means sort the data rows (2-20) by column A, keeping each row intact, rather than sorting column A alone"
+    - "No direction is stated; ascending is used as the default sort direction for a plain sort"
+    - "The header row 1 stays in place and is not part of the sort"
+    - "Data is the 19 numeric rows shown in the inspection report, so value comparisons need no tolerance"
+  grounding_used: "inspection.md: file /home/user/NetIncome.xlsx, sheet 'Sheet1', A1='Revenue', B1='Total Expenses', data in A2:B20 (19 numeric rows, all integers), 40 non-empty cells. Request text: 'Sort by the revenue column.' Predicate syntax taken from reader-reference.txt (calc range values, ordered_by, multiset_equal, before)."
+  confidence: low

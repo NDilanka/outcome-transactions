@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The headings include the Attendees: and Apologies: labels as well as the five timed agenda section titles, so those two labels should also be bold.",
+  "reading_followed": "Only the five timed agenda section title paragraphs (4, 8, 11, 15, 18) are required to be bold, with the Attendees: and Apologies: labels left optional.",
+  "notes": "The request 'Bold the headings.' does not say which lines are headings, and bold cannot be checked by the reader surface, so only text and structure are enforced by predicates. The Date/Time/Location lines and sub-items are not treated as headings."
+}

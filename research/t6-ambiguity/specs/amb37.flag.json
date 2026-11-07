@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": false,
+  "other_reading": null,
+  "reading_followed": "The overview slide (slide 2) heading text colour is changed to FFC000 to match the title slide heading colour, with its text and the rest of the slide left unchanged.",
+  "notes": "In the starting file the overview heading already matches the title heading in bold, size, typeface and alignment, so colour is the only difference. The predicates cannot read bold, size or typeface, so those are recorded as fuzzy."
+}

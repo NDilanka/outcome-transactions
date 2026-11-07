@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Sort the table by Date newest first (descending) instead of oldest first.",
+  "reading_followed": "Sort the data rows (B2:E36) by Date in ascending order, oldest first, keeping each row's Budget, Actual and Difference formula together.",
+  "notes": "The request does not state a direction; ascending is the default sort. The conventions file contained no YAML example, so the format follows the key order given in the task and the predicate syntax in examples.txt."
+}

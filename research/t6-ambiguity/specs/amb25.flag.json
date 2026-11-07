@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "'The headings' means the table header row (Sessions, Topics & Readings, Format) or all bold/title-like lines, so those should be underlined instead of or in addition to 'Setting' and 'Assessment'.",
+  "reading_followed": "'The headings' means the two bold section titles 'Setting' and 'Assessment', which must stay underlined, with no other content or layout changed.",
+  "notes": "In the starting file 'Setting' and 'Assessment' are already bold and single-underlined, so the requested change is largely a no-op for them and underline is not checkable by a must predicate. Confidence is low because the underline outcome is fuzzy and the YAML format example was not present in the conventions file."
+}

@@ -1,0 +1,25 @@
+- id: amb23
+  must:
+    - |-
+      libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').all_text does_not_match /INSTRUCTIONS|Please do not include|Reviewers need|Include rows for all personnel|DO NOT include|All work efforts should be given/
+    - |-
+      count(libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').tables) == 1
+    - |-
+      libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(1).rows == before(libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(1).rows)
+    - |-
+      os.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').exists == true
+  footprint:
+    - "Delete the instruction body paragraphs before the 'TABLE OF WORK EFFORT' heading: the 'TABLE OF WORK EFFORT - INSTRUCTIONS' title, the 'Please do not include these instructions' line, the long instruction paragraphs, and their blank spacer paragraphs."
+    - "Optionally delete the blank spacer paragraphs and the 'TABLE OF WORK EFFORT' heading paragraph that sit between the instructions and the table."
+    - "No change to the text, rows, or columns of the work-effort table (table 1), including its placeholder rows, n/a entries, and totals."
+    - "No change to the file path or location; the edit is made in the same .docx file."
+  fuzzy:
+    - "Whether the 'TABLE OF WORK EFFORT' heading paragraph is kept above the table or removed (both acceptable; it is not instruction text)."
+    - "Whether blank spacer paragraphs around the table are kept or removed, as long as the table is not moved off the first page or split."
+    - "Whether the table's own formatting (borders, bold, fonts, widths) is preserved; the reader cannot check it, but a visible deterioration of the table would be a failure."
+  assumptions:
+    - "'Drop the instructions' means removing the instruction text from the existing document, not creating a new file."
+    - "'I only need the table' means the table must remain intact and be the main content; it does not mean the table's placeholders should be filled in."
+    - "The instruction text is every paragraph that appears before the 'TABLE OF WORK EFFORT' heading (paragraphs 1-14 in the starting state)."
+  grounding_used: "inspection.md: the document has 18 paragraphs (p0-p10 hold the instruction text, the title 'TABLE OF WORK EFFORT - INSTRUCTIONS' is p0, the heading 'TABLE OF WORK EFFORT' is p13), and one 11x7 table (table0) with header rows, role rows (Sc-I, Co-I, Collaborator, Other placeholders), and a Total row. The reader-reference confirms all_text, tables, table(N).rows, count, and before() are readable. Instruction phrases checked in the regex are verbatim from p2, p4, p6, p8 and p10."
+  confidence: medium

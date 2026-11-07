@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The request means the grading marks should be reworked so that the table's totals reach 10 through an edit to a value, which would require changing numbers the request does not identify.",
+  "reading_followed": "The table's existing marks (5 and 5, which sum to 10) already satisfy the request, so the spec requires the table and all document text to stay exactly as they start.",
+  "notes": "The header marks already sum to 10 and the deduction maxima also sum to 10, so no reading that is consistent with the file requires an edit beyond the one identified. The spec therefore expects no changes."
+}

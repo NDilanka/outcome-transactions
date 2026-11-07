@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The 'title' is the bottom credit line (shape 'Google Shape;167;p 1', text 'Include a credit, citation, or supporting message'), which is mixed case and would be changed to all caps.",
+  "reading_followed": "The title is the headline shape 'Google Shape;166;p 1' on slide 5, whose text is already all caps in the starting file, so the end state requires its text to stay all caps with no other change.",
+  "notes": "The slide has no title placeholder, so identifying the title is a judgment call. Under the followed reading the headline is already uppercase in the stored XML, so the spec mainly checks that nothing else changes."
+}

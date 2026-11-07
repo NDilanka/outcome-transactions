@@ -1,0 +1,19 @@
+- id: amb13
+  must:
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').formulas == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').formulas)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').values == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').values)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').nonempty_cells set_equal before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').nonempty_cells)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').range('A1:B23').values == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').range('A1:B23').values)"
+  footprint:
+    - "Sheet1 cells F2:F36 of /home/user/BoomerangSales.xlsx: number format changed to a percentage format (display only; stored values unchanged)"
+    - "serialization_metadata of /home/user/BoomerangSales.xlsx only (package bookkeeping, producer metadata, ZIP ordering/timestamps, correct recalculation caches)"
+  fuzzy:
+    - "Discount cells F2:F36 visibly display as percentages (for example stored 0.165 shows as 16.5%, stored 0 shows as 0%); number of decimal places is free. Number formats are not readable by the readers, so this is judged from the saved file."
+    - "The header F1 and the other columns are not expected to change; no new percent column or chart is expected."
+  assumptions:
+    - "'Show as percents' means apply a percentage display format to the existing Discount values; the stored fractions are not multiplied by 100 and are not replaced by text."
+    - "The target is the workbook at /home/user/BoomerangSales.xlsx, sheet 'Sheet1', column F (Discount), rows 2 to 36."
+    - "The 'Retail Price' sheet has no discount column and is not expected to change."
+  grounding_used: "From inspection.md: Sheet1 A1:F36 holds Date Time, Web Site, Product, Type (IF formulas in D2:D36), Quantity, and Discount (F1 header; F2:F36 are stored fractions such as 0.165, 0.15, 0.019, 0.594, 0.375 and 0 with no number format shown, i.e. General). 216 non-empty cells in Sheet1 (A1:F36 fully populated). Sheet 'Retail Price' A1:B23 (46 non-empty cells) holds product prices only. Readers cannot see number formats, so the percent display is only fuzzy and the must predicates pin the stored content to the starting state."
+  confidence: medium

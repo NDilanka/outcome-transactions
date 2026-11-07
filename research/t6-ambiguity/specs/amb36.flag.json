@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Move the last bullet to the top of its list (first position) rather than one position up.",
+  "reading_followed": "The last bulleted paragraph in the deck (slide 7, shape 'PlaceHolder 2', 'Use designated campus posting areas & bulletin boards for approved materials') swaps with the bullet directly above it, and nothing else changes.",
+  "notes": "'Move up' with no amount most naturally means one position, but moving to the top is also plausible. The 'last bullet' is unambiguous deck-wide because slide 7 is the last slide and its final bullet is the last buChar paragraph; the conventions file has no YAML example, so standard list-item form was used."
+}

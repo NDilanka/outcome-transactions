@@ -1,0 +1,19 @@
+- id: amb20
+  must:
+    - "os.file('/home/user/Desktop/Meeting-Agenda.pdf').exists == true"
+    - "libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').all_text)"
+    - "libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').paragraphs.count == before(libreoffice.writer.file('/home/user/Desktop/Meeting-Agenda.docx').paragraphs.count)"
+    - "os.file('/home/user/Desktop/Meeting-Agenda.docx').exists == true"
+  footprint:
+    - "Create one new file, /home/user/Desktop/Meeting-Agenda.pdf, in the same folder as the source document, containing a PDF export of the document's current content."
+    - "Save any app process, window, cache, lockfile, or temporary files created by the export, as runtime housekeeping only."
+  fuzzy:
+    - "The PDF visually reproduces the content and layout of Meeting-Agenda.docx (all agenda lines, attendees, and apologies appear in the same order)."
+  assumptions:
+    - "The request 'Save a copy as a PDF too' refers to the single document on the Desktop, Meeting-Agenda.docx, which is the only file the task setup placed on the machine."
+    - "A 'copy' means the original stays in place and unchanged; the PDF is a new sibling file."
+    - "The PDF takes the source base name (Meeting-Agenda.pdf) in the same folder, since the request names no other location or name."
+    - "The reader cannot read PDF text, so PDF content is checked only by the fuzzy criterion, not by a must predicate."
+    - "No settings, preferences, or other files are required by the request."
+  grounding_used: "inspection.md lists one file, /home/user/Desktop/Meeting-Agenda.docx (32 paragraphs, 0 tables, no images), with text such as 'Date: March 10, 2024' and the agenda lines through 'Lisa Green'. From the reader reference: writer.file exposes .all_text and .paragraphs for .docx; os.file exposes .exists; before() expresses unchanged state. The reader cannot read PDF content, so the PDF is checked by existence only."
+  confidence: medium

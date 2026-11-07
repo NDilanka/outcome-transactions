@@ -1,0 +1,22 @@
+- id: amb14
+  must:
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('C2:C16').values == [\"Aspen\", \"Yanaki\", \"Bellen\", \"Quad\", \"Crested Beaut\", \"Manu LD\", \"Fire Aspen\", \"Sunspot\", \"Bower Aussie Round\", \"Fun Fly\", \"Carlota Doublers\", \"Manu MTA\", \"Sunshine\", \"GelFast\", \"Sunset\"]"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('E2:E16').values == [33, 29, 3, 36, 38, 4, 93, 64, 3, 30, 4, 1, 34, 1, 68]"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('F2:F16').values within(0.001) [0.165, 0.15, 0.019, 0.15, 0.15, 0, 0.375, 0.375, 0, 0.15, 0.019, 0.019, 0.169, 0, 0.375]"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F1').values == [\"Date Time\", \"Web Site\", \"Product\", \"Type\", \"Quantity\", \"Discount\"]"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').cell('D16').formula == '=IF(E16<10,\"Retail\",\"Wholesale\")'"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').nonempty_cells subset_of range('A1:F16')"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').range('A1:B23').values == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').range('A1:B23').values)"
+  footprint:
+    - "/home/user/BoomerangSales.xlsx, sheet 'Sheet1' only: rows whose Product repeats an earlier row's Product are deleted (the first occurrence of each product is kept, in original order); the remaining rows shift up. 15 data rows remain (rows 2-16)."
+    - "No other cell, sheet, formatting, or file is changed by the task."
+  fuzzy:
+    - "Date Time, Web Site, Quantity and Discount values of each kept row should still belong to that row's original sale (the must predicates check only Product, Quantity and Discount for the kept rows, and the Date Time and Web Site values are not checked)."
+    - "Whether the duplicate-product removal should keep the first occurrence versus the last occurrence, or merge quantities, is a judgment call; this spec keeps the first occurrence and does not merge quantities."
+  assumptions:
+    - "'Duplicate products' means repeated values in the Product column of Sheet1. No two rows of Sheet1 are identical across all six columns, and no product name is repeated on 'Retail Price', so a whole-row duplicate removal would change nothing and is not the intended reading."
+    - "Product names are compared as they appear in the starting file; the repeated names in the starting file are Aspen (6 rows), Fun Fly (9), Bellen (2), Quad (2), Crested Beaut (2), Fire Aspen (2), Bower Aussie Round (2), Carlota Doublers (3)."
+    - "The 'Retail Price' sheet is not a target and must be unchanged."
+  grounding_used: "Inspection report for task 51719eea-10bc-4246-a428-ac7c433dd4b3 (Sheet1 A1:F36, 35 data rows, Product in column C, Type formulas in column D; Retail Price A1:B23 with 22 product names and no repeats). Confirmed from the snapshot file with stdlib XML parsing: no exact duplicate rows in A:F, 15 distinct products across 35 data rows. First-occurrence order of products: Aspen r2, Yanaki r3, Bellen r4, Quad r5, Crested Beaut r6, Manu LD r7, Fire Aspen r9, Sunspot r10, Bower Aussie Round r11, Fun Fly r13, Carlota Doublers r15, Manu MTA r23, Sunshine r25, GelFast r27, Sunset r29; the Quantity and Discount values for these rows were taken from the report."
+  confidence: low

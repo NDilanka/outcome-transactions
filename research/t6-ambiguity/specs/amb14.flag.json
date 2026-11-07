@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Remove only rows that are exact duplicates of another row across all columns, which on these files removes nothing because no two rows are identical.",
+  "reading_followed": "Within Sheet1, delete every row whose Product repeats an earlier row's Product, keeping the first occurrence of each product in original order, so that 15 rows remain.",
+  "notes": "The Product-column reading was chosen because it is the common hand-performed 'remove duplicates on Product' action and it changes the file, whereas the whole-row reading is a no-op. Date Time and Web Site values of kept rows are not checked by any must predicate."
+}

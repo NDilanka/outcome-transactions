@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Round the stored numbers to a coarser unit such as the nearest ten or hundred, which would change the stored values in B2:G11.",
+  "reading_followed": "Display the numbers in B2:G11 as whole numbers, which leaves every stored value (already whole integers) unchanged.",
+  "notes": "Every value in B2:G11 is already a whole integer with General format, so the whole-number reading changes no readable state and the readers cannot check display format. Confidence is low because the request does not say what unit to round to."
+}

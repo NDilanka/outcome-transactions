@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "'Worth 30' means 30 marks rather than 30%, so the document should be rewritten to state 30 marks with 10 marks for each of the three parts.",
+  "reading_followed": "The document already states a 30% total split 10% / 10% / 10%, so the spec requires that wording to remain unchanged and no edit is made.",
+  "notes": "The percentage reading makes the request a no-op on these files, which is why the spec has an empty footprint. The marks reading would require changing paragraphs 13 and 14 and was not followed."
+}

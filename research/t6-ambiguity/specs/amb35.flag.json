@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Move or reposition the title placeholder box so that it is horizontally centred on the slide, leaving the text alignment unchanged.",
+  "reading_followed": "Set the horizontal paragraph alignment of the slide 1 title text to centred, leaving the title box position and size unchanged.",
+  "notes": "The reader surface cannot read paragraph alignment or shape position, so the centring requirement is covered only by the fuzzy item and the must predicates check unchanged state. The title box is already nearly centred horizontally, so the two readings look similar when rendered."
+}

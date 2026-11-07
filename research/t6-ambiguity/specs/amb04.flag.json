@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Put a single aggregate net income figure (total revenue minus total expenses) in the next column, rather than a per-row net income column.",
+  "reading_followed": "Column C receives a per-row net income (Revenue minus Total Expenses) for each data row 2 to 20, with the header Net Income in C1.",
+  "notes": "The writer conventions text gave no YAML example block, so the item follows the key order in the task and the example predicate syntax. Net income values were computed in Python from the inspection report values because openpyxl is not installed."
+}

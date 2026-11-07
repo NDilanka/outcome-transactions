@@ -1,0 +1,21 @@
+- id: amb24
+  must:
+    - |-
+      libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(1).rows[10] == ['Total funded work effort', '', '0.00', '0.00', '0.00', '0.00', '0.00']
+    - |-
+      libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(1).rows == before(libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').table(1).rows)
+    - |-
+      libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/Table_Of_Work_Effort_Instructions.docx').all_text)
+  footprint:
+    - "Table 1 of /home/user/Desktop/Table_Of_Work_Effort_Instructions.docx: cell text of row 10 (one-based, 'Total funded work effort') only, which may be set to the column sums of the funded rows above (all 0.00 in the starting file)."
+    - "Package bookkeeping from saving the .docx (ZIP ordering, timestamps, producer metadata)."
+    - "App runtime housekeeping (lock files, caches, logs)."
+  fuzzy:
+    - "Whether the total row shows a correct summation of the funded rows. The starting file has no effort figures, so the only correct sums are 0.00 and this is judged by the literal row values."
+  assumptions:
+    - "The total row is row 10 (one-based) of the single table in the file, labelled 'Total funded work effort'."
+    - "The funded rows to sum are Sc-I, Co-I and Other (rows 4 to 7 one-based); the Collaborator row is n/a and excluded; blank rows add nothing."
+    - "The request gives no effort figures, so no non-zero value is required; the unfunded-work section below the total is not to be changed."
+    - "Word tables hold no formulas, so the total row is filled as literal text."
+  grounding_used: "inspection.md: one table, 11 rows x 7 columns; row 10 (one-based) is 'Total funded work effort' with 0.00 in Y1 to Total; Sc-I, Co-I and Other rows are all 0.00; Collaborator row is n/a; row 11 is the header for the NOT-funded section. Request text: 'Fill in the total row.' The starting XML was checked directly for row order and cell text."
+  confidence: low

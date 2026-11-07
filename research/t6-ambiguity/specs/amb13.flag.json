@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Multiply the stored Discount values in F2:F36 by 100 (so 0.165 becomes 16.5) and show them as plain numbers or with a literal percent sign, which changes the stored values.",
+  "reading_followed": "Apply a percentage number format to Sheet1 F2:F36 so each stored fraction displays as a percent, leaving all stored values, formulas, and other sheets unchanged.",
+  "notes": "Readers cannot read number formats, so the percent display is covered only by fuzzy judgment while the must predicates pin stored content to the starting state. The standard spreadsheet meaning of 'show as percents' is a format change, but the wording alone could also suggest converting the stored numbers."
+}

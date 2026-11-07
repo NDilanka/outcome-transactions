@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": false,
+  "other_reading": null,
+  "reading_followed": "Create a PDF copy at /home/user/Desktop/69_4.pdf of the deck and leave /home/user/Desktop/69_4.pptx unchanged.",
+  "notes": "'Too' signals an added copy rather than a replacement of the .pptx, so the reading is fairly clear. The main residual uncertainty is the PDF filename, which the request does not state; the spec assumes the default stem."
+}

@@ -1,0 +1,28 @@
+- id: amb17
+  must:
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D3').value < before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D3').value)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D4').value > before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D4').value)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D5').value < before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D5').value)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D6').value > before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D6').value)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D7').value < before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D7').value)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D8').value < before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').cell('D8').value)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:C8').values == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('A1:C8').values)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('E3:E8').formulas == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').range('E3:E8').formulas)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').nonempty_cells == before(libreoffice.calc.file('/home/user/Desktop/my_bookkeeping.xlsx').sheet('Sheet1').nonempty_cells)"
+  footprint:
+    - "Values of the Amount column D3:D8 on Sheet1 of /home/user/Desktop/my_bookkeeping.xlsx, each changed so that its magnitude grows (negative amounts become more negative, positive amounts become larger); signs are kept"
+    - "Cached results of the formula cells E4:E8 on Sheet1 (recalculation only; their formulas are unchanged)"
+  fuzzy:
+    - "Whether the request means the numeric amounts in column D (as specified here) or the on-screen font size of the amounts; font size is not checkable with the readers"
+    - "The size of each increase is a judgment call; no growth factor is specified and none is checked"
+    - "The Balance column E should visibly reflect the new amounts after recalculation; the exact cached balance values are not checked"
+    - "Whether the Balance opening value E3 (850) should stay fixed; it is required unchanged by the formula check above"
+    - "Whether the receipt files on the Desktop (receipt_0 to receipt_4) are meant to be affected; they are not required to change and not required to stay unchanged"
+  assumptions:
+    - "Amounts means the Amount column D (header in D2) of Sheet1 in my_bookkeeping.xlsx"
+    - "The Balance column E is derived from E3 and the amounts through formulas E4:E8"
+    - "Headers, descriptions, categories, types and the merged title are not part of the change"
+    - "Each amount is changed individually; no uniform factor or fixed increment is implied"
+  grounding_used: "Inspection report: Sheet1 of my_bookkeeping.xlsx has Amount values D3=-150, D4=500, D5=-60, D6=300, D7=-700, D8=-100 (all numeric constants); E3=850 is a constant opening balance; E4:E8 are formulas =E(n-1)+D(n) with cached values 1350, 1290, 1590, 890, 790. Headers in row 2 (Description, Category, Type, Amount, Balance) and title A1 (merged A1:E1) are present. Receipt files are listed on the Desktop but the request does not name them."
+  confidence: low

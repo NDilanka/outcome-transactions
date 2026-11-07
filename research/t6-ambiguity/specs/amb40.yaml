@@ -1,0 +1,26 @@
+- id: amb40
+  must:
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide_count == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide_count)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 1').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 2').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 2').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 3').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 3').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 10').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 10').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 11').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 11').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 12').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('Rectangle 12').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('TextBox 4').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(24).shape('TextBox 4').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).shape('TextBox 1').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).shape('TextBox 1').text)"
+    - "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(23).shape('TextBox 11').text == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(23).shape('TextBox 11').text)"
+  footprint:
+    - "Hyperlink or click action added to the text of the six URL shapes on slide 24 ('Rectangle 1', 'Rectangle 2', 'Rectangle 3', 'Rectangle 10', 'Rectangle 11', 'Rectangle 12') of /home/user/Desktop/Ch4 Video Effect.pptx, each pointing to the URL it displays"
+    - "Standard side effects of applying a hyperlink to text (link run styling) on those six shapes only"
+  fuzzy:
+    - "Each of the six URL shapes on slide 24 is clickable, and its link target equals the URL text shown in that shape (hyperlink targets are not readable by predicates; judge from the saved file)"
+    - "The heading 'References to pictures and videos:' on slide 24 is not required to be a link"
+    - "Visual appearance of the link text (for example blue underline) may change as a result of making it a link"
+  assumptions:
+    - "'The links' means the six URL text shapes on the last slide (slide 24, which is the last of 24 slides)"
+    - "Making links clickable does not require changing the displayed URL text, shape positions, or any other slide"
+    - "No transition, slide order, or slide count change is requested"
+    - "Hyperlink targets are not readable by the reader surface, so clickability is guarded only by the fuzzy criterion and the footprint; text predicates guard against unintended edits"
+  grounding_used: "inspection.md: slide 24 (layout Blank) contains shapes Rectangle 1, Rectangle 2, Rectangle 3, Rectangle 10, Rectangle 11, Rectangle 12 each holding one URL as plain text (YouTube and image URLs), plus TextBox 4 holding the heading 'References to pictures and videos:'; deck has 24 slides; slide 1 TextBox 1 and slide 23 TextBox 11 used as unchanged-content guards. reader-reference.txt: hyperlink targets are not readable, so no predicate checks link status; slide_count and shape .text are readable."
+  confidence: medium

@@ -1,0 +1,14 @@
+- id: amb26
+  must:
+    - "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').all_text)"
+    - "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').paragraph(13).text == 'The tutorial will constitute 30% of your total grade.'"
+    - "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').paragraph(14).text matches /10% on group presentation, 10% on discussion and 10% on Debate/i"
+  footprint: []
+  fuzzy: []
+  assumptions:
+    - "The request's 'worth 30' is read as the existing 30% total stated in paragraph 13 (one-based), which is already in the document."
+    - "The three parts (group presentation, discussion, debate) are already split 10% / 10% / 10% in paragraph 14, so the split requirement is already satisfied and no edit is needed."
+    - "The request does not ask for a change of scale (for example to 30 marks), so the document's percentage wording is kept."
+    - "The paragraph indices in inspection.md are zero-based (p0 to p27); the one-based indices used in the predicates are p12 to paragraph(13) and p13 to paragraph(14)."
+  grounding_used: "inspection.md reports paragraph p12 'The tutorial will constitute 30% of your total grade.' and paragraph p13 'Your tutorial mark depends on three parts: 10% on group presentation, 10% on discussion and 10% on Debate.' Both are plain text with no tables in those paragraphs. The request text is 'The tutorial is worth 30, split the three parts evenly.' The inspection report was used; the starting file was not opened separately."
+  confidence: low

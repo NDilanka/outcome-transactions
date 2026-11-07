@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The total is a plain SUM of D2:D36 that is allowed to show #N/A, or the total is placed somewhere other than below the data (for example a separate summary area or a different column).",
+  "reading_followed": "A total of the 22 numeric Actual values in D2:D36, with #N/A cells excluded, is placed in D37 under a label in B37, and nothing else changes.",
+  "notes": "The request names no location for the total and does not say how the #N/A cells should be treated, and both choices change the end state. The spec fixes the placement and the exclusion of #N/A from the total (57930), so a different reasonable placement would fail the D37 check."
+}

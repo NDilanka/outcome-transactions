@@ -1,0 +1,27 @@
+- id: amb36
+  must:
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(6).text == 'Use designated campus posting areas & bulletin boards for approved materials'"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(7).text == 'Requests approval to host a Program or Activity ON or OFF Campus'"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(6).bullet.type == 'char'"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(7).bullet.type == 'char'"
+    - "count(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraphs) == 9"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(1).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(1).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(2).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(2).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(3).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(3).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(4).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(4).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(5).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(5).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(8).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(8).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(9).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 2').paragraph(9).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 1').paragraph(1).text == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide(7).shape('PlaceHolder 1').paragraph(1).text)"
+    - "libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide_count == before(libreoffice.impress.file('/home/user/Desktop/New_Club_Spring_2018_Training.pptx').slide_count)"
+  footprint:
+    - "On slide 7, shape 'PlaceHolder 2': the bullet 'Use designated campus posting areas & bulletin boards for approved materials' moves up one position, swapping places with the bullet 'Requests approval to host a Program or Activity ON or OFF Campus'. Its text, level and bullet formatting are unchanged."
+    - "No other paragraph, shape, slide, or file in the presentation changes."
+  fuzzy:
+    - "Whether the moved bullet keeps its original indentation and spacing after the swap."
+  assumptions:
+    - "'The last bullet' means the last bulleted paragraph in the deck, which is on slide 7 (the last slide)."
+    - "'Move up' means one position up, not to the top of the list."
+    - "Empty paragraphs (buNone) are not bullets and stay where they are."
+  grounding_used: "Inspection report slide 7 lists shape 'PlaceHolder 2' with 9 paragraphs (0-based p0 to p8); the last buChar paragraph is 0-based p6 ('Use designated campus posting areas & bulletin boards for approved materials'), preceded by p5 ('Requests approval to host a Program or Activity ON or OFF Campus'). Confirmed by reading ppt/slides/slide7.xml in the starting snapshot pptx via zipfile: last bulleted paragraph is the 'Use designated...' item. Slides total 7; title shape is 'PlaceHolder 1'."
+  confidence: medium

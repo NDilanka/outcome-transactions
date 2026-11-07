@@ -1,0 +1,23 @@
+- id: amb08
+  must:
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:C1').values == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:C1').values)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:C29').values == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:C29').values)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:C29').formulas == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:C29').formulas)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').nonempty_cells set_equal before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').nonempty_cells)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').hidden_rows == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').hidden_rows)"
+    - "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').hidden_columns == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').hidden_columns)"
+    - "os.file('/home/user/Movie_title_garbage_clean.xlsx').exists == true"
+  footprint:
+    - "Cell formatting (font weight, font colour, font size, fill colour) of header cells B1 and C1 on Sheet1 of /home/user/Movie_title_garbage_clean.xlsx"
+    - "Serialization metadata of the same workbook file as a consequence of saving it"
+  fuzzy:
+    - "Header cells B1 ('Garbage Movie titles') and C1 ('Clean Movie Titles') look more prominent than in the starting file when rendered (for example a stronger or more contrasting fill, a larger or coloured font). Judged visually; the request does not name a specific style."
+    - "Data cells B2:C29 keep their starting appearance; no other cells are restyled beyond the header emphasis."
+  assumptions:
+    - "'Headers' means the two column header cells in row 1 of Sheet1 (B1 and C1); no other row or column is a header."
+    - "Header text, data values, formulas, sheet names and column/row visibility must not change; emphasis is achieved through formatting only."
+    - "The workbook is saved in place at /home/user/Movie_title_garbage_clean.xlsx."
+    - "Formatting attributes are not readable by the reader surface, so the appearance requirement is carried by the fuzzy criterion."
+  grounding_used: "Inspection report: Sheet1 dims B1:C29; B1 'Garbage Movie titles' and C1 'Clean Movie Titles' are bold with fills FFF9CB9C and FFA4C2F4; C column has only C1 non-empty; 30 non-empty cells total; B2:B29 hold the movie title data. Reader reference: bold, fill colour and font size are not readable, so only values, formulas, sheet names, nonempty cells and hidden rows/columns are checked as must predicates. Example predicates confirm calc.file range/values/formulas/nonempty_cells/hidden_rows/hidden_columns syntax."
+  confidence: low

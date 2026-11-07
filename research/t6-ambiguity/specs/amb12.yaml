@@ -1,0 +1,20 @@
+- id: amb12
+  must:
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').values == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').values)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').formulas == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Sheet1').range('A1:F36').formulas)"
+    - "libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').range('A1:B23').values == before(libreoffice.calc.file('/home/user/BoomerangSales.xlsx').sheet('Retail Price').range('A1:B23').values)"
+  footprint:
+    - "Sheet1 gains exactly one new cell outside A1:F36 that holds the Aspen quantity total of 142 (typed value or a formula evaluating to 142)"
+    - "No other cell, sheet, or file changes"
+  fuzzy:
+    - "The placement of the total cell is not specified; any empty cell outside A1:F36 on Sheet1 is acceptable, and a label next to it is optional."
+    - "Whether the total is also stated in the chat reply is not checked."
+    - "Only the exact product 'Aspen' is counted. Rows for 'Fire Aspen' (quantities 93 and 3) are a different product and are excluded; a reading that includes them would give 238 instead of 142."
+  assumptions:
+    - "'Aspen' means the Product value exactly equal to 'Aspen' in column C of Sheet1."
+    - "The quantity is column E. Aspen rows are 2, 14, 16, 17, 21 and 33 with quantities 33, 8, 3, 91, 6 and 1, which sum to 142."
+    - "The workbook path is /home/user/BoomerangSales.xlsx, as given in the inspection report."
+    - "The sheet structure is Sheet1 (A1:F36) and Retail Price (A1:B23), as inspected."
+  grounding_used: "Inspection report for /home/user/BoomerangSales.xlsx: Sheet1 A1:F36 with Product in column C and Quantity in column E; Aspen rows 2, 14, 16, 17, 21, 33 (quantities 33, 8, 3, 91, 6, 1 = 142); Fire Aspen rows 9 and 26 (93 and 3) excluded; Retail Price sheet A1:B23; sheet names Sheet1 and Retail Price. Predicates use only the calc reader surface (sheet_names, range values and formulas, before())."
+  confidence: low

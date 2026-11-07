@@ -1,0 +1,22 @@
+- id: amb10
+  must:
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('B2:B36').values ordered_by ascending"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('B2:B36').values multiset_equal before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('B2:B36').values)"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('C2:C36').values == [1156, 1917, 3375, 3238, 3909, 526, 1846, 998, 333, 549, 3983, 1384, 833, 155, 3865, 3350, 1506, 4448, 3574, 1710, 3633, 1222, 3746, 2172, 4070, 709, 294, 2024, 231, 397, 2481, 3330, 1512, 652, 1796]"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('D2:D36').values == ['#N/A', 116, 3452, '#N/A', 1167, '#N/A', 4705, 3799, 1789, '#N/A', '#N/A', 3533, 1896, '#N/A', 2211, 3556, 4370, 725, 3826, '#N/A', 281, 2390, 1017, '#N/A', '#N/A', '#N/A', '#N/A', '#N/A', 2531, 2441, 4112, 4512, '#N/A', 2041, 3460]"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('E2:E36').formulas == ['=D2-C2', '=D3-C3', '=D4-C4', '=D5-C5', '=D6-C6', '=D7-C7', '=D8-C8', '=D9-C9', '=D10-C10', '=D11-C11', '=D12-C12', '=D13-C13', '=D14-C14', '=D15-C15', '=D16-C16', '=D17-C17', '=D18-C18', '=D19-C19', '=D20-C20', '=D21-C21', '=D22-C22', '=D23-C23', '=D24-C24', '=D25-C25', '=D26-C26', '=D27-C27', '=D28-C28', '=D29-C29', '=D30-C30', '=D31-C31', '=D32-C32', '=D33-C33', '=D34-C34', '=D35-C35', '=D36-C36']"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('B1:E1').values == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('B1:E1').values)"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet_names)"
+  footprint:
+    - "Sheet1 cells B2:E36 only: data rows reordered so that rows are in ascending Date order (oldest first); each row's Date, Budget, Actual and Difference formula move together"
+  fuzzy:
+    - "Order of the two rows dated 2021-07-17 (Budget 1917 and Budget 3375): the spec expects their original relative order (stable sort); either order is a reasonable sort"
+    - "Cell number formats and column widths after the sort are not checked; a person sorting by hand would not change them"
+  assumptions:
+    - "Sort means ascending by Date (oldest first), the default sort direction"
+    - "Row 1 is a header and stays in place; the sort range is B1:E36 with a header"
+    - "The Difference formulas are row-relative (=D{r}-C{r}); after the sort each row's formula refers to its own row"
+    - "The #N/A error cells (Actual is =NA() in 14 rows) move with their rows and remain errors; the reader is assumed to report them as the string '#N/A'"
+    - "No other sheet, cell, or workbook setting is changed; the file has no autofilter, no hidden rows, and one sheet"
+  grounding_used: "Inspection report: sheet Sheet1, dims B1:E36, header in row 1, B holds dates (m/d/yyyy), C Budget, D Actual (=NA() in 14 rows), E =D-C formulas, 35 data rows, two rows dated 2021-07-17 (rows 22 and 31). Snapshot XML confirmed no autoFilter, no hidden rows, single sheet. Expected sorted C/D/E lists computed from the snapshot with a stable sort by date."
+  confidence: medium

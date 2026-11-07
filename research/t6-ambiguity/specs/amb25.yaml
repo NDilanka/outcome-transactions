@@ -1,0 +1,17 @@
+- id: amb25
+  must:
+    - "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').all_text)"
+    - "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1).rows == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1).rows)"
+    - "count(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').paragraphs) == before(count(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').paragraphs))"
+  footprint:
+    - "Underline run formatting on the heading paragraphs 'Setting' (paragraph 3, one-based) and 'Assessment' (paragraph 12, one-based) of /home/user/Desktop/CCCH9003_Tutorial_guidelines.docx; these must remain underlined. No other change to the document."
+  fuzzy:
+    - "The headings 'Setting' and 'Assessment' appear underlined in the saved document. In the starting file both are already bold with single underline, so the requested end state is that they remain underlined."
+    - "No other visible formatting (bold, italic, size, colour, alignment, underline on body text or table cells) changed as a side effect of the edit."
+  assumptions:
+    - "'The headings' means the two bold section titles 'Setting' and 'Assessment' (the only paragraphs styled as section headings in the starting file)."
+    - "Underline is not readable by the reader surface, so the underline outcome is judged under fuzzy; must predicates cover text and table content unchanged."
+    - "The table header row ('Sessions', 'Topics & Readings', 'Format') is treated as a table, not a heading; it is not in the footprint."
+    - "The request names no file; the only file in the task folder is CCCH9003_Tutorial_guidelines.docx on the Desktop."
+  grounding_used: "Inspection report: paragraph index 2 (0-based) 'Setting' and index 11 'Assessment' are bold, size 12, underline; table0 is 9x3 with header 'Sessions / Topics & Readings / Format'. Read the starting docx word/document.xml directly: 'Setting' and 'Assessment' runs have w:b and w:u val=single; the table header runs carry no underline. Reader reference: underline is not readable, so it cannot be a must predicate; writer .all_text, .table(N).rows and .paragraphs are readable."
+  confidence: low

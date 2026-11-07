@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The requester expects the total row to show non-zero totals from effort figures they consider already known, so the row should change from the starting zeros.",
+  "reading_followed": "The total row must equal the column sums of the funded rows, which are all 0.00 in the starting file, so the row stays at 0.00 and no other content changes.",
+  "notes": "The request names no effort values, and the file has none, so any correct sum is 0.00. The predicates use the one-based row index 10 for the total row and check that the rest of the table and document text are unchanged."
+}

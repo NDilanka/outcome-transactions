@@ -1,0 +1,18 @@
+- id: amb30
+  must:
+    - "libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text == before(libreoffice.writer.file('/home/user/Desktop/sample-recruitment-phone-script.odt').all_text)"
+    - "os.file('/home/user/Desktop/sample-recruitment-phone-script.odt').exists == true"
+  footprint:
+    - "Italic character formatting applied to the runs of stage-direction text in /home/user/Desktop/sample-recruitment-phone-script.odt"
+    - "Existing italic formatting may remain as is; no other character, paragraph, or table formatting changes"
+  fuzzy:
+    - "Every stage-direction passage is italic: the bracketed instruction in the 'Okay' reply (p17, '[Ask if you can schedule another time ...]') and the non-spoken branch and instruction lines such as 'If the Person ...' and 'Answer any questions patient may have.' (p7, p9, p15, p19, p23, p27, p37, p41, p47)"
+    - "Spoken lines beginning 'Study Team:' and the sample script body text are not italicized by this change"
+    - "Bracketed template placeholders such as [name], [condition] inside spoken lines are not treated as stage directions unless they form an instruction to the caller"
+    - "Existing yellow highlight and bold formatting are left unchanged"
+  assumptions:
+    - "A stage direction is non-spoken text that tells the person running the call what to do or when to do it (the bracketed instruction at p17 and the conditional branch headings and instruction sentences)"
+    - "Italic cannot be read by the reader surface, so the italic change is judged by the fuzzy criteria; the must predicates only guard the text and file identity"
+    - "Text content is not altered by italicizing; the file stays at its starting path and format"
+  grounding_used: "Inspection report paragraph text: p17 contains a bracketed instruction; p7, p9, p15, p19, p23, p27, p37, p41, p47 are branch/instruction lines; p5, p11, p21, p25, p29, p31, p33, p43 begin with 'Study Team:'. Starting style list shows italic styles T2, T3, T5 already exist, so some runs are already italic. Reader reference states italic is not readable, so the only checkable must predicates are unchanged all_text and file existence at the starting path."
+  confidence: low

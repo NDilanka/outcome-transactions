@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Make the headers stand out by changing their text (for example uppercasing them or adding markers), which would alter the stored header values.",
+  "reading_followed": "Header cells B1 and C1 keep their text and gain visual emphasis through formatting only, with all data values and structure unchanged.",
+  "notes": "The request is short and does not name a style or a method, and the reader surface cannot read formatting, so the core requirement is only covered by a fuzzy criterion. Confidence is low for that reason."
+}

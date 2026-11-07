@@ -1,0 +1,21 @@
+- id: amb27
+  must:
+    - "os.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').exists == true"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').all_text == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').all_text)"
+    - "count(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables) == before(count(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables))"
+    - "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(2).rows == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(2).rows)"
+  footprint:
+    - "Bold formatting applied to the text of the header row (row 1) of table 2 in /home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx, counting tables in body order (the table whose first row reads p, b, t, d, k c, g)"
+    - "No other change to the document's text, tables, or structure"
+  fuzzy:
+    - "Every non-empty cell in row 1 of table 2 is bold, and the cell text is unchanged"
+    - "No other text in the document, including the row 2 example words of table 2 and all other tables, is newly bolded; the existing bold paragraph labels elsewhere in the document are left as they were"
+    - "Bold is applied directly to the cell text or runs (not by changing the table style), consistent with a person selecting the header row and pressing Bold"
+  assumptions:
+    - "Headers means the first row of the second table; the table has 2 rows, so the header row is row 1 and row 2 holds example words that are not headers"
+    - "The second table is body-order index 2 (1-based) of 13 tables; the XML body order confirms the tables are consecutive with no intervening table, and table 2 is the p, b, t, d, k c, g table"
+    - "Bold is not readable by the reader surface, so the bold change itself can only be judged by fuzzy review; must predicates check that text and structure are unchanged"
+    - "Document headings (Heading 1 paragraphs) are not the table headers the request refers to"
+    - "Paths use the Ubuntu location /home/user/Desktop as given in the inspection report"
+  grounding_used: "Inspection report for task 936321ce-5236-426a-9a20-e0e3c5dc536f: 13 tables (table0 to table12), table1 is 2x11 with first row p, b, t, d, k c, g and second row pet, bet, tip, dip, kit cap, gap; the file has 43 paragraphs; bold is listed only for the plain-text labels in paragraphs 21 to 23, 26, 27, 30, 32, 36. Confirmed by reading word/document.xml from the read-only snapshot: 13 w:tbl elements in body order, the first row of the second table has no explicit bold run. Reader reference: bold is not readable; before() and all_text/tables/rows are readable."
+  confidence: medium

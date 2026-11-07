@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "The placeholder bullets are the seven small picture shapes (Google Shape;450 to 456) beside the agenda list, so the request means deleting those pictures rather than removing paragraph bullet formatting.",
+  "reading_followed": "Remove the bullet markers from the seven paragraphs of the agenda body on slide 3 while keeping their text, paragraph count, title, slide count, and transition unchanged.",
+  "notes": "The paragraphs carry character bullets (buChar) and are the only bullet markers the reader can inspect, so that reading is followed. The picture shapes are left untouched by the must list and are noted as a fuzzy point."
+}

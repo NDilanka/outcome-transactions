@@ -1,0 +1,24 @@
+- id: amb09
+  must:
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('C2:C23').values == [1506, 1384, 652, 333, 397, 4448, 3330, 2481, 3865, 998, 3746, 1917, 3909, 231, 1222, 3633, 3350, 833, 3375, 3574, 1846, 1796]"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('D2:D23').values == [4370, 3533, 2041, 1789, 2441, 725, 4512, 4112, 2211, 3799, 1017, 116, 1167, 2531, 2390, 281, 3556, 1896, 3452, 3826, 4705, 3460]"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('B24:E36').nonempty_cells == []"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').range('B1:E1').values == ['Date', 'Budget', 'Actual', 'Difference']"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').cell('E2').formula == '=D2-C2'"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').cell('E23').formula == '=D23-C23'"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows)"
+  footprint:
+    - "On Sheet1, the 13 data rows whose Actual cell is =NA() (original rows 3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33) are deleted entirely, so the remaining rows shift up and the 22 other data rows keep their order, values and formulas."
+    - "Difference formulas in the remaining rows are adjusted by the row shift and recalculated; cached values may change accordingly."
+    - "Nothing else in the workbook changes: no other rows, columns, headers, sheets, formatting, or hidden state."
+  fuzzy:
+    - "Date column values in the remaining rows keep their original values and order (dates are not checked by a predicate because reader value types for dates are not confirmed)."
+    - "A person might instead hide the N/A rows (the filename says HideNA); this spec follows the literal request 'get rid of' and deletes them."
+  assumptions:
+    - "'N/A rows' means rows where the Actual value is #N/A, which also makes Difference #N/A; Budget has no #N/A cells."
+    - "'Get rid of' means delete the rows, not hide them."
+    - "Header row 1 stays; sheet is 'Sheet1'."
+    - "The 144 non-empty cells in the starting sheet include 52 cells in the 13 N/A rows, leaving 92 cells, which matches the 22 remaining data rows plus header."
+  grounding_used: "Inspection report for /home/user/Date_Budget_Variance_HideNA.xlsx: Sheet1 B1:E36, header row 1, 35 data rows; rows with D='=NA()' (cached #N/A) are 3,6,8,9,12,14,18,19,20,24,27,32,33 (13 rows); Budget (C) values are all numeric; E formulas are =D{n}-C{n}; 144 non-empty cells. Remaining values of C and D were copied from the report in original row order. Reader reference: calc range values, formula, nonempty_cells, hidden_rows, sheet_names, before()."
+  confidence: low

@@ -1,0 +1,23 @@
+- id: amb33
+  must:
+    - 'libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraph(1).text does_not_match /[a-z]/'
+    - 'libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraph(2).text does_not_match /[a-z]/'
+    - 'libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraph(3).text does_not_match /[a-z]/'
+    - 'lower(libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraph(1).text) == ''write an original'''
+    - 'lower(libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraph(2).text) == ''statement or'''
+    - 'lower(libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraph(3).text) == ''inspiring quote'''
+    - 'count(libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraphs) == before(count(libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;166;p 1'').paragraphs))'
+    - 'libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide_count == before(libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide_count)'
+    - 'libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;167;p 1'').text == before(libreoffice.impress.file(''/home/user/Desktop/1_2.pptx'').slide(5).shape(''Google Shape;167;p 1'').text)'
+  footprint:
+    - 'Text case of the title shape Google Shape;166;p 1 on slide 5 of /home/user/Desktop/1_2.pptx, which is set to all caps. Its three paragraphs already read WRITE AN ORIGINAL / STATEMENT OR / INSPIRING QUOTE in the starting file, so this may be a no-op for the stored text.'
+    - 'No other text, shape, slide, or transition in the presentation changes.'
+  fuzzy:
+    - 'Identification of the slide title as the headline shape Google Shape;166;p 1 rather than the credit line Google Shape;167;p 1 (slide 5 has no title placeholder).'
+  assumptions:
+    - 'The file is /home/user/Desktop/1_2.pptx (the only pptx in the task snapshot).'
+    - 'The last slide is slide 5 of 5.'
+    - 'The title is the large headline shape Google Shape;166;p 1; the credit line Google Shape;167;p 1 is a supporting message, not a title.'
+    - 'Accepted tolerance: the stored text of the title must be all caps; no other formatting is checked.'
+  grounding_used: 'Inspection report: slides=5; slide 5 shapes include Google Shape;166;p 1 with paragraphs WRITE AN ORIGINAL, STATEMENT OR, INSPIRING QUOTE, and Google Shape;167;p 1 with text Include a credit, citation, or supporting message. Verified by reading ppt/slides/slide5.xml from the read-only snapshot: the a:t texts of shape 166 are already uppercase and no cap attribute is set on any run; shape 167 is mixed case.'
+  confidence: medium

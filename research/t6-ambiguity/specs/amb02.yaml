@@ -1,0 +1,21 @@
+- id: amb02
+  must:
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet_names == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet_names)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').values == before(libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('A1:G11').values)"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').range('H2:H11').values within(0.001) [2894, 2450, 2253, 2648, 2439, 2952, 2481, 2574, 3000, 2468]"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').cell('H1').value matches /total/i"
+    - "libreoffice.calc.file('/home/user/SalesRep.xlsx').sheet('Sheet1').nonempty_cells subset_of range('A1:H11')"
+  footprint:
+    - "Sheet1 cells H1:H11 in /home/user/SalesRep.xlsx: a new total column with a header and one row total per rep (rows 2-11)"
+    - "Serialization metadata of /home/user/SalesRep.xlsx (package bookkeeping, producer metadata, recalculation caches) as a side effect of saving"
+  fuzzy:
+    - "The header text of H1 is free; any label containing 'Total' is acceptable (for example 'Total' or 'Total Sales')."
+    - "Whether the totals are stored as typed values or as SUM formulas over B:G is free; the must predicates check values only."
+    - "Number formatting, column width, and bold or fill on the new header are free and not checked."
+  assumptions:
+    - "'Total for each rep' means one row total per rep, the sum of Jan through Jun (columns B:G) on the same row, placed in the next free column H."
+    - "Reps are the data rows 2-11 (Ivelisse Peel through Cleo Nixon); no grand total row is requested, so no row 12 content is required and none is forbidden beyond the nonempty_cells check."
+    - "Expected totals computed from the starting values in the inspection report: Ivelisse Peel 2894, Sigrid Grooms 2450, Majorie Flaherty 2253, Stevie Fisk 2648, Nova Bolduc 2439, Naoma Moyer 2952, Eric Minter 2481, Dotty Dorn 2574, Kandice Hussey 3000, Cleo Nixon 2468."
+    - "Column placement in H is an assumption about where a person would put the column; the request does not name a location."
+  grounding_used: "inspection.md for /home/user/SalesRep.xlsx: sheet 'Sheet1', dims A1:G11, header row 'Sales Rep', Jan to Jun in B1:G1, 10 rep rows 2-11 with integer monthly values in B:G. Row sums were computed by hand from those values. Reader-reference for calc.file cell, range, nonempty_cells, sheet_names and before() syntax; examples.txt for the within(TOLERANCE) and matches syntax."
+  confidence: medium

@@ -1,0 +1,30 @@
+- id: amb19
+  must:
+    - 'os.tree(''/home/user/Desktop'').paths == before(os.tree(''/home/user/Desktop'').paths)'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(29).text == "Michael Brown"'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(30).text == "Apologies:"'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(31).text == "Lisa Green"'
+    - 'count(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraphs) in [31, 32]'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(1).text == before(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(1).text)'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(6).text == before(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(6).text)'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(12).text == before(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(12).text)'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(19).text == before(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(19).text)'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(24).text == before(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(24).text)'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(25).text == before(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(25).text)'
+    - 'libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(28).text == before(libreoffice.writer.file(''/home/user/Desktop/Meeting-Agenda.docx'').paragraph(28).text)'
+  footprint:
+    - 'Paragraphs of /home/user/Desktop/Meeting-Agenda.docx: the "Apologies:" heading and the "Lisa Green" line move up so they directly follow "Michael Brown" (the last attendee), with no blank paragraph between them.'
+    - 'The blank separator paragraph that currently sits between "Michael Brown" and "Apologies:" may be kept at the end of the document or removed.'
+    - 'Package and serialization bookkeeping of the .docx file (ZIP ordering, timestamps, producer metadata) as a side effect of saving.'
+    - 'runtime(app).housekeeping for the word processor (process, window, lock and cache files).'
+  fuzzy:
+    - 'The moved "Apologies:" heading and "Lisa Green" line keep their original look (normal style, 13 pt) and are not restyled.'
+    - 'Whether the trailing blank separator is kept or deleted is a matter of judgment; either is acceptable.'
+    - 'No other agenda text (times, facilitators, presenters, attendee names) is edited, reworded, or reformatted.'
+  assumptions:
+    - '"Move the apologies up with the attendees" means move the Apologies block toward the attendee list so that it sits directly under the last attendee.'
+    - 'In the starting file the Apologies block already follows the attendee list, separated only by one blank paragraph (paragraph 30), so the intended change is closing that gap.'
+    - 'The Apologies block is not moved above the "Attendees:" heading and is not moved into any other section.'
+    - 'The document has 32 paragraphs at the start; the blank separator may or may not survive, hence the count check allows 31 or 32.'
+  grounding_used: 'From inspection.md (Meeting-Agenda.docx, 0-based p23 blank, p24 "Attendees:", p25-p29 John Doe, Jane Smith, Alex Johnson, Emily White, Michael Brown, p30 blank, p31 "Apologies:", p32 "Lisa Green"; 32 paragraphs, all normal style, size 13.0; no tables, no images). Converted to the 1-based indices used by the reader: Michael Brown = 29, blank = 30 (starting), Apologies: = 31, Lisa Green = 32. Sampled unchanged paragraphs: 1 (Date), 6 (Welcome and Introduction), 12 (Project A Update), 19 (Closing), 24 (Attendees:), 25 (John Doe), 28 (Emily White). Reader contract and examples for syntax only.'
+  confidence: medium

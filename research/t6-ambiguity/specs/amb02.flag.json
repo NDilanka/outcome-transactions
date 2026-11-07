@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": false,
+  "other_reading": null,
+  "reading_followed": "One total per rep row, the sum of Jan through Jun on that row, written in a new column H of Sheet1 with a header containing 'Total', and no other cells changed.",
+  "notes": "The request names no column location, header text, or formula-versus-value choice, so those are left fuzzy or assumed to column H. Placement in H is the main source of spec uncertainty, which is why confidence is medium."
+}

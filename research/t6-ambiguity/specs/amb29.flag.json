@@ -1,0 +1,6 @@
+{
+  "two_readings_plausible": true,
+  "other_reading": "Clear all character emphasis (bold and italic) on the affected runs, not only the yellow background highlight.",
+  "reading_followed": "Remove only the yellow background highlight from the highlighted runs, keep their italic and every other attribute, and change no text.",
+  "notes": "No reader exposes background colour, so the must predicates verify only text and structure preservation and highlight removal rests on fuzzy judgment. The reading followed is the standard meaning of highlighting in a word processor."
+}
