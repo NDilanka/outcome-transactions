@@ -44,7 +44,8 @@ def main():
             rec = {'blind_id': bid}
             try:
                 res = specexec.run_spec(spec, after, before)
-                rec.update(decision=res['decision'], predicates=res['predicates'])
+                rec.update(decision=res['decision'], predicates=res['predicates'],
+                           empty_all_undecided_decision=res['empty_all_undecided_decision'])
             except Exception as e:  # executor crash is visible as ERROR, never as a pass
                 rec.update(decision='ERROR', predicates=[], error=f'{type(e).__name__}: {str(e)[:200]}',
                            trace=traceback.format_exc()[-800:])

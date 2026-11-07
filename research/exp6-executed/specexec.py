@@ -764,6 +764,8 @@ class Ctx:
         self.root, self.start_root = root, start_root
         self.opened = []      # (ubuntu path, document, opened inside before()) for the current predicate
         self.in_before = 0
+        self.vacuous = []     # all() calls with no values in the current predicate (logged)
+        self.strict_empty = False  # counterfactual pass: such an all() is UNDECIDED (Amendment 2 rule)
     def resolve(self, ubuntu_path):
         if not ubuntu_path.startswith('/'): raise Unsupported(f"relative path {ubuntu_path}")
         return os.path.join(self.root, ubuntu_path.lstrip('/'))
@@ -889,6 +891,7 @@ def ev(n, env, ctx):
         for x in ev(it, env, ctx):
             e2 = dict(env, **{var: x})
             if cond is None or ev(cond, e2, ctx): vals.append(bool(ev(body, e2, ctx)))
+        if kind == 'all' and not vals: vacuous(ctx, var)
         return all(vals) if kind == 'all' else any(vals)
     if k == 'quant':
         raise Unsupported("quantifier outside all()/any()")
@@ -911,6 +914,7 @@ def ev(n, env, ctx):
                 for x in ev(a[2], env, ctx):
                     e2 = dict(env, **{a[1]: x})
                     if a[3] is None or ev(a[3], e2, ctx): vals.append(ev(a[4], e2, ctx))
+            if fn[1] == 'all' and not vals: vacuous(ctx, a[1] if a[0] == 'quant' else 'generator')
             return all(vals) if fn[1] == 'all' else any(vals)
         if fn[0] == 'attr' and fn[2] == 'index':  # list.index(x), not the per-item projection of an 'index' attribute
             base = ev(fn[1], env, ctx)
@@ -939,8 +943,37 @@ def short(v):
     return s if len(s) < 160 else s[:157] + '...'
 
 
+def vacuous(ctx, what):
+    """An all() with no values is true by convention. It is logged; in the counterfactual pass it is UNDECIDED."""
+    ctx.vacuous.append(what)
+    if ctx.strict_empty: raise Unsupported(f"all() over no values ({what})")
+
+
+def _eval_pred(ast, ctx):
+    """(status, reason) of one parsed predicate."""
+    try:
+        val = ev(ast, {}, ctx)
+        return ('PASS' if bool(val) else 'FAIL'), short(val)[:160]
+    except ReaderMiss as e:
+        return 'FAIL', f'missing: {e}'
+    except Unsupported as e:
+        return 'UNSUPPORTED', f'eval: {e}'
+    except Exception as e:  # executor bug or unexpected file: never silently accept
+        return 'ERROR', f'{type(e).__name__}: {str(e)[:120]}'
+
+
+def _decide(statuses):
+    if 'FAIL' in statuses: return 'REJECT'
+    if any(s in ('UNSUPPORTED', 'ERROR') for s in statuses): return 'UNDECIDED'
+    return 'ACCEPT'
+
+
 def run_spec(spec, end_root, start_root):
-    """Evaluate every must-predicate. Returns decision and per-predicate records."""
+    """Evaluate every must-predicate. Returns the decision and per-predicate records.
+
+    Logging only (the decision is computed from the status as before): a predicate with an all() that had no values
+    records them in 'vacuous_all', and 'if_vacuous_all_undecided' is its status when such an all() counts as
+    UNDECIDED. 'empty_all_undecided_decision' is the spec decision under that rule (the Amendment 2 candidate)."""
     ctx = Ctx(end_root, start_root)
     CURRENT['sheet'] = None
     recs = []
@@ -950,19 +983,16 @@ def run_spec(spec, end_root, start_root):
             ast = parse(pred)
         except Unsupported as e:
             recs.append({'pred': pred, 'status': 'UNSUPPORTED', 'reason': f'parse: {e}'}); continue
-        try:
-            ctx.opened = []  # documents are bound per predicate
-            val = ev(ast, {}, ctx)
-            ok = bool(val)
-            recs.append({'pred': pred, 'status': 'PASS' if ok else 'FAIL', 'reason': short(val)[:160]})
-        except ReaderMiss as e:
-            recs.append({'pred': pred, 'status': 'FAIL', 'reason': f'missing: {e}'})
-        except Unsupported as e:
-            recs.append({'pred': pred, 'status': 'UNSUPPORTED', 'reason': f'eval: {e}'})
-        except Exception as e:  # executor bug or unexpected file: never silently accept
-            recs.append({'pred': pred, 'status': 'ERROR', 'reason': f'{type(e).__name__}: {str(e)[:120]}'})
+        ctx.opened, ctx.vacuous, ctx.strict_empty = [], [], False  # documents are bound per predicate
+        status, reason = _eval_pred(ast, ctx)
+        rec = {'pred': pred, 'status': status, 'reason': reason}
+        if ctx.vacuous:
+            rec['vacuous_all'] = list(ctx.vacuous)
+            ctx.opened, ctx.vacuous, ctx.strict_empty = [], [], True
+            rec['if_vacuous_all_undecided'] = _eval_pred(ast, ctx)[0]
+            ctx.strict_empty = False
+        recs.append(rec)
     statuses = [r['status'] for r in recs]
-    if 'FAIL' in statuses: decision = 'REJECT'
-    elif any(s in ('UNSUPPORTED', 'ERROR') for s in statuses): decision = 'UNDECIDED'
-    else: decision = 'ACCEPT'
-    return {'decision': decision, 'predicates': recs}
+    counterfactual = [r.get('if_vacuous_all_undecided', r['status']) for r in recs]
+    return {'decision': _decide(statuses), 'predicates': recs,
+            'empty_all_undecided_decision': _decide(counterfactual)}
