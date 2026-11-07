@@ -8,7 +8,7 @@ Scope (deliberately small): only the predicate grammar and readers that the Exp 
   (the executor cannot decide, so it never accepts by skipping a predicate); ACCEPT if all PASS.
 - Footprint items are prose in these specs. They are reported as NOT_EXECUTED, not checked.
 """
-import collections, functools, hashlib, os, re, stat, subprocess, tempfile, codecs, zipfile
+import collections, functools, hashlib, inspect, os, re, stat, subprocess, tempfile, codecs, zipfile
 
 import openpyxl
 from openpyxl.utils import range_boundaries, get_column_letter
@@ -36,7 +36,7 @@ class ReaderMiss(Exception):
 # ---------------------------------------------------------------- tokenizer and parser
 
 KEYWORDS = {'and', 'or', 'not', 'in', 'for', 'if', 'where', 'within', 'matches', 'startswith', 'endswith',
-            'set_equal', 'multiset_equal', 'subset_of', 'includes', 'includes_any'}
+            'set_equal', 'multiset_equal', 'subset_of', 'includes', 'includes_any', 'equals_by_character'}
 TOKEN = re.compile(r"""
  (?P<ws>\s+)
 |(?P<num>0o[0-7]+|\d+\.\d+|\d+)
@@ -122,7 +122,7 @@ class Parser:
                 self.take(); self.expect('op', '('); tol = self.or_(); self.expect('op', ')')
                 l = ('within', l, tol, self.add())
             elif t[0] == 'kw' and t[1] in ('matches', 'startswith', 'endswith', 'set_equal', 'multiset_equal',
-                                           'subset_of', 'includes', 'includes_any'):
+                                           'subset_of', 'includes', 'includes_any', 'equals_by_character'):
                 self.take(); l = ('op', t[1], l, self.add())
             else:
                 return l
@@ -196,6 +196,19 @@ class Parser:
         self.expect('op', ')')
         return args
 
+    def quant_stmt(self):
+        """Statement form without parentheses: all|exists [NOUN] v in ITER [where COND]: BODY.
+        NOUN is an optional label such as 'chart' (the iterable defines what is checked). BODY runs to the end of the predicate."""
+        kind = self.take()[1]
+        if self.is_('id', None, 1): self.take()  # NOUN
+        var = self.expect('id')[1]
+        self.expect('kw', 'in')
+        it = self.rhs_with_range()
+        cond = None
+        if self.is_('kw', 'where'): self.take(); cond = self.or_()
+        self.expect('op', ':')
+        return ('qstmt', kind, var, it, cond, self.or_())
+
     def primary(self):
         t = self.peek()
         if t[0] == 'num':
@@ -205,6 +218,9 @@ class Parser:
             self.take(); s = t[1][1:-1]
             if '\\' in s: s = codecs.decode(s, 'unicode_escape')
             return ('lit', s)
+        if t[0] == 'id' and t[1] in ('all', 'exists') and self.is_('id', None, 1) and (
+                self.is_('kw', 'in', 2) or (self.is_('id', None, 2) and self.is_('kw', 'in', 3))):
+            return self.quant_stmt()
         if t[0] == 'id':
             self.take()
             if t[1] in ('null', 'None'): return ('lit', None)
@@ -270,6 +286,7 @@ class RowList(Seq):
 class IntRange:
     def __init__(self, lo, hi): self.lo, self.hi = lo, hi
     def __contains__(self, x): return self.lo <= x <= self.hi
+    def __iter__(self): return iter(range(self.lo, self.hi + 1))
 
 
 def getattr_(obj, name):
@@ -379,7 +396,12 @@ class ChartObj:
         if t.tx is None or t.tx.rich is None: return None
         return ''.join(r.t for p in t.tx.rich.p for r in (p.r or []))
     @property
-    def series(self): return [SeriesObj(s, self.book) for s in self.ch.series]
+    def series(self): return ZeroList(SeriesObj(s, self.book) for s in self.ch.series)
+
+
+class ZeroList(list):
+    """Chart series: indexed from 0, as the specs write them (series[0] is the first series)."""
+    def at(self, n): return self[n]
 
 
 class SeriesObj:
@@ -599,6 +621,11 @@ class SlideObj:
     def __init__(self, s, index): self.s, self.index = s, index
     @property
     def shapes(self): return Seq([ShapeObj(sh) for sh in self.s.shapes])
+    def __eq__(self, o):
+        """Same shapes (names, positions, text, run colours) and same transition. Identity alone is never equal across files."""
+        return (isinstance(o, SlideObj) and [sh._snap() for sh in self.shapes] == [sh._snap() for sh in o.shapes]
+                and self.transition == o.transition)
+    def __repr__(self): return f"Slide({self.index})"
     def shape(self, name):
         for sh in self.shapes:
             if sh.name == name: return sh
@@ -715,11 +742,11 @@ def writer_file(path):
 class LibreOfficeRoot:
     def __init__(self, ctx): self.ctx = ctx
     @property
-    def calc(self): return _Namespace(file=lambda p: CalcFile(self.ctx.resolve(p)))
+    def calc(self): return _Namespace(file=lambda p: self.ctx.open(p, CalcFile))
     @property
-    def writer(self): return _Namespace(file=lambda p: writer_file(self.ctx.resolve(p)))
+    def writer(self): return _Namespace(file=lambda p: self.ctx.open(p, writer_file))
     @property
-    def impress(self): return _Namespace(file=lambda p: PptxFile(self.ctx.resolve(p)))
+    def impress(self): return _Namespace(file=lambda p: self.ctx.open(p, PptxFile))
 
 
 class OsRoot:
@@ -735,9 +762,25 @@ class _Namespace:
 class Ctx:
     def __init__(self, root, start_root):
         self.root, self.start_root = root, start_root
+        self.opened = []      # (ubuntu path, document, opened inside before()) for the current predicate
+        self.in_before = 0
     def resolve(self, ubuntu_path):
         if not ubuntu_path.startswith('/'): raise Unsupported(f"relative path {ubuntu_path}")
         return os.path.join(self.root, ubuntu_path.lstrip('/'))
+    def open(self, ubuntu_path, factory):
+        obj = factory(self.resolve(ubuntu_path))
+        self.opened.append((ubuntu_path, obj, self.in_before > 0))
+        return obj
+
+
+def bare_doc_method(name, ctx):
+    """A bare method call such as table(2) means the method of the one document the predicate opened outside
+    before(). With no document, or with several different ones, the name stays unknown (never guess the file)."""
+    docs = {path: obj for path, obj, in_before in ctx.opened if not in_before}
+    if len(docs) != 1: return None
+    obj = next(iter(docs.values()))
+    if not inspect.isfunction(getattr(type(obj), name, None)): return None
+    return getattr(obj, name)
 
 
 # ---------------------------------------------------------------- evaluator
@@ -755,6 +798,8 @@ def lookup(name, env, ctx):
     if name in FUNCS: return FUNCS[name]
     if name == 'libreoffice': return LibreOfficeRoot(ctx)
     if name == 'os': return OsRoot(ctx)
+    bare = bare_doc_method(name, ctx)
+    if bare is not None: return bare
     raise Unsupported(f"unknown name {name!r}")
 
 
@@ -823,6 +868,7 @@ def ev(n, env, ctx):
         if op == 'set_equal':
             return set(a) == set(_coords(b))
         if op == 'multiset_equal': return collections.Counter(a) == collections.Counter(b)
+        if op == 'equals_by_character': return _by_char(a) == _by_char(b)
         if op == 'subset_of': return set(a) <= set(_coords(b))
         raise Unsupported(f"operator {op}")
     if k == 'listcomp':
@@ -837,6 +883,13 @@ def ev(n, env, ctx):
             e2 = dict(env, **{n[2]: x})
             if n[4] is None or ev(n[4], e2, ctx): items.append(ev(n[1], e2, ctx))
         return items
+    if k == 'qstmt':
+        _, kind, var, it, cond, body = n
+        vals = []
+        for x in ev(it, env, ctx):
+            e2 = dict(env, **{var: x})
+            if cond is None or ev(cond, e2, ctx): vals.append(bool(ev(body, e2, ctx)))
+        return all(vals) if kind == 'all' else any(vals)
     if k == 'quant':
         raise Unsupported("quantifier outside all()/any()")
     if k == 'call':
@@ -844,8 +897,11 @@ def ev(n, env, ctx):
         if fn[0] == 'name' and fn[1] == 'before':
             saved = ctx.root
             ctx.root = ctx.start_root
+            ctx.in_before += 1
             try: return ev(args[0], env, ctx)
-            finally: ctx.root = saved
+            finally:
+                ctx.root = saved
+                ctx.in_before -= 1
         if fn[0] == 'name' and fn[1] in ('all', 'any') and len(args) == 1 and args[0][0] in ('gen', 'quant'):
             a = args[0]
             if a[0] == 'gen':
@@ -856,7 +912,12 @@ def ev(n, env, ctx):
                     e2 = dict(env, **{a[1]: x})
                     if a[3] is None or ev(a[3], e2, ctx): vals.append(ev(a[4], e2, ctx))
             return all(vals) if fn[1] == 'all' else any(vals)
-        callee = ev(fn, env, ctx)
+        if fn[0] == 'attr' and fn[2] == 'index':  # list.index(x), not the per-item projection of an 'index' attribute
+            base = ev(fn[1], env, ctx)
+            if isinstance(base, list): return base.index(*[ev(x, env, ctx) for x in args])
+            callee = getattr_(base, 'index')
+        else:
+            callee = ev(fn, env, ctx)
         if not callable(callee): raise Unsupported(f"not callable: {fn}")
         return callee(*[ev(x, env, ctx) for x in args])
     raise Unsupported(f"node {k}")
@@ -864,6 +925,13 @@ def ev(n, env, ctx):
 
 def _coords(x):
     return x.coords if hasattr(x, 'coords') else x
+
+
+def _by_char(x):
+    """Character by character: a string is its sequence of characters; lists compare element by element."""
+    if isinstance(x, str): return tuple(x)
+    if isinstance(x, list): return [_by_char(i) for i in x]
+    return x
 
 
 def short(v):
@@ -883,6 +951,7 @@ def run_spec(spec, end_root, start_root):
         except Unsupported as e:
             recs.append({'pred': pred, 'status': 'UNSUPPORTED', 'reason': f'parse: {e}'}); continue
         try:
+            ctx.opened = []  # documents are bound per predicate
             val = ev(ast, {}, ctx)
             ok = bool(val)
             recs.append({'pred': pred, 'status': 'PASS' if ok else 'FAIL', 'reason': short(val)[:160]})
