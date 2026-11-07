@@ -1,0 +1,4 @@
+Compute the sum of "Revenue" and "Total Expenses" and put the results under two columns named "Total Revenue" and "Total Expenses" of a new sheet (Sheet2)
+
+Files (number, path inside the state, folders that hold its pages):
+f01  home/user/NetIncome.xlsx  start, end

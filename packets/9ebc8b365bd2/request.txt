@@ -1,0 +1,5 @@
+Copy the "Revenue" column along with the header to a new sheet named "Sheet2".
+
+Files (number, path inside the state, folders that hold its pages):
+f01  home/user/Documents/NetIncome_copy.xlsx  end
+f02  home/user/NetIncome.xlsx  start, end

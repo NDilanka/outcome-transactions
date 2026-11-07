@@ -1,0 +1,4 @@
+Add a bullet point to the content of this slide.
+
+Files (number, path inside the state, folders that hold its pages):
+f01  home/user/Desktop/69_4.pptx  start, end

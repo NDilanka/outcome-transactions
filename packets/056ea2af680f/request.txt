@@ -1,0 +1,4 @@
+I have been editing my document and some words that needed to be rewritten are highlighted in yellow. As I fixed those words, please help me remove all highlight. I want to make sure that there is no highlight word.
+
+Files (number, path inside the state, folders that hold its pages):
+f01  home/user/Desktop/sample-recruitment-phone-script.odt  start, end

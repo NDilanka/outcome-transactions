@@ -1,0 +1,6 @@
+Calculate revenue in a new column according to the Retail Price sheet (consider product price and quantity and discount), and generate a Pivot Table in a new sheet (Sheet2) that summarizes the revenue of each product.
+
+Files (number, path inside the state, folders that hold its pages):
+f01  home/user/BoomerangSales.ods  end
+f02  home/user/BoomerangSales.xlsx  start, end
+f03  home/user/BoomerangSales_summary.ods  end

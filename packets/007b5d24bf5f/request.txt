@@ -1,0 +1,4 @@
+I am currently engaged in text processing and require assistance in converting all uppercase text to lowercase within my document. This precision is critical for maintaining a uniform and polished presentation. Could you help me on this?
+
+Files (number, path inside the state, folders that hold its pages):
+f01  home/user/Desktop/presentation_instruction_2023_Feb.docx  start, end
