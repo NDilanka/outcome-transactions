@@ -20,9 +20,6 @@ def fv(v): return f'<table:table-cell office:value-type="float" office:value="{v
 def row(*cells): return '<table:table-row>' + ''.join(cells) + '</table:table-row>'
 def table(name, rows): return f'<table:table table:name="{name}">' + ''.join(rows) + '</table:table>'
 HDR = row(sv("Item"), sv("Q1"), sv("Q2"), sv("Q3"))
-LIST_STYLE = ('<office:automatic-styles><text:list-style style:name="L">'
-              '<text:list-level-style-number text:level="1" style:num-format="1" style:num-suffix="."/>'
-              '</text:list-style></office:automatic-styles>')
 
 def zip_ods(name, content, styles=""):
     """A content.xml package, read by the parser only (no LibreOffice needed)."""
@@ -38,7 +35,7 @@ def lo_ods(name, sheets_xml):
     """A workbook saved by LibreOffice from a flat ODS, the same way the prototype's own files are made."""
     fods = os.path.join(WORK, name + ".fods")
     open(fods, "w").write(f'<?xml version="1.0" encoding="UTF-8"?><office:document {NS} office:version="1.3" '
-                          f'office:mimetype="application/vnd.oasis.opendocument.spreadsheet">{LIST_STYLE}'
+                          f'office:mimetype="application/vnd.oasis.opendocument.spreadsheet">'
                           f'<office:body><office:spreadsheet>{sheets_xml}</office:spreadsheet></office:body></office:document>')
     r = subprocess.run(["soffice", f"-env:UserInstallation={PROFILE}", "--headless", "--convert-to", "ods", "--outdir", WORK, fods],
                        capture_output=True, text=True, timeout=180)
@@ -85,13 +82,13 @@ check("B0 an identical copy has no change (control)", not R.changed_cells(same, 
 
 # C and D. Anchor labels: what the user sees must decide the target, and a label the parser cannot read is a refusal.
 book = lo_ods("labels", (
+    table("List", [HDR, row(sv("1."), fv(3)), row(sv("placeholder"), fv(4))]) +
     table("Space", [HDR, row(sv(" R "), fv(3)), row(sv("R"), fv(4))]) +
-    table("List", [HDR, row(sv("1."), fv(3)), row(
-        '<table:table-cell office:value-type="string"><text:list text:style-name="L"><text:list-item><text:p/></text:list-item></text:list></table:table-cell>',
-        fv(4))]) +
     table("Span", [row(sv("Item"), '<table:table-cell table:number-columns-spanned="2" office:value-type="string"><text:p>Q1</text:p></table:table-cell>'
                        '<table:covered-table-cell/>', sv("Q3")), row(sv("item1"), fv(3), fv(4), fv(5))]) +
     table("Pos", [HDR, row(sv("item1"), fv(3)), row(sv("item2"), fv(4))])))
+# LibreOffice drops a list paragraph when it loads a cell, so the list is written into the saved file (the first sheet).
+R.ods_replace_cell(book, "A3", '<table:table-cell office:value-type="string"><text:list text:style-name="L"><text:list-item><text:p/></text:list-item></text:list></table:table-cell>')
 def target_of(sheet): return R.find_anchor(book, R.anchor_of(book, f"{sheet}!B2"))
 check("C1 a label that differs only in spaces is a duplicate", target_of("Space") is None, f"resolved to {target_of('Space')}")
 check("C2 a label whose number is a list marker is refused", target_of("List") is None, f"resolved to {target_of('List')}")

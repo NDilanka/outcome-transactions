@@ -1,5 +1,5 @@
 """State readers and ODS editing for the outcome-transaction prototype."""
-import zipfile, re, io, os, hashlib, subprocess, shutil, copy
+import zipfile, re, io, os, hashlib, subprocess, shutil, copy, csv, tempfile
 import xml.etree.ElementTree as ET
 
 NS = {
@@ -93,6 +93,12 @@ def _text(cell):
     texts = [_inline(p) for p in _paragraphs(cell)]
     return "\n".join(texts) if any(texts) else ""
 
+LIST_TAGS = (X + "list", X + "numbered-paragraph")
+
+def _has_list(cell):
+    """A list paragraph. Its number is not stored text, so the label a user sees can differ from the text here."""
+    return any(el.tag in LIST_TAGS for el in cell.iter())
+
 def _root(path):
     with zipfile.ZipFile(path) as z:
         return ET.fromstring(z.read("content.xml"))
@@ -123,7 +129,8 @@ def all_cells(path):
     if dup: raise ValueError(f"sheet name {dup[0]!r} is used more than once")
     return {f"{t.get(T + 'name')}!{ref}": v for t in root.iter(T + "table") for ref, v in _sheet_cells(t, sprops).items()}
 
-def _sheet_cells(table, sprops):
+def _sheet_cells(table, sprops, lists=None):
+    """{ref: (value, formatting)}. If lists is a list, each cell with a list paragraph is appended to it as (column, row, columns, rows)."""
     out = {}
     r = 0
     for row in table.iter(T + "table-row"):
@@ -134,6 +141,7 @@ def _sheet_cells(table, sprops):
             if cell.tag not in (T + "table-cell", T + "covered-table-cell"):
                 continue
             crep = int(cell.get(T + "number-columns-repeated", "1"))
+            if lists is not None and _has_list(cell): lists.append((c, r, crep, rrep))
             val = _cached(cell)
             if val is None:
                 val = _text(cell) or None
@@ -247,30 +255,73 @@ def ods_insert_row(path, idx):
         raise ValueError(f"row {idx} is past the end of the sheet")
     _save_content(path, items, root)
 
+LO_CSV = "csv:Text - txt - csv (StarCalc):44,34,76,1,,0,false,true,true,false,false,{n}"  # comma, quote, UTF-8, text as shown, one sheet
+_SHOWN = {}  # (file sha, sheet) -> rows: one workbook is converted once however often it is read
+
+def _norm(text):
+    """A label or header as the reader compares it: runs of whitespace are one space, and the ends are trimmed."""
+    return " ".join((text or "").split()) or None
+
+def _shown_at(rows, r, c):
+    return _norm(rows[r][c]) if r < len(rows) and c < len(rows[r]) else None
+
+def shown_sheet(path, sheet):
+    """The rows of one sheet as LibreOffice shows each cell (its displayed text, not its stored value), first row
+    first. The workbook is converted from a copy, so no lock file lands beside it."""
+    names = sheet_names(path)
+    if names.count(sheet) != 1: raise ValueError(f"sheet {sheet!r} occurs {names.count(sheet)} times")
+    key = (sha(path), sheet)
+    if key in _SHOWN: return _SHOWN[key]
+    tmp = tempfile.mkdtemp(prefix="otx_shown_")
+    try:
+        src = os.path.join(tmp, "book.ods")
+        shutil.copyfile(path, src)
+        r = subprocess.run(["soffice", "-env:UserInstallation=file:///tmp/otx_shown", "--headless", "--convert-to",
+                            LO_CSV.format(n=names.index(sheet) + 1), "--outdir", tmp, src], capture_output=True, text=True, timeout=120)
+        outs = [f for f in os.listdir(tmp) if f.endswith(".csv")]  # one sheet is exported as book-<sheet>.csv
+        if len(outs) != 1: raise ValueError(f"LibreOffice could not show sheet {sheet!r}: {r.stderr[-200:]}")
+        with open(os.path.join(tmp, outs[0]), newline="", encoding="utf-8") as f:
+            _SHOWN[key] = list(csv.reader(f))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    return _SHOWN[key]
+
 def anchor_of(path, ref):
-    """Name a cell by its sheet, its row label (column A of its row) and its column header (row 1 of its column).
-    ref is 'Sheet!B2'."""
+    """Name a cell by its sheet, its row label (column A of its row) and its column header (row 1 of its column),
+    as LibreOffice shows them. ref is 'Sheet!B2'."""
     sheet, cell = ref.rsplit("!", 1)
-    cells = ods_cells(path, sheet)
+    rows = shown_sheet(path, sheet)
     row, col = ref_to_rc(cell)
-    return (sheet, cells.get(f"A{row + 1}", (None,))[0], cells.get(f"{col_name(col)}1", (None,))[0])
+    return (sheet, _shown_at(rows, row, 0), _shown_at(rows, 0, col))
 
 def find_anchor(path, anchor):
     """The address 'Sheet!B2' of the one cell this anchor names, or None. The sheet must occur once in the workbook
-    under its name (a rename, a deletion or a duplicate refuses), and within it the label and the header must each
-    occur once. No other sheet is ever used in its place."""
+    under its name (a rename, a deletion or a duplicate refuses). Within it the label and the header must each occur
+    once as LibreOffice shows them, and the stored text must find the same rows and columns, or the file and its
+    display disagree. A list paragraph in column A or row 1 refuses, because its number is not stored text.
+    No other sheet is ever used in its place."""
     sheet, label, header = anchor
     if sheet is None or label is None or header is None:
         return None
     root = _root(path)
     if sum(t.get(T + "name") == sheet for t in root.iter(T + "table")) != 1:
         return None
-    cells = _sheet_cells(_table(root, sheet), _style_props(root))
-    rows = [k[1:] for k, (v, _) in cells.items() if re.fullmatch(r"A\d+", k) and v == label]
-    cols = [k[:-1] for k, (v, _) in cells.items() if re.fullmatch(r"[A-Z]+1", k) and v == header]
-    if len(rows) != 1 or len(cols) != 1:
+    lists = []
+    stored = _sheet_cells(_table(root, sheet), _style_props(root), lists)
+    if any(c == 0 or r == 0 for c, r, _, _ in lists):
         return None
-    return f"{sheet}!{cols[0]}{rows[0]}"
+    shown = shown_sheet(path, sheet)
+    n_rows = max([len(shown)] + [ref_to_rc(k)[0] + 1 for k in stored])
+    n_cols = max([len(r) for r in shown] + [ref_to_rc(k)[1] + 1 for k in stored])
+    shown_rows = [r for r in range(n_rows) if _shown_at(shown, r, 0) == label]
+    stored_rows = [r for r in range(n_rows) if _norm(stored.get(f"A{r + 1}", (None,))[0]) == label]
+    shown_cols = [c for c in range(n_cols) if _shown_at(shown, 0, c) == header]
+    stored_cols = [c for c in range(n_cols) if _norm(stored.get(f"{col_name(c)}1", (None,))[0]) == header]
+    if shown_rows != stored_rows or shown_cols != stored_cols:
+        return None
+    if len(shown_rows) != 1 or len(shown_cols) != 1:
+        return None
+    return f"{sheet}!{col_name(shown_cols[0])}{shown_rows[0] + 1}"
 
 def ods_append_block(path, label, count):
     """Append count identical rows, each with label in column A, stored as one repeated row block (what pasting identical rows writes)."""
