@@ -1,0 +1,57 @@
+{
+  "8af0626e3f82": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The empty 5-row, 7-column table is added, but the existing TABLE OF WORK EFFORT heading and surrounding paragraphs are deleted."
+  },
+  "979fe43b3e97": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty 5-row, 7-column table is added with the existing content preserved and only an accompanying blank paragraph, although the dump cannot verify the cursor position."
+  },
+  "9d7355b0025f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The existing populated 11-row table is replaced with an empty 5-row, 7-column table instead of being preserved."
+  },
+  "9f91241aced4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty 5-row, 7-column table is inserted before the existing table without visible content or formatting damage, although the dump cannot verify the cursor position."
+  },
+  "a813c2fecef9": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "No empty 5-row, 7-column table is added to the document."
+  },
+  "b3319684b74d": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty 5-row, 7-column table is added with the existing content preserved and only an accompanying blank paragraph, although the dump cannot verify the cursor position."
+  },
+  "b7fe57e66730": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original document is unchanged and an unrequested ODT containing text paragraphs rather than the requested empty table is created."
+  },
+  "e92490f8325d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The empty table is added only to an unrequested copy while the original document remains unchanged."
+  },
+  "f0d38874496c": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty 5-row, 7-column table is inserted before the existing table without visible content or formatting damage, although the dump cannot verify the cursor position."
+  },
+  "f42f207f83fd": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty 5-row, 7-column table is added while the existing content and visible formatting remain unchanged, although the dump cannot verify the cursor position."
+  },
+  "f677e678d309": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Five comma-separated text paragraphs are added instead of an actual empty table."
+  }
+}

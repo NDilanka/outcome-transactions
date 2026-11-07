@@ -1,0 +1,57 @@
+{
+  "2f5c6ef07bc8": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new table has the requested dimensions but every cell contains a column label instead of being empty."
+  },
+  "3c62d905d703": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The empty five-row, seven-column table is added, but the existing document's paragraph fonts are changed to Arial without permission."
+  },
+  "3e00421d6be6": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table is added with the existing content and displayed formatting preserved, although the dump cannot verify its placement at the original cursor."
+  },
+  "49e69ca78bd4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added table has seven rows and five columns instead of five rows and seven columns."
+  },
+  "5697e7d21c7d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The empty table is created in a separate Table.docx file rather than inserted into the existing document at the cursor."
+  },
+  "5700f82813bc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added table has only six columns instead of the requested seven."
+  },
+  "5c3f9016e009": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested empty five-row, seven-column table is added with an accompanying blank paragraph and no changes to existing content, although the dump cannot verify cursor placement."
+  },
+  "6390c995b947": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The dump still shows only the original populated table and no new empty five-row, seven-column table, although a nested insertion might not be visible."
+  },
+  "736bcb30a448": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added table has only four rows instead of the requested five."
+  },
+  "7f6ccd81184e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added table has six rows and a populated header rather than being an empty five-row table."
+  },
+  "8793c177484a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The requested empty table is added, but all contents of the pre-existing work-effort table are also erased."
+  }
+}
