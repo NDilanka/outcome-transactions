@@ -1,6 +1,6 @@
 # Experiment 9 preregistration: do rendered pages catch what the file dumps drop?
 
-Status: LOCKED by the commit that adds this file with the scripts, prompts and input manifest listed in section 9. The lock commit hash is in the message to the orchestrator and in the results. Written before any Exp 9 render or judge call. The image-input probe (section 3) ran before the lock. No Exp 9 render or judge output exists yet.
+Status: LOCKED by commit 2e9eac4, which adds this file with the scripts, prompts and input manifest listed in section 9. Amendment 1 (section 10) was made after the lock and before any render. The lock commit hash is in the message to the orchestrator and in the results. Written before any Exp 9 render or judge call. The image-input probe (section 3) ran before the lock. No Exp 9 render or judge output exists yet.
 
 ## 0. Decisions settled before the lock (changes from draft v1)
 
@@ -44,7 +44,7 @@ Judge
 - Image-input probe, run by the orchestrator before this lock: `pv-sol-xhigh` read a test PNG through the Read tool and reported it correctly (a solid blue rectangle on the left, and the small red text "K7Q" to its right). The image reaches the model through the Read tool. This is the same model as the Exp 7 dump judge, so G2 compares like with like.
 - Instruction text: `sol_prompt_exp7.txt` is the Exp 7 template, verbatim. `sol_prompt_render.txt` differs from it in two sentences only: the packet description (now the request with its file list, and page images) and "If the images cannot show whether the request is met" (in place of "If the dump cannot show"). The diff is in the lock commit. Both hashes are recorded in section 9. The Exp 7 template was restored from the orchestrator's judge runner text, which is outside this repository. Before batch 1, the orchestrator compares the sha256 of `sol_prompt_exp7.txt` with its runner's copy.
 - Verdict format: unchanged. Accept or reject, confidence high, medium or low, a one-sentence reason, and one entry per packet.
-- Batches: sort the blind ids and cut them into consecutive groups of 4. A group whose PNG total is over 40 is split into consecutive runs, taking states in order while the total stays at or under 40. A state with more than 40 PNGs goes alone. Splits depend only on PNG counts, never on verdicts. No page is dropped. If a batch cannot be judged, the run stops and the orchestrator reports it.
+- Batches: sort the blind ids and cut them into consecutive groups of 4. A group whose PNG total is over 40 is split into consecutive runs, taking states in order while the total stays at or under 40. A state with more than 40 PNGs is judged alone in its own batch, with no PNG cap (Amendment 1, section 10). Splits depend only on PNG counts, never on verdicts. No page is dropped or truncated. If a batch cannot be judged, the run stops and the orchestrator reports it.
 - Undecided: a missing verdict, an unparseable file, or an id not in the batch is undecided. Undecided counts as a reject for G2 and as a miss for G1. Both choices are conservative for the render key.
 - One judge run. A rerun is labelled post hoc.
 
@@ -133,3 +133,10 @@ Nothing in this document depends on any render or judge output.
 - `sol_prompt_render.txt`: sha256 `242c0e168f3ee510bfd41fa7294a8894cb7631e34067bcd25845ab3247939d17`
 - `render_lib.py`, `renderability_checks.py`, `render_all.py`, `input_manifest.py`
 - `input_manifest.json`: sha256 `e48200d75524619a8ad7edfc5972934969978f936ab623716c915757a7746f9a`, 78 blind ids, 163 input files
+
+## 10. Amendment 1 (made before any render)
+
+- A state can have more than 40 PNGs. A deck of 24 or more slides gives 48 or more PNGs for the before and after sides together. Such a state is judged alone in its own batch, with no PNG cap. Its PNG count and page count are reported with the results. Its pages are never truncated, dropped or split across batches.
+- The 5 MiB per-PNG limit (section 3) still applies. A state whose PNG would exceed it stops the run before judging.
+- The amendment was made and published before any render. Batch files, PNG counts per batch and the largest batch are reported with the results.
+- The amendment changes no group, gate or threshold.
