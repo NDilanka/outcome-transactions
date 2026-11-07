@@ -1,6 +1,6 @@
 # Experiment 9 preregistration: do rendered pages catch what the file dumps drop?
 
-Status: LOCKED by commit 2e9eac4, which adds this file with the scripts, prompts and input manifest listed in section 9. Amendment 1 (section 10) was made after the lock and before any render. The lock commit hash is in the message to the orchestrator and in the results. Written before any Exp 9 render or judge call. The image-input probe (section 3) ran before the lock. No Exp 9 render or judge output exists yet.
+Status: LOCKED by commit 2e9eac4, which adds this file with the scripts, prompts and input manifest listed in section 9. Amendment 1 (section 10) was made after the lock and before any render. Amendment 2 (section 11) is post hoc: it was made after the group A renders and before any judge run. The lock commit hash is in the message to the orchestrator and in the results. Written before any Exp 9 render or judge call. The image-input probe (section 3) ran before the lock. No Exp 9 render or judge output exists yet.
 
 ## 0. Decisions settled before the lock (changes from draft v1)
 
@@ -140,3 +140,33 @@ Nothing in this document depends on any render or judge output.
 - The 5 MiB per-PNG limit (section 3) still applies. A state whose PNG would exceed it stops the run before judging.
 - The amendment was made and published before any render. Batch files, PNG counts per batch and the largest batch are reported with the results.
 - The amendment changes no group, gate or threshold.
+
+## 11. Amendment 2 (post hoc: written after the group A renders, before any judge run)
+
+Why this is labelled post hoc. The registered checks in section 4 assume that the before slide 5 text of 57667013 is yellow (FFFF00). It is green (#9EEFBC). Yellow text appears only in the after states. Draft v1 carried the same assumption. The first group A renders showed it: `renderability_checks.py` made 1 of 4 states renderable. Its evidence is in its result file, which is not committed. This amendment corrects the predicates to test what each property does to the render: alpha 0 removes the green text, and lumMod 60000 turns the yellow into dark olive. No judge has run, and no verdict exists.
+
+What changes. Groups, sample, judge input, prompt, batch rule and gate thresholds do not change. Only the renderability decision for group A changes, in `renderability_amendment2.py`:
+- 57667013 state_19 (alpha 0): renderable if the before render has at least 20 pixels within 10 per channel of 9EEFBC inside the before slide 5 text spans, and the after render has at most 5% of that count in the same rectangles.
+- 57667013 state_20 (lumMod 60000): renderable if the after render has at least 20 dark olive pixels (R 100 to 200, |R-G| at most 20, B at most 60) inside the after slide 5 text spans of colour 999900, and at most 5% as many FFFF00 pixels in those rectangles.
+- 57667013 state_22: unchanged. Still renderable.
+- 66399b0d state_17: not renderable under either reading. No check separates it from the before render, because the before render already has the same full-width single-cell rows (table rows 0 and 10). The render cannot show this error. It is a finding, not a gap in the check.
+- 66399b0d state_01 to state_04 (cursor): not renderable, unchanged.
+
+Evidence, from the group A renders already on disk (no re-render, no judge):
+
+| State | Quantity | Value |
+|---|---|---|
+| 57667013 state_19 | green (9EEFBC) pixels in the before text spans (4 spans) | 162,883 |
+| 57667013 state_19 | green pixels in the same rectangles, after | 0 |
+| 57667013 state_20 | dark olive pixels in the after text spans (5 spans) | 175,574 |
+| 57667013 state_20 | FFFF00 pixels in the same rectangles, after | 0 |
+| 57667013 state_20 | FFFF00 pixels in the same rectangles, before | 0 |
+| 57667013 state_22 | black-filled shape delta; near-black pixel delta | 6; 2,808,399 |
+
+G1 under both readings. The judge decides nothing until the batches run, so these are the reporting rules, fixed now.
+- As registered: renderable = {state_22}. G1 is decided on one state.
+- Amended: renderable = {state_19, state_20, state_22}. G1 requires all three to be rejected.
+- The headline claims a G1 pass only if G1 passes under both readings. Under the amended reading that means all three are rejected.
+- 66399b0d state_17 is judged like every group A state. Its verdict is not counted toward G1 under either reading. It is reported with the cursor states as errors no current representation shows.
+
+Renderer note. During the 74-state render, PyMuPDF printed "cannot create appearance stream for Screen annotations" for several PDFs. These are form-field annotations in LibreOffice output. The pages are rendered as PyMuPDF produces them. The count of such warnings is reported with the results.
