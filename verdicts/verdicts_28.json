@@ -1,0 +1,22 @@
+{
+  "ca2d8935aeab": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All movie titles appear copied with normalized spacing and word capitalization, with no visible unrelated changes."
+  },
+  "cc18e891c928": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All movie titles appear copied with normalized spacing and word capitalization, with no visible unrelated changes."
+  },
+  "cef1a72d2e29": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The document text, including headings and table entries, is lowercase while its content and formatting are preserved."
+  },
+  "d371aa495e9c": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Picture-size changes appear confined to the requested slides and other slides are preserved, but exact centimeter heights cannot be verified from the images."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "867334318fcc": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible highlighting has been removed while the document's text and formatting are preserved."
+  },
+  "88492a4ef9ec": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The empty seven-column, five-row table is present, but an unrequested blank third page has also been introduced."
+  },
+  "8b5a17dfd97f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only one paragraph was lowercased, leaving uppercase letters in the title, other paragraphs, and table."
+  },
+  "92e93aef96da": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The new revenue values correctly account for price, quantity, and discount and the added pivot summarizes them by product, although the sheet name is not visible."
+  }
+}

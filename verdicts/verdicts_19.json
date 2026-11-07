@@ -1,0 +1,7 @@
+{
+  "9e9bd9f0615c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The second YouTube hyperlink on slide 24 changes from black to cyan, which is unrequested formatting damage."
+  }
+}

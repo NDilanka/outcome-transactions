@@ -1,0 +1,17 @@
+{
+  "d3922c59b120": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The added summary shows the correct totals of 867786 revenue and 411686 expenses without apparent changes to the original data, although the sheet name and full revenue header are not visible."
+  },
+  "d8a0aba28d5c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Only the first two overview items have been struck through, and the remaining presentation content and formatting are preserved."
+  },
+  "d99aa5b119aa": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A bullet has been added to the slide's body paragraph while preserving its text, italic styling, and title."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "25a086e52c8e": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The N/A-bearing rows are no longer visible and the remaining table is preserved, although the images cannot confirm hiding rather than deletion or filtering."
+  },
+  "25fea9ecbbfe": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "An empty seven-column, five-row table appears below the existing work-effort table, with the original document content preserved."
+  },
+  "2a97a3b8edc5": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All textboxes on slide 5 now have yellow text, and the other slides appear unchanged."
+  },
+  "2c0a4f4e6603": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The first two list lines have strikethrough, while the remaining text and slides appear unchanged."
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "af1c2d9f43c3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The second YouTube link on slide 24 changes from black to turquoise, an unrequested formatting change beyond adding a dissolve transition to slide 1."
+  }
+}

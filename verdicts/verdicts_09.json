@@ -1,0 +1,22 @@
+{
+  "3bdc93f2eb43": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Rows containing N/A are no longer visible and the remaining table appears unchanged, although the images cannot distinguish hiding from deletion or filtering."
+  },
+  "40e16e1c0eed": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "There is no blank page after page 1, and page 2 still contains the statutory declaration."
+  },
+  "432231db42a4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although revenue and a product summary were added, the Retail Price sheet lost its original formatting and the sales dates now display as hash marks."
+  },
+  "4418497ab630": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible highlighting has been removed from both pages without apparent changes to the text or layout."
+  }
+}

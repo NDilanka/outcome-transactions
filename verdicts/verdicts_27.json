@@ -1,0 +1,17 @@
+{
+  "c35ca2ae7e2a": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Total and Growth rows and correctly titled bar and line charts are present, with January omitted from the growth chart and the original sales data preserved."
+  },
+  "c3bd9bb0d295": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Entire records containing N/A disappear from the visible table, hiding populated dates and budgets as well as the requested N/A markers."
+  },
+  "c5bb573ee73f": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The first two body lines on slide 5 are struck through while the remaining slide content and other slides are unchanged."
+  }
+}

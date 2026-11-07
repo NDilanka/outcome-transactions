@@ -1,0 +1,17 @@
+{
+  "160bc340f071": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The uppercase passages were lowercased, but the following paragraph's spacing and wrapping changed and the existing table shifted left without being requested."
+  },
+  "20b0de2da6d4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The empty seven-column, five-row table was inserted below the existing table, but an unrequested blank third page was also added."
+  },
+  "217c624af081": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The first two list lines have strikethrough, while the remaining lines and other slides are unchanged."
+  }
+}

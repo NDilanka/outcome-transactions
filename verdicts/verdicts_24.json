@@ -1,0 +1,7 @@
+{
+  "b1904159da6c": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All 24 slides remain visually unchanged, consistent with a transition-only edit, although static page images cannot verify that slide 1 uses Dissolve."
+  }
+}

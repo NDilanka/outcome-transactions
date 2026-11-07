@@ -1,0 +1,7 @@
+{
+  "0b1168c0cf27": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All 24 slides are visually unchanged, consistent with adding only the requested first-slide dissolve transition, although static images cannot verify the effect."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "b25356b9c1b6": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The comma-separated text is converted into tables while the surrounding document content is preserved."
+  },
+  "b67add03148e": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The added sheet page shows the correct revenue and expense totals of 867786 and 411686, although its sheet name and complete headings are not visible."
+  },
+  "b8744c615a8a": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The end slide appears to add a bullet to its content without other substantive changes."
+  },
+  "bb964981e2f9": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Slide 3 enlarges the decorative waves over the agenda text while leaving the main portrait unchanged."
+  }
+}

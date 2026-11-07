@@ -1,0 +1,22 @@
+{
+  "f73cecc57744": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Page 2 still contains the statutory declaration rather than the requested blank page after page 1."
+  },
+  "fe671f38552b": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The revenue values correctly reflect retail price, quantity and discount and the new page summarizes revenue by product, although the images cannot verify the Sheet2 name or actual Pivot Table structure."
+  },
+  "ff333a727ff9": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible text has been converted to lowercase while preserving the document's content and formatting."
+  },
+  "ffbdd153aa25": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlighting has been removed while the text and formatting on both pages remain intact."
+  }
+}

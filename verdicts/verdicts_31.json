@@ -1,0 +1,22 @@
+{
+  "ddf744d6db77": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The first two body lines on slide 5 are struck through, with the remaining content and slides visibly preserved."
+  },
+  "e7e0da463c1c": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The empty 7-column, 5-row table is present, but the existing example table's outer borders and column widths were also changed."
+  },
+  "f0556eebf279": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All listed titles appear in the clean column with excess spaces removed and word casing normalized, without visible changes elsewhere."
+  },
+  "f6e2e5b5e7c0": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "An empty 7-column, 5-row table was inserted, but the existing table's formatting changed and an unrequested blank third page was added."
+  }
+}

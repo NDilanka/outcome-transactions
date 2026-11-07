@@ -1,0 +1,7 @@
+{
+  "109ad23405a8": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The unchanged slides are consistent with adding a dissolve transition to slide 1 without collateral changes, although static images cannot verify the effect."
+  }
+}

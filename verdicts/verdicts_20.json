@@ -1,0 +1,12 @@
+{
+  "9f7f6683b964": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The added summary shows the correct totals of 867786 and 411686 with the source unchanged, although the sheet name and full revenue heading are not visible."
+  },
+  "a5b013da4401": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "An empty seven-column, five-row table appears below the original table, split across two pages, with the existing document unchanged."
+  }
+}

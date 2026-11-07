@@ -1,0 +1,22 @@
+{
+  "4871dac2c014": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The empty seven-column, five-row table is present, but the existing work-effort table has also been shifted left without being requested."
+  },
+  "4aca82b5c34c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Total and Growth rows contain the monthly totals and percentage changes, with correctly titled bar and line charts and January omitted from Growth."
+  },
+  "4ca67b0152c5": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible yellow highlighting has been removed while the document's text and formatting otherwise remain unchanged."
+  },
+  "4ee7b6a6cbc8": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each sentence of the first paragraph is separated by an empty line, with the remaining document content preserved."
+  }
+}

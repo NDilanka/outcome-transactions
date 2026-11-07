@@ -1,0 +1,22 @@
+{
+  "93d3e37bd545": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible text on slide 5 is yellow, with the slide layout and other slides unchanged."
+  },
+  "9614d79b5e3b": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The added sheet image contains the Revenue header and all original values while the source remains unchanged, although the sheet name is not visible."
+  },
+  "97f7c6e994d7": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty seven-column, five-row table appears across the final two pages without visible damage to existing content, although the original cursor position cannot be verified."
+  },
+  "9923385bd6b9": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The added sheet image contains the Revenue header and all original values while the source remains unchanged, although the sheet name is not visible."
+  }
+}

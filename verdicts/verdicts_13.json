@@ -1,0 +1,17 @@
+{
+  "6084dcf15cd4": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "On slide 3 the decorative squiggles have been enlarged across the text while the main photograph remains unchanged, causing unrequested layout damage."
+  },
+  "60b17dfaa5eb": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The incomplete rows appear hidden with the remaining visible data preserved, but images cannot verify that no cells were deleted or a filter used."
+  },
+  "71481265ae56": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Page 2 still contains declaration text immediately after page 1, so the requested blank page was not inserted."
+  }
+}

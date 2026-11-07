@@ -1,0 +1,22 @@
+{
+  "80d521568d34": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The hyphenated title leaves the word after the hyphen lowercase rather than capitalizing the first letter of every word."
+  },
+  "812f0ac4d5d2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide content remains unchanged with no bullet point added."
+  },
+  "81425018f708": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The existing slide content remains unbulleted while an unrelated placeholder reading 'New bullet point' has been added."
+  },
+  "84861be4f05e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The first two list lines are struck through and the remaining presentation content is unchanged."
+  }
+}

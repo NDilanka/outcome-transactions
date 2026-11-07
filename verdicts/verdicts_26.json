@@ -1,0 +1,7 @@
+{
+  "bf91660c0095": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All 24 slides are visually unchanged with no collateral damage, consistent with adding a first-slide dissolve transition, although static images cannot verify the transition."
+  }
+}

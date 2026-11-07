@@ -1,0 +1,22 @@
+{
+  "34d7d774fbe1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-separated text became a table, but the meaningful underlining of graphemes in the example words was removed."
+  },
+  "3590c87b0a60": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All text on slide 5 is yellow, with the content, layout and other slides preserved."
+  },
+  "3a37f6fa9fb8": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A blank second page was added, but the original document's text wrapping, spacing and table positions were also altered."
+  },
+  "3b3c333289e1": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The original sheet is preserved and an additional page contains the Revenue header and matching values, although the images do not reveal its sheet name."
+  }
+}
