@@ -4,12 +4,14 @@ for the parts of xlsx and docx files that the experiments check."""
 import ctypes
 import ctypes.wintypes as wt
 import os
+import re
 import subprocess
 import threading
 import time
 import xml.etree.ElementTree as ET
 import zipfile
 
+import win32api
 import win32gui
 import win32process
 
@@ -17,6 +19,15 @@ WM_CLOSE = 0x0010
 SS_NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 PKG_NS = "{http://schemas.microsoft.com/office/2006/xmlPackage}"
+HOME = os.path.expanduser("~")
+PROFILE_NAMES = {os.path.basename(HOME), os.path.basename(win32api.GetShortPathName(HOME))}
+
+
+def redact(text):
+    """Window titles of other apps can show the profile path. The account name is not written to results."""
+    for name in PROFILE_NAMES:
+        text = re.sub(re.escape(name), "<user>", text, flags=re.IGNORECASE)
+    return text
 
 
 class _MemoryStatusEx(ctypes.Structure):

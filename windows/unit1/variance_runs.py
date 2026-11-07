@@ -11,12 +11,23 @@ import os
 import subprocess
 import sys
 
+from otx_win import redact
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 MAIN = os.path.join(HERE, "results")
 VAR = os.path.join(MAIN, "variance")
 OPEN_DOC = os.path.join(HERE, "open_doc_experiment.py")
 REPS = 3
 EXPECTED = {"PASS": 16, "REFUSED": 14}
+
+
+def _label(r):
+    """Verdict of one run. A run that errored has no verdict, so its status is shown instead."""
+    if r is None:
+        return "missing"
+    if r.get("verdict"):
+        return r["verdict"].split(":")[0]
+    return f"status {r.get('status')}"
 
 
 def main_cells():
@@ -42,8 +53,12 @@ def run_cells(cells):
             for app, state, method in cells[kind]:
                 print("rep", rep, kind, app, state, method, flush=True)
                 try:
-                    subprocess.run([sys.executable, OPEN_DOC, "run", app, state, method],
-                                   env=env, timeout=300, capture_output=True, text=True)
+                    res = subprocess.run([sys.executable, OPEN_DOC, "run", app, state, method],
+                                         env=env, timeout=300, capture_output=True, text=True)
+                    if res.stderr.strip():
+                        with open(os.path.join(rdir, f"{app}-{state}-{method}.stderr.txt"), "w",
+                                  encoding="utf-8") as f:
+                            f.write(redact(res.stderr))
                 except subprocess.TimeoutExpired:
                     pid_file = os.path.join(env["OTX_WORK"], f"{app}-{state}-{method}", "pid.txt")
                     if os.path.exists(pid_file):
@@ -70,7 +85,7 @@ def summarize(cells):
         for app, state, method in cells[kind]:
             name = f"{app}-{state}-{method}"
             reps = [_load(os.path.join(VAR, f"rep{rep}", name + ".json")) for rep in range(1, REPS + 1)]
-            verdicts = [(r or {}).get("verdict", "missing").split(":")[0] for r in reps]
+            verdicts = [_label(r) for r in reps]
             fg = [(r or {}).get("watch_counts", {}).get("commit|foreground", 0) for r in reps]
             dialogs = [sum(v for k, v in (r or {}).get("watch_counts", {}).items() if k.endswith("|dialog"))
                        for r in reps]

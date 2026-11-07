@@ -25,7 +25,6 @@ import time
 import traceback
 import zipfile
 
-import win32api
 import win32com.client
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +34,7 @@ sys.path.insert(0, HERE)
 import xlsx_props as XP  # noqa: E402
 from open_doc_experiment import scrub_author  # noqa: E402
 from otx_win import (Watchdog, foreground_desc, free_mb, image_pids, kill_pid, new_image_pid,  # noqa: E402
-                     pid_alive, wait_for_memory)
+                     pid_alive, redact, wait_for_memory)
 
 BASE = os.path.join(HERE, "base", "revert.xlsx")
 WORK = os.path.join(HERE, "work", "revert")
@@ -308,17 +307,6 @@ def run(case, rep):
         with open(os.path.join(RESULTS, name + ".json"), "w") as f:
             f.write(redact(json.dumps(rec, indent=1, default=str)))
     return rec
-
-
-HOME = os.path.expanduser("~")
-PROFILE_NAMES = {os.path.basename(HOME), os.path.basename(win32api.GetShortPathName(HOME))}
-
-
-def redact(text):
-    """Window titles of other apps can show the profile path. The account name is not written to results."""
-    for name in PROFILE_NAMES:
-        text = re.sub(re.escape(name), "<user>", text, flags=re.IGNORECASE)
-    return text
 
 
 def judge(spec, rec):

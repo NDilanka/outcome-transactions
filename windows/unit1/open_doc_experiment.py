@@ -20,17 +20,22 @@ import time
 import traceback
 import zipfile
 
+import pywintypes
 import win32com.client
 
 from otx_win import (Watchdog, docx_paras, flat_opc_paras, foreground_desc, force_foreground, free_mb,
-                     image_pids, kill_pid, lock_info, new_image_pid, pid_alive, rm_holders,
+                     image_pids, kill_pid, lock_info, new_image_pid, pid_alive, redact, rm_holders,
                      wait_for_memory, xlsx_cells)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.join(HERE, "base")
-WORK = os.path.join(HERE, "work")
-RESULTS = os.path.join(HERE, "results")
+# OTX_WORK and OTX_RESULTS let the variance driver send each rep to its own folders.
+WORK = os.environ.get("OTX_WORK") or os.path.join(HERE, "work")
+RESULTS = os.environ.get("OTX_RESULTS") or os.path.join(HERE, "results")
 MIN_FREE_MB = 350
+# Office rejects COM calls while it is busy, for example right after a window activation. Both codes mean
+# "not run": the call did not reach the document, so retrying it cannot apply an edit twice.
+RETRYABLE_COM = (-2147418111, -2147417846)  # RPC_E_CALL_REJECTED (0x80010001), RPC_E_SERVERCALL_RETRYLATER
 
 XLSX_OTHERS = {"A1": "Item", "B1": "Amount", "A2": "Travel", "A3": "Food", "B3": 250.0}
 DOCX_OTHERS = ["Budget report", "Food: 250"]
@@ -170,6 +175,21 @@ def snapshot_step(adapter, d, stage, ext):
     return rec
 
 
+def retry_rejected(fn, tries=40, wait_s=0.25):
+    """Run fn, retrying only when Office rejects the call as busy. Returns how many rejections were retried."""
+    rejected = 0
+    for attempt in range(tries):
+        try:
+            fn()
+            return rejected
+        except pywintypes.com_error as e:
+            if e.hresult not in RETRYABLE_COM or attempt == tries - 1:
+                raise
+            rejected += 1
+            time.sleep(wait_s)
+    return rejected
+
+
 class _Office:
     prog = None
     ext = None
@@ -207,8 +227,11 @@ class Excel(_Office):
     def live_agent(self, quiet=False):
         if quiet:
             self.app.ScreenUpdating = False
-        try:
+
+        def write():
             self.ws.Range("B2").Value = 5000
+        try:
+            self.rejected = retry_rejected(write)
         finally:
             if quiet:
                 self.app.ScreenUpdating = True
@@ -392,6 +415,7 @@ def run(app_name, state, method):
             commit["steps"].append("app closed, transplant, app reopened")
         else:
             commit = commit_file(method, doc, agent_bytes(ext, doc))
+        commit["com_rejections"] = getattr(adapter, "rejected", None)
         rec["commit"] = commit
         time.sleep(2)
         rec["fg_after_commit"] = foreground_desc()
@@ -446,7 +470,7 @@ def run(app_name, state, method):
         rec["seconds"] = round(time.time() - t0, 1)
         os.makedirs(RESULTS, exist_ok=True)
         with open(os.path.join(RESULTS, name + ".json"), "w") as f:
-            json.dump(rec, f, indent=1, default=str)
+            f.write(redact(json.dumps(rec, indent=1, default=str)))
     return rec
 
 
@@ -607,8 +631,8 @@ def report():
     text = ("## Commit and verdict per run\n\n" + "\n".join(main) +
             "\n\n## Snapshot through the owner (before the commit)\n\n" + "\n".join(snap) + "\n")
     with open(out, "w") as f:
-        f.write(text)
-    print(text)
+        f.write(redact(text))
+    print(redact(text))
 
 
 if __name__ == "__main__":
