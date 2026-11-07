@@ -1,0 +1,1235 @@
+[
+ {
+  "task": "a9f325aa",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == [\"Minions In Black\", \"The Dragon With The Girl Tattoo\", \"Hairy Potter\", \"Enemy Of The Stuke\", \"Silence Of Thf Fans\", \"21 Pump Street\", \"The Longest Yard\", \"The Bune Collector\", \"Dump Fiction\", \"Eternal Sunshine Of The Mindless Spot\", \"Fifty Shaucks Of Black\", \"Star Shrek\", \"Lord Of The Cringe\", \"Thf Godfathr\", \"Buck From The Future\", \"Hug Club\", \"Planet Of The Grades\", \"Top Bun\", \"Gone With The Wink\", \"The Good, The Better And The Best\", \"Doodlefuls\", \"I Am Batmun\", \"Doctor Norrml\", \"Bud Would Hunting\", \"If Yesterday\", <one of [\"Edge Of Puip-Fre Fiction\", \"Edge Of Puip-fre Fiction\"]>, \"Funkirk\", \"Dumblodore: Dumb And Dumber\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))"
+   }
+  ]
+ },
+ {
+  "task": "a9f325aa",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))"
+   }
+  ]
+ },
+ {
+  "task": "a9f325aa",
+  "state": "mut_wrong_value",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == [\"Minions In Black\", \"The Dragon With The Girl Tattoo\", \"Hairy Potter\", \"Enemy Of The Stuke\", \"Silence Of Thf Fans\", \"21 Pump Street\", \"The Longest Yard\", \"The Bune Collector\", \"Dump Fiction\", \"Eternal Sunshine Of The Mindless Spot\", \"Fifty Shaucks Of Black\", \"Star Shrek\", \"Lord Of The Cringe\", \"Thf Godfathr\", \"Buck From The Future\", \"Hug Club\", \"Planet Of The Grades\", \"Top Bun\", \"Gone With The Wink\", \"The Good, The Better And The Best\", \"Doodlefuls\", \"I Am Batmun\", \"Doctor Norrml\", \"Bud Would Hunting\", \"If Yesterday\", <one of [\"Edge Of Puip-Fre Fiction\", \"Edge Of Puip-fre Fiction\"]>, \"Funkirk\", \"Dumblodore: Dumb And Dumber\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))"
+   }
+  ]
+ },
+ {
+  "task": "a9f325aa",
+  "state": "mut_lowercase_title",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == [\"Minions In Black\", \"The Dragon With The Girl Tattoo\", \"Hairy Potter\", \"Enemy Of The Stuke\", \"Silence Of Thf Fans\", \"21 Pump Street\", \"The Longest Yard\", \"The Bune Collector\", \"Dump Fiction\", \"Eternal Sunshine Of The Mindless Spot\", \"Fifty Shaucks Of Black\", \"Star Shrek\", \"Lord Of The Cringe\", \"Thf Godfathr\", \"Buck From The Future\", \"Hug Club\", \"Planet Of The Grades\", \"Top Bun\", \"Gone With The Wink\", \"The Good, The Better And The Best\", \"Doodlefuls\", \"I Am Batmun\", \"Doctor Norrml\", \"Bud Would Hunting\", \"If Yesterday\", <one of [\"Edge Of Puip-Fre Fiction\", \"Edge Of Puip-fre Fiction\"]>, \"Funkirk\", \"Dumblodore: Dumb And Dumber\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))"
+   }
+  ]
+ },
+ {
+  "task": "a9f325aa",
+  "state": "mut_source_changed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == [\"Minions In Black\", \"The Dragon With The Girl Tattoo\", \"Hairy Potter\", \"Enemy Of The Stuke\", \"Silence Of Thf Fans\", \"21 Pump Street\", \"The Longest Yard\", \"The Bune Collector\", \"Dump Fiction\", \"Eternal Sunshine Of The Mindless Spot\", \"Fifty Shaucks Of Black\", \"Star Shrek\", \"Lord Of The Cringe\", \"Thf Godfathr\", \"Buck From The Future\", \"Hug Club\", \"Planet Of The Grades\", \"Top Bun\", \"Gone With The Wink\", \"The Good, The Better And The Best\", \"Doodlefuls\", \"I Am Batmun\", \"Doctor Norrml\", \"Bud Would Hunting\", \"If Yesterday\", <one of [\"Edge Of Puip-Fre Fiction\", \"Edge Of Puip-fre Fiction\"]>, \"Funkirk\", \"Dumblodore: Dumb And Dumber\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:B29').values == before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B1:B29').values)"
+   }
+  ]
+ },
+ {
+  "task": "a9f325aa",
+  "state": "mut_stray_cell",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').nonempty_cells subset_of range('B1:C29')"
+   }
+  ]
+ },
+ {
+  "task": "a9f325aa",
+  "state": "mut_header_removed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('C2:C29').values == proper_case(collapse_whitespace(trim(before(libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').range('B2:B29').values))))"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Movie_title_garbage_clean.xlsx').sheet('Sheet1').cell('C1').value == \"Clean Movie Titles\""
+   }
+  ]
+ },
+ {
+  "task": "42e0a640",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A1').value == \"Total Revenue\""
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B1').value == \"Total Expenses\""
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A2').value within(0.001) 867786"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B2').value within(0.001) 411686"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').nonempty_cells set_equal [\"A1\", \"B1\", \"A2\", \"B2\"]"
+   }
+  ]
+ },
+ {
+  "task": "42e0a640",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   }
+  ]
+ },
+ {
+  "task": "42e0a640",
+  "state": "mut_wrong_sum",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A2').value within(0.001) 867786"
+   }
+  ]
+ },
+ {
+  "task": "42e0a640",
+  "state": "mut_swapped_columns",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A2').value within(0.001) 867786"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B2').value within(0.001) 411686"
+   }
+  ]
+ },
+ {
+  "task": "42e0a640",
+  "state": "mut_sheet_renamed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A1').value == \"Total Revenue\""
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B1').value == \"Total Expenses\""
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('A2').value within(0.001) 867786"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B2').value within(0.001) 411686"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').nonempty_cells set_equal [\"A1\", \"B1\", \"A2\", \"B2\"]"
+   }
+  ]
+ },
+ {
+  "task": "42e0a640",
+  "state": "mut_source_changed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').cell('B2').value within(0.001) 411686"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values)"
+   }
+  ]
+ },
+ {
+  "task": "1273e544",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').range('A1:A20').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:A20').values)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').nonempty_cells subset_of range('A1:A20')"
+   }
+  ]
+ },
+ {
+  "task": "1273e544",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   }
+  ]
+ },
+ {
+  "task": "1273e544",
+  "state": "mut_wrong_value",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').range('A1:A20').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:A20').values)"
+   }
+  ]
+ },
+ {
+  "task": "1273e544",
+  "state": "mut_header_removed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').range('A1:A20').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:A20').values)"
+   }
+  ]
+ },
+ {
+  "task": "1273e544",
+  "state": "mut_source_changed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').values)"
+   }
+  ]
+ },
+ {
+  "task": "1273e544",
+  "state": "mut_sheet_renamed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet_names == [\"Sheet1\", \"Sheet2\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').range('A1:A20').values == before(libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet1').range('A1:A20').values)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/NetIncome.xlsx').sheet('Sheet2').nonempty_cells subset_of range('A1:A20')"
+   }
+  ]
+ },
+ {
+  "task": "6054afcb",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows set_equal [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]"
+   }
+  ]
+ },
+ {
+  "task": "6054afcb",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "ACCEPT",
+  "osworld": "PASS",
+  "non_pass": []
+ },
+ {
+  "task": "6054afcb",
+  "state": "mut_unhide_all",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows set_equal [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]"
+   }
+  ]
+ },
+ {
+  "task": "6054afcb",
+  "state": "mut_hide_extra",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').hidden_rows set_equal [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]"
+   }
+  ]
+ },
+ {
+  "task": "6054afcb",
+  "state": "mut_row_deleted",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').values == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').values)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').formulas == before(libreoffice.calc.file('/home/user/Date_Budget_Variance_HideNA.xlsx').sheet('Sheet1').formulas)"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraph(1).bullet.type in [\"char\", \"picture\"]"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraphs.texts == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraphs.texts)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraph(1).bullet.type in [\"char\", \"picture\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "gold2",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "gold3",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "gold4",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "positive",
+  "kind": "positive",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "mut_bullet_removed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraph(1).bullet.type in [\"char\", \"picture\"]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "mut_text_changed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraphs.texts == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 2').paragraphs.texts)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "f23acfd2",
+  "state": "mut_extra_slide",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "count(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slides) == 1"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1') == before(libreoffice.impress.file('/home/user/Desktop/69_4.pptx').slide(1).shape('PlaceHolder 1'))"
+   }
+  ]
+ },
+ {
+  "task": "57667013",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shape('Google Shape;166;p 1').text_runs[*].color == 'FFFF00'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shape('Google Shape;167;p 1').text_runs[*].color == 'FFFF00'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "all(s in libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shapes where s.has_text: s.text_runs[*].color == 'FFFF00')"
+   }
+  ]
+ },
+ {
+  "task": "57667013",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "ACCEPT",
+  "osworld": "PASS",
+  "non_pass": []
+ },
+ {
+  "task": "57667013",
+  "state": "gold2",
+  "kind": "gold",
+  "executor": "ACCEPT",
+  "osworld": "PASS",
+  "non_pass": []
+ },
+ {
+  "task": "57667013",
+  "state": "mut_light_yellow",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shape('Google Shape;166;p 1').text_runs[*].color == 'FFFF00'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shape('Google Shape;167;p 1').text_runs[*].color == 'FFFF00'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "all(s in libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shapes where s.has_text: s.text_runs[*].color == 'FFFF00')"
+   }
+  ]
+ },
+ {
+  "task": "57667013",
+  "state": "mut_one_reverted",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shape('Google Shape;166;p 1').text_runs[*].color == 'FFFF00'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "all(s in libreoffice.impress.file('/home/user/Desktop/1_2.pptx').slide(5).shapes where s.has_text: s.text_runs[*].color == 'FFFF00')"
+   }
+  ]
+ },
+ {
+  "task": "57667013",
+  "state": "mut_other_slide",
+  "kind": "mutant",
+  "executor": "ACCEPT",
+  "osworld": "FAIL",
+  "non_pass": []
+ },
+ {
+  "task": "21760ecb",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition.type == 'dissolve'"
+   }
+  ]
+ },
+ {
+  "task": "21760ecb",
+  "state": "positive",
+  "kind": "positive",
+  "executor": "ACCEPT",
+  "osworld": "PASS",
+  "non_pass": []
+ },
+ {
+  "task": "21760ecb",
+  "state": "mut_wrong_effect",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition.type == 'dissolve'"
+   }
+  ]
+ },
+ {
+  "task": "21760ecb",
+  "state": "mut_wrong_slide",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slide(1).transition.type == 'dissolve'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slides[2..24].transition == before(libreoffice.impress.file('/home/user/Desktop/Ch4 Video Effect.pptx').slides[2..24].transition)"
+   }
+  ]
+ },
+ {
+  "task": "d53ff5ee",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text == [lower(t) for t in before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text)]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraph(8).text == 'prepare a presentation about 2-3 minutes before your presentation date. you need to talk in the front of the classroom. you can use powerpoint, but max 10 chinese characters in each page. marks will be deducted if you read a script from the beginning to the end.'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraph(2).text == 'chin9505'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).cells[*].text == [lower(t) for t in before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).cells[*].text)]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "not any(c.isupper() for c in libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text)"
+   }
+  ]
+ },
+ {
+  "task": "d53ff5ee",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "ACCEPT",
+  "osworld": "PASS",
+  "non_pass": []
+ },
+ {
+  "task": "d53ff5ee",
+  "state": "mut_first_letter_upper",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text == [lower(t) for t in before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text)]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "not any(c.isupper() for c in libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text)"
+   }
+  ]
+ },
+ {
+  "task": "d53ff5ee",
+  "state": "mut_table_upper",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).cells[*].text == [lower(t) for t in before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').table(1).cells[*].text)]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "not any(c.isupper() for c in libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').all_text)"
+   }
+  ]
+ },
+ {
+  "task": "d53ff5ee",
+  "state": "mut_paragraph_deleted",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text == [lower(t) for t in before(libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraphs[*].text)]"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraph(8).text == 'prepare a presentation about 2-3 minutes before your presentation date. you need to talk in the front of the classroom. you can use powerpoint, but max 10 chinese characters in each page. marks will be deducted if you read a script from the beginning to the end.'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/presentation_instruction_2023_Feb.docx').paragraph(2).text == 'chin9505'"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "start",
+  "kind": "start",
+  "executor": "UNDECIDED",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "UNDECIDED",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "gold2",
+  "kind": "gold",
+  "executor": "UNDECIDED",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "gold3",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1) == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1))"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "gold4",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1) == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1))"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "mut_blank_lines_removed",
+  "kind": "mutant",
+  "executor": "UNDECIDED",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "mut_word_changed",
+  "kind": "mutant",
+  "executor": "UNDECIDED",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   }
+  ]
+ },
+ {
+  "task": "88fe4b2d",
+  "state": "mut_table_changed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "[collapse_whitespace(l).strip() for l in libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').text_lines_before_paragraph_with_text('Setting')] matches ['The purpose of the tutorial is to facilitate in-depth discussions on a more specific issue related to our lectures.', '', 'Discussions play an important role in learning as it helps to deepen your understanding and develop your own ideas.', '', 'Besides this, if you can explain something to others clearly, then you really understand it.', '', 'If you can’t, you don’t!', '', 'So, the discussion is also an effective way for you to examine how much you have understood in class.', '', 'The harvest of our tutorials largely depends on your active participation and contribution.', '', 'Thus, be proactive and talkative!', ''] followed by zero or one additional ''"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1) == before(libreoffice.writer.file('/home/user/Desktop/CCCH9003_Tutorial_guidelines.docx').table(1))"
+   }
+  ]
+ },
+ {
+  "task": "936321ce",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "len(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables) == 14"
+   },
+   {
+    "status": "FAIL",
+    "pred": "[[collapse_whitespace(replace(c.text, '\\u00a0', ' ')).strip() for c in row] for row in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows] == [['Sound-Letter Pattern', 'Grapheme', 'Example Grapheme', 'Example Word'], ['1 letter making 1 sound', 'Graph', 'b a', 'rub cat'], ['2 letters making 1 sound', 'Digraph', 'ch oy', 'chop soy'], ['3 letters making 1 sound', 'Trigraph', 'dge ere', 'ridge here'], ['4 letters making 1 sound', 'Quadgraph', 'ough', 'through though']]"
+   },
+   {
+    "status": "UNSUPPORTED",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "not any(p.text startswith 'Sound-Letter Pattern,' or p.text matches '^[1-4] letters? making 1 sound' for p in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[2..14] == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[1..13])"
+   },
+   {
+    "status": "FAIL",
+    "pred": "[p.text for p in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs] == [p.text for p in before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs) if p.index not in 5..9]"
+   }
+  ]
+ },
+ {
+  "task": "936321ce",
+  "state": "gold1",
+  "kind": "gold",
+  "executor": "UNDECIDED",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'"
+   }
+  ]
+ },
+ {
+  "task": "936321ce",
+  "state": "gold2",
+  "kind": "gold",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "len(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables) == 14"
+   },
+   {
+    "status": "FAIL",
+    "pred": "[[collapse_whitespace(replace(c.text, '\\u00a0', ' ')).strip() for c in row] for row in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows] == [['Sound-Letter Pattern', 'Grapheme', 'Example Grapheme', 'Example Word'], ['1 letter making 1 sound', 'Graph', 'b a', 'rub cat'], ['2 letters making 1 sound', 'Digraph', 'ch oy', 'chop soy'], ['3 letters making 1 sound', 'Trigraph', 'dge ere', 'ridge here'], ['4 letters making 1 sound', 'Quadgraph', 'ough', 'through though']]"
+   },
+   {
+    "status": "UNSUPPORTED",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[2..14] == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[1..13])"
+   }
+  ]
+ },
+ {
+  "task": "936321ce",
+  "state": "mut_table_cell_changed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "[[collapse_whitespace(replace(c.text, '\\u00a0', ' ')).strip() for c in row] for row in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows] == [['Sound-Letter Pattern', 'Grapheme', 'Example Grapheme', 'Example Word'], ['1 letter making 1 sound', 'Graph', 'b a', 'rub cat'], ['2 letters making 1 sound', 'Digraph', 'ch oy', 'chop soy'], ['3 letters making 1 sound', 'Trigraph', 'dge ere', 'ridge here'], ['4 letters making 1 sound', 'Quadgraph', 'ough', 'through though']]"
+   },
+   {
+    "status": "UNSUPPORTED",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'"
+   }
+  ]
+ },
+ {
+  "task": "936321ce",
+  "state": "mut_table_removed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "len(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables) == 14"
+   },
+   {
+    "status": "FAIL",
+    "pred": "[[collapse_whitespace(replace(c.text, '\\u00a0', ' ')).strip() for c in row] for row in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows] == [['Sound-Letter Pattern', 'Grapheme', 'Example Grapheme', 'Example Word'], ['1 letter making 1 sound', 'Graph', 'b a', 'rub cat'], ['2 letters making 1 sound', 'Digraph', 'ch oy', 'chop soy'], ['3 letters making 1 sound', 'Trigraph', 'dge ere', 'ridge here'], ['4 letters making 1 sound', 'Quadgraph', 'ough', 'through though']]"
+   },
+   {
+    "status": "UNSUPPORTED",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[2..14] == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[1..13])"
+   }
+  ]
+ },
+ {
+  "task": "936321ce",
+  "state": "mut_comma_line_restored",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "UNSUPPORTED",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "not any(p.text startswith 'Sound-Letter Pattern,' or p.text matches '^[1-4] letters? making 1 sound' for p in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "[p.text for p in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs] == [p.text for p in before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').paragraphs) if p.index not in 5..9]"
+   }
+  ]
+ },
+ {
+  "task": "936321ce",
+  "state": "mut_table_moved",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "[[collapse_whitespace(replace(c.text, '\\u00a0', ' ')).strip() for c in row] for row in libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').table(1).rows] == [['Sound-Letter Pattern', 'Grapheme', 'Example Grapheme', 'Example Word'], ['1 letter making 1 sound', 'Graph', 'b a', 'rub cat'], ['2 letters making 1 sound', 'Digraph', 'ch oy', 'chop soy'], ['3 letters making 1 sound', 'Trigraph', 'dge ere', 'ridge here'], ['4 letters making 1 sound', 'Quadgraph', 'ough', 'through though']]"
+   },
+   {
+    "status": "UNSUPPORTED",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').body_order: table(1) comes after the paragraph 'Graphemes can be a single letter (graph), ...' and before the paragraph starting 'Consonant digraphs and trigraphs are not to be confused'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[2..14] == before(libreoffice.writer.file('/home/user/Desktop/Graphemes_Sound_Letter_Patterns.docx').tables[1..13])"
+   }
+  ]
+ },
+ {
+  "task": "ecc2413d",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count) + 1"
+   },
+   {
+    "status": "FAIL",
+    "pred": "collapse_whitespace(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2].text) == ''"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3].text startswith 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3..].text == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2..].text)"
+   }
+  ]
+ },
+ {
+  "task": "ecc2413d",
+  "state": "positive",
+  "kind": "positive",
+  "executor": "ACCEPT",
+  "osworld": "PASS",
+  "non_pass": []
+ },
+ {
+  "task": "ecc2413d",
+  "state": "mut_one_break",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count) + 1"
+   },
+   {
+    "status": "FAIL",
+    "pred": "collapse_whitespace(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2].text) == ''"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3].text startswith 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3..].text == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2..].text)"
+   }
+  ]
+ },
+ {
+  "task": "ecc2413d",
+  "state": "mut_three_breaks",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "FAIL",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages.count) + 1"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3].text startswith 'TRADE MARKS ACT 1998 (2020 Rev. Ed.)'"
+   },
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[3..].text == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[2..].text)"
+   }
+  ]
+ },
+ {
+  "task": "ecc2413d",
+  "state": "mut_text_changed",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "PASS",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[1].text == before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').rendered_pages[1].text)"
+   },
+   {
+    "status": "FAIL",
+    "pred": "[p.text for p in libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').paragraphs if p.text.strip() != ''] == [p.text for p in before(libreoffice.writer.file('/home/user/Desktop/Sample_Statutory_Declaration.docx').paragraphs) if p.text.strip() != '']"
+   }
+  ]
+ },
+ {
+  "task": "4d117223",
+  "state": "start",
+  "kind": "start",
+  "executor": "REJECT",
+  "osworld": "NOT_RUNNABLE",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "os.file('/home/user/testDir/file1.txt').mode == 0o644"
+   },
+   {
+    "status": "FAIL",
+    "pred": "os.file('/home/user/testDir/subDir2/file3.txt').mode == 0o644"
+   },
+   {
+    "status": "FAIL",
+    "pred": "all(f.mode == 0o644 for f in os.tree('/home/user/testDir').regular_files)"
+   }
+  ]
+ },
+ {
+  "task": "4d117223",
+  "state": "positive",
+  "kind": "positive",
+  "executor": "ACCEPT",
+  "osworld": "NOT_RUNNABLE",
+  "non_pass": []
+ },
+ {
+  "task": "4d117223",
+  "state": "mut_one_file_755",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "NOT_RUNNABLE",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "os.file('/home/user/testDir/subDir1/file2.txt').mode == 0o644"
+   },
+   {
+    "status": "FAIL",
+    "pred": "all(f.mode == 0o644 for f in os.tree('/home/user/testDir').regular_files)"
+   }
+  ]
+ },
+ {
+  "task": "4d117223",
+  "state": "mut_one_file_600",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "NOT_RUNNABLE",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "os.file('/home/user/testDir/file1.txt').mode == 0o644"
+   },
+   {
+    "status": "FAIL",
+    "pred": "all(f.mode == 0o644 for f in os.tree('/home/user/testDir').regular_files)"
+   }
+  ]
+ },
+ {
+  "task": "4d117223",
+  "state": "mut_extra_file",
+  "kind": "mutant",
+  "executor": "REJECT",
+  "osworld": "NOT_RUNNABLE",
+  "non_pass": [
+   {
+    "status": "FAIL",
+    "pred": "os.tree('/home/user/testDir').paths set_equal before(os.tree('/home/user/testDir').paths)"
+   }
+  ]
+ }
+]
