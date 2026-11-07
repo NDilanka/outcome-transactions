@@ -1,6 +1,6 @@
 # Experiment 10 preregistration: does a render judge catch what the text judge accepts?
 
-Status: written before any Exp 10 render. The lock commit on branch `exp10-render` adds this file with the scripts and prompt in section 11. Its hash is in the message to the orchestrator. One scratch render of a single Exp 8 docx attempt ran before the lock, to check the pipeline. Its output is outside the repository, was not packeted, was not judged, and is not used.
+Status: written before any Exp 10 render. The lock commit on branch `exp10-render` adds this file with the scripts and prompt in section 11. Amendment 1 (section 12) was added after the lock and before any render; it records the orchestrator's approval and the basis-17 expectation. Its hash is in the message to the orchestrator. One scratch render of a single Exp 8 docx attempt ran before the lock, to check the pipeline. Its output is outside the repository, was not packeted, was not judged, and is not used.
 
 ## 0. Decisions for the orchestrator to approve before any render
 
@@ -142,8 +142,34 @@ Nothing in this file depends on any render or judge output, except Addendum A, w
 - `render_lib.py`: copied from commit 4bc82d0 of `research/exp9-render/render_lib.py`, unchanged, sha256 `2d9ad5d14ab3b9b3dfe2e1d0982e65606d980faf8d3039cec437c4124f554022`
 - `exp10_run.py`: sha256 `4f653e2b05653af4558f820d947641db18d5ed77c015087e315a60f411cae195`
 - `exp10_rowcheck.py`: sha256 `7002fdb752352c7d9a7673ed82c9cce5bf45d8d3a8553d056563dbe10493ff10`
+- `exp10_score.py`: sha256 `3a9cbe95cc0ed62eb3d5ace60bf75341c78051d7c8ef5f643ad7d9e2051302b5` (added by Amendment 1, section 12)
 - `sol_prompt_render.txt`: sha256 `242c0e168f3ee510bfd41fa7294a8894cb7631e34067bcd25845ab3247939d17`
 - Salt commitment: `a3bdd873ee37ff981732b87d04d0a7fd04b6f2a18a04d705fc927744789ec07d`
+
+## 12. Amendment 1 (lock amendment, written after the lock and before any render)
+
+The orchestrator approved section 0 on the lock, with the additions below. Nothing else changes: groups, packets, prompt, batch rule, undecided rule and renderability flags (section 5) stay as written.
+
+1. Profile states (section 0, item 1). Approved. Their render verdict is reject. The results lead with basis 17 (section 7). Basis 18 gets one removal for free (083c86e1), so it is reported second.
+
+2. Live UI block (section 0, item 2). Approved. Sol's packets saw the same text, so the comparison stays fair. A cursor-dependent case can then be decided from the UI text, not from the render. The renderability flag of 66399b0d method 4 stays "no" (section 5).
+   Tagging rule for every render verdict on 66399b0d method 4, fixed now. Read the verdict reason and tag it:
+   - "UI text" if the reason relies on the cursor position or the wording of the Live UI block (for example: cursor, UI, selected, last paragraph, empty paragraph, above or below the table);
+   - "image" if the reason relies only on what the rendered pages show;
+   - "both" if it relies on both.
+   The tag is recorded with the results. It does not change any verdict.
+
+3. Gate (section 7). Approved, with the basis-17 conditions stated in full:
+   - Basis 17 (the headline): A AND R must (i) leave no wrong commit on both of A's basis-17 wrong requests, and (ii) keep at least 12 of A's 13 correct zero-click commits on the 17 requests.
+   - Basis 18: A AND R must (i) remove at least 2 of A's 3 wrong commits and (ii) keep at least 12 of A's 13 correct zero-click commits.
+   - The render key earns a second-key place only if both bases pass both conditions.
+
+4. Expectation for basis 17, written before any render. A's two basis-17 wrong commits and what each needs:
+   - ecc2413d, method 1 (476b080a). Renderable by the page-count predicate (section 5). The expectation from the predicate is that the render rejects it. A AND R removes this commit only if its pick is not wrong. Sol accepts all four ecc2413d candidates, and methods 1, 2 and 4 are wrong, so the render must reject methods 1, 2 and 4 (eeb4b683, 7b72ebd1 are methods 2 and 4). They have the same page count as method 1, so the same expectation applies. Accepting method 3 alone is also a removal.
+   - d53ff5ee, method 2 (de97694c). A request-reading case. No predicate is registered for it (section 5), so no check can be expected to catch it. A AND R removes this commit only if its pick is not wrong. Sol accepts methods 1, 2 and 4 of d53ff5ee, and methods 2 and 4 are wrong. So the render must reject method 4 (b9d8b59c) as well, which is also a request-reading case. Accepting method 1 alone is also a removal.
+   Consequence: basis 17 passes only if the render judge rejects both d53ff5ee candidates. Those are errors the predicates call not renderable, so the gate needs the render to catch an error that no check covers. This is allowed, and it is written here before the judge runs. No prediction is made for this pair. The render shows the lowercased words, but whether they are wrong depends on how "all uppercase text" is read (GT ruling d53ff5ee, option a). Any render result on the pair is reported as a result of request reading.
+
+5. Scorer. `exp10_score.py` is part of the lock (section 11). It was tested before this amendment on synthetic stats and verdicts, not on Exp 10 data. Two tests: (i) render verdicts equal to Sol's first pass: A AND R removes only 083c86e1 (by the undecided rule) on basis 18, and nothing on basis 17, so the gate fails; (ii) an oracle that accepts exactly the GT-correct states: both bases pass. These tests check the logic only.
 
 ## Addendum A (table row check)
 
