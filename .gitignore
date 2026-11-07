@@ -4,3 +4,9 @@ research/OSWorld/
 research/exp5-grounded/snapshots/
 __pycache__/
 *.pyc
+research/exp6-executed/osworld_gold/
+research/exp6-executed/endstates/
+# Exp 6 gate roots (copies of snapshots with gold files and mutants), debug states, and the private blind map
+research/exp6-executed/gate/
+research/exp6-executed/debug/states/
+research/exp6-executed/blind_map.json

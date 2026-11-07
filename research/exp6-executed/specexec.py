@@ -1,0 +1,750 @@
+"""Spec executor for Exp 6: runs the must-predicates of grounded outcome specs (exp5) on a real end state.
+
+Scope (deliberately small): only the predicate grammar and readers that the Exp 6 subset uses.
+- Paths in predicates are Ubuntu paths. A machine root maps /home/user/x to <root>/home/user/x.
+- before(e) evaluates e against the starting root.
+- Indices are one-based and slices are inclusive (paragraphs[3..28]); an open end (rendered_pages[3..]) is allowed.
+- Decision per spec: REJECT if any must-predicate FAILs; UNDECIDED if none FAILs but one is UNSUPPORTED or ERROR
+  (the executor cannot decide, so it never accepts by skipping a predicate); ACCEPT if all PASS.
+- Footprint items are prose in these specs. They are reported as NOT_EXECUTED, not checked.
+"""
+import collections, functools, hashlib, os, re, stat, subprocess, tempfile, codecs
+
+import openpyxl
+from openpyxl.utils import range_boundaries, get_column_letter
+from docx import Document
+from pptx import Presentation
+from lxml import etree
+from pypdf import PdfReader
+
+
+class Unsupported(Exception):
+    """Predicate uses syntax or a reader the executor does not implement."""
+
+
+class ReaderMiss(Exception):
+    """A named object (sheet, shape, file, page) is absent in the end state. This is a FAIL, not an error."""
+
+
+# ---------------------------------------------------------------- tokenizer and parser
+
+KEYWORDS = {'and', 'or', 'not', 'in', 'for', 'if', 'where', 'within', 'matches', 'startswith', 'endswith',
+            'set_equal', 'multiset_equal', 'subset_of', 'includes', 'includes_any'}
+TOKEN = re.compile(r"""
+ (?P<ws>\s+)
+|(?P<num>0o[0-7]+|\d+\.\d+|\d+)
+|(?P<str>'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*")
+|(?P<id>[A-Za-z_][A-Za-z0-9_]*)
+|(?P<op>==|!=|<=|>=|\.\.|[<>+\-*/().,\[\]{}:])
+""", re.X)
+
+
+def strip_comment(pred):
+    """Drop a trailing '# ...' comment that is not inside quotes."""
+    q = None
+    for i, ch in enumerate(pred):
+        if q:
+            if ch == q: q = None
+        elif ch in "'\"": q = ch
+        elif ch == '#' and i > 0 and pred[i - 1] == ' ': return pred[:i].rstrip()
+    return pred.strip()
+
+
+def tokenize(src):
+    out, pos = [], 0
+    while pos < len(src):
+        m = TOKEN.match(src, pos)
+        if not m: raise Unsupported(f"cannot tokenize at {src[pos:pos+20]!r}")
+        pos = m.end()
+        kind = m.lastgroup
+        if kind == 'ws': continue
+        val = m.group(kind)
+        if kind == 'id' and val in KEYWORDS: kind = 'kw'
+        out.append((kind, val))
+    out.append(('eof', None))
+    return out
+
+
+class Parser:
+    def __init__(self, src):
+        self.t = tokenize(src)
+        self.i = 0
+
+    def peek(self, k=0): return self.t[self.i + k]
+    def take(self): tok = self.t[self.i]; self.i += 1; return tok
+    def is_(self, kind, val=None, k=0):
+        t = self.peek(k)
+        return t[0] == kind and (val is None or t[1] == val)
+    def expect(self, kind, val=None):
+        if not self.is_(kind, val): raise Unsupported(f"expected {val or kind}, got {self.peek()[1]!r}")
+        return self.take()
+
+    def parse(self):
+        e = self.or_()
+        if not self.is_('eof'): raise Unsupported(f"trailing tokens at {self.peek()[1]!r}")
+        return e
+
+    def or_(self):
+        l = self.and_()
+        while self.is_('kw', 'or'):
+            self.take(); l = ('or', l, self.and_())
+        return l
+
+    def and_(self):
+        l = self.not_()
+        while self.is_('kw', 'and'):
+            self.take(); l = ('and', l, self.not_())
+        return l
+
+    def not_(self):
+        if self.is_('kw', 'not') and not self.is_('kw', 'in', 1):
+            self.take(); return ('not', self.not_())
+        return self.cmp()
+
+    def cmp(self):
+        l = self.add()
+        while True:
+            t = self.peek()
+            if t[0] == 'op' and t[1] in ('==', '!=', '<', '<=', '>', '>='):
+                self.take(); l = ('cmp', t[1], l, self.add())
+            elif self.is_('kw', 'in'):
+                self.take(); l = ('in', l, self.rhs_with_range())
+            elif self.is_('kw', 'not') and self.is_('kw', 'in', 1):
+                self.take(); self.take(); l = ('not', ('in', l, self.rhs_with_range()))
+            elif self.is_('kw', 'within'):
+                self.take(); self.expect('op', '('); tol = self.or_(); self.expect('op', ')')
+                l = ('within', l, tol, self.add())
+            elif t[0] == 'kw' and t[1] in ('matches', 'startswith', 'endswith', 'set_equal', 'multiset_equal',
+                                           'subset_of', 'includes', 'includes_any'):
+                self.take(); l = ('op', t[1], l, self.add())
+            else:
+                return l
+
+    def rhs_with_range(self):
+        r = self.add()
+        if self.is_('op', '..'):
+            self.take(); hi = self.add(); return ('range', r, hi)
+        return r
+
+    def add(self):
+        l = self.mul()
+        while self.peek()[0] == 'op' and self.peek()[1] in ('+', '-'):
+            op = self.take()[1]; l = ('arith', op, l, self.mul())
+        return l
+
+    def mul(self):
+        l = self.unary()
+        while self.peek()[0] == 'op' and self.peek()[1] in ('*', '/'):
+            op = self.take()[1]; l = ('arith', op, l, self.unary())
+        return l
+
+    def unary(self):
+        if self.is_('op', '-'):
+            self.take(); return ('arith', '-', ('lit', 0), self.unary())
+        return self.postfix()
+
+    def postfix(self):
+        e = self.primary()
+        while True:
+            if self.is_('op', '.'):
+                self.take(); e = ('attr', e, self.expect('id')[1])
+            elif self.is_('op', '('):
+                e = ('call', e, self.args())
+            elif self.is_('op', '['):
+                self.take()
+                if self.is_('op', '*'):
+                    self.take(); self.expect('op', ']'); e = ('star', e)
+                else:
+                    a = self.add()
+                    if self.is_('op', '..'):
+                        self.take()
+                        b = None if self.is_('op', ']') else self.add()
+                        self.expect('op', ']'); e = ('span', e, a, b)
+                    else:
+                        self.expect('op', ']'); e = ('index', e, a)
+            else:
+                return e
+
+    def args(self):
+        self.expect('op', '(')
+        if self.is_('op', ')'):
+            self.take(); return []
+        first = self.or_()
+        if self.is_('kw', 'for'):  # generator: any(expr for v in it if cond)
+            self.take(); var = self.expect('id')[1]; self.expect('kw', 'in'); it = self.or_()
+            cond = None
+            if self.is_('kw', 'if'): self.take(); cond = self.or_()
+            self.expect('op', ')')
+            return [('gen', first, var, it, cond)]
+        if self.is_('kw', 'where') or self.is_('op', ':'):  # quantifier: all(v in it where cond: body)
+            if first[0] != 'in': raise Unsupported("quantifier needs 'v in iterable'")
+            var, it = first[1][1], first[2]
+            cond = None
+            if self.is_('kw', 'where'): self.take(); cond = self.or_()
+            self.expect('op', ':'); body = self.or_(); self.expect('op', ')')
+            return [('quant', var, it, cond, body)]
+        args = [first]
+        while self.is_('op', ','):
+            self.take(); args.append(self.or_())
+        self.expect('op', ')')
+        return args
+
+    def primary(self):
+        t = self.peek()
+        if t[0] == 'num':
+            self.take(); v = t[1]
+            return ('lit', int(v, 8) if v.startswith('0o') else (float(v) if '.' in v else int(v)))
+        if t[0] == 'str':
+            self.take(); s = t[1][1:-1]
+            if '\\' in s: s = codecs.decode(s, 'unicode_escape')
+            return ('lit', s)
+        if t[0] == 'id':
+            self.take()
+            if t[1] in ('null', 'None'): return ('lit', None)
+            if t[1] in ('true', 'True'): return ('lit', True)
+            if t[1] in ('false', 'False'): return ('lit', False)
+            return ('name', t[1])
+        if self.is_('op', '('):
+            self.take(); e = self.or_(); self.expect('op', ')'); return e
+        if self.is_('op', '['):
+            self.take()
+            if self.is_('op', ']'): self.take(); return ('list', [])
+            first = self.or_()
+            if self.is_('kw', 'for'):
+                self.take(); var = self.expect('id')[1]; self.expect('kw', 'in'); it = self.or_()
+                cond = None
+                if self.is_('kw', 'if'): self.take(); cond = self.or_()
+                self.expect('op', ']'); return ('listcomp', first, var, it, cond)
+            items = [first]
+            while self.is_('op', ','):
+                self.take()
+                if self.is_('op', ']'): break
+                items.append(self.or_())
+            self.expect('op', ']'); return ('list', items)
+        if self.is_('op', '<'):  # <one of [...]>
+            self.take()
+            if not self.is_('id', 'one'): raise Unsupported("only <one of [...]> is supported")
+            self.take(); self.expect('id', 'of'); lst = self.primary(); self.expect('op', '>')
+            return ('oneof', lst)
+        if self.is_('op', '{'):
+            self.take(); items = []
+            while not self.is_('op', '}'):
+                items.append(self.or_())
+                if self.is_('op', ','): self.take()
+            self.take(); return ('set', items)
+        raise Unsupported(f"unexpected token {t[1]!r}")
+
+
+def parse(src):
+    return Parser(src).parse()
+
+
+# ---------------------------------------------------------------- values
+
+class OneOf:
+    def __init__(self, options): self.options = options
+    def __eq__(self, other): return other in self.options
+    def __repr__(self): return f"<one of {self.options}>"
+
+
+class Seq(list):
+    """Reader sequence: one-based indexing and inclusive spans."""
+    def at(self, n):
+        if not 1 <= n <= len(self): raise ReaderMiss(f"index {n} out of range (len {len(self)})")
+        return self[n - 1]
+    def span(self, a, b):
+        return Seq(self[a - 1:(len(self) if b is None else b)])
+
+
+class IntRange:
+    def __init__(self, lo, hi): self.lo, self.hi = lo, hi
+    def __contains__(self, x): return self.lo <= x <= self.hi
+
+
+def getattr_(obj, name):
+    if isinstance(obj, list):
+        if name == 'texts': return [x.text for x in obj]
+        return [getattr_(x, name) for x in obj]
+    try:
+        return getattr(obj, name)
+    except AttributeError:
+        raise Unsupported(f"no attribute {name!r} on {type(obj).__name__}")
+
+
+def as_str_list(fn, x):
+    return [fn(i) for i in x] if isinstance(x, list) else fn(x)
+
+
+def proper_word(w):
+    out, done = [], False
+    for ch in w:
+        if not done and ch.isalpha(): out.append(ch.upper()); done = True
+        else: out.append(ch.lower() if ch.isalpha() else ch)
+    return ''.join(out)
+
+
+FUNCS = {
+    'lower': lambda x: as_str_list(lambda s: s.lower(), x),
+    'trim': lambda x: as_str_list(lambda s: s.strip(), x),
+    'collapse_whitespace': lambda x: as_str_list(lambda s: re.sub(r'\s+', ' ', s), x),
+    'proper_case': lambda x: as_str_list(lambda s: ' '.join(proper_word(w) for w in re.sub(r'\s+', ' ', s).split(' ')), x),
+    'replace': lambda x, a, b: as_str_list(lambda s: s.replace(a, b), x),
+    'len': len,
+    'count': len,
+}
+
+
+# ---------------------------------------------------------------- readers
+
+@functools.lru_cache(maxsize=None)
+def _calc_book(path, stamp):
+    return (openpyxl.load_workbook(path, data_only=True), openpyxl.load_workbook(path))
+
+
+class CalcFile:
+    def __init__(self, path):
+        self.path = path
+        self.stamp = (os.path.getmtime(path), os.path.getsize(path))
+        self.vwb, self.fwb = _calc_book(path, self.stamp)
+    @property
+    def sheet_names(self): return list(self.vwb.sheetnames)
+    def sheet(self, name):
+        if name not in self.vwb.sheetnames: raise ReaderMiss(f"no sheet {name!r}")
+        sh = CalcSheet(self, name)
+        CURRENT['sheet'] = sh  # a bare range('B1:C29') in the same predicate refers to this sheet
+        return sh
+
+
+class CalcSheet:
+    def __init__(self, book, name):
+        self.book, self.name = book, name
+        self.wv, self.wf = book.vwb[name], book.fwb[name]
+    def _bbox(self):
+        cells = [(c.row, c.column) for row in self.wv.iter_rows() for c in row if c.value not in (None, '')]
+        if not cells: return None
+        return min(r for r, _ in cells), min(c for _, c in cells), max(r for r, _ in cells), max(c for _, c in cells)
+    def _grid(self, ws, box):
+        if box is None: return []
+        r0, c0, r1, c1 = box
+        return [list(r) for r in ws.iter_rows(min_row=r0, max_row=r1, min_col=c0, max_col=c1, values_only=True)]
+    @property
+    def values(self): return self._grid(self.wv, self._bbox())
+    @property
+    def formulas(self): return self._grid(self.wf, self._bbox())
+    @property
+    def nonempty_cells(self):
+        return [c.coordinate for row in self.wv.iter_rows() for c in row if c.value not in (None, '')]
+    @property
+    def hidden_rows(self): return sorted(r for r, d in self.wf.row_dimensions.items() if d.hidden)
+    @property
+    def hidden_columns(self): return sorted(k for k, d in self.wf.column_dimensions.items() if d.hidden)
+    @property
+    def autofilter(self): return self.wf.auto_filter.ref
+    def cell(self, ref): return CalcCell(self.wv[ref].value, self.wf[ref].value)
+    def range(self, ref): return CalcRange(self, ref)
+
+
+class CalcCell:
+    def __init__(self, value, formula): self.value, self.formula = value, formula
+
+
+class CalcRange:
+    def __init__(self, sheet, ref):
+        self.sheet, self.ref = sheet, ref
+        self.box = range_boundaries(ref)
+    @property
+    def coords(self):
+        c0, r0, c1, r1 = self.box
+        return {f"{get_column_letter(c)}{r}" for r in range(r0, r1 + 1) for c in range(c0, c1 + 1)}
+    def _flat(self, rows):
+        if len(rows) == 1: return rows[0]
+        if rows and all(len(r) == 1 for r in rows): return [r[0] for r in rows]
+        return rows
+    @property
+    def values(self):
+        c0, r0, c1, r1 = self.box
+        return self._flat([list(r) for r in self.sheet.wv.iter_rows(min_row=r0, max_row=r1, min_col=c0, max_col=c1, values_only=True)])
+    @property
+    def formulas(self):
+        c0, r0, c1, r1 = self.box
+        return self._flat([list(r) for r in self.sheet.wf.iter_rows(min_row=r0, max_row=r1, min_col=c0, max_col=c1, values_only=True)])
+    @property
+    def nonempty_cells(self):
+        return [c for c in sorted(self.coords) if self.sheet.wv[c].value not in (None, '')]
+
+
+class PageObj:
+    def __init__(self, text, images): self.text, self.objects = text, images
+class PageList:
+    def __init__(self, pages): self.pages = pages
+    @property
+    def count(self): return len(self.pages)
+    def at(self, n):
+        if not 1 <= n <= len(self.pages): raise ReaderMiss(f"page {n} out of range")
+        return self.pages[n - 1]
+    def span(self, a, b): return self.pages[a - 1:(len(self.pages) if b is None else b)]
+
+
+@functools.lru_cache(maxsize=None)
+def _render_pdf(path, stamp):
+    """LibreOffice renders the file to PDF (the same engine the user sees); page text comes from pypdf."""
+    tmp = tempfile.mkdtemp(prefix='exp6pdf_')
+    subprocess.run(['soffice', '--headless', '--convert-to', 'pdf', '--outdir', tmp, path],
+                   check=True, capture_output=True, timeout=180)
+    pdf = os.path.join(tmp, os.path.splitext(os.path.basename(path))[0] + '.pdf')
+    r = PdfReader(pdf)
+    # PDF text extraction returns renderer spacing (double spaces, line breaks inside words); collapse it.
+    return [PageObj(re.sub(r'\s+', ' ', p.extract_text() or '').strip(), list(p.images)) for p in r.pages]
+
+
+class DocxFile:
+    def __init__(self, path):
+        self.path = path
+        self.stamp = (os.path.getmtime(path), os.path.getsize(path))
+        self.doc = Document(path)
+    @functools.cached_property
+    def paragraphs(self): return Seq([ParaObj(i + 1, p.text) for i, p in enumerate(self.doc.paragraphs)])
+    @functools.cached_property
+    def tables(self): return Seq([TableObj(i + 1, t) for i, t in enumerate(self.doc.tables)])
+    def paragraph(self, n): return self.paragraphs.at(n)
+    def table(self, n): return self.tables.at(n)
+    @property
+    def all_text(self):
+        parts = [p.text for p in self.paragraphs] + [c.text for t in self.tables for c in t.cells]
+        return '\n'.join(parts)
+    def text_lines_before_paragraph_with_text(self, s):
+        for i, p in enumerate(self.paragraphs):
+            if s in p.text: return [q.text for q in self.paragraphs[:i]]
+        raise ReaderMiss(f"no paragraph containing {s!r}")
+    def paragraphs_from_text(self, s):
+        for i, p in enumerate(self.paragraphs):
+            if s in p.text: return Seq(self.paragraphs[i:])
+        raise ReaderMiss(f"no paragraph containing {s!r}")
+    @property
+    def rendered_pages(self):
+        return PageList(_render_pdf(self.path, self.stamp))
+
+
+class ParaObj:
+    def __init__(self, index, text): self.index, self.text = index, text
+    def __eq__(self, o): return isinstance(o, ParaObj) and o.text == self.text
+    def __repr__(self): return f"P{self.index}({self.text[:30]!r})"
+
+
+class CellObj:
+    def __init__(self, text): self.text = text
+
+
+class TableObj:
+    def __init__(self, index, t): self.index, self.t = index, t
+    @property
+    def rows(self):
+        return Seq([Seq([CellObj(c.text) for c in r.cells]) for r in self.t.rows])
+    @property
+    def cells(self): return Seq([c for r in self.rows for c in r])
+    def __eq__(self, o):
+        return isinstance(o, TableObj) and [[c.text for c in r] for r in self.rows] == [[c.text for c in r] for r in o.rows]
+
+
+class PptxFile:
+    def __init__(self, path):
+        self.prs = Presentation(path)
+    @functools.cached_property
+    def slides(self): return Seq([SlideObj(s, i + 1) for i, s in enumerate(self.prs.slides)])
+    @property
+    def slide_count(self): return len(self.slides)
+    def slide(self, n): return self.slides.at(n)
+
+
+class SlideObj:
+    def __init__(self, s, index): self.s, self.index = s, index
+    @property
+    def shapes(self): return Seq([ShapeObj(sh) for sh in self.s.shapes])
+    def shape(self, name):
+        for sh in self.shapes:
+            if sh.name == name: return sh
+        raise ReaderMiss(f"no shape {name!r} on slide {self.index}")
+    @property
+    def transition(self):
+        el = self.s._element.find('{http://schemas.openxmlformats.org/presentationml/2006/main}transition')
+        if el is None: return TransitionObj(None)
+        kids = [c for c in el if etree.QName(c).localname not in ('extLst', 'sndAc')]
+        return TransitionObj(etree.QName(kids[0]).localname if kids else 'none')
+
+
+class TransitionObj:
+    def __init__(self, t): self.type = t
+    def __eq__(self, o): return isinstance(o, TransitionObj) and o.type == self.type
+    def __repr__(self): return f"Transition({self.type})"
+
+
+A = '{http://schemas.openxmlformats.org/drawingml/2006/main}'
+
+
+class ShapeObj:
+    def __init__(self, sh):
+        self.sh = sh
+        self.name = sh.name
+    @property
+    def text(self): return self.sh.text_frame.text if self.sh.has_text_frame else ''
+    @property
+    def has_text(self): return bool(self.text.strip())
+    @property
+    def paragraphs(self):
+        if not self.sh.has_text_frame: return Seq()
+        return Seq([ParaP(p) for p in self.sh.text_frame.paragraphs])
+    def paragraph(self, n): return self.paragraphs.at(n)
+    @property
+    def text_runs(self):
+        out = []
+        if self.sh.has_text_frame:
+            for p in self.sh.text_frame.paragraphs:
+                for r in p.runs:
+                    rp = r._r.find(A + 'rPr')
+                    clr = None
+                    if rp is not None:
+                        c = rp.find(f'{A}solidFill/{A}srgbClr')
+                        # hex colour case is an encoding detail (LibreOffice writes lowercase): normalise it
+                        clr = c.get('val').upper() if c is not None else None
+                    out.append(RunP(r.text, clr))
+        return Seq(out)
+    def _snap(self):
+        return (self.name, self.sh.left, self.sh.top, self.sh.width, self.sh.height, self.text,
+                [r.color for r in self.text_runs])
+    def __eq__(self, o): return isinstance(o, ShapeObj) and o._snap() == self._snap()
+    def __repr__(self): return f"Shape({self.name!r})"
+
+
+class ParaP:
+    def __init__(self, p): self.p = p
+    @property
+    def text(self): return self.p.text
+    @property
+    def bullet(self):
+        pPr = self.p._p.find(A + 'pPr')
+        if pPr is None: return BulletObj('inherited')
+        tags = [etree.QName(c).localname for c in pPr]
+        for name, kind in (('buNone', 'none'), ('buChar', 'char'), ('buAutoNum', 'number'), ('buBlip', 'picture')):
+            if name in tags: return BulletObj(kind)
+        return BulletObj('inherited')
+
+
+class BulletObj:
+    def __init__(self, t): self.type = t
+
+
+class RunP:
+    def __init__(self, text, color): self.text, self.color = text, color
+
+
+class OsFile:
+    def __init__(self, abs_path, ub_path):
+        self.abs_path, self.ub_path = abs_path, ub_path
+    @property
+    def mode(self):
+        if not os.path.lexists(self.abs_path): raise ReaderMiss(f"no file {self.ub_path}")
+        return stat.S_IMODE(os.stat(self.abs_path).st_mode)
+    @property
+    def exists(self): return os.path.lexists(self.abs_path)
+
+
+class OsTree:
+    def __init__(self, abs_root, ub_root):
+        self.abs_root, self.ub_root = abs_root, ub_root
+        if not os.path.isdir(abs_root): raise ReaderMiss(f"no directory {ub_root}")
+    def _walk(self):
+        for dp, dns, fns in os.walk(self.abs_root):
+            for n in dns + fns:
+                full = os.path.join(dp, n)
+                rel = os.path.relpath(full, self.abs_root)
+                yield full, self.ub_root.rstrip('/') + '/' + rel
+    @property
+    def paths(self): return sorted(ub for _, ub in self._walk())
+    @property
+    def regular_files(self):
+        return Seq([OsFile(f, ub) for f, ub in sorted(self._walk(), key=lambda x: x[1]) if os.path.isfile(f) and not os.path.islink(f)])
+
+
+class LibreOfficeRoot:
+    def __init__(self, ctx): self.ctx = ctx
+    @property
+    def calc(self): return _Namespace(file=lambda p: CalcFile(self.ctx.resolve(p)))
+    @property
+    def writer(self): return _Namespace(file=lambda p: DocxFile(self.ctx.resolve(p)))
+    @property
+    def impress(self): return _Namespace(file=lambda p: PptxFile(self.ctx.resolve(p)))
+
+
+class OsRoot:
+    def __init__(self, ctx): self.ctx = ctx
+    def file(self, p): return OsFile(self.ctx.resolve(p), p)
+    def tree(self, p): return OsTree(self.ctx.resolve(p), p)
+
+
+class _Namespace:
+    def __init__(self, **kw): self.__dict__.update(kw)
+
+
+class Ctx:
+    def __init__(self, root, start_root):
+        self.root, self.start_root = root, start_root
+    def resolve(self, ubuntu_path):
+        if not ubuntu_path.startswith('/'): raise Unsupported(f"relative path {ubuntu_path}")
+        return os.path.join(self.root, ubuntu_path.lstrip('/'))
+
+
+# ---------------------------------------------------------------- evaluator
+
+CURRENT = {'sheet': None}
+
+
+def lookup(name, env, ctx):
+    if name in env: return env[name]
+    if name == 'range':
+        def bare_range(ref):
+            if CURRENT['sheet'] is None: raise Unsupported("range() with no sheet selected")
+            return CURRENT['sheet'].range(ref)
+        return bare_range
+    if name in FUNCS: return FUNCS[name]
+    if name == 'libreoffice': return LibreOfficeRoot(ctx)
+    if name == 'os': return OsRoot(ctx)
+    raise Unsupported(f"unknown name {name!r}")
+
+
+def same(a, b):
+    """Equality that treats one-of and tolerant comparisons the same way everywhere."""
+    return a == b
+
+
+def ev(n, env, ctx):
+    k = n[0]
+    if k == 'lit': return n[1]
+    if k == 'name': return lookup(n[1], env, ctx)
+    if k == 'attr': return getattr_(ev(n[1], env, ctx), n[2])
+    if k == 'list': return [ev(x, env, ctx) for x in n[1]]
+    if k == 'set': return {ev(x, env, ctx) for x in n[1]}
+    if k == 'oneof': return OneOf(ev(n[1], env, ctx))
+    if k == 'range': return IntRange(ev(n[1], env, ctx), ev(n[2], env, ctx))
+    if k == 'star': return ev(n[1], env, ctx)
+    if k == 'index':
+        obj, idx = ev(n[1], env, ctx), ev(n[2], env, ctx)
+        if hasattr(obj, 'at'): return obj.at(idx)
+        if isinstance(obj, list): return Seq(obj).at(idx)
+        raise Unsupported(f"cannot index {type(obj).__name__}")
+    if k == 'span':
+        obj = ev(n[1], env, ctx)
+        a = ev(n[2], env, ctx)
+        b = None if n[3] is None else ev(n[3], env, ctx)
+        if hasattr(obj, 'span'): return obj.span(a, b)
+        return Seq(obj).span(a, b)
+    if k == 'arith':
+        a, b = ev(n[2], env, ctx), ev(n[3], env, ctx)
+        return {'+': lambda: a + b, '-': lambda: a - b, '*': lambda: a * b, '/': lambda: a / b}[n[1]]()
+    if k == 'not': return not ev(n[1], env, ctx)
+    if k == 'and': return bool(ev(n[1], env, ctx)) and bool(ev(n[2], env, ctx))
+    if k == 'or': return bool(ev(n[1], env, ctx)) or bool(ev(n[2], env, ctx))
+    if k == 'cmp':
+        a, b = ev(n[2], env, ctx), ev(n[3], env, ctx)
+        op = n[1]
+        # A projection (list) compared with a scalar is a universal condition over its items
+        # (writer_conventions.txt); an empty projection is satisfied vacuously.
+        if isinstance(a, list) and not isinstance(b, list) and not isinstance(b, OneOf):
+            eq = all(x == b for x in a)
+            return eq if op == '==' else not eq
+        if op == '==': return a == b
+        if op == '!=': return a != b
+        return {'<': lambda: a < b, '<=': lambda: a <= b, '>': lambda: a > b, '>=': lambda: a >= b}[op]()
+    if k == 'in':
+        a, b = ev(n[1], env, ctx), ev(n[2], env, ctx)
+        return a in b
+    if k == 'within':
+        a, b, tol = ev(n[1], env, ctx), ev(n[3], env, ctx), ev(n[2], env, ctx)
+        def close(x, y):
+            return abs(x - y) <= tol
+        if isinstance(a, list) and isinstance(b, list):
+            return len(a) == len(b) and all(close(x, y) for x, y in zip(a, b))
+        return close(a, b)
+    if k == 'op':
+        op, a, b = n[1], ev(n[2], env, ctx), ev(n[3], env, ctx)
+        if op == 'matches':
+            if isinstance(b, list): return same(a, b)
+            return re.search(b, a) is not None
+        if op == 'startswith': return a.startswith(b)
+        if op == 'endswith': return a.endswith(b)
+        if op == 'set_equal':
+            return set(a) == set(_coords(b))
+        if op == 'multiset_equal': return collections.Counter(a) == collections.Counter(b)
+        if op == 'subset_of': return set(a) <= set(_coords(b))
+        raise Unsupported(f"operator {op}")
+    if k == 'listcomp':
+        out = []
+        for x in ev(n[3], env, ctx):
+            e2 = dict(env, **{n[2]: x})
+            if n[4] is None or ev(n[4], e2, ctx): out.append(ev(n[1], e2, ctx))
+        return out
+    if k == 'gen':
+        items = []
+        for x in ev(n[3], env, ctx):
+            e2 = dict(env, **{n[2]: x})
+            if n[4] is None or ev(n[4], e2, ctx): items.append(ev(n[1], e2, ctx))
+        return items
+    if k == 'quant':
+        raise Unsupported("quantifier outside all()/any()")
+    if k == 'call':
+        fn, args = n[1], n[2]
+        if fn[0] == 'name' and fn[1] == 'before':
+            saved = ctx.root
+            ctx.root = ctx.start_root
+            try: return ev(args[0], env, ctx)
+            finally: ctx.root = saved
+        if fn[0] == 'name' and fn[1] in ('all', 'any') and len(args) == 1 and args[0][0] in ('gen', 'quant'):
+            a = args[0]
+            if a[0] == 'gen':
+                vals = ev(a, env, ctx)
+            else:
+                vals = []
+                for x in ev(a[2], env, ctx):
+                    e2 = dict(env, **{a[1]: x})
+                    if a[3] is None or ev(a[3], e2, ctx): vals.append(ev(a[4], e2, ctx))
+            return all(vals) if fn[1] == 'all' else any(vals)
+        callee = ev(fn, env, ctx)
+        if not callable(callee): raise Unsupported(f"not callable: {fn}")
+        return callee(*[ev(x, env, ctx) for x in args])
+    raise Unsupported(f"node {k}")
+
+
+def _coords(x):
+    return x.coords if hasattr(x, 'coords') else x
+
+
+def short(v):
+    s = repr(v)
+    return s if len(s) < 160 else s[:157] + '...'
+
+
+def run_spec(spec, end_root, start_root):
+    """Evaluate every must-predicate. Returns decision and per-predicate records."""
+    ctx = Ctx(end_root, start_root)
+    CURRENT['sheet'] = None
+    recs = []
+    for src in spec.get('must', []):
+        pred = strip_comment(src)
+        try:
+            ast = parse(pred)
+        except Unsupported as e:
+            recs.append({'pred': pred, 'status': 'UNSUPPORTED', 'reason': f'parse: {e}'}); continue
+        try:
+            val = ev(ast, {}, ctx)
+            ok = bool(val)
+            recs.append({'pred': pred, 'status': 'PASS' if ok else 'FAIL', 'reason': short(val)[:160]})
+        except ReaderMiss as e:
+            recs.append({'pred': pred, 'status': 'FAIL', 'reason': f'missing: {e}'})
+        except Unsupported as e:
+            recs.append({'pred': pred, 'status': 'UNSUPPORTED', 'reason': f'eval: {e}'})
+        except Exception as e:  # executor bug or unexpected file: never silently accept
+            recs.append({'pred': pred, 'status': 'ERROR', 'reason': f'{type(e).__name__}: {str(e)[:120]}'})
+    statuses = [r['status'] for r in recs]
+    if 'FAIL' in statuses: decision = 'REJECT'
+    elif any(s in ('UNSUPPORTED', 'ERROR') for s in statuses): decision = 'UNDECIDED'
+    else: decision = 'ACCEPT'
+    return {'decision': decision, 'predicates': recs}
