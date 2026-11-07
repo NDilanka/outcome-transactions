@@ -225,6 +225,10 @@ def m_936321ce(root, name):
         doc.tables[0].rows[1].cells[1].paragraphs[0].runs[0].text = 'Grap'
     elif name == 'table_removed':
         t = doc.tables[0]._tbl; t.getparent().remove(t)
+    elif name == 'table_moved':  # the new table ends up after the original tables instead of in place of the text
+        t = doc.tables[0]._tbl; body = t.getparent(); body.remove(t)
+        sect = body.find(W + 'sectPr')
+        (sect.addprevious(t) if sect is not None else body.append(t))
     elif name == 'comma_line_restored':
         anchor = doc.paragraphs[0]
         newp = etree.Element(W + 'p'); r = etree.SubElement(newp, W + 'r')
@@ -278,7 +282,7 @@ MUTANTS = {
     '21760ecb': (m_21760ecb, ['wrong_effect', 'wrong_slide']),
     'd53ff5ee': (m_d53ff5ee, ['first_letter_upper', 'table_upper', 'paragraph_deleted']),
     '88fe4b2d': (m_88fe4b2d, ['blank_lines_removed', 'word_changed', 'table_changed']),
-    '936321ce': (m_936321ce, ['table_cell_changed', 'table_removed', 'comma_line_restored']),
+    '936321ce': (m_936321ce, ['table_cell_changed', 'table_removed', 'comma_line_restored', 'table_moved']),
     'ecc2413d': (m_ecc2413d, ['one_break', 'three_breaks', 'text_changed']),
     '4d117223': (m_4d117223, ['one_file_755', 'one_file_600', 'extra_file']),
 }
