@@ -1,0 +1,153 @@
+== signature mode: sorted
+attempts with no content change: 0
+agreement groups (>=2 attempts, same signature): 15 in 14 of 18 requests
+agreement groups by GT of members: {'all C': 12, 'mixed': 1, 'all W': 2}
+POLICY A {"requests": 18, "correct_zero_click": 13, "wrong_commit": 3, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c", "ecc2413d:476b080a"]}
+POLICY B {"requests": 18, "correct_zero_click": 8, "wrong_commit": 1, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+POLICY C {"requests": 18, "correct_zero_click": 10, "wrong_commit": 2, "confirm": 6, "confirm_tags": {"GAP": 1, "AMBIGUOUS": 5}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:476b080a"]}
+POLICY D {"requests": 18, "correct_zero_click": 9, "wrong_commit": 1, "confirm": 8, "confirm_tags": {"GAP": 2, "AMBIGUOUS": 6}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+
+| task | signature groups (method: GT) | A | B | C | D | CONFIRM tag |
+|---|---|---|---|---|---|---|
+| 0326d92d | none | 1:C | 2:C | none | none | GAP |
+| 1273e544 | 1c8e14 {1:C, 2:C, 3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 21760ecb | 354b38 {1:C, 2:C, 4:C} | 2:C | 2:C | 2:C | 2:C |  |
+| 2cd43775 | none | 1:W | none | none | none | AMBIGUOUS |
+| 42e0a640 | 320b72 {1:C, 2:C}; eabaa1 {3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 51719eea | none | 3:C | none | none | none | AMBIGUOUS |
+| 550ce7e7 | fb78ac {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| 57667013 | 9c1336 {1:C, 2:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 6054afcb | 89e4ae {1:C, 2:C, 3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 66399b0d | e4222f {1:C, 2:C, 4:W} | 1:C | 1:C | 1:C | none | AMBIGUOUS |
+| 6a33f9b9 | db9a95 {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| 7ae48c60 | fb6e96 {2:C, 4:C} | none | none | none | none | AMBIGUOUS |
+| 88fe4b2d | 1cde4b {1:C, 2:C} | 1:C | none | 1:C | 1:C |  |
+| 936321ce | c7485e {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| a9f325aa | adf400 {1:C, 2:C, 3:C, 4:C} | none | none | none | none | AMBIGUOUS |
+| d53ff5ee | d7c15a {2:W, 4:W} | 2:W | 2:W | 2:W | 2:W |  |
+| ecc2413d | 0d7fbd {1:W, 4:W} | 1:W | 3:C | 1:W | none | GAP |
+| f23acfd2 | none | 3:C | none | none | none | AMBIGUOUS |
+
+pairwise Jaccard of changed-line sets (min, max) and changed lines per method, per request:
+  0326d92d: jaccard (0.55, 0.55); changed lines 1:17, 2:17, 3:17, 4:17
+  1273e544: jaccard (1.0, 1.0); changed lines 1:23, 2:23, 3:23, 4:23
+  21760ecb: jaccard (0.0, 1.0); changed lines 1:1, 2:1, 3:257, 4:1
+  2cd43775: jaccard (0.0, 0.14); changed lines 1:2, 2:6, 3:3, 4:1
+  42e0a640: jaccard (0.56, 1.0); changed lines 1:7, 2:7, 3:7, 4:7
+  51719eea: jaccard (0.02, 0.05); changed lines 1:75, 2:215, 3:80, 4:77
+  550ce7e7: jaccard (0.06, 1.0); changed lines 1:4, 2:4, 3:50, 4:4
+  57667013: jaccard (0.04, 1.0); changed lines 1:8, 2:8, 3:88, 4:8
+  6054afcb: jaccard (1.0, 1.0); changed lines 1:1, 2:1, 3:1, 4:1
+  66399b0d: jaccard (0.33, 1.0); changed lines 1:2, 2:2, 3:6, 4:2
+  6a33f9b9: jaccard (0.35, 1.0); changed lines 1:8, 2:8, 3:19, 4:8
+  7ae48c60: jaccard (0.03, 1.0); changed lines 1:18, 2:18, 3:272, 4:18
+  88fe4b2d: jaccard (0.33, 1.0); changed lines 1:9, 2:9, 3:27, 4:9
+  936321ce: jaccard (0.41, 1.0); changed lines 1:11, 2:11, 3:27, 4:11
+  a9f325aa: jaccard (1.0, 1.0); changed lines 1:28, 2:28, 3:28, 4:28
+  d53ff5ee: jaccard (0.2, 1.0); changed lines 1:4, 2:18, 3:6, 4:18
+  ecc2413d: jaccard (0.0, 1.0); changed lines 1:1, 2:2, 3:28, 4:1
+  f23acfd2: jaccard (0.0, 0.0); changed lines 1:1, 2:1, 3:4, 4:1
+
+== signature mode: anchored
+attempts with no content change: 0
+agreement groups (>=2 attempts, same signature): 15 in 14 of 18 requests
+agreement groups by GT of members: {'all C': 13, 'all W': 2}
+POLICY A {"requests": 18, "correct_zero_click": 13, "wrong_commit": 3, "confirm": 2, "confirm_tags": {"AMBIGUOUS": 2}, "wrong_commit_tasks": ["2cd43775:083c86e1", "d53ff5ee:de97694c", "ecc2413d:476b080a"]}
+POLICY B {"requests": 18, "correct_zero_click": 8, "wrong_commit": 1, "confirm": 9, "confirm_tags": {"AMBIGUOUS": 7, "GAP": 2}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+POLICY C {"requests": 18, "correct_zero_click": 10, "wrong_commit": 2, "confirm": 6, "confirm_tags": {"GAP": 1, "AMBIGUOUS": 5}, "wrong_commit_tasks": ["d53ff5ee:de97694c", "ecc2413d:476b080a"]}
+POLICY D {"requests": 18, "correct_zero_click": 9, "wrong_commit": 1, "confirm": 8, "confirm_tags": {"GAP": 2, "AMBIGUOUS": 6}, "wrong_commit_tasks": ["d53ff5ee:de97694c"]}
+
+| task | signature groups (method: GT) | A | B | C | D | CONFIRM tag |
+|---|---|---|---|---|---|---|
+| 0326d92d | none | 1:C | 2:C | none | none | GAP |
+| 1273e544 | c94f9d {1:C, 2:C, 3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 21760ecb | 560fca {1:C, 2:C, 4:C} | 2:C | 2:C | 2:C | 2:C |  |
+| 2cd43775 | none | 1:W | none | none | none | AMBIGUOUS |
+| 42e0a640 | 108e3f {1:C, 2:C}; 80ad4c {3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 51719eea | none | 3:C | none | none | none | AMBIGUOUS |
+| 550ce7e7 | d61724 {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| 57667013 | 327736 {1:C, 2:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 6054afcb | 848889 {1:C, 2:C, 3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 66399b0d | f54aee {1:C, 2:C} | 1:C | 1:C | 1:C | none | AMBIGUOUS |
+| 6a33f9b9 | a11ee8 {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| 7ae48c60 | dfa973 {2:C, 4:C} | none | none | none | none | AMBIGUOUS |
+| 88fe4b2d | 0b655a {1:C, 2:C} | 1:C | none | 1:C | 1:C |  |
+| 936321ce | c7c6b1 {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| a9f325aa | 51fadc {1:C, 2:C, 3:C, 4:C} | none | none | none | none | AMBIGUOUS |
+| d53ff5ee | 4e05f6 {2:W, 4:W} | 2:W | 2:W | 2:W | 2:W |  |
+| ecc2413d | eac8b6 {1:W, 4:W} | 1:W | 3:C | 1:W | none | GAP |
+| f23acfd2 | none | 3:C | none | none | none | AMBIGUOUS |
+
+pairwise Jaccard of changed-line sets (min, max) and changed lines per method, per request:
+  0326d92d: jaccard (0.6, 0.6); changed lines 1:20, 2:20, 3:20, 4:20
+  1273e544: jaccard (1.0, 1.0); changed lines 1:26, 2:26, 3:26, 4:26
+  21760ecb: jaccard (0.0, 1.0); changed lines 1:3, 2:3, 3:350, 4:3
+  2cd43775: jaccard (0.08, 0.33); changed lines 1:3, 2:8, 3:5, 4:3
+  42e0a640: jaccard (0.67, 1.0); changed lines 1:10, 2:10, 3:10, 4:10
+  51719eea: jaccard (0.09, 0.36); changed lines 1:150, 2:360, 3:154, 4:151
+  550ce7e7: jaccard (0.06, 1.0); changed lines 1:6, 2:6, 3:70, 4:6
+  57667013: jaccard (0.06, 1.0); changed lines 1:11, 2:11, 3:115, 4:11
+  6054afcb: jaccard (1.0, 1.0); changed lines 1:3, 2:3, 3:3, 4:3
+  66399b0d: jaccard (0.23, 1.0); changed lines 1:4, 2:4, 3:12, 4:4
+  6a33f9b9: jaccard (0.42, 1.0); changed lines 1:12, 2:12, 3:25, 4:12
+  7ae48c60: jaccard (0.04, 1.0); changed lines 1:24, 2:24, 3:302, 4:24
+  88fe4b2d: jaccard (0.34, 1.0); changed lines 1:10, 2:10, 3:29, 4:10
+  936321ce: jaccard (0.24, 1.0); changed lines 1:13, 2:13, 3:49, 4:13
+  a9f325aa: jaccard (1.0, 1.0); changed lines 1:57, 2:57, 3:57, 4:57
+  d53ff5ee: jaccard (0.2, 1.0); changed lines 1:7, 2:20, 3:10, 4:20
+  ecc2413d: jaccard (0.0, 1.0); changed lines 1:3, 2:4, 3:36, 4:3
+  f23acfd2: jaccard (0.11, 0.5); changed lines 1:3, 2:3, 3:7, 4:3
+
+######## signature mode: sorted
+== scenario: sensitivity: GT v4, auto-save family as adjudicated (all C)
+   wrong end states (all 84): 11; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 6
+   A   correct 14/18  wrong 2  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   C   correct 10/18  wrong 2  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
+== scenario: PRIMARY: GT v4, auto-save strict reading
+   wrong end states (all 84): 14; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 7
+   A   correct 13/18  wrong 3  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['2cd43775:083c86e1', 'd53ff5ee:de97694c', 'ecc2413d:476b080a']
+   B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   C   correct 10/18  wrong 2  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
+PER-REQUEST, PRIMARY SCENARIO (sorted signatures, strict auto-save):
+| task | signature groups (method: GT) | A | B | C | D | CONFIRM tag (D no-commit) |
+|---|---|---|---|---|---|---|
+| 0326d92d | none | 1:C | 2:C | none | none | GAP |
+| 1273e544 | 1c8e14 {1:C, 2:C, 3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 21760ecb | 354b38 {1:C, 2:C, 4:C} | 2:C | 2:C | 2:C | 2:C |  |
+| 2cd43775 | none | 1:W | none | none | none | AMBIGUOUS |
+| 42e0a640 | 320b72 {1:C, 2:C}; eabaa1 {3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 51719eea | none | 3:C | none | none | none | AMBIGUOUS |
+| 550ce7e7 | fb78ac {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| 57667013 | 9c1336 {1:C, 2:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 6054afcb | 89e4ae {1:C, 2:C, 3:C, 4:C} | 1:C | 1:C | 1:C | 1:C |  |
+| 66399b0d | e4222f {1:C, 2:C, 4:W} | 1:C | 1:C | 1:C | none | AMBIGUOUS |
+| 6a33f9b9 | db9a95 {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| 7ae48c60 | fb6e96 {2:C, 4:C} | none | none | none | none | AMBIGUOUS |
+| 88fe4b2d | 1cde4b {1:C, 2:C} | 1:C | none | 1:C | 1:C |  |
+| 936321ce | c7485e {1:C, 2:C, 4:C} | 1:C | none | 1:C | 1:C |  |
+| a9f325aa | adf400 {1:C, 2:C, 3:C, 4:C} | none | none | none | none | AMBIGUOUS |
+| d53ff5ee | d7c15a {2:W, 4:W} | 2:W | 2:W | 2:W | 2:W |  |
+| ecc2413d | 0d7fbd {1:W, 4:W} | 1:W | 3:C | 1:W | none | GAP |
+| f23acfd2 | none | 3:C | none | none | none | AMBIGUOUS |
+
+######## signature mode: anchored
+== scenario: sensitivity: GT v4, auto-save family as adjudicated (all C)
+   wrong end states (all 84): 11; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 6
+   A   correct 14/18  wrong 2  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   C   correct 10/18  wrong 2  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
+== scenario: PRIMARY: GT v4, auto-save strict reading
+   wrong end states (all 84): 14; two-key passes: 3; spec ACCEPT on wrong: 3; judge accept on wrong: 7
+   A   correct 13/18  wrong 3  CONFIRM  2 {'AMBIGUOUS': 2}  wrong tasks ['2cd43775:083c86e1', 'd53ff5ee:de97694c', 'ecc2413d:476b080a']
+   B   correct  8/18  wrong 1  CONFIRM  9 {'AMBIGUOUS': 7, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   Bs  correct  9/18  wrong 1  CONFIRM  8 {'AMBIGUOUS': 6, 'GAP': 2}  wrong tasks ['d53ff5ee:de97694c']
+   C   correct 10/18  wrong 2  CONFIRM  6 {'GAP': 1, 'AMBIGUOUS': 5}  wrong tasks ['d53ff5ee:de97694c', 'ecc2413d:476b080a']
+   D   correct  9/18  wrong 1  CONFIRM  8 {'GAP': 2, 'AMBIGUOUS': 6}  wrong tasks ['d53ff5ee:de97694c']
+

@@ -1,0 +1,7 @@
+{
+ "blind_id": "aa4000548752",
+ "request": "Please help me add folder \"/home/user/data1\" and folder \"/home/user/data2\" to the current workspace.",
+ "before_state": "\n## FILE /home/user/project.code-workspace (67 bytes)\n{\n\t\"folders\": [\n\t\t{\n\t\t\t\"path\": \"project\"\n\t\t}\n\t],\n\t\"settings\": {}\n}\n",
+ "after_state": "\n## FILE /home/user/project.code-workspace (123 bytes)\n{\n\t\"folders\": [\n\t\t{\n\t\t\t\"path\": \"project\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"data1\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"data3\"\n\t\t}\n\t],\n\t\"settings\": {}\n}\n",
+ "diff": "CHANGED /home/user/project.code-workspace (67 -> 123 bytes)\n--- before\n+++ after\n@@ -3,4 +3,10 @@\n \t\t{\n \t\t\t\"path\": \"project\"\n+\t\t},\n+\t\t{\n+\t\t\t\"path\": \"data1\"\n+\t\t},\n+\t\t{\n+\t\t\t\"path\": \"data3\"\n \t\t}\n \t],"
+}

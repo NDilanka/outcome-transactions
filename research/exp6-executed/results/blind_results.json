@@ -1,0 +1,1292 @@
+{
+ "n_states": 238,
+ "n_tasks": 34,
+ "raw_run_no_normalization": {
+  "states": 238,
+  "wrong": 170,
+  "correct": 68,
+  "wrong_exec": {
+   "UNDECIDED": 106,
+   "REJECT": 61,
+   "ACCEPT": 3
+  },
+  "correct_exec": {
+   "UNDECIDED": 46,
+   "ACCEPT": 12,
+   "REJECT": 10
+  },
+  "wrong_accept": 3,
+  "wrong_accept_pct": 1.76,
+  "wrong_accept_ub95_pct": 5.07,
+  "correct_accept_pct": 17.6,
+  "correct_reject_pct": 14.7,
+  "correct_undecided_pct": 67.6,
+  "correct_not_accepted_pct": 82.4,
+  "wrong_official": {
+   "FAIL": 78,
+   "NOT_RUNNABLE": 85,
+   "PASS": 6,
+   "ERROR": 1
+  },
+  "correct_official": {
+   "FAIL": 17,
+   "NOT_RUNNABLE": 34,
+   "PASS": 17
+  }
+ },
+ "as_labelled": {
+  "states": 238,
+  "wrong": 170,
+  "correct": 68,
+  "wrong_exec": {
+   "UNDECIDED": 107,
+   "REJECT": 60,
+   "ACCEPT": 3
+  },
+  "correct_exec": {
+   "UNDECIDED": 48,
+   "ACCEPT": 14,
+   "REJECT": 6
+  },
+  "wrong_accept": 3,
+  "wrong_accept_pct": 1.76,
+  "wrong_accept_ub95_pct": 5.07,
+  "correct_accept_pct": 20.6,
+  "correct_reject_pct": 8.8,
+  "correct_undecided_pct": 70.6,
+  "correct_not_accepted_pct": 79.4,
+  "wrong_official": {
+   "FAIL": 78,
+   "NOT_RUNNABLE": 85,
+   "PASS": 7
+  },
+  "correct_official": {
+   "FAIL": 15,
+   "NOT_RUNNABLE": 34,
+   "PASS": 19
+  }
+ },
+ "adjusted": {
+  "states": 238,
+  "wrong": 173,
+  "correct": 65,
+  "wrong_exec": {
+   "UNDECIDED": 111,
+   "REJECT": 60,
+   "ACCEPT": 2
+  },
+  "correct_exec": {
+   "UNDECIDED": 44,
+   "ACCEPT": 15,
+   "REJECT": 6
+  },
+  "wrong_accept": 2,
+  "wrong_accept_pct": 1.16,
+  "wrong_accept_ub95_pct": 4.11,
+  "correct_accept_pct": 23.1,
+  "correct_reject_pct": 9.2,
+  "correct_undecided_pct": 67.7,
+  "correct_not_accepted_pct": 76.9,
+  "wrong_official": {
+   "FAIL": 82,
+   "NOT_RUNNABLE": 85,
+   "PASS": 6
+  },
+  "correct_official": {
+   "FAIL": 11,
+   "NOT_RUNNABLE": 34,
+   "PASS": 20
+  }
+ },
+ "sensitivity": {
+  "states": 238,
+  "wrong": 174,
+  "correct": 64,
+  "wrong_exec": {
+   "UNDECIDED": 111,
+   "REJECT": 60,
+   "ACCEPT": 3
+  },
+  "correct_exec": {
+   "UNDECIDED": 44,
+   "ACCEPT": 14,
+   "REJECT": 6
+  },
+  "wrong_accept": 3,
+  "wrong_accept_pct": 1.72,
+  "wrong_accept_ub95_pct": 4.96,
+  "correct_accept_pct": 21.9,
+  "correct_reject_pct": 9.4,
+  "correct_undecided_pct": 68.8,
+  "correct_not_accepted_pct": 78.1,
+  "wrong_official": {
+   "FAIL": 83,
+   "NOT_RUNNABLE": 85,
+   "PASS": 6
+  },
+  "correct_official": {
+   "FAIL": 10,
+   "NOT_RUNNABLE": 34,
+   "PASS": 20
+  }
+ },
+ "groups": {
+  "a": {
+   "states": 119,
+   "wrong": 86,
+   "correct": 33,
+   "wrong_exec": {
+    "UNDECIDED": 24,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 12,
+    "ACCEPT": 15,
+    "REJECT": 6
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 2.33,
+   "wrong_accept_ub95_pct": 8.15,
+   "correct_accept_pct": 45.5,
+   "correct_reject_pct": 18.2,
+   "correct_undecided_pct": 36.4,
+   "correct_not_accepted_pct": 54.5,
+   "wrong_official": {
+    "FAIL": 75,
+    "PASS": 6,
+    "NOT_RUNNABLE": 5
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "PASS": 20,
+    "NOT_RUNNABLE": 2
+   }
+  },
+  "b": {
+   "states": 119,
+   "wrong": 87,
+   "correct": 32,
+   "wrong_exec": {
+    "UNDECIDED": 87
+   },
+   "correct_exec": {
+    "UNDECIDED": 32
+   },
+   "wrong_accept": 0,
+   "wrong_accept_pct": 0.0,
+   "wrong_accept_ub95_pct": 4.15,
+   "correct_accept_pct": 0.0,
+   "correct_reject_pct": 0.0,
+   "correct_undecided_pct": 100.0,
+   "correct_not_accepted_pct": 100.0,
+   "wrong_official": {
+    "NOT_RUNNABLE": 80,
+    "FAIL": 7
+   },
+   "correct_official": {
+    "NOT_RUNNABLE": 32
+   }
+  },
+  "all": {
+   "states": 238,
+   "wrong": 173,
+   "correct": 65,
+   "wrong_exec": {
+    "UNDECIDED": 111,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 44,
+    "ACCEPT": 15,
+    "REJECT": 6
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 1.16,
+   "wrong_accept_ub95_pct": 4.11,
+   "correct_accept_pct": 23.1,
+   "correct_reject_pct": 9.2,
+   "correct_undecided_pct": 67.7,
+   "correct_not_accepted_pct": 76.9,
+   "wrong_official": {
+    "FAIL": 82,
+    "NOT_RUNNABLE": 85,
+    "PASS": 6
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "NOT_RUNNABLE": 34,
+    "PASS": 20
+   }
+  }
+ },
+ "coverage_group_b": {
+  "correct_states": 32,
+  "correct_with_unsupported_or_error": 32,
+  "correct_with_unknown_app_root": 30,
+  "wrong_states": 87,
+  "wrong_with_unsupported_or_error": 87,
+  "wrong_with_unknown_app_root": 82
+ },
+ "rerun_groups": {
+  "a": {
+   "states": 119,
+   "wrong": 86,
+   "correct": 33,
+   "wrong_exec": {
+    "UNDECIDED": 24,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 14,
+    "ACCEPT": 15,
+    "REJECT": 4
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 2.33,
+   "wrong_accept_ub95_pct": 8.15,
+   "correct_accept_pct": 45.5,
+   "correct_reject_pct": 12.1,
+   "correct_undecided_pct": 42.4,
+   "correct_not_accepted_pct": 54.5,
+   "wrong_official": {
+    "FAIL": 75,
+    "PASS": 6,
+    "NOT_RUNNABLE": 5
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "PASS": 20,
+    "NOT_RUNNABLE": 2
+   }
+  },
+  "b": {
+   "states": 119,
+   "wrong": 87,
+   "correct": 32,
+   "wrong_exec": {
+    "UNDECIDED": 87
+   },
+   "correct_exec": {
+    "UNDECIDED": 32
+   },
+   "wrong_accept": 0,
+   "wrong_accept_pct": 0.0,
+   "wrong_accept_ub95_pct": 4.15,
+   "correct_accept_pct": 0.0,
+   "correct_reject_pct": 0.0,
+   "correct_undecided_pct": 100.0,
+   "correct_not_accepted_pct": 100.0,
+   "wrong_official": {
+    "NOT_RUNNABLE": 80,
+    "FAIL": 7
+   },
+   "correct_official": {
+    "NOT_RUNNABLE": 32
+   }
+  },
+  "all": {
+   "states": 238,
+   "wrong": 173,
+   "correct": 65,
+   "wrong_exec": {
+    "UNDECIDED": 111,
+    "REJECT": 60,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 46,
+    "ACCEPT": 15,
+    "REJECT": 4
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 1.16,
+   "wrong_accept_ub95_pct": 4.11,
+   "correct_accept_pct": 23.1,
+   "correct_reject_pct": 6.2,
+   "correct_undecided_pct": 70.8,
+   "correct_not_accepted_pct": 76.9,
+   "wrong_official": {
+    "FAIL": 82,
+    "NOT_RUNNABLE": 85,
+    "PASS": 6
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "NOT_RUNNABLE": 34,
+    "PASS": 20
+   }
+  }
+ },
+ "rerun_transitions": [
+  {
+   "group": "a",
+   "label": "correct",
+   "primary": "REJECT",
+   "rerun": "UNDECIDED",
+   "states": 2
+  }
+ ],
+ "rerun_checks": {
+  "decision_changed": 2,
+  "predicate_records_changed": 3,
+  "official_changed": 0,
+  "tasks_changed": [
+   "66399b0d"
+  ]
+ },
+ "categories": {
+  "AMBIGUOUS_LABEL": 8,
+  "OFFICIAL_FALSE_ACCEPT": 6,
+  "LABEL_ERROR": 5,
+  "SPEC_GAP": 2,
+  "EXECUTOR_DEFECT": 2,
+  "OFFICIAL_OVER_STRICT": 4,
+  "SPEC_ERROR": 1,
+  "RENDERER": 2
+ },
+ "label_changes": {
+  "wrong -> correct": 1,
+  "correct -> wrong": 4
+ },
+ "causes": {
+  "executor defect": {
+   "states": 8,
+   "reject": 2,
+   "undecided": 6,
+   "tasks": [
+    "0326d92d",
+    "66399b0d",
+    "6a33f9b9",
+    "7ae48c60"
+   ]
+  },
+  "prose/grammar": {
+   "states": 6,
+   "reject": 0,
+   "undecided": 6,
+   "tasks": [
+    "550ce7e7",
+    "88fe4b2d",
+    "936321ce"
+   ]
+  },
+  "contradiction": {
+   "states": 1,
+   "reject": 1,
+   "undecided": 0,
+   "tasks": [
+    "a9f325aa"
+   ]
+  },
+  "spec over-pin": {
+   "states": 1,
+   "reject": 1,
+   "undecided": 0,
+   "tasks": [
+    "d53ff5ee"
+   ]
+  },
+  "renderer": {
+   "states": 2,
+   "reject": 2,
+   "undecided": 0,
+   "tasks": [
+    "ecc2413d"
+   ]
+  }
+ },
+ "ablation": {
+  "gate_pass": {
+   "states": 28,
+   "wrong": 19,
+   "correct": 9,
+   "wrong_exec": {
+    "REJECT": 19
+   },
+   "correct_exec": {
+    "ACCEPT": 6,
+    "REJECT": 3
+   },
+   "wrong_accept": 0,
+   "wrong_accept_pct": 0.0,
+   "wrong_accept_ub95_pct": 17.65,
+   "correct_accept_pct": 66.7,
+   "correct_reject_pct": 33.3,
+   "correct_undecided_pct": 0.0,
+   "correct_not_accepted_pct": 33.3,
+   "wrong_official": {
+    "FAIL": 14,
+    "PASS": 5
+   },
+   "correct_official": {
+    "PASS": 9
+   }
+  },
+  "gate_fail": {
+   "states": 210,
+   "wrong": 154,
+   "correct": 56,
+   "wrong_exec": {
+    "UNDECIDED": 111,
+    "REJECT": 41,
+    "ACCEPT": 2
+   },
+   "correct_exec": {
+    "UNDECIDED": 44,
+    "ACCEPT": 9,
+    "REJECT": 3
+   },
+   "wrong_accept": 2,
+   "wrong_accept_pct": 1.3,
+   "wrong_accept_ub95_pct": 4.61,
+   "correct_accept_pct": 16.1,
+   "correct_reject_pct": 5.4,
+   "correct_undecided_pct": 78.6,
+   "correct_not_accepted_pct": 83.9,
+   "wrong_official": {
+    "FAIL": 68,
+    "NOT_RUNNABLE": 85,
+    "PASS": 1
+   },
+   "correct_official": {
+    "FAIL": 11,
+    "NOT_RUNNABLE": 34,
+    "PASS": 11
+   }
+  },
+  "gate_pass_tasks_in_blind_set": [
+   "21760ecb",
+   "6054afcb",
+   "d53ff5ee",
+   "ecc2413d"
+  ]
+ },
+ "families": [
+  [
+   "gimp",
+   4,
+   28,
+   20,
+   8,
+   0,
+   0,
+   8,
+   0,
+   28
+  ],
+  [
+   "libreoffice_calc",
+   6,
+   42,
+   32,
+   10,
+   0,
+   1,
+   2,
+   7,
+   0
+  ],
+  [
+   "libreoffice_impress",
+   5,
+   35,
+   24,
+   11,
+   2,
+   0,
+   4,
+   7,
+   0
+  ],
+  [
+   "libreoffice_writer",
+   6,
+   42,
+   30,
+   12,
+   0,
+   5,
+   6,
+   1,
+   7
+  ],
+  [
+   "multi_apps",
+   5,
+   35,
+   27,
+   8,
+   0,
+   0,
+   8,
+   0,
+   28
+  ],
+  [
+   "os",
+   1,
+   7,
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "thunderbird",
+   4,
+   28,
+   20,
+   8,
+   0,
+   0,
+   8,
+   0,
+   28
+  ],
+  [
+   "vlc",
+   2,
+   14,
+   10,
+   4,
+   0,
+   0,
+   4,
+   0,
+   14
+  ],
+  [
+   "vs_code",
+   1,
+   7,
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ]
+ ],
+ "tasks": [
+  [
+   "0326d92d",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "06ca5602",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "08c73485",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "1273e544",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "21760ecb",
+   "libreoffice_impress",
+   4,
+   3,
+   0,
+   0,
+   0,
+   3,
+   0
+  ],
+  [
+   "23393935",
+   "os",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "26150609",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "386dbd0e",
+   "vlc",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "42e0a640",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "51719eea",
+   "libreoffice_calc",
+   7,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   "550ce7e7",
+   "libreoffice_impress",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "554785e9",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "57667013",
+   "libreoffice_impress",
+   5,
+   2,
+   1,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "5bc63fb9",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "6054afcb",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "66399b0d",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   2,
+   0,
+   0,
+   0
+  ],
+  [
+   "6a33f9b9",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "6ed0a554",
+   "vs_code",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "7ae48c60",
+   "libreoffice_impress",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "88fe4b2d",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "8e116af7",
+   "multi_apps",
+   7,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   "936321ce",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   0
+  ],
+  [
+   "9b7bc335",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "a9f325aa",
+   "libreoffice_calc",
+   5,
+   2,
+   0,
+   1,
+   0,
+   1,
+   0
+  ],
+  [
+   "d53ff5ee",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   1,
+   0,
+   1,
+   0
+  ],
+  [
+   "d68204bf",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "dd84e895",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "e2dd0213",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "ecc2413d",
+   "libreoffice_writer",
+   5,
+   2,
+   0,
+   2,
+   0,
+   0,
+   0
+  ],
+  [
+   "f201fbc3",
+   "thunderbird",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "f23acfd2",
+   "libreoffice_impress",
+   5,
+   2,
+   1,
+   0,
+   0,
+   2,
+   0
+  ],
+  [
+   "f4aec372",
+   "gimp",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "f918266a",
+   "multi_apps",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ],
+  [
+   "fba2c100",
+   "vlc",
+   5,
+   2,
+   0,
+   0,
+   2,
+   0,
+   7
+  ]
+ ],
+ "judge": {
+  "verdict_files": 16,
+  "verdict_counts": {
+   "reject|high": 139,
+   "accept|low": 42,
+   "accept|medium": 4,
+   "accept|high": 31,
+   "reject|medium": 10,
+   "reject|low": 12
+  },
+  "verdict_total": 238,
+  "views": {
+   "adj": {
+    "all": {
+     "wrong": 173,
+     "correct": 65,
+     "spec_wrong_accept": 2,
+     "judge_wrong_accept": 24,
+     "judge_wrong_accept_ub": 19.94,
+     "judge_wrong_accept_high": 0,
+     "judge_wrong_states_high": 132,
+     "judge_wrong_accept_medium_or_low": 24,
+     "spec_accept_on_correct": 15,
+     "spec_reject_on_correct": 6,
+     "judge_accept_on_correct": 53,
+     "judge_wrong_reject": 12,
+     "judge_wrong_reject_high": 7,
+     "judge_states_high": 170,
+     "judge_correct_states_high": 38,
+     "combined_wrong_accept": 0,
+     "combined_wrong_accept_ub": 2.11,
+     "combined_correct_commit": 13,
+     "combined_wrong_accept_high": 0,
+     "combined_wrong_accept_high_ub": 2.11,
+     "combined_correct_commit_high": 12,
+     "gate_3x_pass": true
+    },
+    "a": {
+     "wrong": 86,
+     "correct": 33,
+     "spec_wrong_accept": 2,
+     "judge_wrong_accept": 5,
+     "judge_wrong_accept_ub": 13.05,
+     "judge_wrong_accept_high": 0,
+     "judge_wrong_states_high": 73,
+     "judge_wrong_accept_medium_or_low": 5,
+     "spec_accept_on_correct": 15,
+     "spec_reject_on_correct": 6,
+     "judge_accept_on_correct": 26,
+     "judge_wrong_reject": 7,
+     "judge_wrong_reject_high": 3,
+     "judge_states_high": 94,
+     "judge_correct_states_high": 21,
+     "combined_wrong_accept": 0,
+     "combined_wrong_accept_ub": 4.2,
+     "combined_correct_commit": 13,
+     "combined_wrong_accept_high": 0,
+     "combined_wrong_accept_high_ub": 4.2,
+     "combined_correct_commit_high": 12,
+     "gate_3x_pass": false
+    },
+    "b": {
+     "wrong": 87,
+     "correct": 32,
+     "spec_wrong_accept": 0,
+     "judge_wrong_accept": 19,
+     "judge_wrong_accept_ub": 31.98,
+     "judge_wrong_accept_high": 0,
+     "judge_wrong_states_high": 59,
+     "judge_wrong_accept_medium_or_low": 19,
+     "spec_accept_on_correct": 0,
+     "spec_reject_on_correct": 0,
+     "judge_accept_on_correct": 27,
+     "judge_wrong_reject": 5,
+     "judge_wrong_reject_high": 4,
+     "judge_states_high": 76,
+     "judge_correct_states_high": 17,
+     "combined_wrong_accept": 0,
+     "combined_wrong_accept_ub": 4.15,
+     "combined_correct_commit": 0,
+     "combined_wrong_accept_high": 0,
+     "combined_wrong_accept_high_ub": 4.15,
+     "combined_correct_commit_high": 0,
+     "gate_3x_pass": true
+    }
+   },
+   "raw": {
+    "all": {
+     "wrong": 170,
+     "correct": 68,
+     "spec_wrong_accept": 3,
+     "judge_wrong_accept": 24,
+     "judge_wrong_accept_ub": 20.27,
+     "judge_wrong_accept_high": 1,
+     "judge_wrong_states_high": 131,
+     "judge_wrong_accept_medium_or_low": 23,
+     "spec_accept_on_correct": 14,
+     "spec_reject_on_correct": 6,
+     "judge_accept_on_correct": 53,
+     "judge_wrong_reject": 15,
+     "judge_wrong_reject_high": 9,
+     "judge_states_high": 170,
+     "judge_correct_states_high": 39,
+     "combined_wrong_accept": 1,
+     "combined_wrong_accept_ub": 3.23,
+     "combined_correct_commit": 12,
+     "combined_wrong_accept_high": 1,
+     "combined_wrong_accept_high_ub": 3.23,
+     "combined_correct_commit_high": 11,
+     "gate_3x_pass": true
+    },
+    "a": {
+     "wrong": 85,
+     "correct": 34,
+     "spec_wrong_accept": 3,
+     "judge_wrong_accept": 5,
+     "judge_wrong_accept_ub": 13.2,
+     "judge_wrong_accept_high": 1,
+     "judge_wrong_states_high": 74,
+     "judge_wrong_accept_medium_or_low": 4,
+     "spec_accept_on_correct": 14,
+     "spec_reject_on_correct": 6,
+     "judge_accept_on_correct": 26,
+     "judge_wrong_reject": 8,
+     "judge_wrong_reject_high": 3,
+     "judge_states_high": 94,
+     "judge_correct_states_high": 20,
+     "combined_wrong_accept": 1,
+     "combined_wrong_accept_ub": 6.38,
+     "combined_correct_commit": 12,
+     "combined_wrong_accept_high": 1,
+     "combined_wrong_accept_high_ub": 6.38,
+     "combined_correct_commit_high": 11,
+     "gate_3x_pass": false
+    },
+    "b": {
+     "wrong": 85,
+     "correct": 34,
+     "spec_wrong_accept": 0,
+     "judge_wrong_accept": 19,
+     "judge_wrong_accept_ub": 32.69,
+     "judge_wrong_accept_high": 0,
+     "judge_wrong_states_high": 57,
+     "judge_wrong_accept_medium_or_low": 19,
+     "spec_accept_on_correct": 0,
+     "spec_reject_on_correct": 0,
+     "judge_accept_on_correct": 27,
+     "judge_wrong_reject": 7,
+     "judge_wrong_reject_high": 6,
+     "judge_states_high": 76,
+     "judge_correct_states_high": 19,
+     "combined_wrong_accept": 0,
+     "combined_wrong_accept_ub": 4.25,
+     "combined_correct_commit": 0,
+     "combined_wrong_accept_high": 0,
+     "combined_wrong_accept_high_ub": 4.25,
+     "combined_correct_commit_high": 0,
+     "gate_3x_pass": true
+    }
+   },
+   "sens": {
+    "all": {
+     "wrong": 174,
+     "correct": 64,
+     "spec_wrong_accept": 3,
+     "judge_wrong_accept": 25,
+     "judge_wrong_accept_ub": 20.48,
+     "judge_wrong_accept_high": 0,
+     "judge_wrong_states_high": 132,
+     "judge_wrong_accept_medium_or_low": 25,
+     "spec_accept_on_correct": 14,
+     "spec_reject_on_correct": 6,
+     "judge_accept_on_correct": 52,
+     "judge_wrong_reject": 12,
+     "judge_wrong_reject_high": 7,
+     "judge_states_high": 170,
+     "judge_correct_states_high": 38,
+     "combined_wrong_accept": 1,
+     "combined_wrong_accept_ub": 3.16,
+     "combined_correct_commit": 12,
+     "combined_wrong_accept_high": 0,
+     "combined_wrong_accept_high_ub": 2.1,
+     "combined_correct_commit_high": 12,
+     "gate_3x_pass": true
+    },
+    "a": {
+     "wrong": 87,
+     "correct": 32,
+     "spec_wrong_accept": 3,
+     "judge_wrong_accept": 6,
+     "judge_wrong_accept_ub": 14.41,
+     "judge_wrong_accept_high": 0,
+     "judge_wrong_states_high": 73,
+     "judge_wrong_accept_medium_or_low": 6,
+     "spec_accept_on_correct": 14,
+     "spec_reject_on_correct": 6,
+     "judge_accept_on_correct": 25,
+     "judge_wrong_reject": 7,
+     "judge_wrong_reject_high": 3,
+     "judge_states_high": 94,
+     "judge_correct_states_high": 21,
+     "combined_wrong_accept": 1,
+     "combined_wrong_accept_ub": 6.24,
+     "combined_correct_commit": 12,
+     "combined_wrong_accept_high": 0,
+     "combined_wrong_accept_high_ub": 4.15,
+     "combined_correct_commit_high": 12,
+     "gate_3x_pass": false
+    },
+    "b": {
+     "wrong": 87,
+     "correct": 32,
+     "spec_wrong_accept": 0,
+     "judge_wrong_accept": 19,
+     "judge_wrong_accept_ub": 31.98,
+     "judge_wrong_accept_high": 0,
+     "judge_wrong_states_high": 59,
+     "judge_wrong_accept_medium_or_low": 19,
+     "spec_accept_on_correct": 0,
+     "spec_reject_on_correct": 0,
+     "judge_accept_on_correct": 27,
+     "judge_wrong_reject": 5,
+     "judge_wrong_reject_high": 4,
+     "judge_states_high": 76,
+     "judge_correct_states_high": 17,
+     "combined_wrong_accept": 0,
+     "combined_wrong_accept_ub": 4.15,
+     "combined_correct_commit": 0,
+     "combined_wrong_accept_high": 0,
+     "combined_wrong_accept_high_ub": 4.15,
+     "combined_correct_commit_high": 0,
+     "gate_3x_pass": true
+    }
+   }
+  },
+  "spec_gap_verdicts": [
+   {
+    "judge": "reject",
+    "confidence": "high"
+   },
+   {
+    "judge": "reject",
+    "confidence": "high"
+   }
+  ],
+  "family_adj": [
+   [
+    "gimp",
+    28,
+    20,
+    6,
+    8,
+    8,
+    0,
+    0
+   ],
+   [
+    "libreoffice_calc",
+    42,
+    32,
+    2,
+    10,
+    8,
+    2,
+    0
+   ],
+   [
+    "libreoffice_impress",
+    35,
+    24,
+    0,
+    11,
+    9,
+    2,
+    0
+   ],
+   [
+    "libreoffice_writer",
+    42,
+    30,
+    3,
+    12,
+    9,
+    3,
+    0
+   ],
+   [
+    "multi_apps",
+    35,
+    27,
+    3,
+    8,
+    5,
+    3,
+    0
+   ],
+   [
+    "os",
+    7,
+    5,
+    0,
+    2,
+    2,
+    0,
+    0
+   ],
+   [
+    "thunderbird",
+    28,
+    20,
+    8,
+    8,
+    6,
+    2,
+    0
+   ],
+   [
+    "vlc",
+    14,
+    10,
+    2,
+    4,
+    4,
+    0,
+    0
+   ],
+   [
+    "vs_code",
+    7,
+    5,
+    0,
+    2,
+    2,
+    0,
+    0
+   ]
+  ],
+  "sum_judge_accept_all": 77
+ }
+}

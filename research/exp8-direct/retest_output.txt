@@ -1,0 +1,68 @@
+== verification (branch files at origin/exp8-judge-verdicts)
+first-pass TSV (metrics.py input) vs first-pass files: 84 of 84 match
+
+packets: first 84, second 84, blind map 84
+flips: 4 (accept->reject)
+  083c86e1 first accept high, second reject medium
+  d8fa1b66 first accept medium, second reject medium
+  4e3dd7f6 first accept medium, second reject medium
+  699226e8 first accept medium, second reject medium
+flip list matches report: True
+second pass alone: accept 60, reject 24
+confidence labels matched: 77 of 84
+first-pass confidence of flipped packets: {'high': 1, 'medium': 3, 'low': 0}
+first-pass confidence of all packets: {'high': 47, 'medium': 12, 'low': 25}
+rated high in both passes: 43, of which flipped: 0
+
+== the flipped packets (first-pass GT, strict reading)
+| code | task | method | condition | GT | ambiguous | spec | first judge | second judge |
+|---|---|---|---|---|---|---|---|---|
+| 083c86e1 | 2cd43775 | 1 | none | W | Y | UNDECIDED | accept high | reject medium |
+| 4e3dd7f6 | 6054afcb | 3 | none | C | N | ACCEPT | accept medium | reject medium |
+| 699226e8 | d53ff5ee | 1 | none | C | N | REJECT | accept medium | reject medium |
+| d8fa1b66 | 6054afcb | 2 | none | C | N | ACCEPT | accept medium | reject medium |
+GT of flipped: C 3, W 1
+
+judge accepts, first: 64 (C 57, W 7); precision 0.891
+judge accepts, key (first conf): 60 (C 54, W 6); precision 0.900
+judge accepts, key (min conf): 60 (C 54, W 6); precision 0.900
+wrong accepts after key (first conf): e6b4b156 (66399b0d m4, low), de97694c (d53ff5ee m2, high), b9d8b59c (d53ff5ee m4, high), 476b080a (ecc2413d m1, low), eeb4b683 (ecc2413d m2, low), 7b72ebd1 (ecc2413d m4, low)
+recall on correct end states, first: 57 of 70
+recall on correct end states, key: 54 of 70
+
+== arms, primary 72 attempts, strict GT
+| arm | first: correct / wrong / CONFIRM | key (first conf): correct / wrong / CONFIRM | key (min conf): correct / wrong / CONFIRM | key wrong commits (first conf) |
+|---|---|---|---|---|
+| A | 13 / 3 / 2 | 14 / 2 / 2 | 14 / 2 / 2 | d53ff5ee:de97694c, ecc2413d:476b080a |
+| B | 8 / 1 / 9 | 8 / 1 / 9 | 8 / 1 / 9 | d53ff5ee:de97694c |
+| Bs | 9 / 1 / 8 | 9 / 1 / 8 | 9 / 1 / 8 | d53ff5ee:de97694c |
+| C | 10 / 2 / 6 | 10 / 2 / 6 | 10 / 2 / 6 | d53ff5ee:de97694c, ecc2413d:476b080a |
+| D | 9 / 1 / 8 | 9 / 1 / 8 | 9 / 1 / 8 | d53ff5ee:de97694c |
+
+== per request: commits that change under the key (first confidence rule)
+  2cd43775: A: 1:W(083c86e1) -> 3:C(76604199)
+  requests with any commit change: 1
+
+== per request: commits that change under the key (min confidence rule)
+  2cd43775: A: 1:W(083c86e1) -> 3:C(76604199)
+  requests with any commit change: 1
+
+== confidence rule check: requests whose pick differs between the first and min rules
+  A: 0 []
+  B: 0 []
+  Bs: 0 []
+  C: 0 []
+  D: 0 []
+
+== CONFIRM tags, key (first conf): tag counts per arm
+  A: {'AMBIGUOUS': 2}
+  B: {'AMBIGUOUS': 7, 'GAP': 2}
+  Bs: {'AMBIGUOUS': 6, 'GAP': 2}
+  C: {'GAP': 1, 'AMBIGUOUS': 5}
+  D: {'GAP': 2, 'AMBIGUOUS': 6}
+
+== commits decided by method-order tie-break (same top confidence as another eligible candidate)
+  A: 13 committed requests tie on confidence
+  B: 8 committed requests tie on confidence
+  C: 11 committed requests tie on confidence
+  D: 9 committed requests tie on confidence

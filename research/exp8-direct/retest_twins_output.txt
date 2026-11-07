@@ -1,0 +1,24 @@
+== flipped 083c86e1 (task 2cd43775, GT v4 strict label: W)
+  identical end states in this task: none
+  files differing from a9e34228 (m2): registrymodifications.xcu
+  files differing from 76604199 (m3): registrymodifications.xcu
+  files differing from 81a65c80 (m4): registrymodifications.xcu
+== flipped d8fa1b66 (task 6054afcb, GT v4 strict label: C)
+  identical end states in this task: 5a2c5250 (m1, first accept high, second accept high), 4e3dd7f6 (m3, first accept medium, second reject medium), fbd38e91 (m4, first accept high, second accept high)
+== flipped 4e3dd7f6 (task 6054afcb, GT v4 strict label: C)
+  identical end states in this task: 5a2c5250 (m1, first accept high, second accept high), d8fa1b66 (m2, first accept medium, second reject medium), fbd38e91 (m4, first accept high, second accept high)
+== flipped 699226e8 (task d53ff5ee, GT v4 strict label: C)
+  identical end states in this task: a6cac88c (m3, first reject medium, second reject medium)
+
+6054afcb m1 (5a2c5250): rows with =NA(): [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows: [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows are exactly the =NA() rows: True
+6054afcb m2 (d8fa1b66): rows with =NA(): [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows: [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows are exactly the =NA() rows: True
+6054afcb m3 (4e3dd7f6): rows with =NA(): [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows: [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows are exactly the =NA() rows: True
+6054afcb m4 (fbd38e91): rows with =NA(): [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows: [3, 6, 8, 9, 12, 14, 18, 19, 20, 24, 27, 32, 33]
+  hidden rows are exactly the =NA() rows: True

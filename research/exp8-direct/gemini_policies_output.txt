@@ -1,0 +1,85 @@
+== verification (Gemini at origin/exp8-judge-verdicts)
+Gemini verdicts: 84 packets; accept 73, reject 11
+Gemini confidence: {'high': 75, 'medium': 3, 'low': 6}
+Sol first pass x Gemini (count): {'accept/accept': 61, 'accept/reject': 3, 'reject/accept': 12, 'reject/reject': 8}
+disagreements: 15 (Sol reject, Gemini accept: 12; Sol accept, Gemini reject: 3)
+  Sol reject, Gemini accept: GT C 8, GT W 4; wrong: ['2cd48d90', '81a65c80', 'a9e34228', 'f624e5ec']
+  Sol accept, Gemini reject: GT C 2, GT W 1; wrong: ['eeb4b683']
+Gemini on all 84, strict GT v4: accept C 63 accept W 10 | reject C 7 | reject W 4
+
+== primary: 72 attempts, 18 requests; GT C 59, W 13
+
+== pool level (all 72 primary candidates; accepted by the policy before the pick)
+| policy | accepted | correct | wrong | wrong states accepted |
+|---|---|---|---|---|
+| A | 53 | 46 | 7 | 083c86e1, e6b4b156, de97694c, b9d8b59c, 476b080a, eeb4b683, 7b72ebd1 |
+| B | 29 | 26 | 3 | e6b4b156, de97694c, b9d8b59c |
+| G | 63 | 54 | 9 | f624e5ec, 083c86e1, a9e34228, 81a65c80, e6b4b156, de97694c, b9d8b59c, 476b080a, 7b72ebd1 |
+| E | 52 | 46 | 6 | 083c86e1, e6b4b156, de97694c, b9d8b59c, 476b080a, 7b72ebd1 |
+| E2 | 48 | 43 | 5 | e6b4b156, de97694c, b9d8b59c, 476b080a, 7b72ebd1 |
+| E3 | 29 | 26 | 3 | e6b4b156, de97694c, b9d8b59c |
+recall on correct states: A 46 of 59, B 26 of 59, G 54 of 59, E 46 of 59, E2 43 of 59, E3 26 of 59
+
+== arms (primary 72, 18 requests): first pass pick, and sensitivity (lowest label over the used verdicts)
+| policy | correct zero-click | wrong commits | CONFIRM | tags (AMBIGUOUS / GAP / PLAIN) | CONFIRM with a Sol/Gemini split | wrong commit tasks | sensitivity: correct / wrong |
+|---|---|---|---|---|---|---|---|
+| A | 13 of 18 | 3 | 2 | 2 / 0 / 0 | 2 | 2cd43775:083c86e1, d53ff5ee:de97694c, ecc2413d:476b080a | 13 / 3 |
+| B | 8 of 18 | 1 | 9 | 7 / 2 / 0 | 5 | d53ff5ee:de97694c | 8 / 1 |
+| G | 15 of 18 | 3 | 0 | 0 / 0 / 0 | 0 | 2cd43775:083c86e1, d53ff5ee:de97694c, ecc2413d:476b080a | 15 / 3 |
+| E | 13 of 18 | 3 | 2 | 2 / 0 / 0 | 2 | 2cd43775:083c86e1, d53ff5ee:de97694c, ecc2413d:476b080a | 13 / 3 |
+| E2 | 14 of 18 | 2 | 2 | 2 / 0 / 0 | 2 | d53ff5ee:de97694c, ecc2413d:476b080a | 14 / 2 |
+| E3 | 8 of 18 | 1 | 9 | 7 / 2 / 0 | 5 | d53ff5ee:de97694c | 8 / 1 |
+
+G0 share (correct zero-click over 18): A 72.2%, B 44.4%, G 83.3%, E 72.2%, E2 77.8%, E3 44.4%
+CONFIRM share over 18: A 11.1%, B 50.0%, G 0.0%, E 11.1%, E2 11.1%, E3 50.0%
+
+== per request commits (code, GT)
+| task | A | B | G | E | E2 | E3 | GT by method (A-D) |
+|---|---|---|---|---|---|---|---|
+| 0326d92d | 1:C(ff0d05a9) | 2:C(f18f5859) | 1:C(ff0d05a9) | 1:C(ff0d05a9) | 1:C(ff0d05a9) | 2:C(f18f5859) | CCCC |
+| 1273e544 | 1:C(fd317894) | 1:C(fd317894) | 1:C(fd317894) | 1:C(fd317894) | 1:C(fd317894) | 1:C(fd317894) | CCCC |
+| 21760ecb | 2:C(4bbc8949) | 2:C(4bbc8949) | 1:C(27a4b457) | 2:C(4bbc8949) | 2:C(4bbc8949) | 2:C(4bbc8949) | CCWC |
+| 2cd43775 | 1:W(083c86e1) | none | 1:W(083c86e1) | 1:W(083c86e1) | 3:C(76604199) | none | WWCW |
+| 42e0a640 | 1:C(73fca539) | 1:C(73fca539) | 1:C(73fca539) | 1:C(73fca539) | 1:C(73fca539) | 1:C(73fca539) | CCCC |
+| 51719eea | 3:C(74e4e825) | none | 3:C(74e4e825) | 3:C(74e4e825) | 3:C(74e4e825) | none | WWCC |
+| 550ce7e7 | 1:C(75dfcc33) | none | 1:C(75dfcc33) | 1:C(75dfcc33) | 1:C(75dfcc33) | none | CCCC |
+| 57667013 | 1:C(9e648579) | 1:C(9e648579) | 1:C(9e648579) | 1:C(9e648579) | 1:C(9e648579) | 1:C(9e648579) | CCCC |
+| 6054afcb | 1:C(5a2c5250) | 1:C(5a2c5250) | 1:C(5a2c5250) | 1:C(5a2c5250) | 1:C(5a2c5250) | 1:C(5a2c5250) | CCCC |
+| 66399b0d | 1:C(799cff5f) | 1:C(799cff5f) | 1:C(799cff5f) | 1:C(799cff5f) | 1:C(799cff5f) | 1:C(799cff5f) | CCCW |
+| 6a33f9b9 | 1:C(67e71203) | none | 1:C(67e71203) | 1:C(67e71203) | 1:C(67e71203) | none | CCCC |
+| 7ae48c60 | none | none | 2:C(67903403) | none | none | none | CCWC |
+| 88fe4b2d | 1:C(d759d99e) | none | 1:C(d759d99e) | 1:C(d759d99e) | 1:C(d759d99e) | none | CCCC |
+| 936321ce | 1:C(46b17a55) | none | 1:C(46b17a55) | 1:C(46b17a55) | 1:C(46b17a55) | none | CCCC |
+| a9f325aa | none | none | 1:C(0184bad5) | none | none | none | CCCC |
+| d53ff5ee | 2:W(de97694c) | 2:W(de97694c) | 2:W(de97694c) | 2:W(de97694c) | 2:W(de97694c) | 2:W(de97694c) | CWCW |
+| ecc2413d | 1:W(476b080a) | 3:C(02d030c7) | 1:W(476b080a) | 1:W(476b080a) | 1:W(476b080a) | 3:C(02d030c7) | WWCW |
+| f23acfd2 | 3:C(8252b764) | none | 3:C(8252b764) | 3:C(8252b764) | 3:C(8252b764) | none | CCCC |
+
+== wrong states (all 14 strict W, incl. ablation): Sol first, Sol second, Gemini
+| code | task | method | condition | Sol first | Sol second | Gemini (conf) | spec | in primary |
+|---|---|---|---|---|---|---|---|---|
+| 083c86e1 | 2cd43775 | 1 | none | accept (high) | reject (medium) | accept (high) | UNDECIDED | yes |
+| 2cd48d90 | 21760ecb | 3 | noui | reject (high) | reject (high) | accept (high) | REJECT | no (ablation) |
+| 3ab6ba1b | 51719eea | 1 | none | reject (high) | reject (high) | reject (high) | REJECT | yes |
+| 3f9e3de2 | 51719eea | 2 | none | reject (high) | reject (high) | reject (high) | UNDECIDED | yes |
+| 476b080a | ecc2413d | 1 | ui | accept (low) | accept (low) | accept (high) | REJECT | yes |
+| 7b72ebd1 | ecc2413d | 4 | ui | accept (low) | accept (low) | accept (high) | REJECT | yes |
+| 81a65c80 | 2cd43775 | 4 | none | reject (high) | reject (high) | accept (high) | UNDECIDED | yes |
+| a9e34228 | 2cd43775 | 2 | none | reject (high) | reject (high) | accept (high) | UNDECIDED | yes |
+| b9d8b59c | d53ff5ee | 4 | none | accept (high) | accept (high) | accept (high) | ACCEPT | yes |
+| de97694c | d53ff5ee | 2 | none | accept (high) | accept (high) | accept (high) | ACCEPT | yes |
+| e6b4b156 | 66399b0d | 4 | ui | accept (low) | accept (low) | accept (high) | ACCEPT | yes |
+| eeb4b683 | ecc2413d | 2 | ui | accept (low) | accept (low) | reject (low) | REJECT | yes |
+| f06f57bc | 7ae48c60 | 3 | none | reject (high) | reject (high) | reject (high) | UNDECIDED | yes |
+| f624e5ec | 21760ecb | 3 | ui | reject (high) | reject (high) | accept (high) | REJECT | yes |
+
+== Sol key survivors (judge accept in both Sol passes, GT W): Gemini verdict and reason
+- 476b080a (ecc2413d m1, ui): Sol first low, Sol second low; Gemini accept (high). Gemini reason: A blank page was inserted right after the first page via an empty paragraph and page break without altering any other document content.
+- 7b72ebd1 (ecc2413d m4, ui): Sol first low, Sol second low; Gemini accept (high). Gemini reason: A blank page (an empty paragraph and page break) was inserted immediately after page 1 with no unrequested changes.
+- b9d8b59c (d53ff5ee m4, none): Sol first high, Sol second high; Gemini accept (high). Gemini reason: All uppercase characters across the document paragraphs and table cells were converted to lowercase while preserving formatting.
+- de97694c (d53ff5ee m2, none): Sol first high, Sol second high; Gemini accept (high). Gemini reason: All uppercase characters across the document paragraphs and table cells were converted to lowercase while preserving formatting.
+- e6b4b156 (66399b0d m4, ui): Sol first low, Sol second low; Gemini accept (high). Gemini reason: An empty 5-row by 7-column table was inserted at the end of the document where the cursor was located without modifying existing content.
+- eeb4b683 (ecc2413d m2, ui): Sol first low, Sol second low; Gemini reject (low). Gemini reason: Only a single page break was added without a new paragraph while the cursor was at the start of page 1, which either inserts a break before page 1 or fails to create a blank page after page 1.
+
+== the same for the v3 label of 02d030c7 (W in v3, C in v4), for reference
+- 02d030c7 (ecc2413d m3): GT v4 C; Sol first accept (low), Sol second accept; Gemini accept (high). Gemini reason: A new empty paragraph and page break were inserted right after page 1 (after p4), creating a blank second page without damaging document content.

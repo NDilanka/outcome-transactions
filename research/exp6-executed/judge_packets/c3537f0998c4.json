@@ -1,0 +1,7 @@
+{
+ "blind_id": "c3537f0998c4",
+ "request": "Snap a photo of the current video scene, save it as 'interstellar.png', and put it on the Desktop, please.",
+ "before_state": "\n## FILE /home/user/Desktop/Interstellar Movie - Official Trailer.mp4 (26502599 bytes)\nbinary .mp4 file, 26502599 bytes (not inspected)",
+ "after_state": "\n## FILE /home/user/Desktop/Interstellar Movie - Official Trailer.mp4 (26502599 bytes)\nbinary .mp4 file, 26502599 bytes (not inspected)\n## FILE /home/user/Desktop/interstellar.png (223449 bytes)\nimage 1920x1080 mode=RGB format=PNG\nmean RGB=[6.8, 74.7, 31.5]\n3x3 grid mean RGB (rows top->bottom): [[[0, 59, 22], [0, 59, 22], [0, 59, 22]], [[10, 101, 43], [33, 113, 59], [11, 102, 44]], [[3, 61, 24], [1, 59, 23], [3, 60, 24]]]\ncolumn thirds mean RGB: [[4, 73, 30], [11, 77, 35], [5, 74, 30]]\nrow thirds mean RGB: [[0, 59, 22], [18, 105, 49], [2, 60, 24]]\ncolor ~[0, 96, 36]: 67.8% of pixels, bbox x=0..1919 y=146..939, centroid=(960,541)\ncolor ~[0, 0, 0]: 25.7% of pixels, bbox x=0..1919 y=0..1079, centroid=(960,540)\ncolor ~[6, 93, 39]: 3.1% of pixels, bbox x=0..1919 y=140..940, centroid=(956,517)\ncolor ~[239, 221, 202]: 1.1% of pixels, bbox x=370..1548 y=414..861, centroid=(963,525)\ncolor ~[237, 227, 204]: 0.8% of pixels, bbox x=370..1551 y=414..861, centroid=(966,533)\ncolor ~[42, 83, 52]: 0.2% of pixels, bbox x=0..1919 y=139..863, centroid=(966,358)",
+ "diff": "ADDED /home/user/Desktop/interstellar.png (223449 bytes)"
+}
