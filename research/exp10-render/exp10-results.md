@@ -11,6 +11,9 @@ Attempt codes are the Exp 8 codes, as in the preregistration. Labels: **measured
 - **Other office wrong accepts:** the render judge rejected 1 of 3 (66399b0d method 4), and accepted d53ff5ee methods 2 and 4, both with high confidence. **Measured.**
 - **Office wrong states (11):** Sol accepted 6 and rejected 5. The render judge rejected 8 and accepted 3. **Measured.**
 - **Office correct states (69):** the render judge rejected 13, a rate of 18.8% (95% exact interval 10.4% to 30.1%). Sol rejected 13 too. The two sets share 5 states, and the rest split into 8 render-only and 8 Sol-only. **Measured.**
+- **Interpretation (the two judges' errors differ):** on these real agent outputs, the render judge and Sol fail on different states. On wrong states, the render alone caught 4 and Sol alone caught 1. On correct states, 8 were rejected only by the render and 8 only by Sol. The render caught all 3 pagination cases (ecc2413d methods 1, 2 and 4), the class the predicate was written for. This is one run on 80 states, so it shows the errors differ here, not that they are independent in general.
+- **Interpretation (request-reading class):** the gate fails on d53ff5ee method 2. The render and Sol both accepted it, and no second representation caught this shared misreading. Amendment 1 made no prediction for this pair, so this is a result, not a predicted outcome.
+- **Interpretation (judge reliability):** the render judge applied the blank-page reason inconsistently across the 8 66399b0d states. All 8 go from 2 to 3 pages. It rejected 3 for a blank page (ui method 4, noui methods 2 and 4). It accepted 3 with the same page count (ui methods 1 and 2, noui method 1) without citing a blank page. This is a reliability limit of the judge's reading, not of the render's pages.
 
 ## 2. Verdicts checked before scoring
 
