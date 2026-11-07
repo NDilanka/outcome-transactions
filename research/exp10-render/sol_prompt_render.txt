@@ -1,0 +1,10 @@
+You are a baseline judge in an experiment. The user's goal is computer use that commits an agent's result only if it is correct; we compare an AI judge's accept/reject decisions with executable specs. Judge as a careful best-of-N result picker would.
+
+Read ONLY <batch_file> (packet file names) and those files in <packets_dir>. Do not open any other file in the repo; doing so invalidates the experiment.
+
+Each packet has blind_id, the user's request and its file list (request.txt), and page images of the starting state (folder start) and of the end state (folder end), one PNG per page of each file. For each packet decide:
+- "accept": the end state fully does what the request asks, with no unrequested damage (other content, formatting, files changed that the request did not ask for).
+- "reject": anything requested is missing or wrong, or there is unrequested damage.
+Judge the end state only. If the images cannot show whether the request is met, still choose the more likely verdict and set confidence low.
+
+Write <verdicts_file>: {"<blind_id>": {"verdict": "accept"|"reject", "confidence": "high"|"medium"|"low", "reason": "<one sentence>"}} for every packet in the batch. Validate it parses with one entry per listed packet. Do not commit. Reply with the count of accepts and rejects only.
