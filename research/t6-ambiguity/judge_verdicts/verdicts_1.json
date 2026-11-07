@@ -1,0 +1,72 @@
+{
+  "1c281c6f7b12": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The document changed without visible content or structural damage, consistent with enlarging the examples, but their font sizes are omitted from the dump."
+  },
+  "1d2a6eda7a9b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The total row is already filled with 0.00 in every numeric column, correctly summing the zero commitments while excluding n/a entries."
+  },
+  "2027724344a0": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Only the last slide's title changes from BIG LAUNCH to Launch day, with the remaining visible content and formatting preserved."
+  },
+  "2112a9e9f162": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All numeric data cells use a zero-decimal format and retain their already whole-number values, satisfying rounding to whole numbers without altering other cells."
+  },
+  "28ce33ac4493": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All 13 rows containing N/A are removed while the other records, their order, and correctly adjusted difference formulas are preserved."
+  },
+  "374efdbed874": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Both yellow-highlighted styles become transparent while the script text, bold, and italic formatting remain unchanged."
+  },
+  "3a2efcbb8558": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Lisa Green is copied into the attendees list while remaining under Apologies, duplicating the entry and incorrectly presenting an absent person as attending instead of moving the apologies section."
+  },
+  "3cc60df900a0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original third slide is deleted while the original second slide remains."
+  },
+  "3fd8431f6d7a": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "Every movie title receives a whitespace-normalized, consistently capitalized version in the designated Clean Movie Titles column while the source titles and headers are preserved."
+  },
+  "430f63aaa122": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The added labeled SUMIF correctly totals the six exact Aspen entries to 142 without including Fire Aspen or changing existing data."
+  },
+  "47cb73a73bd6": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The title is enlarged, but the separate CHIN9505 course-code paragraph is also reformatted despite the request being limited to the title."
+  },
+  "53d698b3b16f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Highlighting is removed, but existing bold and italic formatting is also stripped from multiple styles without being requested."
+  },
+  "5c272cb6e3ca": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The Apologies heading and Lisa Green are moved directly beneath the attendees without duplication, relabeling, or other visible changes."
+  },
+  "5ef37d0ea7cf": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The only visible change adds two-decimal number formatting rather than demonstrating larger amount text, although the dump does not expose font sizes."
+  }
+}

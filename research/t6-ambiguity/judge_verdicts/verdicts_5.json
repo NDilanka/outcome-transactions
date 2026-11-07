@@ -1,0 +1,52 @@
+{
+  "ebdd0f1a70f9": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The N/A rows remain visible with their dates and budgets, and only their error cells and formulas were cleared."
+  },
+  "ec59cff221e2": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All records are sorted by ascending revenue with their corresponding expenses and headers preserved."
+  },
+  "eeaf7f7e1243": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Expenses were multiplied by 100 instead of being divided by revenue and displayed as percentages."
+  },
+  "f20a1027afb2": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The sales table retains the first complete record for each distinct product with correct row formulas and leaves the price sheet unchanged."
+  },
+  "f421f8b8b985": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All instructional material was removed while the table and its existing title were preserved."
+  },
+  "f5a1b67040b6": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The title and all column headers are already bold in the unchanged end state."
+  },
+  "f80e34bcb550": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Only the unchanged table remains after removal of the instructions and surrounding paragraphs."
+  },
+  "fe8105d771ad": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The edit leaves the category allocations unchanged and replaces their individual deduction limits with a shared limit, altering the grading rules rather than fixing the marks total."
+  },
+  "fed2ef6cb1fb": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The first-slide title box is already horizontally centered with no other changes, although the dump does not reveal its text alignment."
+  },
+  "ff28192a9306": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All agenda section headings and the Attendees and Apologies headings are bold, with body text and other formatting preserved."
+  }
+}
