@@ -47,6 +47,13 @@ def _style_props(root):
         props[st.get(S + "name")] = (st.get(S + "parent-style-name"), st.get(S + "data-style-name") is not None, tuple(sorted(kv)))
     return props
 
+def _cached(cell):
+    """The value a cell stores in an attribute (number, date, boolean or string), or None. A string cell may have no text."""
+    for a in ("value", "date-value", "boolean-value", "string-value"):
+        if cell.get(O + a):
+            return cell.get(O + a)
+    return None
+
 def ods_cells(path, sheet=None):
     """Return {ref: (value, formatting)} for non-empty cells of the first (or named) sheet."""
     with zipfile.ZipFile(path) as z:
@@ -64,7 +71,7 @@ def ods_cells(path, sheet=None):
             if cell.tag not in (T + "table-cell", T + "covered-table-cell"):
                 continue
             crep = int(cell.get(T + "number-columns-repeated", "1"))
-            val = cell.get(O + "value")
+            val = _cached(cell)
             if val is None:
                 txt = "".join("".join(p.itertext()) for p in cell.iter(X + "p"))
                 val = txt if txt else None
