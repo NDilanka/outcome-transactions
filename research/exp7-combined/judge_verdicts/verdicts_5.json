@@ -1,0 +1,77 @@
+{
+  "37677bf86135": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The lowercase conversion also changes the course code from centered to left-aligned and the instruction paragraph from justified to left-aligned."
+  },
+  "37c61b0ae798": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The pictures on slides 3, 4, and 6 have heights of 25, 20, and 30 cm instead of the requested 20, 30, and 25 cm."
+  },
+  "37dc62b78dab": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph remains unsplit, with all seven new empty paragraphs placed after it instead of between its sentences."
+  },
+  "3851025c33bc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the first paragraph is separated correctly, the later presentation-outline paragraph is also split and spaced without being requested."
+  },
+  "3894ba663733": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The bullet is added only to an unrequested copy file while the original presentation remains unchanged."
+  },
+  "3969e04005c2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new table splits the text at spaces into ten columns rather than separating the four comma-delimited fields."
+  },
+  "3c62d905d703": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The requested empty 5-row, 7-column table is added, but the existing document's font is also changed from Times New Roman to Arial."
+  },
+  "3cdcfa1cea9b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph's sentences remain together with no empty lines inserted between them."
+  },
+  "3d0746ec9802": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "A bullet symbol is added before the slide's content while its existing wording, title, and layout are preserved."
+  },
+  "3e00421d6be6": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty 5-row, 7-column table is added without other visible changes, although the dump does not reveal the cursor position."
+  },
+  "40aa94ff491e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original data sheet is removed and both requested totals display #NAME? errors instead of computed sums."
+  },
+  "41dd0848059c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The picture heights on slides 3, 4, and 6 are changed to 20, 30, and 25 cm respectively with no other visible changes."
+  },
+  "422baedcc039": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The fully uppercase course code and instruction paragraph are converted to lowercase while the remaining content and formatting are preserved."
+  },
+  "42b052bf11c2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although all affected rows are hidden, their NA formulas are replaced with literal N/A text, changing dependent results to #VALUE! errors."
+  },
+  "4353e63a53ee": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Rows 24, 27, 32, and 33 still visibly contain N/A errors because only the earlier affected rows are hidden."
+  }
+}

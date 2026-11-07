@@ -1,0 +1,77 @@
+{
+  "8d15332800d4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All values and formulas are preserved and the workbook changed, consistent with hiding N/A through formatting that the dump does not expose."
+  },
+  "8dc108ffa16d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The revenue formulas look up product names rather than prices and return errors, while Sheet2 contains zero-valued local SUMIF formulas instead of the requested revenue Pivot Table."
+  },
+  "8de2710947da": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 includes the unrequested Total Expenses column in addition to Revenue."
+  },
+  "8e17b760eccf": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A bullet was added to the slide's content paragraph while the title and other visible properties remain unchanged."
+  },
+  "8e5e7229aec6": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The original workbook still lacks both Revenue and Sheet2, and only separate ODS files with unreadable contents were added."
+  },
+  "8e8f39be47e8": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The original workbook still lacks Sheet2 and the only addition is an ODS file whose contents cannot be verified from the dump."
+  },
+  "8e9520bc01b2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The bullet was added to the title instead of the slide's content paragraph."
+  },
+  "8e97d300bfbe": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both summary formulas use invalid sheet references and display #NAME? instead of the requested totals."
+  },
+  "8edd59d703c4": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Slide 1 has a dissolve transition and the dump shows no other content changes."
+  },
+  "8fc2b3465864": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original presentation remains unchanged and the strikethrough changes exist only in an unrequested additional copy."
+  },
+  "90cc4b9c8c53": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Growth formulas return #NAME? errors, so the requested month-on-month percentages and corresponding line chart cannot be correct."
+  },
+  "938d42a84393": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Revenue values were sorted rather than copied in their original order."
+  },
+  "955e554850c7": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the heights are correct, the pictures on slides 3 and 6 were also moved vertically without being requested."
+  },
+  "9642036364f0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The destination sheet is named Sheet 2 instead of the explicitly requested Sheet2."
+  },
+  "975178722daa": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The original Clean Movie Titles column remains empty and only an ODS file with unreadable contents was added."
+  }
+}

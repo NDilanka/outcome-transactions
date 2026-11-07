@@ -1,0 +1,77 @@
+{
+  "008de3046775": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The highlights are removed, but all empty paragraphs are also deleted, changing the document's spacing without authorization."
+  },
+  "00ac8bef8f81": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the correct totals of 867786 revenue and 411686 expenses under the requested headings, with Sheet1 unchanged."
+  },
+  "00bde5c15bc0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the supporting textbox becomes yellow while the three-line main textbox on slide 5 remains green."
+  },
+  "02208bbbe029": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The supporting textbox uses FFC000 rather than exact yellow FFFF00, so not all slide 5 text is yellow."
+  },
+  "02408d2e3f47": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Most of the uppercase instruction paragraph is deleted instead of converted, and uppercase text elsewhere remains."
+  },
+  "02da1bb933a2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first-slide dissolve is added, but an unrequested duplicate presentation file is also created."
+  },
+  "02e1ae438d21": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The totals are added to Sheet1 instead of the requested new sheet named Sheet2."
+  },
+  "02eca099a1ab": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Dissolve is added to slide 24 as well as slide 1, changing a slide the request did not target."
+  },
+  "035d7dbd7227": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The sentences receive blank-line separation, but an unrequested empty paragraph is also inserted before the first sentence."
+  },
+  "03671f4dc92e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The summary is placed on a sheet named Pivot instead of Sheet2 and its unqualified SUMIF formulas return zero for every product."
+  },
+  "0448d9ae3822": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Rows containing valid negative differences are hidden while all rows containing N/A remain visible."
+  },
+  "05c66bd797a0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Total formulas sum their own columns including themselves, leaving all totals and growth percentages as errors."
+  },
+  "072daedfd49e": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The revenue column and per-product summary exist, but Sheet2 appears to contain a static summary rather than the requested Pivot Table."
+  },
+  "0779f8908342": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Only slide 1 gains the requested dissolve transition, with no other changes shown."
+  },
+  "09832b7303ab": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The revenue column is calculated, but Sheet2 and the requested per-product Pivot Table are missing."
+  }
+}

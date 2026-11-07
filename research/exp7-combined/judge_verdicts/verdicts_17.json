@@ -1,0 +1,77 @@
+{
+  "af9975e2a779": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The copied column is on a sheet named Revenue rather than the requested Sheet2."
+  },
+  "b072dae405e6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Revenue increases prices by the discount instead of reducing them, and Sheet2 contains zero-valued SUMIF formulas rather than the requested revenue Pivot Table."
+  },
+  "b0d63372cd87": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3 has a background group resized to 20 cm while its picture remains unchanged."
+  },
+  "b126a00fb261": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All movie titles are copied into the clean column with excess whitespace removed and each whitespace-delimited word capitalized, while the source and headers remain unchanged."
+  },
+  "b16dac72ba06": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The content receives a bullet but its font color is also changed from black to white without being requested."
+  },
+  "b2864bd7887e": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The calculations and charts are saved only in an unrequested Documents copy while the original workbook remains unchanged."
+  },
+  "b3319684b74d": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row seven-column table is added without changing existing content, although the dump cannot verify its position against the cursor."
+  },
+  "b40b3abfc9ca": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 omits the final Revenue entry of 58782 from row 20."
+  },
+  "b417753d9681": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Growth values are shifted one column left, putting February growth under January and leaving June without its growth value."
+  },
+  "b41c6917a0b3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The copied titles retain their redundant leading and internal whitespace."
+  },
+  "b479ae7e0045": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first two lines are struck through, but the second line's existing bullet is also removed without permission."
+  },
+  "b5fe9c98eea8": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "All explicit font colors disappear from slide 5, so the dump does not establish that the textboxes use the required exact yellow."
+  },
+  "b690aa91a5e3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both total formulas display #NAME? errors and also exclude the final data row."
+  },
+  "b77d07b7da1f": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All text in both slide 5 textboxes is changed to exact yellow FFFF00 with no other visible changes."
+  },
+  "b7fe57e66730": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original DOCX remains unchanged, and the added ODT contains an unrequested populated heading rather than inserting the requested empty table into the document."
+  }
+}

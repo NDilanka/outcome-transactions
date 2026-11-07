@@ -1,0 +1,77 @@
+{
+  "979fe43b3e97": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty seven-column, five-row table is added without changing existing content, although the dump does not reveal the cursor position."
+  },
+  "98ac0a9f181d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The totals are displayed in a pie chart rather than the requested bar chart."
+  },
+  "98ff3d07e4dc": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all nineteen revenue values while Sheet1 remains unchanged."
+  },
+  "9944bff16841": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "Only an empty paragraph is visibly added while the page-break count decreases, making insertion of the requested blank page unlikely."
+  },
+  "99d9fda43df0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both requested totals evaluate to #NAME? and an unrequested Sheet3 is added."
+  },
+  "9baf950f7e83": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The added paragraph contains the unrequested text 'This page intentionally left blank' instead of leaving the inserted page blank."
+  },
+  "9c59be676b26": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All data and formulas remain intact and the file changes without visible filtering or deletion, consistent with hiding the N/A display through formatting that the dump does not expose."
+  },
+  "9d3506af8cdf": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Hiding the entire Actual column also hides valid data and leaves the N/A errors in the Difference column unaddressed."
+  },
+  "9d7355b0025f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original populated work-effort table is destroyed and replaced with the empty table instead of preserving it and inserting a new table."
+  },
+  "9f91241aced4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A new empty seven-column, five-row table is present and the original table and text are preserved, although cursor placement cannot be verified."
+  },
+  "9fcf34ea6227": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The source Garbage Movie titles column is overwritten and the requested Clean Movie Titles column remains empty."
+  },
+  "a22d1c6898d3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 includes the unrequested Total Expenses column in addition to the requested Revenue column."
+  },
+  "a25e340877a0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Rows are reordered and Difference formulas retain incorrect references, corrupting results and leaving N/A errors in visible rows."
+  },
+  "a3aea37abc7f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Strikethrough is applied to the first and last paragraphs on slide 5 rather than the first and second lines."
+  },
+  "a452d08a7e81": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Yellow text is saved only in an unrequested copy while the original presentation remains unchanged."
+  }
+}

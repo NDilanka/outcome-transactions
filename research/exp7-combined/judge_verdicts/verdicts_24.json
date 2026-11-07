@@ -1,0 +1,62 @@
+{
+  "f99d0f8c31c2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new sheet is named Totals instead of Sheet2, and both total formulas return #NAME? rather than sums."
+  },
+  "fa2ca92b1ed9": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The sentences appear in adjacent paragraphs without the requested empty lines between them, although paragraph spacing is not shown."
+  },
+  "fa9ee6fc3f13": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the N/A rows are hidden without deletion, the entire Difference column is also hidden, concealing valid results unnecessarily."
+  },
+  "fb1ca86fafc8": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first slide gains the dissolve transition, but its existing econtents Challenge 2021 text box is deleted."
+  },
+  "fb5ac786066d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Dissolve is added to slide 24 rather than the requested first slide, which remains without a transition."
+  },
+  "fbfc2b356558": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Dissolve is applied to all 24 slides instead of only the first slide, changing the other slides without authorization."
+  },
+  "fde914199707": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Revenue is missing for the first sale, an extra formula produces #N/A, and Sheet2 contains zero-valued SUMIF formulas instead of the requested revenue pivot table."
+  },
+  "fdf13e6cbaac": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each sentence of the original first paragraph is followed by an empty line, and the remaining paragraphs and table are preserved."
+  },
+  "fe267d9f3182": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The conversion transposes the comma-delimited data into four rows and five columns instead of preserving the five source lines as rows and their four fields as columns."
+  },
+  "fe9060645fcc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 places the labels in rows rather than two column headers, and both total formulas return #NAME? instead of sums."
+  },
+  "ff2ce42dad7a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The uppercase text is changed to title case rather than lowercase, leaving uppercase letters in the requested passages."
+  },
+  "ff9b4277a302": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first two modified lines are bolded rather than struck through, and their strike settings remain noStrike."
+  }
+}

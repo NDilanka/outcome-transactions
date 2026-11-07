@@ -1,0 +1,77 @@
+{
+  "5c64834fad0a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Revenue ignores discounts, and Sheet2 uses SUMIF formulas referencing its own empty columns instead of a working revenue Pivot Table."
+  },
+  "5cb08e4d12de": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first four sentences remain together without empty lines between them."
+  },
+  "5cda2805186c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The supporting-message textbox on slide 5 remains white instead of yellow."
+  },
+  "5d5024686c2a": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlighting is removed while the document text and other shown formatting are preserved."
+  },
+  "5d5565257fa5": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains invalid, off-by-one references displaying #NAME? errors instead of a copy of the Revenue values."
+  },
+  "5d8f58d5d443": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Entire rows are hidden, concealing existing Date and Budget values as well as the N/A entries the user asked to hide."
+  },
+  "5e0a573fb2a8": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first slide has a fade transition rather than the requested dissolve transition."
+  },
+  "5ebf2b697d11": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The pictures' widths were set to 20, 30, and 25 cm while their heights remain unchanged."
+  },
+  "5ed2fdb1b36c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The target pictures on slides 3, 4, and 6 have heights of 20, 30, and 25 cm respectively with no other shown changes."
+  },
+  "5fffa44c2ff7": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide content still has explicit buNone formatting and no bullet point."
+  },
+  "61377f101545": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 5 text remains green and white rather than yellow."
+  },
+  "613804e72b83": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve transition is added to the first slide with no other shown changes."
+  },
+  "62bcf5812f17": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The N/A formulas are replaced with zeros, altering the underlying data and calculated differences rather than hiding the placeholders."
+  },
+  "62c28167ddb2": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The comma-separated block has four fields per row, but the resulting table adds an unrequested fifth empty column."
+  },
+  "6390c995b947": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The end-state dump contains only the original 11-by-7 table and does not show the requested empty 5-by-7 insertion."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "78105922ac04": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Revenue was moved rather than copied, deleting the original column from Sheet1 and shifting Total Expenses."
+  },
+  "78f23d949f60": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 was created only in an unrequested duplicate workbook while the original NetIncome.xlsx remains unchanged."
+  },
+  "794751688b6a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles were alphabetically sorted instead of remaining aligned with their corresponding source rows."
+  },
+  "7ac86dc6fb29": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The first two lines lose their explicit no-strike setting, but the dump shows no applied strikethrough, so the requested formatting appears missing."
+  },
+  "7b6d620f0702": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The case conversion also changes the document's fonts to Arial, including unrelated Calibri text."
+  },
+  "7b6ddd77e16c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "CHIN9505 remains uppercase and POWERPOINT was misspelled as powerpoitn rather than merely lowercased."
+  },
+  "7cb022e49f10": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although a bullet was added, the content textbox was also moved substantially downward and partly outside the slide."
+  },
+  "7d3b41b14255": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first slide has only an empty transition element rather than the requested dissolve transition."
+  },
+  "7ecbab82441c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Strikethrough was applied to all nine lines of the content textbox instead of only the first two."
+  },
+  "7f6ccd81184e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The inserted table has six rows and a populated header instead of being an empty five-row, seven-column table."
+  },
+  "801f6e1aaf00": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Highlights were removed only in an unrequested copy while the original document retains its yellow highlights."
+  },
+  "80ed69bbb444": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only an empty bulleted paragraph was added, leaving the actual slide content without a bullet."
+  },
+  "8120fc1b43ae": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The supporting textbox is light yellow FFFF99 rather than exact yellow FFFF00, and the main textbox has no explicit yellow color shown."
+  },
+  "813589c8cf96": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The totals and Feb-Jun growth formulas are correct and both requested chart types exist, although chart titles and source ranges are not exposed by the dump."
+  },
+  "81559a7ce804": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The end state still explicitly marks every text run as noStrike, so the requested first and second lines are not struck through."
+  }
+}

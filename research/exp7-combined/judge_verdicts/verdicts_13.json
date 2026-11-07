@@ -1,0 +1,77 @@
+{
+  "821d89a6b8ff": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "Only an empty paragraph was inserted within the trade-mark application details, with no visible evidence of a blank page after the current page."
+  },
+  "82b9806a14ee": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The body was bulleted but also duplicated in full, adding unrequested repeated content."
+  },
+  "8371d517831f": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The overview's first two list entries remain unstruck while a finance heading and one item on slide 5 were struck instead."
+  },
+  "85ef33f916fa": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original document is unchanged and the newly added ODT omits the existing table and formatting."
+  },
+  "878637a346fa": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 uses SUMIF formulas referencing its own empty columns, producing zero totals instead of the requested revenue Pivot Table."
+  },
+  "8793c177484a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new empty 5-by-7 table was added but all contents of the pre-existing work-effort table were erased."
+  },
+  "87eafda4774e": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The only visible change is an empty paragraph before Exhibit A, a plausible blank-page insertion at that boundary, with all other content preserved."
+  },
+  "88328b277701": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The totals and growth formulas are correct, but only a line chart exists and conditional formatting does not provide the requested titled Total bar chart."
+  },
+  "889b9ea945d7": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible text on slide 5 is exactly yellow (FFFF00), with no other visible changes."
+  },
+  "89740d8d3512": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The first two overview-list entries have strikethrough and all other content is preserved, although the dump does not identify the active slide."
+  },
+  "8a82d7c12a84": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All visible text on slide 5 is exactly yellow (FFFF00), with no other visible changes."
+  },
+  "8a9890d53d2f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles are entirely uppercase rather than having only each word's initial letter capitalized."
+  },
+  "8af0626e3f82": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The empty 5-by-7 table was added but the existing TABLE OF WORK EFFORT heading and surrounding paragraphs were deleted."
+  },
+  "8b0278770c04": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-separated text was converted but the rest of the document, including all thirteen existing tables, was deleted."
+  },
+  "8c96a526b3e4": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "C27 contains Puip-fre rather than capitalizing both words in the hyphenated title as Puip-Fre."
+  }
+}

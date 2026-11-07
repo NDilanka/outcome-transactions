@@ -1,0 +1,77 @@
+{
+  "70a19f20e1e4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The highlights were removed but the affected text was also changed to yellow font, which is unrequested formatting damage."
+  },
+  "71627baa085e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Every total excludes the sales in row 11, so both the monthly totals and the resulting growth percentages are incorrect."
+  },
+  "71645d3d49dd": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The first slide has a valid dissolve transition and no other content or formatting changes are shown."
+  },
+  "71adb439f4d9": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The visible change adds only an empty paragraph before the title with no additional page break, rather than a blank page after the current page."
+  },
+  "71d60797d589": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The main pictures on slides 3, 4, and 6 have heights of 20, 30, and 25 cm respectively, with other visible properties preserved."
+  },
+  "733f97ab3bf9": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "One page break was added while all visible content and formatting were preserved, consistent with inserting the requested blank page although its location is not shown."
+  },
+  "736bcb30a448": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The inserted empty table has only four rows instead of the requested five."
+  },
+  "73e46e742197": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The dissolve element uses the DrawingML a namespace instead of the required PresentationML p namespace, so it is not a valid dissolve slide transition."
+  },
+  "73f2d5d2d94a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The destination contains the original uncleaned titles while the source column was changed, and neither column has the requested capitalization."
+  },
+  "74ab48f129e6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the N/A rows are hidden and data are preserved, an unrequested AutoFilter was added despite the instruction that a filter was not needed."
+  },
+  "74d3e994014c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The formulas on Sheet2 evaluate to #NAME? errors rather than the requested revenue and expense sums."
+  },
+  "74dc494da6de": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slides 4 and 6 have picture heights of 20 cm instead of the requested 30 and 25 cm."
+  },
+  "7676717172fa": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The document's text was changed to 10-point font throughout, causing extensive unrequested formatting changes."
+  },
+  "76a3f1f56963": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 merely copies the individual revenue and expense values instead of computing their sums."
+  },
+  "7744de641a35": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide content still explicitly has no bullet formatting, so the requested bullet point was not added."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "ef95ec2aa9f2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph is split at commas as well as sentence endings, introducing unrequested blank lines within sentences."
+  },
+  "f00859b934a2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The text on slide 5 remains mint green and white instead of the requested yellow."
+  },
+  "f01213f08727": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains SUMIF formulas referencing its own empty columns and returning zero rather than a Pivot Table summarizing product revenues."
+  },
+  "f0d38874496c": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table is added with existing content preserved, although the dump cannot verify the cursor-relative placement."
+  },
+  "f25054655c9b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-separated text is replaced by two identical tables instead of one, duplicating the content."
+  },
+  "f277c4608398": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All 28 titles are copied into the existing clean-title column with redundant whitespace removed and each whitespace-delimited word capitalized, with no other visible changes."
+  },
+  "f3029642b780": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The existing Clean Movie Titles column remains empty while the cleaned titles are placed on an unrequested new sheet."
+  },
+  "f416bd49eb64": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the first ten movie titles are cleaned, leaving C12 through C29 empty."
+  },
+  "f42f207f83fd": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table is added without visible damage, although the dump cannot verify that its location matches the original cursor."
+  },
+  "f54a2b1031ab": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The resulting presentation has invalid XML with a missing required shape-name attribute, so the bullet edit leaves a damaged file."
+  },
+  "f6034db57904": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Growth row includes an invented January growth of zero even though growth was requested only for February through June."
+  },
+  "f65dfaa009e3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains repeated order-count formulas rather than the requested Pivot Table summing each product's revenue."
+  },
+  "f677e678d309": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Five paragraphs of comma-separated blanks are added instead of an actual empty seven-column, five-row table."
+  },
+  "f71987393468": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The dissolve transition is added but every existing shape, title, and image on the first slide is deleted."
+  },
+  "f9364d1b4172": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "Growth percentages are stored as text rather than numeric values, making the requested growth line chart unlikely to plot correctly, and the dump does not expose its data or titles."
+  }
+}

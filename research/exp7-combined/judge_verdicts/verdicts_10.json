@@ -1,0 +1,77 @@
+{
+  "63d517ddaafe": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The original slide still has no bullet, and the newly added ODP is uninspected, so the requested change is not demonstrated."
+  },
+  "63d7bf983642": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains incorrect totals of 868000 and 412000 instead of the actual sums 867786 and 411686."
+  },
+  "6484928c5d63": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The requested picture heights were applied only to an unrequested copy while the original presentation remains unchanged."
+  },
+  "654ecdb89927": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Each comma-separated line remains entirely in the first table column instead of being split into four columns."
+  },
+  "66c461432526": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlighting is removed while the document text and existing bold and italic formatting are preserved."
+  },
+  "6712241ec61b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The yellow highlighting is replaced with explicit white highlighting rather than removed."
+  },
+  "6789296ad28e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all 19 revenue values, with Sheet1 unchanged."
+  },
+  "680417a1701e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The table conversion appears only in an unrequested copy while the original document retains its comma-separated paragraphs."
+  },
+  "6a03c3489b4f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The requested picture heights are not set, and seven small pictures on slide 3 are instead incorrectly stretched to 3.8 cm."
+  },
+  "6c182fc11280": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 5 text is correctly yellow, but slide 3 text is also recolored without being requested."
+  },
+  "6d3bc4680b7c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only one paragraph is lowercased, leaving uppercase text such as CHIN9505 and other capitals unchanged."
+  },
+  "6de8455d1b57": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original DOCX still contains the comma-separated text, and an unrequested ODT file is added instead."
+  },
+  "6ea80a27ec78": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The formerly italic highlighted span is merged with seven nonitalic spans under an undefined T42 style, so its original formatting is likely lost."
+  },
+  "6f63e7278c0e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Hiding rows 3 through 12 conceals valid data while leaving multiple later N/A entries visible."
+  },
+  "7006d1d5f1db": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both totals evaluate to #NAME?, and the Total Expenses formula incorrectly subtracts expenses from revenue."
+  }
+}

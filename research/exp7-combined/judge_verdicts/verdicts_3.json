@@ -1,0 +1,77 @@
+{
+  "1fa6545dc1dd": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All text on slide 5 is now exactly yellow (FFFF00), with no other visible changes."
+  },
+  "213bfde9169b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-delimited records became separate one-row tables instead of one table, and unrelated narrative paragraphs were also converted."
+  },
+  "226a9104b62a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The uppercase text CHIN9505 remains unchanged rather than being converted to lowercase."
+  },
+  "22f1c7f75ead": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each sentence of the first paragraph is separated by one empty line, and the remaining document is preserved."
+  },
+  "23dd06d1662a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The converted table drops the Example Word column and all of its entries."
+  },
+  "247f6d3a492b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The main pictures on slides 3, 4, and 6 have heights of 20, 30, and 25 cm respectively, with proportional widths and other content preserved."
+  },
+  "2574c41e27dc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The N/A rows are hidden, but their Difference formulas have been deleted rather than preserved."
+  },
+  "2851703b6999": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Everything after the first paragraph, including the settings, assessment guidance, and reading table, has been deleted."
+  },
+  "28e66fc7f8a1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both totals evaluate to #NAME? and omit row 2, so Sheet2 does not contain the requested sums."
+  },
+  "293d4e316db3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original sales records were removed and replaced by broken total and growth formulas instead of adding correct rows underneath."
+  },
+  "29dd689bba68": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The slide content now has a bullet point, while the title, text, and other visible formatting remain unchanged."
+  },
+  "2a2849c7138c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each sentence of the first paragraph is separated by one empty line, and the remaining document is preserved."
+  },
+  "2b66e5dd432d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The totals row is labeled Total Sales rather than the explicitly requested Total."
+  },
+  "2c2a466e9da2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The requested heights are set, but the widths on slides 4 and 6 were arbitrarily made equal to their heights, distorting the pictures."
+  },
+  "2c2f9320dabd": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains only the Revenue header and none of the column's data."
+  }
+}

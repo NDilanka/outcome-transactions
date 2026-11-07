@@ -1,0 +1,77 @@
+{
+  "4d23b17a0936": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 has the requested headers, but both total formulas produce #NAME? errors instead of the requested sums."
+  },
+  "4d2943c622bc": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The comma-separated header and four data rows are replaced by a matching four-column table while the surrounding document content remains unchanged."
+  },
+  "4d4aaae91c21": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "Both fully uppercase passages are converted to lowercase without changing other document content or visible formatting."
+  },
+  "4d77ab138fa8": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlighting is removed while the text and other visible formatting are preserved."
+  },
+  "4dcca6185bce": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The copied movie titles have normalized whitespace but retain their original mixed capitalization instead of the requested word-initial capitals and lowercase remaining letters."
+  },
+  "4ea60aaf30c1": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The first two body lines of the to-do list are struck through, using double strikethrough, and the remaining visible content is unchanged."
+  },
+  "4eb7d02fcc04": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The uppercase instruction paragraph is deleted rather than lowercased, and CHIN9505 remains uppercase."
+  },
+  "4ed1d584a0f3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A separate document containing the table is created, but the requested text remains comma-separated in the original document."
+  },
+  "4f9039929262": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A duplicate table is appended while the original comma-separated text is left unconverted."
+  },
+  "5106e6ea1be9": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All seven sentences in the first paragraph are separated by empty lines, with subsequent paragraphs and the table preserved."
+  },
+  "51116c7bf3a1": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The dump shows only two added empty paragraphs and no additional explicit page breaks, so a complete blank page after the current page is not established."
+  },
+  "51b44f048b1f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Dissolve is added to both the first and second slides even though only the first slide was requested."
+  },
+  "5321f8b56664": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The lowercase edits are saved only in an unrequested copy while the original document retains its uppercase passages."
+  },
+  "53419c57d2bf": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the slide title is struck through, leaving the first and second lines of the to-do list unchanged."
+  },
+  "53c99d323f9d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Strikethrough is applied to unrelated text on several slides in addition to the first two lines of the to-do list."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "bef2c8623565": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The sentence 'If you can’t, you don’t!' was deleted instead of being preserved and separated."
+  },
+  "c1648e38940f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first two lines are struck through but also have unrequested '(done)' text appended."
+  },
+  "c317b2fa19d3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Revenue column was transposed into a row on Sheet2 rather than copied as a column."
+  },
+  "c3b456f85736": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The sentences are correctly separated, but Times New Roman is also explicitly imposed on unrelated paragraphs whose inherited fonts are not shown."
+  },
+  "c4e9460aac58": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Sheet2 includes an unrequested copy of all source data beneath the total headers before the actual summary totals."
+  },
+  "c625bbfc9944": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles overwrite the source column while the Clean Movie Titles column contains the original uncleaned text."
+  },
+  "c84bc355301e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-separated Quadgraph row remains outside the table, leaving the conversion incomplete."
+  },
+  "c87d2d48efb1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains the revenue values but omits the explicitly requested Revenue header."
+  },
+  "c8fb89f1008b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Dissolve was applied to slides 2 through 24 instead of the requested first slide."
+  },
+  "c956e60e448a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both summary formulas produce '#NAME?' errors instead of the requested totals."
+  },
+  "cb9c6849bfa0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original document is unchanged and an unrequested copy contains only an extra empty paragraph rather than a demonstrated blank page."
+  },
+  "ccd934fc79d1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original workbook is unchanged and the unrequested copy has '#NAME?' errors instead of summary totals."
+  },
+  "cd866958cd7d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first slide still has no transition, so the requested dissolve effect is missing."
+  },
+  "cd89d8affd10": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Growth formulas calculate current-month sales divided by prior-month sales without subtracting one, producing ratios rather than growth percentages."
+  },
+  "cd95bbefb195": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Removing the content placeholder's explicit no-bullet setting likely enables its inherited bullet while preserving all other shown content and formatting."
+  }
+}

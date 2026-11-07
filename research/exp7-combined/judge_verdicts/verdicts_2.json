@@ -1,0 +1,77 @@
+{
+  "16f9b3e6e201": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph's sentences were deleted rather than separated by empty lines."
+  },
+  "173357ddb789": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All rows containing N/A are temporarily hidden without deleting cells, changing their values or formulas, or introducing a filter."
+  },
+  "178ef04f75ce": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The content received automatic numbering instead of the requested bullet point."
+  },
+  "17982197f4d2": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The unchanged paragraph, section, and page-break counts provide no evidence that the requested blank page was inserted."
+  },
+  "1862b7f97b84": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All rows containing N/A are temporarily hidden without deleting cells, changing their values or formulas, or introducing a filter."
+  },
+  "18ab79a94b20": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide content still explicitly has no bullet point."
+  },
+  "19c0ba3e8a12": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "A bullet was added to the title as well as the content, unnecessarily changing the title's formatting."
+  },
+  "19de4b2eed52": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The Total and Growth calculations are correct, but the dump provides no evidence of the required titled bar and line charts."
+  },
+  "1a6dd26a62b0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only Finance Meetings received strikethrough, leaving the second requested line unchanged."
+  },
+  "1acf8cff81b2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although a bullet was added, most of the original slide content was deleted."
+  },
+  "1bf2f11b4903": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The bullet was added, but the content was also converted to uppercase without being requested."
+  },
+  "1c4e6b4c0fb8": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "All rows containing N/A are temporarily hidden without deleting cells, changing their values or formulas, or introducing a filter."
+  },
+  "1d20c641f748": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The uppercase instruction paragraph was truncated, deleting most of its text instead of merely changing its case."
+  },
+  "1d4c231cd89a": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The comma-separated header and four records were converted into a correct five-row, four-column table while the remaining document content was preserved."
+  },
+  "1e5eb7d2afd5": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Many cleaned movie titles still contain redundant leading spaces."
+  }
+}

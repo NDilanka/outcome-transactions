@@ -1,0 +1,77 @@
+{
+  "53fd1179199e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Growth row calculates absolute monthly sales differences instead of month-on-month growth percentages."
+  },
+  "55287f2824be": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Both yellow-highlight styles are now transparent while all text and other displayed formatting are preserved."
+  },
+  "5697e7d21c7d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The empty table was created in a separate Table.docx file rather than inserted into the existing document at the cursor."
+  },
+  "5700f82813bc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The inserted table has five rows but only six columns instead of the requested seven."
+  },
+  "5758436b5aab": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Only the slide 5 text colors were changed with other displayed content preserved, plausibly to named yellow although the resulting colors are not exposed."
+  },
+  "57b3f524222d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The comma-separated block became a table, but the rest of the document, including its thirteen existing tables, was deleted."
+  },
+  "57ba0df4b6c3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original sales sheet was deleted, leaving no revenue column and a zero-valued SUMIF summary instead of the requested revenue pivot table."
+  },
+  "57f50f1f8391": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Slide 1 uses a p14 preset named dissolve rather than the standard p:dissolve transition element, making the requested transition unlikely to work."
+  },
+  "58edc0f230f9": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "Only one empty paragraph appears within the declaration with no increase in reported page breaks, so a separate blank page seems unlikely."
+  },
+  "5921b90cafeb": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both summary formulas produce #NAME? errors and the expenses formula incorrectly references the revenue range."
+  },
+  "59db6d8bfe36": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Two blank paragraphs were inserted after the opening-page content with everything else preserved, plausibly creating the requested blank page although pagination is not exposed."
+  },
+  "5a77e2b92721": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all nineteen revenue values unchanged, and the original sheet is preserved."
+  },
+  "5acb4d8710fb": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The end-state dump still shows no transition on slide 1 and no transition-related difference, so the requested dissolve effect appears missing."
+  },
+  "5b5699cab69d": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide 5 text runs retain their original green and white colors instead of becoming yellow."
+  },
+  "5c3f9016e009": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table was added to the original document without removing existing content, though its position relative to the cursor is not exposed."
+  }
+}

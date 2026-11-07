@@ -1,0 +1,77 @@
+{
+  "09c82b5f9572": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Text using style T5 remains highlighted yellow, so not all highlighting was removed."
+  },
+  "0b460f646bc9": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles use sentence case rather than capitalizing the first letter of every word."
+  },
+  "0bcb53a31369": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first two lines were recolored gray but still have no strikethrough."
+  },
+  "0bdf0936ad67": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Exhibit C heading and attachment instructions were deleted, which is unrequested content loss."
+  },
+  "0c5a971a052e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the data rows were converted, leaving the comma-separated column headers outside the table."
+  },
+  "0d0c40ccd2d5": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The totals, February-to-June growth percentages, and both requested chart types are present, although the dump does not expose chart titles or plotted ranges."
+  },
+  "0dba7eacca2e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The document title, copyright notice, and disclaimer were deleted instead of preserving the existing content while adding a blank page."
+  },
+  "0e8f64c7b03a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the first two sentences were separated, while the remaining five sentences still share one paragraph without empty lines between them."
+  },
+  "103809193b0f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new table has only one column and retains the commas instead of splitting the four fields into separate columns."
+  },
+  "108be004f47b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The picture on slide 3 was deleted rather than resized to a height of 20 cm."
+  },
+  "137eba1567e0": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All titles were copied into C2:C29 with redundant spaces removed and each whitespace-delimited word capitalized, with no other visible changes."
+  },
+  "14a386c6b105": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The requested heights were set, but all three pictures were also moved vertically despite no request to change their positions."
+  },
+  "14c061c24db6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original PPTX retains all three incorrect heights and an unrequested ODP file was created instead."
+  },
+  "163775022370": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The data were shifted down a row without updating the difference formulas, corrupting calculations and leaving errors visible."
+  },
+  "1664a6446d43": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 lists websites rather than products and uses zero-valued SUMIF formulas instead of the requested product-revenue Pivot Table."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "a548b77897ba": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the header was converted to a table, while all four comma-separated data rows remain outside it."
+  },
+  "a6015cfc31b5": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The visible change appears to add only an empty paragraph rather than a blank page, although paragraph-level pagination is not shown."
+  },
+  "a63d28754847": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first slide has the dissolve transition, but the other 23 slides were deleted."
+  },
+  "a682c0fc7619": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains SUMIF formulas referencing its own empty columns and returning zero instead of the requested product-revenue Pivot Table."
+  },
+  "a7008aeb6ef5": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The yellow highlighting was removed, but the formerly highlighted text received unrequested single underlining."
+  },
+  "a78799125c68": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Only the first two text entries in the slide 5 task list gained strikethrough, which plausibly matches the requested lines although the active slide is not shown."
+  },
+  "a813c2fecef9": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "No empty 7-column by 5-row table was inserted, and the document still contains only its original populated table."
+  },
+  "a81794bdb292": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The visible change appears to add only an empty paragraph rather than a blank page, although paragraph-level pagination is not shown."
+  },
+  "a9590038c5d1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles were written into unrelated column D while the requested Clean Movie Titles column C remains empty."
+  },
+  "aa392820563d": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Feb-Jun Growth rows are calculated correctly and both required chart types are present, although chart titles and source ranges are not exposed."
+  },
+  "ab1e6a145629": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Only the two all-capital paragraphs were lowercased, leaving uppercase letters throughout the title, other paragraphs, and table."
+  },
+  "ab32ef2ca67e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph was converted into an unrequested seven-row table rather than sentences separated by empty lines."
+  },
+  "ab67310e8401": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Every sentence from the first paragraph was duplicated instead of appearing once with one empty line after it."
+  },
+  "af8606e699aa": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 has an invalid revenue formula returning #NAME? and no total-expenses result."
+  },
+  "af8c1478f44f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Unrelated groups were resized on slides 3, 4, and 6 while the pictures retained their original heights."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "b8ba9644be78": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The requested spacing is applied only to an unrequested copy while the original document remains unchanged."
+  },
+  "b92c7f414031": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The five comma-delimited lines are converted into a five-row, four-column table with their contents and the rest of the document preserved."
+  },
+  "b93256b802bb": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Both yellow-highlighted styles are made transparent while the text and other displayed formatting remain unchanged."
+  },
+  "b9611db55a4f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The pictures on slides 3 and 4 are set to 21 and 31 cm instead of 20 and 30 cm, and slide 6 remains at 26 cm instead of 25 cm."
+  },
+  "ba119ce7a905": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3 has an icon stretched to 25 cm instead of its main picture being set to 20 cm, and slide 4 is set to 20 cm instead of 30 cm."
+  },
+  "ba7535d3d9aa": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The table is created, but existing nonbreaking spaces and internal spacing within its contents are removed or collapsed beyond the requested comma conversion."
+  },
+  "babd5670fcb0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the course code is lowercased while the entire uppercase instruction paragraph remains unchanged."
+  },
+  "bb7692cd1ab0": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the beginning of the uppercase instruction paragraph is lowercased, leaving most of it and the course code uppercase."
+  },
+  "bb83b195f534": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new sheet contains formulas returning #NAME? rather than the requested revenue and expense totals."
+  },
+  "bbc68ca579b5": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Removing the highlights also removes existing bold formatting from styles T1 and T2 without being requested."
+  },
+  "bbe9a676d5fd": {
+    "verdict": "reject",
+    "confidence": "low",
+    "reason": "The dump shows only an appended empty paragraph and no additional page break, so it does not establish that a blank page was inserted after the current page."
+  },
+  "bc50b6a046d3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The used styles T5 and T9 still have yellow backgrounds, leaving highlighted text in the document."
+  },
+  "bcadaaa5ba8c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Every growth formula subtracts the current month from the previous month and divides by the current month instead of calculating the requested month-on-month growth."
+  },
+  "bd85c8546dc8": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains only the two requested column headers and no computed totals underneath."
+  },
+  "bdef67b6d299": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Rows containing missing data are deleted rather than hidden, and the shifted difference formulas no longer correspond to their rows."
+  }
+}

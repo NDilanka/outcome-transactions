@@ -1,0 +1,77 @@
+{
+  "d8f7ebc24e5a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The first paragraph's sentences are separated by two empty paragraphs rather than the requested one empty line."
+  },
+  "d95fb1894e21": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles are shifted up one row, omitting Minions In Black and duplicating the final title."
+  },
+  "d9e849f985cb": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The totals and Feb-to-Jun growth percentages are correct and both requested chart types exist, although their titles and data ranges are not exposed by the dump."
+  },
+  "da05e2d15c9b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original ODT retains its yellow highlights while an unrequested, reformatted DOCX copy has been added."
+  },
+  "db125e7afe68": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The totals and Feb-to-Jun growth percentages are correct and both requested chart types exist, although their titles and data ranges are not exposed by the dump."
+  },
+  "db695b6dc755": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The copied column header is Revenues instead of the original Revenue."
+  },
+  "dc2c4f5049b4": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "All copied revenue amounts were converted from numeric cells into text instead of preserving the original column's numeric data."
+  },
+  "dd7085d5adf6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Revenue uses the same fixed product price for every sale and Sheet2 contains zero-valued local SUMIF formulas rather than a working revenue Pivot Table."
+  },
+  "ddcad7bc74d2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Seven spans still use style T9, which retains its yellow background."
+  },
+  "df79615427aa": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Both summary formulas return #NAME? errors and the first header is Revenue rather than Total Revenue."
+  },
+  "dff860085fc4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Only slide 5's text color settings visibly change, consistent with applying named yellow, but the dump does not expose the resulting colors."
+  },
+  "e054c6387174": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 5's text still has the original green and white explicit font colors rather than yellow."
+  },
+  "e07b2c12728e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 5's text still has the original green and white explicit font colors rather than yellow."
+  },
+  "e20b402a31de": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original document is unchanged and the added ODT copy loses formatting and tables instead of adding a blank page to the existing document."
+  },
+  "e24008e503da": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Textboxes on slides 2, 3, and 4 were resized instead of the pictures on slides 3, 4, and 6."
+  }
+}

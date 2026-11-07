@@ -1,0 +1,77 @@
+{
+  "cefe16a80fef": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The conversion deletes numbers and punctuation, including 9505, 2-3, and 10, instead of preserving the document while changing case."
+  },
+  "cf0e281b4123": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The edit deletes the existing line 'Advocating for student Budget Requests.' and strikes the Finance Meetings heading instead of both first two tasks."
+  },
+  "cf2933b40311": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Revenue values are incorrectly rounded to whole numbers, such as 605 instead of 604.83225 for Aspen's first sale, making the product summaries inaccurate."
+  },
+  "cfc4440655b7": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "June's total is missing from G12, causing June's growth to be incorrectly calculated as -100%."
+  },
+  "d0ef9a485eb3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the yellow highlighting is removed, the edit also changes the previously italic T5 text to normal."
+  },
+  "d1830671a499": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles retain uppercase letters within words, such as 'MiniONs IN BlACK', instead of lowercasing every letter after each word's initial."
+  },
+  "d285247f248f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The slide's content paragraph still has buNone, so the requested bullet point was not added."
+  },
+  "d3a14b078536": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 uses SUMIF formulas referencing its own blank columns rather than Sheet1, leaving every product's summarized revenue at zero instead of providing the requested Pivot Table."
+  },
+  "d45753e7bb87": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The NA formulas are deleted rather than hidden, which also changes the dependent differences to incorrect negative budget values."
+  },
+  "d66b0710ec2e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The dissolve transition is added to slide 2 rather than the requested first slide."
+  },
+  "d68912238c7f": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The pictures on slides 3, 4, and 6 have heights of 20, 30, and 25 cm respectively, with no other visible changes."
+  },
+  "d7b2584a28d2": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The edit deletes document text including UCSF and bronchoscopy while the yellow highlight styles remain."
+  },
+  "d7c97c8d0d0a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The picture heights are set to 2, 3, and 2.5 cm rather than the requested 20, 30, and 25 cm."
+  },
+  "d8086240b05f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The cleaned titles remove all interword spaces, producing concatenations such as 'MinionsInBlack' instead of preserving single spaces."
+  },
+  "d839873188e2": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Single strikethrough is applied to the first two task lines while the heading, remaining tasks, and other slides are unchanged."
+  }
+}

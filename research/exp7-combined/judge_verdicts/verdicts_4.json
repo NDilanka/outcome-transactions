@@ -1,0 +1,77 @@
+{
+  "2ce00c923d39": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The original document still contains all-uppercase text, and an unrequested ODT copy was added instead."
+  },
+  "2e9359b82b0d": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the complete Revenue column and header in order, and Sheet1 is unchanged."
+  },
+  "2f1d1cce4a1c": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The picture heights on slides 3, 4, and 6 are approximately 0.7, 1.1, and 0.9 cm rather than the requested 20, 30, and 25 cm."
+  },
+  "2f3000ccabf6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The Growth row omits February's required month-on-month growth calculation."
+  },
+  "2f529eff6d25": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The content paragraph has the requested bullet with text and layout preserved, although the dump cannot establish whether removing its explicit black font color changes its appearance."
+  },
+  "2f5c6ef07bc8": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The new 7-column by 5-row table is filled with repeated column labels instead of being empty."
+  },
+  "31b7767a287f": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The sentences are separated by single line breaks rather than the requested empty line after each sentence."
+  },
+  "326632299d49": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only POWERPOINT was lowercased, leaving the course code and nearly all of the uppercase instructions unchanged."
+  },
+  "32a40a9ae30b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The used T5 and T9 styles still have yellow backgrounds, so highlighted text remains."
+  },
+  "32eebfbc57e6": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although the N/A rows are hidden, the entire Difference column and its formulas were deleted."
+  },
+  "339d14c3aa6e": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The result writes an extra header in D1 and N/A values in C30:C33, violating the instruction to leave irrelevant blank regions untouched."
+  },
+  "34885c07e75a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Removing all span style assignments also removes unrelated bold, italic, and link styling instead of only highlights."
+  },
+  "355d06fa601a": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only the first instruction sentence was lowercased, leaving the remaining uppercase instructions and course code unchanged."
+  },
+  "366225c70ba3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 contains only the first ten revenue values and omits the remaining nine."
+  },
+  "36fe33ee84cf": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "The all-uppercase course code and presentation instructions are lowercased while the other document content and formatting are preserved."
+  }
+}
