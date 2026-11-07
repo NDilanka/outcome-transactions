@@ -4,7 +4,7 @@ import os, fnmatch
 import readers as R
 
 def target(before_file, after_file, ref):
-    """Where a spec cell sits in the after-state: the cell with the row label and column header it had before."""
+    """Where a spec cell sits in the after-state: the cell with the sheet, row label and column header it had before."""
     if not (os.path.exists(before_file) and os.path.exists(after_file)):
         return None
     return R.find_anchor(after_file, R.anchor_of(before_file, ref))
@@ -23,7 +23,7 @@ def evaluate(spec, before, after, noise=()):
             _, f, ref, op, val = p
             fp = os.path.join(after, f)
             addr = target(os.path.join(before, f), fp, ref)
-            got = R.ods_cells(fp).get(addr, (None,))[0] if addr else None
+            got = R.all_cells(fp).get(addr, (None,))[0] if addr else None
             ok = got is not None and float(got) == float(val)
             if not ok: reasons.append(f"must {f}:{ref} == {val}, got {got} (anchored at {addr})")
         elif kind == "exists":
@@ -41,7 +41,7 @@ def evaluate(spec, before, after, noise=()):
             _, f, allowed = p
             fb, fa = os.path.join(before, f), os.path.join(after, f)
             if os.path.exists(fb) and os.path.exists(fa):
-                cb, ca = R.ods_cells(fb), R.ods_cells(fa)
+                cb, ca = R.all_cells(fb), R.all_cells(fa)
                 for ref in sorted(R.changed_cells(fb, fa) - allowed_cells(fb, fa, allowed)):
                     reasons.append(f"preserve: {f}:{ref} changed {cb.get(ref)} -> {ca.get(ref)}")
                     if len(reasons) > 12: break
@@ -54,7 +54,7 @@ def semantic_diff(before, after, spec):
         if p[0] == "ods_cell":
             fb, fp = os.path.join(before, p[1]), os.path.join(after, p[1])
             addr = target(fb, fp, p[2])
-            d[f"{p[1]}:{p[2]}"] = R.ods_cells(fp).get(addr, (None,))[0] if addr else None
+            d[f"{p[1]}:{p[2]}"] = R.all_cells(fp).get(addr, (None,))[0] if addr else None
     for p in spec.get("preserve", []):
         if p[0] == "ods_cells_except":
             fb, fa = os.path.join(before, p[1]), os.path.join(after, p[1])

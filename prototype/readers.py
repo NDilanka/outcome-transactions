@@ -91,13 +91,33 @@ def _text(cell):
     texts = [_inline(p) for p in _paragraphs(cell)]
     return "\n".join(texts) if any(texts) else ""
 
-def ods_cells(path, sheet=None):
-    """Return {ref: (value, formatting)} for non-empty cells of the first (or named) sheet."""
+def _root(path):
     with zipfile.ZipFile(path) as z:
-        root = ET.fromstring(z.read("content.xml"))
-    sprops = _style_props(root)
+        return ET.fromstring(z.read("content.xml"))
+
+def _table(root, sheet=None):
+    """The named sheet, which must occur once in the workbook. With no name, the first sheet: a fixture default
+    that the checks never use."""
     tables = list(root.iter(T + "table"))
-    table = next((t for t in tables if t.get(T + "name") == sheet), tables[0])
+    if sheet is None:
+        return tables[0]
+    named = [t for t in tables if t.get(T + "name") == sheet]
+    if len(named) != 1:
+        raise ValueError(f"sheet {sheet!r} occurs {len(named)} times")
+    return named[0]
+
+def ods_cells(path, sheet):
+    """{ref: (value, formatting)} for the non-empty cells of one named sheet."""
+    root = _root(path)
+    return _sheet_cells(_table(root, sheet), _style_props(root))
+
+def all_cells(path):
+    """{'Sheet!REF': (value, formatting)} over every sheet. A cell's identity includes its sheet."""
+    root = _root(path)
+    sprops = _style_props(root)
+    return {f"{t.get(T + 'name')}!{ref}": v for t in root.iter(T + "table") for ref, v in _sheet_cells(t, sprops).items()}
+
+def _sheet_cells(table, sprops):
     out = {}
     r = 0
     for row in table.iter(T + "table-row"):
@@ -131,10 +151,10 @@ def ods_cells(path, sheet=None):
 
 def changed_cells(a_path, b_path):
     """Refs whose cell differs between two sheets, over both key sets; an absent cell is None."""
-    ca, cb = ods_cells(a_path), ods_cells(b_path)
+    ca, cb = all_cells(a_path), all_cells(b_path)
     return {k for k in set(ca) | set(cb) if ca.get(k) != cb.get(k)}
 
-def ods_set_cell(path, ref, value):
+def ods_set_cell(path, ref, value, sheet=None):
     """Set a numeric cell in place, or clear it when value is None; everything else in the file is preserved."""
     rr, cc = ref_to_rc(ref)
     with zipfile.ZipFile(path) as z:
@@ -142,7 +162,7 @@ def ods_set_cell(path, ref, value):
     content = dict((i.filename, d) for i, d in items)["content.xml"]
     _register_ns(content)
     root = ET.fromstring(content)
-    table = next(root.iter(T + "table"))
+    table = _table(root, sheet)
     r = 0
     target_row = None
     for row in list(table.iter(T + "table-row")):
@@ -220,22 +240,29 @@ def ods_insert_row(path, idx):
     _save_content(path, items, root)
 
 def anchor_of(path, ref):
-    """Name a cell by its row label (column A of its row) and column header (row 1 of its column)."""
-    cells = ods_cells(path)
-    row, col = ref_to_rc(ref)
-    return (cells.get(f"A{row + 1}", (None,))[0], cells.get(f"{col_name(col)}1", (None,))[0])
+    """Name a cell by its sheet, its row label (column A of its row) and its column header (row 1 of its column).
+    ref is 'Sheet!B2'."""
+    sheet, cell = ref.rsplit("!", 1)
+    cells = ods_cells(path, sheet)
+    row, col = ref_to_rc(cell)
+    return (sheet, cells.get(f"A{row + 1}", (None,))[0], cells.get(f"{col_name(col)}1", (None,))[0])
 
 def find_anchor(path, anchor):
-    """The address of the one cell with this row label and column header, or None if there is not exactly one."""
-    label, header = anchor
-    if label is None or header is None:
+    """The address 'Sheet!B2' of the one cell this anchor names, or None. The sheet must occur once in the workbook
+    under its name (a rename, a deletion or a duplicate refuses), and within it the label and the header must each
+    occur once. No other sheet is ever used in its place."""
+    sheet, label, header = anchor
+    if sheet is None or label is None or header is None:
         return None
-    cells = ods_cells(path)
+    root = _root(path)
+    if sum(t.get(T + "name") == sheet for t in root.iter(T + "table")) != 1:
+        return None
+    cells = _sheet_cells(_table(root, sheet), _style_props(root))
     rows = [k[1:] for k, (v, _) in cells.items() if re.fullmatch(r"A\d+", k) and v == label]
     cols = [k[:-1] for k, (v, _) in cells.items() if re.fullmatch(r"[A-Z]+1", k) and v == header]
     if len(rows) != 1 or len(cols) != 1:
         return None
-    return f"{cols[0]}{rows[0]}"
+    return f"{sheet}!{cols[0]}{rows[0]}"
 
 def ods_append_block(path, label, count):
     """Append count identical rows, each with label in column A, stored as one repeated row block (what pasting identical rows writes)."""
@@ -294,9 +321,7 @@ def ods_copy_sheet_first(path, name):
 
 def sheet_names(path):
     """The sheet names of a workbook, in order."""
-    with zipfile.ZipFile(path) as z:
-        root = ET.fromstring(z.read("content.xml"))
-    return [t.get(T + "name") for t in root.iter(T + "table")]
+    return [t.get(T + "name") for t in _root(path).iter(T + "table")]
 
 def ods_rename_sheet(path, old, new):
     """Rename a sheet, as a user does."""

@@ -25,11 +25,12 @@ def log(msg, **kw):
 def run(cmd, **kw):
     return subprocess.run(cmd, shell=True, capture_output=True, text=True, **kw)
 
+TARGET = "Q3!B2"  # the sheet and cell the spec is about
 SPEC = {
     "request": "Q3 budget exported as PDF to out/q3.pdf, with B2 = 5000",
-    "must": [("ods_cell", "budget.ods", "B2", "==", 5000), ("exists", "out/q3.pdf"), ("pdf_contains", "out/q3.pdf", "5000")],
+    "must": [("ods_cell", "budget.ods", TARGET, "==", 5000), ("exists", "out/q3.pdf"), ("pdf_contains", "out/q3.pdf", "5000")],
     "footprint": ["budget.ods", "out/q3.pdf"],
-    "preserve": [("ods_cells_except", "budget.ods", ["B2"])],
+    "preserve": [("ods_cells_except", "budget.ods", [TARGET])],
 }
 EXPECT = {
     "normal": dict(committed=True, level="verified"),
@@ -163,8 +164,9 @@ def main():
     spec_hash = hashlib.sha256(json.dumps(SPEC, sort_keys=True).encode()).hexdigest()[:12]
     log("spec frozen", spec_hash=spec_hash)
     # The spec's target cell, named by its row label and column header rather than by its address.
-    anchor = R.anchor_of(f"{SNAP}/budget.ods", "B2")
-    log("target anchored", anchor=anchor, address=R.find_anchor(f"{SNAP}/budget.ods", anchor))
+    anchor = R.anchor_of(f"{SNAP}/budget.ods", TARGET)
+    target_addr = R.find_anchor(f"{SNAP}/budget.ods", anchor)
+    log("target anchored", anchor=anchor, address=target_addr)
 
     # 2. Mutation-test the spec before any search.
     mt = mutation_test()
@@ -255,7 +257,7 @@ def main():
         if now_addr != base_addr:
             log("anchor moved: the target row or column changed; nothing committed", anchor=anchor, was=base_addr, now=now_addr)
             abort("anchor_mismatch", level, anchor=anchor, base_address=base_addr, now_address=now_addr,
-                  real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0], real_b2_by_sheet=sheet_b2s(), forks=results)
+                  real_b2=R.all_cells(f"{REAL}/budget.ods").get(target_addr, (None,))[0], real_b2_by_sheet=sheet_b2s(), forks=results)
             return
         if not conflicts: break
         # Semantic merge test: the same file changed on both sides, but did the same cells?
@@ -265,7 +267,7 @@ def main():
         log("semantic merge test", user_cells=sorted(user_cells), winner_cells=sorted(win_cells), overlap=overlap)
         if overlap or replays >= 3:
             log("true conflict: show the user both versions; nothing committed",
-                real_B2=R.ods_cells(f"{REAL}/budget.ods").get("B2"), held_effects_released=0)
+                real_B2=R.all_cells(f"{REAL}/budget.ods").get(target_addr), held_effects_released=0)
             abort("true_conflict", level, overlap=overlap, forks=results)
             return
         # Disjoint edits: replay the winning method on a fresh fork of the current real state,
@@ -329,8 +331,8 @@ def main():
                   search_seconds=round(search_s, 1), total_seconds=round(time.monotonic() - T0, 1), replays=replays, log=LOG)
     try:
         report.update(real_notes_preserved="user typed this" in open(f"{REAL}/notes.txt").read(),
-                      user_c3_kept=(R.ods_cells(f"{REAL}/budget.ods").get("C3", (None,))[0] in ("77", 77, "77.0")) if CONFLICT or RACE else None,
-                      real_b2=R.ods_cells(f"{REAL}/budget.ods").get("B2", (None,))[0], real_b2_by_sheet=sheet_b2s())
+                      user_c3_kept=(R.all_cells(f"{REAL}/budget.ods").get("Q3!C3", (None,))[0] in ("77", 77, "77.0")) if CONFLICT or RACE else None,
+                      real_b2=R.all_cells(f"{REAL}/budget.ods").get(target_addr, (None,))[0], real_b2_by_sheet=sheet_b2s())
     except Exception as ex:
         log("report state unreadable", error=f"{type(ex).__name__}: {ex}")
     write_report(report)
