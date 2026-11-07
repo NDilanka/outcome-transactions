@@ -1,0 +1,72 @@
+{
+  "54cce197ae1c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All seven sentences from the first paragraph are separated by empty paragraphs while the remaining content and formatting are preserved."
+  },
+  "56d2334a957b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all nineteen values in their original order, with Sheet1 unchanged."
+  },
+  "5b18693351c3": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Although revenues are calculated, existing Type formulas are replaced by constants and the original date and Retail Price header formatting are changed."
+  },
+  "5b2e90456dea": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table is added after the existing table without other visible changes, though its exact position relative to the cursor paragraph is not shown."
+  },
+  "5de1680cd910": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all nineteen values in their original order, with Sheet1 unchanged."
+  },
+  "5f636fa84036": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Slide 1 has a dissolve transition and the presentation otherwise has no changes shown in the dump."
+  },
+  "67418b818e41": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all nineteen values in their original order, with Sheet1 unchanged."
+  },
+  "68dfe6383058": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3's main image remains 26.8 cm high while seven small icons are enlarged to 20 cm, damaging the layout instead of resizing the intended picture."
+  },
+  "70434fc4daf2": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table is added after the existing table without other visible changes, though its exact position relative to the cursor paragraph is not shown."
+  },
+  "70aebe863cac": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlighting becomes transparent while document text and the other displayed formatting remain unchanged."
+  },
+  "72e2a87c15f6": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The first two Overview list entries have single strikethrough with no other changes, although the dump does not establish which list the user was viewing."
+  },
+  "80ecd67d0379": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Dissolve is added to slide 1, but unrelated text boxes and shapes across other slides are resized or repositioned."
+  },
+  "8184f15ea601": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table is added with existing content unchanged, though the dump does not reveal the cursor or exact insertion point."
+  },
+  "83d340ef5f38": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Growth rows contain correct calculations and both requested chart types exist, though the dump cannot verify chart titles or month ranges."
+  }
+}

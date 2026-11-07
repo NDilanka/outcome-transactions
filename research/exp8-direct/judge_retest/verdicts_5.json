@@ -1,0 +1,72 @@
+{
+  "e3bbbfede77b": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Only AutoRecovery is enabled every three minutes, without enabling automatic saves of the actual document needed to replace Ctrl-S."
+  },
+  "e55e4bfd055c": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The existing content remains unbulleted and an unrequested placeholder saying 'New bullet point' is added instead."
+  },
+  "e733c0f77bb1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "The settings enable three-minute recovery snapshots but do not enable automatic saving of the document itself."
+  },
+  "e90652ffe644": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Both yellow highlighting styles become transparent while the document's text and other displayed formatting remain unchanged."
+  },
+  "ecd19a22ac93": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All displayed text on slide 5 is changed to exact yellow FFFF00 with no other displayed changes."
+  },
+  "ef096f014d54": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The first paragraph is separated correctly, but whitespace is also stripped throughout the unrelated table."
+  },
+  "f6572edea7f3": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The totals, February-to-June growth percentages, and two chart types are correct, although the dump cannot verify chart titles or plotted ranges."
+  },
+  "f795fd545760": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains correctly labeled sums of all revenue and expense values while Sheet1 remains unchanged."
+  },
+  "f85aa657ba46": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "Only the first two entries of the overview list receive single strikethrough formatting."
+  },
+  "f8ff99443124": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row seven-column table is added after the original table without other displayed changes, consistent with the cursor note although exact paragraph placement is not shown."
+  },
+  "f9175197ce79": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Sheet2 uses an ordinary SUMIF summary rather than the requested Pivot Table."
+  },
+  "f9d1a0e61ecf": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Three-minute AutoRecovery and automatic saving of the document itself are both enabled without other displayed changes."
+  },
+  "fd17a72546fc": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 1 gains dissolve, but unrelated text boxes and shapes across other slides are also repositioned or resized."
+  },
+  "ff376badedd3": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The requested empty five-row seven-column table is added and existing content is preserved, but the packet does not reveal whether its placement matches the cursor."
+  }
+}

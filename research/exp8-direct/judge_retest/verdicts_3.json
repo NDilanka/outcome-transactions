@@ -1,0 +1,72 @@
+{
+  "84d28b1c5688": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3's main image remains 26.8 cm high while seven small picture icons are stretched to 20 cm, damaging the slide instead of resizing the intended picture."
+  },
+  "8ab37de36a62": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the correctly labeled revenue and expense totals of 867786 and 411686, with Sheet1 unchanged."
+  },
+  "8c19026ea4ec": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 has the requested headers and correct SUM formulas with cached totals of 867786 and 411686, with Sheet1 unchanged."
+  },
+  "8ee85506bb17": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Entire rows are hidden, concealing valid dates and budgets as well as the N/A entries instead of hiding only the missing-data indicators."
+  },
+  "927c21778126": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3's main image remains 26.8 cm high while seven small picture icons are stretched to 20 cm, damaging the slide instead of resizing the intended picture."
+  },
+  "99659dd78d69": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "C27 contains 'Edge Of Puip-fre Fiction', leaving the word after the hyphen lowercase instead of capitalizing it as 'Fre'."
+  },
+  "a40dff26ee92": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Only the fully capitalized passages were lowercased, leaving uppercase letters in the title, other body paragraphs, and table rather than making the document uniformly lowercase."
+  },
+  "a7b264822d1c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Sheet2 contains the Revenue header and all nineteen original revenue values in order, with Sheet1 unchanged."
+  },
+  "a7e69144b708": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A bullet is added to the slide's content paragraph while the title and all other shown content and formatting remain unchanged."
+  },
+  "a893766a188c": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Slide 1 has a dissolve transition and the remaining shown presentation state is unchanged."
+  },
+  "adb6735a166b": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The first two lines of the overview list have single strikethrough, and no other shown content or formatting changes."
+  },
+  "af7320c2d388": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All shown text in both slide-5 textboxes is exactly yellow FFFF00, with no other shown changes."
+  },
+  "b1ef2ff1f427": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "All shown slide-5 text is exactly yellow FFFF00, and removing explicit no-bullet settings is likely visually equivalent although the dump does not establish inherited bullet formatting."
+  },
+  "b449eafdbc3c": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Entire rows are hidden, concealing valid dates and budgets as well as the N/A entries instead of hiding only the missing-data indicators."
+  }
+}

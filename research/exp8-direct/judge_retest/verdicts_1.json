@@ -1,0 +1,72 @@
+{
+  "264aaa42bea8": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The totals and Feb-to-Jun growth formulas are correct and both chart types are present, although chart titles and data ranges are not exposed."
+  },
+  "284b99a24c87": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlighting is changed to transparent while the text and other shown formatting are preserved."
+  },
+  "2a9b2d5ecedb": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "Revenue correctly incorporates price, quantity, and discount and Sheet2 correctly summarizes each product, although functional Pivot Table metadata is not exposed."
+  },
+  "2d6db767b20e": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All yellow highlighting is changed to transparent while the text and other shown formatting are preserved."
+  },
+  "33aacf1b10c4": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty paragraph and an additional page break after the first-page introductory content likely insert the requested blank page without removing content, but rendered pagination is not shown."
+  },
+  "3511fd7a3d42": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The change enables three-minute AutoRecovery snapshots but does not enable saving the actual document automatically as requested."
+  },
+  "3afe32db0fb0": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "A completely empty five-row, seven-column table is added with the original content retained, although its position relative to the cursor is not shown."
+  },
+  "3b51aa8e3a56": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The first two body lines of the active slide receive single strikethrough while the remaining body lines and text are preserved."
+  },
+  "3bbcc10b7986": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "An empty bulleted paragraph is appended instead of adding a bullet to the existing slide content."
+  },
+  "3f65d20e2552": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty paragraph and an additional page break after the first-page introductory content likely insert the requested blank page without other shown changes, but rendered pagination is not shown."
+  },
+  "4851f85cffdc": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "C27 leaves the hyphen-separated word 'fre' lowercase in 'Puip-fre' rather than capitalizing it as 'Puip-Fre'."
+  },
+  "4dd583ac3964": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All shown text in both slide-5 textboxes is changed to exact yellow FFFF00 with other shown content and formatting preserved."
+  },
+  "4e367bca72f9": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "Only the first two body lines of the active slide receive single strikethrough, with the other shown content and formatting preserved."
+  },
+  "5351880fffb1": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "C27 leaves the hyphen-separated word 'fre' lowercase in 'Puip-fre' rather than capitalizing it as 'Puip-Fre'."
+  }
+}

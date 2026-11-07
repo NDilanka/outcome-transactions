@@ -1,0 +1,72 @@
+{
+  "b6350f5f647e": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "Only the all-caps passages were lowercased, while uppercase letters remain in the title, body text, and table."
+  },
+  "b6de405c1594": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table was added after the existing table with its content retained, although exact cursor placement and equivalence of the renamed paragraph styles are not shown."
+  },
+  "b88830a85d6b": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Only the first two lines of the active slide's body have single strikethrough added."
+  },
+  "b8c75416f987": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "All and only rows containing N/A values are hidden, with the original cells and formulas preserved and no filter added."
+  },
+  "bab88f120679": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Each of the seven sentences in the first paragraph is followed by one empty paragraph, with the remaining content and formatting unchanged."
+  },
+  "bad8acd79d8e": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "An empty five-row, seven-column table was inserted without other visible changes, but the packet does not establish the cursor position."
+  },
+  "bd13e9bf54f1": {
+    "verdict": "accept",
+    "confidence": "medium",
+    "reason": "The five comma-delimited lines became a five-row, four-column table with their text and internal spacing preserved and the remaining document unchanged."
+  },
+  "bfe06e941562": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The conversion also collapses internal nonbreaking spaces between examples, changing formatting beyond replacing comma separators with table columns."
+  },
+  "c6dc444c4f25": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "The Total and Growth rows have correct formulas and the requested chart types exist, although chart titles, series ranges, and January exclusion are not exposed."
+  },
+  "c834f2a0e231": {
+    "verdict": "reject",
+    "confidence": "medium",
+    "reason": "The cleaned title in C27 uses Puip-fre rather than Puip-Fre, leaving the word after the hyphen without the requested initial capital."
+  },
+  "d0868ba7dfe1": {
+    "verdict": "reject",
+    "confidence": "high",
+    "reason": "Slide 3's main image remains 26.8 cm high while seven tiny bullet pictures are enlarged to 20 cm, creating extensive overlap instead of resizing the intended picture."
+  },
+  "e10352e65426": {
+    "verdict": "accept",
+    "confidence": "low",
+    "reason": "One page break was added without visible content changes, consistent with inserting a blank page, but its placement after page 1 is not exposed."
+  },
+  "e19a3fedae35": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "Only the first two lines of the active slide's body have single strikethrough added."
+  },
+  "e30003791d68": {
+    "verdict": "accept",
+    "confidence": "high",
+    "reason": "A dissolve transition was added to slide 1 with no other visible changes."
+  }
+}
