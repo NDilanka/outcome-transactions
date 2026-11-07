@@ -5,7 +5,7 @@ Labels: **measured** (script output or file read), **inferred** (from measured f
 
 **Status: HYPOTHESIS.** The two agreement policies below were proposed after the primary arm results were known. They were not pre-registered and do not change any gate verdict in `exp8-results.md`.
 
-Scripts and outputs: `research/exp8-direct/agreement.py` (output in `agreement_output.txt`) and `research/exp8-direct/metrics.py` (arms, output in `metrics_output.txt`). Both use the primary GT reading (strict auto-save, see `exp8-results.md`).
+Scripts and outputs: `research/exp8-direct/agreement.py` (output in `agreement_output.txt`), `research/exp8-direct/metrics.py` (arms, output in `metrics_output.txt`), and `research/exp8-direct/retest.py` and `retest_twins.py` (judge self-consistency, outputs in `retest_output.txt` and `retest_twins_output.txt`). All use the primary GT reading (strict auto-save, see `exp8-results.md`).
 
 ## Answer first
 
@@ -14,6 +14,7 @@ Scripts and outputs: `research/exp8-direct/agreement.py` (output in `agreement_o
 - Agreement does not catch the wrong state that the two keys also pass (d53ff5ee m2, de97694c). Its twin (m4, b9d8b59c) wrote the same wrong edit, so the two agree with each other. Shared misreadings look like agreement. **Measured (group), inferred (cause).**
 - Of the 12 wrong end states in the primary set, agreement avoids two wrong commits that A or B make (083c86e1 and 02d030c7). It does not avoid the third (de97694c), which A, B, Bs, C and D all commit. **Measured.**
 - Two GT labels look wrong or inconsistent: ecc2413d (the render check contradicts the GT for all four candidates) and a6cac88c versus 699226e8 (same document text, opposite labels). Either can change results. GT v3 is not changed here. This needs a ruling. **Measured.**
+- Judge self-consistency key (verified against the second Sol pass, commit 29fc5bd): accept only if both passes accept. Four of 84 verdicts flip, all accept to reject. Only arm A changes: 14 correct and 2 wrong becomes 15 and 1, because one flip removes the wrong auto-save accept. B, Bs, C and D do not change. Three of the four flips removed correct accepts. The key filters variance, not bias: four wrong accepts survive it. **Measured.**
 
 ## Method
 
@@ -134,19 +135,93 @@ Agreement blocked two commits that A or B make: 083c86e1 (no partner) and 02d030
 ## GT and judge issues (not changed in GT v3)
 
 1. **ecc2413d.** The render check contradicts GT v3 on all four candidates (see above). Needs a re-read and a ruling. Affects A, B and C on this request.
-2. **d53ff5ee, a6cac88c versus 699226e8.** Document text is identical, and the only other difference is one run-boundary marker in one paragraph. GT v3 says a6cac88c is wrong and 699226e8 is correct. The judge also accepted 699226e8 (medium) and rejected a6cac88c (medium). **Measured.** Either label could be wrong. Needs a ruling.
-3. **Auto-save family (2cd43775).** See `exp8-results.md`. The judge accepted 083c86e1 and rejected 81a65c80 and a9e34228 on the same profile evidence. **Measured.**
+2. **d53ff5ee, a6cac88c versus 699226e8.** Document text is identical (paragraph text, table cells included). The only difference in the inspector view is one run-boundary marker in one paragraph. GT v3 says a6cac88c is wrong and 699226e8 is correct. The first judge pass accepted 699226e8 (medium) and rejected a6cac88c (medium). The second pass rejected both (medium). Its reason for 699226e8 is that only the all-caps passages were lowercased. That matches the GT label of a6cac88c and not the GT label of 699226e8. Either label could be wrong. **Measured.** Needs a ruling.
+3. **Auto-save family (2cd43775).** See `exp8-results.md`. The first judge pass accepted 083c86e1 and rejected a9e34228, although the two profiles hold the same settings. The second pass rejected 083c86e1. See the self-consistency section. **Measured.**
+4. **6054afcb.** Four identical end states, all GT C. The second judge pass accepted two and rejected two, both rejects citing whole-row hiding. Whether that is an acceptable reading of "hide them" is a GT question. Not changed here. **Measured.** Needs a ruling.
+
+## Judge self-consistency key (second judge pass)
+
+**Status: verified.** A second, independent Sol pass on all 84 packets is on `origin/exp8-judge-verdicts` at commit 29fc5bd, in `research/exp8-direct/judge_retest/`. It used the same prompt and the same six batches. According to the commit message, each judge saw only its own batch, not the first-pass verdicts. `retest.py` reads both passes from that commit and checks them against the first-pass TSV that `metrics.py` uses. Output: `retest_output.txt`. **Measured.**
+
+### Checks on the two passes (measured)
+
+- 84 packets in each pass. The blind ids match the blind map (84).
+- The first-pass TSV matches the first-pass files: 84 of 84.
+- Four flips, all accept to reject: 083c86e1, d8fa1b66, 4e3dd7f6 and 699226e8. This is the list in the report. (Blind ids are not written here.)
+- Second pass alone: 60 accept, 24 reject.
+- Confidence labels match on 77 of 84.
+- Flipped packets had first-pass confidence high 1, medium 3, low 0. Of the 43 packets rated high in both passes, none flipped.
+
+### The key
+
+A judge accept counts only if both passes accept. A kept accept uses its first-pass confidence (main rule). A sensitivity rule uses the lower of the two labels. The two rules give the same pick for every arm and request (zero changes in the rule check), so the 7 label mismatches change no commit. **Measured.**
+
+### The four flipped packets
+
+| Code | Task, method | GT (strict) | Spec | First pass | Second pass |
+|---|---|---|---|---|---|
+| 083c86e1 | 2cd43775, 1 (auto-save) | W, ambiguous | UNDECIDED | accept, high | reject, medium |
+| 4e3dd7f6 | 6054afcb, 3 | C | ACCEPT | accept, medium | reject, medium |
+| d8fa1b66 | 6054afcb, 2 | C | ACCEPT | accept, medium | reject, medium |
+| 699226e8 | d53ff5ee, 1 | C (label disputed, see GT issues) | REJECT | accept, medium | reject, medium |
+
+**Measured.** GT of the flips: three correct accepts removed (4e3dd7f6, d8fa1b66, 699226e8), one wrong accept removed (083c86e1). 083c86e1 is wrong only under the strict auto-save reading. Under GT as adjudicated it is correct.
+
+Second-pass reasons, as written in the files:
+- 083c86e1: "The change enables three-minute AutoRecovery snapshots but does not enable saving the actual document automatically as requested."
+- 6054afcb, d8fa1b66 and 4e3dd7f6: "Entire rows are hidden, concealing valid dates and budgets as well as the N/A entries instead of hiding only the missing-data indicators."
+- 699226e8: "Only the all-caps passages were lowercased, while uppercase letters remain in the title, body text, and table."
+
+### Effect on the arms (primary 72 attempts, strict GT)
+
+| Arm | First pass: correct / wrong / CONFIRM | With key: correct / wrong / CONFIRM | Wrong commits with key |
+|---|---|---|---|
+| A | 14 / 2 / 2 | 15 / 1 / 2 | d53ff5ee de97694c |
+| B | 7 / 2 / 9 | 7 / 2 / 9 | d53ff5ee de97694c; ecc2413d 02d030c7 |
+| Bs | 8 / 2 / 8 | 8 / 2 / 8 | same as B (Bs does not use the judge) |
+| C | 11 / 1 / 6 | 11 / 1 / 6 | d53ff5ee de97694c |
+| D | 9 / 1 / 8 | 9 / 1 / 8 | d53ff5ee de97694c |
+
+**Measured (script).**
+
+- Only A changes, on one request (2cd43775). The key removes the wrong auto-save accept. A falls to the next accepted candidate, 76604199 (method 3, high), which is correct under the strict reading. The second pass accepts 76604199 (high) and rejects the other three profiles, so on this family it applies the strict reading consistently. **Measured.**
+- B and Bs do not change. B's spec key already excludes 083c86e1, because its spec is UNDECIDED.
+- C and D do not change. The flipped packets are not the picks of either policy. On 6054afcb, C and D still pick method 1 (high, correct). On d53ff5ee, method 1 is in no agreement group.
+- CONFIRM tags do not change.
+- Judge accepts fall from 64 to 60. Correct accepts fall from 59 to 56, and wrong accepts from 5 to 4. Precision (correct accepts over all accepts) rises from 92.2% to 93.3%. Recall on correct end states falls from 83.1% (59 of 71) to 78.9% (56 of 71). **Measured.**
+
+### Identical or near-identical content
+
+All four flips are on content that the judge also saw in an identical or near-identical twin. The second pass did not treat those twins alike.
+
+- **6054afcb.** Four end states (5a2c5250 m1, d8fa1b66 m2, 4e3dd7f6 m3, fbd38e91 m4) are identical in every cell value, formula and hidden row (13 rows each). For all four, the hidden rows are exactly the rows that contain `=NA()`. GT v3 labels all four C. Judge: 5a2c5250 accept high (both passes), fbd38e91 accept high (both passes), d8fa1b66 accept medium then reject medium, 4e3dd7f6 accept medium then reject medium. So the two flips are judge inconsistency on identical content, not different outcomes. **Measured (content and verdicts), inferred (cause).**
+- **d53ff5ee.** 699226e8 and a6cac88c have the same document text (see GT issues). First pass: accept and reject, both medium. Second pass: reject, reject. The second pass made the pair consistent in the reject direction. **Measured.**
+- **2cd43775.** The four profiles differ only in `registrymodifications.xcu`. 76604199 is the only one with UserAutoSaveEnabled set to true. 083c86e1 and a9e34228 hold the same settings (AutoSave Enabled true, TimeIntervall 3, no UserAutoSaveEnabled). They differ only in XML type attributes and quote style. **Measured (file diff).** Treating them as the same setting is **inferred**. The first pass accepted 083c86e1 (high) and rejected a9e34228 (high). The second pass rejected both (083c86e1 medium, a9e34228 high). **Measured.**
+
+### What the key does not catch
+
+- Four wrong accepts remain after the key: e6b4b156 (66399b0d m4, low), de97694c (d53ff5ee m2, high), b9d8b59c (d53ff5ee m4, high) and 02d030c7 (ecc2413d m3, low). Both passes accept all four. **Measured (retest output).**
+- The key is a stability filter, not a correctness filter. A wrong accept that the judge repeats survives it. The same model with the same prompt repeats its own errors on these four. **Inferred.**
+- Flips are few and sit in the middle band: 3 of 12 medium verdicts flipped, 1 of 47 high, 0 of 25 low. The counts are small. **Measured.**
+
+### Summary of the key
+
+- The flips remove three correct accepts and one wrong accept (under the strict reading).
+- Arm A changes on one request: 14 correct and 2 wrong becomes 15 and 1. B, Bs, C and D are unchanged.
+- The key is not a safety mechanism on this sample. It removes one of five wrong first-pass accepts (the auto-save one) and three correct ones. Four wrong accepts survive.
+- Tie-break counts in `retest_output.txt` (A 13 requests, B 8, C 11, D 9) use first-pass confidence. The min rule changes no pick, but these counts were not recomputed under it. **Measured.**
 
 ## Limits
 
 - 18 requests and 12 wrong states in the primary set. Any result here is for one sample. **Measured.**
-- The policies and the high-confidence threshold were chosen after the primary results were seen. **Measured (timeline).**
+- The policies, the high-confidence threshold and the key rule were chosen after the primary results were seen. **Measured (timeline).**
 - Signatures depend on the inspector view, which includes round-trip run markers (see Method). **Measured.**
 - Agreement depends on the four method hints producing diffs that can match. Two methods with the same wrong reading will match. **Inferred.**
-- Judge verdicts are one judge's labels. **Measured.**
+- Judge verdicts come from one model and one prompt, run twice. The second pass measures run-to-run variance, not bias. **Measured (design), inferred (effect).**
 
 ## Next steps
 
 - Ruling on the ecc2413d and d53ff5ee GT labels (blocks any firm agreement result).
+- Ruling on whether whole-row hiding is an accepted reading of 6054afcb (GT v3 says C for four identical end states; the second judge pass rejected two of them on that ground).
 - If agreement is pursued, test it on more requests with independent method hints, and add a check for shared misreading (for example, an independent wording of the request).
 - Do not treat policy C or D as a safety mechanism on this sample. It did not catch the one wrong state that agreed with another.
