@@ -94,6 +94,16 @@ check("C1 a label that differs only in spaces is a duplicate", target_of("Space"
 check("C2 a label whose number is a list marker is refused", target_of("List") is None, f"resolved to {target_of('List')}")
 check("D1 a header merged over two columns is refused", target_of("Span") is None, f"resolved to {target_of('Span')}")
 check("D0 unique labels resolve to their cell (control)", target_of("Pos") == "Pos!B2", f"resolved to {target_of('Pos')}")
+merged_label = lo_ods("merged_label", table("MergeL", [HDR, row(sv("item1"), fv(3)), row(sv("item2"), fv(4))]))
+R.ods_replace_cell(merged_label, "A2", '<table:table-cell table:number-rows-spanned="2" office:value-type="string"><text:p>item1</text:p></table:table-cell>')
+R.ods_replace_cell(merged_label, "A3", '<table:covered-table-cell/>')
+check("D2 a label merged over two rows is refused", R.find_anchor(merged_label, R.anchor_of(merged_label, "MergeL!B2")) is None,
+      f"resolved to {R.find_anchor(merged_label, R.anchor_of(merged_label, 'MergeL!B2'))}")
+merged_away = lo_ods("merged_away", table("MergeA", [HDR, row(sv("item1"), fv(3)), row(sv("item2"), fv(4), fv(5), fv(6))]))
+R.ods_replace_cell(merged_away, "C3", '<table:table-cell table:number-columns-spanned="2" office:value-type="float" office:value="5"><text:p>5</text:p></table:table-cell>')
+R.ods_replace_cell(merged_away, "D3", '<table:covered-table-cell/>')
+check("D3 a merge in another row and column leaves the anchor (control)", R.find_anchor(merged_away, R.anchor_of(merged_away, "MergeA!B2")) == "MergeA!B2",
+      f"resolved to {R.find_anchor(merged_away, R.anchor_of(merged_away, 'MergeA!B2'))}")
 
 shutil.rmtree(WORK, ignore_errors=True)
 failed = [n for n, ok in RESULTS if not ok]
