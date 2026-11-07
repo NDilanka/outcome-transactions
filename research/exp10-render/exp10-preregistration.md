@@ -171,6 +171,59 @@ The orchestrator approved section 0 on the lock, with the additions below. Nothi
 
 5. Scorer. `exp10_score.py` is part of the lock (section 11). It was tested before this amendment on synthetic stats and verdicts, not on Exp 10 data. Two tests: (i) render verdicts equal to Sol's first pass: A AND R removes only 083c86e1 (by the undecided rule) on basis 18, and nothing on basis 17, so the gate fails; (ii) an oracle that accepts exactly the GT-correct states: both bases pass. These tests check the logic only.
 
-## Addendum A (table row check)
+## Addendum A (table row check and render facts)
 
-To be added after the render and before any packet is published.
+Written after the render and before any packet is published. Blind ids are the packet folder names. The run outputs (`stats.json`, `rowcheck.json`, `rowcheck_alnum.json`, `render.log`) stay in the private run folder. They hold blind ids and counts, not codes or cell text.
+
+### A.1 Render (measured)
+
+- 80 office states rendered: 847 PNG pages, 32 batches, largest batch 48 PNGs.
+- Eight states have more than 40 PNGs: 0b1168c0cf27, 109ad23405a8, 5e7d7cf1e324, 9e9bd9f0615c, af1c2d9f43c3, b1904159da6c, bf91660c0095, dc75e83cf9f8. Each is alone in its batch.
+- Pages: 839 kept as rendered, 8 pages re-encoded losslessly (in 4 states), 0 tiled.
+- Largest PNG: 4,108,801 bytes (0737c6be2b90).
+- Render time per state (wall clock, cold start): median 2.35 s, 90th percentile 10.88 s, maximum 15.21 s (0737c6be2b90). Total 337 s.
+- Page counts, start render against end render: 57 states equal, 23 states have one more page on the end render.
+- Predicate check for ecc2413d (section 5): method 1 (40e16e1c0eed), method 2 (f73cecc57744) and method 4 (71481265ae56) have 7 pages on each side. Method 3 (3a37f6fa9fb8) has 7 and 8. This matches the expectation in section 5, with no difference to report.
+- MuPDF printed 64 warnings, "cannot create appearance stream for Screen annotations" (form-field annotations, as in Exp 9). No page was dropped.
+- Leak check: PASS. Each packet holds `request.txt`, `start/` and `end/` only.
+
+### A.2 Locked row check (`exp10_rowcheck.py`, measured)
+
+- 24 docx attempts, 48 sides, 164 tables, 628 table rows (the header row counts as row 1). 508 rows are checkable and 120 are not (no cell with 3 or more characters). No nested tables.
+- 8 table sides flagged, 12 rows in all. The flagged sides belong to 4 attempts (both sides of each). Table 1 in each case.
+- Every flagged table has 9 rows and no uncheckable rows.
+
+| Blind id | Side | Table | Rows missing, locked test | Rows in file | Rows not checkable | Rows missing, post hoc alphanumeric |
+|---|---|---|---|---|---|---|
+| 08b0682f31ff | start | 1 | 7 | 9 | 0 | none |
+| 08b0682f31ff | end | 1 | 4, 7 | 9 | 0 | 4 |
+| 2ff8240d1b09 | start | 1 | 7 | 9 | 0 | none |
+| 2ff8240d1b09 | end | 1 | 4, 7 | 9 | 0 | 4 |
+| 4ee7b6a6cbc8 | start | 1 | 7 | 9 | 0 | none |
+| 4ee7b6a6cbc8 | end | 1 | 4, 7 | 9 | 0 | 4 |
+| b02b018e25ec | start | 1 | 7 | 9 | 0 | none |
+| b02b018e25ec | end | 1 | 4, 7 | 9 | 0 | 4 |
+
+### A.3 Inspection of each mismatch (measured by eye)
+
+I cropped each flagged row from the LibreOffice PDF of its side (the same pages the PNGs come from) and looked at it.
+
+- Row 7 on the start side ("Writing a Research Paper") is drawn on page 2 in all four attempts.
+- Row 7 on the end side (same cell) is drawn on page 2 in all four attempts.
+- Row 4 on the end side ("Rethinking the May-Fourth Movement") is drawn on page 1 in all four attempts.
+
+Causes:
+
+- Row 7, both sides. The locked test fails on punctuation and line breaks in these multi-line cells (bullet dashes, and a hyphen at a line break). The alphanumeric variant passes both sides.
+- Row 4, end side. In the extracted text, the neighbouring cell ("Group presentation") sits between two lines of this cell, so the cell text is not contiguous. Both tests flag it. The row is drawn, but the text test cannot confirm it.
+
+No mismatched row is missing from the render. The text test cannot show a row that is drawn with its text but hidden by borders or clipping.
+
+### A.4 Post hoc variant (`exp10_rowcheck_alnum.py`, post hoc)
+
+Written after the locked run. It compares letters and digits only. It flags 4 table sides, all row 4 on the end side of the same 4 attempts. The row 7 mismatches pass. It is reported next to the locked result and is not used for any primary number.
+
+### A.5 Decision
+
+- Section 6 says mismatched states stay in judging. No state is removed. All 80 office states go to the judge as rendered.
+- Limits: the check is a text test. It covers the 508 checkable rows and not the 120 uncheckable rows. It does not test borders or clipping. Visual inspection covers the 4 flagged attempts only.
