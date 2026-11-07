@@ -1,0 +1,158 @@
+{
+ "run": "merged-r1",
+ "case": "merged",
+ "rep": 1,
+ "expect": "confirm",
+ "status": "ok",
+ "calls": [
+  {
+   "status": "confirm_required",
+   "confirm": false,
+   "conflicts": [],
+   "written": []
+  },
+  {
+   "status": "reverted",
+   "confirm": true,
+   "conflicts": [],
+   "written": [
+    "E5"
+   ]
+  }
+ ],
+ "free_mb_before": 882,
+ "pid": 25852,
+ "fg_before_commit": {
+  "hwnd": 394868,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Write viral X post for Acan pre-launch - Factory",
+  "pid": 14064
+ },
+ "fg_after_commit": {
+  "hwnd": 394868,
+  "class": "Chrome_WidgetWin_1",
+  "title": "Write viral X post for Acan pre-launch - Factory",
+  "pid": 14064
+ },
+ "plan": {
+  "footprint": [
+   "E5"
+  ],
+  "confirm_reasons": [
+   "E5: merged range"
+  ],
+  "prior": {
+   "E5": {
+    "value": "merged note",
+    "formula": null,
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": true
+   }
+  },
+  "committed": {
+   "E5": {
+    "value": "agent note",
+    "formula": null,
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": true
+   }
+  }
+ },
+ "mem_after_first_call": {
+  "E5": {
+   "value": "agent note",
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": true
+  }
+ },
+ "mem_after_revert": {
+  "E5": {
+   "value": "merged note",
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": true
+  }
+ },
+ "mem_user": {
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "comments_after_revert": [],
+ "disk": {
+  "E5": {
+   "value": "merged note",
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": true
+  },
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "disk_matches_prior": true,
+ "disk_matches_committed": false,
+ "verdict": "CORRECT: confirm needed, revert done on confirm",
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 394868,
+   "class": "Chrome_WidgetWin_1",
+   "fg_pid": 14064,
+   "title": "Write viral X post for Acan pre-launch - Factory"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 18482814,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  }
+ ],
+ "killed_excel_pid": 25852,
+ "seconds": 8.0
+}

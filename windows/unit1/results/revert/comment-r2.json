@@ -1,0 +1,152 @@
+{
+ "run": "comment-r2",
+ "case": "comment",
+ "rep": 2,
+ "expect": "confirm",
+ "status": "ok",
+ "calls": [
+  {
+   "status": "confirm_required",
+   "confirm": false,
+   "conflicts": [],
+   "written": []
+  },
+  {
+   "status": "reverted",
+   "confirm": true,
+   "conflicts": [],
+   "written": [
+    "B2"
+   ]
+  }
+ ],
+ "free_mb_before": 786,
+ "pid": 18916,
+ "fg_before_commit": {
+  "hwnd": 12191600,
+  "class": "ApplicationFrameWindow",
+  "title": "Media Player",
+  "pid": 12836
+ },
+ "fg_after_commit": {
+  "hwnd": 12191600,
+  "class": "ApplicationFrameWindow",
+  "title": "Media Player",
+  "pid": 12836
+ },
+ "plan": {
+  "footprint": [
+   "B2"
+  ],
+  "confirm_reasons": [
+   "comment added or removed, which the record does not capture"
+  ],
+  "prior": {
+   "B2": {
+    "value": 1000.0,
+    "formula": null,
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": false
+   }
+  },
+  "committed": {
+   "B2": {
+    "value": 5000.0,
+    "formula": null,
+    "numfmt": "General",
+    "bold": false,
+    "fill": null,
+    "merged": false
+   }
+  }
+ },
+ "mem_after_first_call": {
+  "B2": {
+   "value": 5000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "mem_after_revert": {
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "mem_user": {
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "comments_after_revert": [
+  "B2"
+ ],
+ "disk": {
+  "B2": {
+   "value": 1000.0,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  },
+  "D1": {
+   "value": null,
+   "formula": null,
+   "numfmt": "General",
+   "bold": false,
+   "fill": null,
+   "merged": false
+  }
+ },
+ "disk_matches_prior": true,
+ "disk_matches_committed": false,
+ "verdict": "CORRECT: confirm needed, revert done on confirm",
+ "watch_counts": {
+  "open|foreground": 1,
+  "open|window-appeared": 1
+ },
+ "watch_events": [
+  {
+   "phase": "open",
+   "kind": "foreground",
+   "hwnd": 12191600,
+   "class": "ApplicationFrameWindow",
+   "fg_pid": 12836,
+   "title": "Media Player"
+  },
+  {
+   "phase": "open",
+   "kind": "window-appeared",
+   "hwnd": 24053472,
+   "class": "ThunderMain",
+   "visible": false,
+   "iconic": false,
+   "title": ""
+  }
+ ],
+ "killed_excel_pid": 18916,
+ "seconds": 15.4
+}

@@ -100,7 +100,7 @@ def build_template(xlsx):
             zout.writestr(info.filename, _part(info.filename, zin.read(info.filename)))
 
 
-def build_excel(xlsx):
+def build_excel(xlsx, features=False):
     from excel_com import ExcelSession
 
     with ExcelSession() as xl:
@@ -110,17 +110,25 @@ def build_excel(xlsx):
         for ref, v in grid().items():
             ws.Range(ref).Value = v
         ws.Range("A1:D1").Font.Bold = True
+        if features:
+            # Features the second method must carry: a formula that does not depend on B2, a merged range,
+            # a fill, and a number format.
+            ws.Range("F2").Formula = "=C2*2"
+            ws.Range("E5").Value = "merged note"
+            ws.Range("E5:F5").Merge()
+            ws.Range("A3").Interior.Color = 65535
+            ws.Range("B3").NumberFormat = "#,##0.00"
         wb.SaveAs(os.path.abspath(xlsx), 51)
         xl.claim(xlsx)
 
 
-def build(ws, excel=False):
+def build(ws, excel=False, features=False):
     xlsx = os.path.join(ws, "budget.xlsx")
     if os.path.exists(xlsx):
         raise FileExistsError(xlsx)
     os.makedirs(os.path.join(ws, "out"), exist_ok=True)
     if excel:
-        build_excel(xlsx)
+        build_excel(xlsx, features)
     else:
         build_template(xlsx)
     with open(os.path.join(ws, "notes.txt"), "w", encoding="utf-8", newline="") as f:

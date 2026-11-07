@@ -273,7 +273,7 @@ def xlsx_cells(path):
             val = strings[int(v.text)]
         elif t == "inlineStr":
             val = "".join(x.text or "" for x in c.iter(SS_NS + "t"))
-        elif v is not None:
+        elif v is not None and v.text is not None:
             val = v.text if t in ("str", "e") else float(v.text)
         else:
             continue

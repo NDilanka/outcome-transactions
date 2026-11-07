@@ -3,6 +3,7 @@
   py -3 windows/unit2/tests_offline.py
 """
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -13,11 +14,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "unit1"))
 sys.path.insert(0, HERE)
 
+import agreement as AG  # noqa: E402
 import backend as B  # noqa: E402
 import make_workspace as MW  # noqa: E402
 import otx_win  # noqa: E402
 import spec_win as SW  # noqa: E402
 import xlsx_edit as XE  # noqa: E402
+import xlsx_props as XP  # noqa: E402
 from scenarios import MUTANTS, SPEC, make_mutant  # noqa: E402
 
 UNIT1_BASE = os.path.join(os.path.dirname(HERE), "unit1", "base", "budget.xlsx")
@@ -184,6 +187,101 @@ def test_set_number_refuses_text_cell():
     assert B.tree_hashes(real) == before
 
 
+def _features_file(name):
+    """An openpyxl workbook with a formula, a merged range, a fill, a number format, bold, and a column width."""
+    import openpyxl
+    from openpyxl.styles import Font, PatternFill
+
+    path = os.path.join(_dir("features", name), "features.xlsx")
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Q3"
+    ws["A1"], ws["B1"] = "Item", "Amount"
+    for r in range(2, 6):
+        ws[f"A{r}"], ws[f"B{r}"], ws[f"C{r}"] = f"row{r}", 1000 + r, 2
+    ws["F2"] = "=C2*2"
+    ws["E5"] = "merged note"
+    ws.merge_cells("E5:F5")
+    ws["A3"].fill = PatternFill("solid", fgColor="FFFF00")
+    ws["B3"].number_format = "#,##0.00"
+    ws["A1"].font = Font(bold=True)
+    ws.column_dimensions["A"].width = 18
+    wb.save(path)
+    return path
+
+
+def _with_cached_formula(path, ref, cached):
+    """Adds the cached result Excel would store next to a formula. openpyxl writes the formula with no result."""
+    out = path + ".cached.xlsx"
+    pat = re.compile(rb'(<c r="%s"[^>]*><f>[^<]*</f>)(?:<v\s*/>|<v></v>)?' % ref.encode())
+    with zipfile.ZipFile(path) as zin, zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as zout:
+        for info in zin.infolist():
+            body = zin.read(info.filename)
+            if info.filename == "xl/worksheets/sheet1.xml":
+                body, n = pat.subn(rb"\g<1><v>%d</v>" % cached, body)
+                assert n == 1, f"{ref} is not a formula cell in sheet1.xml"
+            zout.writestr(info.filename, body)
+    return out
+
+
+def test_xlsx_props_reads_formula_fill_merge_numfmt():
+    p = XP.read_props(_features_file("props"))
+    c = p["cells"]
+    assert c["F2"]["formula"] == "C2*2" and c["F2"]["value"] is None
+    assert c["E5"]["merged"] and c["F5"]["merged"], c.get("F5")
+    assert not c.get("D5", XP.EMPTY)["merged"]
+    assert c["A3"]["fill"] == "FFFF00" and c["A4"]["fill"] is None
+    assert c["B3"]["numfmt"] == "#,##0.00" and c["B4"]["numfmt"] == "General"
+    assert c["A1"]["bold"] and not c["A2"]["bold"]
+    assert p["col_width"]["A"] == 18.0
+
+
+def test_compare_props_reports_only_the_changed_property():
+    base = _features_file("cmp_base")
+    other = _with_cached_formula(base, "F2", 4)
+    diffs = XP.compare_props(XP.read_props(base), XP.read_props(other))
+    assert list(diffs) == ["value"] and [d[0] for d in diffs["value"]] == ["F2"], diffs
+
+
+def test_roundtrip_loses_cached_formula_value_and_nothing_else():
+    path = _with_cached_formula(_features_file("roundtrip"), "F2", 4)
+    losses = AG.roundtrip_losses(path)
+    assert list(losses) == ["value"], losses
+    assert [d[0] for d in losses["value"]] == ["F2"], losses
+
+
+def test_decide_rules():
+    loss = {"value": [("F2", 4.0, None)]}
+    diff = {"csv": [("out/q3.csv", 10, 12)]}
+    assert AG.decide(True, {}, {})[0] == "two_method_agreed"
+    assert AG.decide(False, {}, {})[0] == "agreement_refused"
+    assert AG.decide(True, loss, {})[0] == "agreement_refused"
+    assert AG.decide(True, {"numfmt": [("B3", "a", "b")]}, {})[0] == "agreement_refused"
+    assert AG.decide(True, {}, diff)[0] == "method_disagreement"
+    outcome, status = AG.decide(True, loss, {})
+    assert status["value"] == "refused" and status["csv"] == "agreed", status
+
+
+def test_xlsx_cells_skips_formula_without_cached_result():
+    cells = otx_win.xlsx_cells(_features_file("empty_v"))
+    assert "F2" not in cells and cells["B2"] == 1002.0
+
+
+def test_openpyxl_method_agrees_with_direct_on_template():
+    snap = _dir("second_snap")
+    MW.build_template(os.path.join(snap, "budget.xlsx"))
+    os.makedirs(os.path.join(snap, "out"), exist_ok=True)
+    direct_fd, second_fd = os.path.join(TMP, "second_direct"), os.path.join(TMP, "second_openpyxl")
+    direct = B.run_fork("direct_xlsx", snap, direct_fd)
+    second = B.run_fork("openpyxl_xlsx", snap, second_fd, refuse_office=True)
+    assert direct["rc"] == 0 and second["rc"] == 0, (direct["stderr_tail"], second["stderr_tail"])
+    assert second["network"].get("office_com") == "refused", second["network"]
+    assert otx_win.xlsx_cells(os.path.join(second_fd, "budget.xlsx"))["B2"] == 5000.0
+    outcome, status = AG.decide(True, AG.roundtrip_losses(os.path.join(snap, "budget.xlsx")),
+                                AG.fork_diffs(direct_fd, second_fd))
+    assert outcome == "two_method_agreed", status
+
+
 TESTS = [
     test_workspace_layout,
     test_spec_accepts_only_the_correct_outcome,
@@ -197,6 +295,12 @@ TESTS = [
     test_rm_holders_and_lock_clear_for_unopened_workspace,
     test_csv_from_cells_orders_rows_and_columns,
     test_set_number_refuses_text_cell,
+    test_xlsx_props_reads_formula_fill_merge_numfmt,
+    test_compare_props_reports_only_the_changed_property,
+    test_roundtrip_loses_cached_formula_value_and_nothing_else,
+    test_decide_rules,
+    test_xlsx_cells_skips_formula_without_cached_result,
+    test_openpyxl_method_agrees_with_direct_on_template,
 ]
 
 
