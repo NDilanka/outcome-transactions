@@ -55,7 +55,7 @@ def check(name, ok, detail=""):
 ten_wide = zip_ods("ten_wide.ods", table("Q3", [HDR, row(
     '<table:table-cell table:number-columns-repeated="1001" office:value-type="float" office:value="7"><text:p>7</text:p></table:table-cell>')]))
 check("A1 a populated repeat of 1001 cells keeps its last cell",
-      f"{R.col_name(1000)}2" in R.all_cells(ten_wide), "the 1001st column is cut at 1000")
+      f"Q3!{R.col_name(1000)}2" in R.all_cells(ten_wide), "the 1001st column is cut at 1000")
 
 dup_a = zip_ods("dup_sheet_a.ods", table("Q3", [HDR]) + table("Other", [row(fv(7))]) + table("Other", [row(fv(9))]))
 dup_b = zip_ods("dup_sheet_b.ods", table("Q3", [HDR]) + table("Other", [row(fv(8))]) + table("Other", [row(fv(9))]))

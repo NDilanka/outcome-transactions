@@ -13,7 +13,7 @@ def allowed_cells(before_file, after_file, refs):
     """The after-state addresses of the cells a spec allows to change, found by anchor."""
     return {a for a in (target(before_file, after_file, ref) for ref in refs) if a}
 
-def evaluate(spec, before, after, noise=()):
+def _evaluate(spec, before, after, noise=()):
     """noise: paths that a null control fork (same app, no task) also changed; they are
     app side effects, not outcomes, so they are neither checked nor committed."""
     reasons = []
@@ -47,7 +47,20 @@ def evaluate(spec, before, after, noise=()):
                     if len(reasons) > 12: break
     return (len(reasons) == 0), reasons, sorted(changed)
 
+def evaluate(spec, before, after, noise=()):
+    """A workbook the reader cannot read faithfully (duplicate sheet names, an oversized repeat) is refused."""
+    try:
+        return _evaluate(spec, before, after, noise)
+    except ValueError as ex:
+        return False, [f"refused: {ex}"], []
+
 def semantic_diff(before, after, spec):
+    try:
+        return _semantic_diff(before, after, spec)
+    except ValueError as ex:
+        return {"unreadable": str(ex)}
+
+def _semantic_diff(before, after, spec):
     """Outcome-level summary used for agreement between forks."""
     d = {}
     for p in spec["must"]:

@@ -8,6 +8,7 @@ NS = {
     "text": "urn:oasis:names:tc:opendocument:xmlns:text:1.0",
 }
 T = "{%s}" % NS["table"]; O = "{%s}" % NS["office"]; X = "{%s}" % NS["text"]
+MAX_COLUMNS = 16384  # the widest sheet a spreadsheet application writes
 
 def col_name(i):
     s = ""
@@ -112,9 +113,13 @@ def ods_cells(path, sheet):
     return _sheet_cells(_table(root, sheet), _style_props(root))
 
 def all_cells(path):
-    """{'Sheet!REF': (value, formatting)} over every sheet. A cell's identity includes its sheet."""
+    """{'Sheet!REF': (value, formatting)} over every sheet. A cell's identity includes its sheet. Two sheets with
+    one name would share keys, so the workbook is refused instead."""
     root = _root(path)
     sprops = _style_props(root)
+    names = [t.get(T + "name") for t in root.iter(T + "table")]
+    dup = sorted({n for n in names if names.count(n) > 1})
+    if dup: raise ValueError(f"sheet name {dup[0]!r} is used more than once")
     return {f"{t.get(T + 'name')}!{ref}": v for t in root.iter(T + "table") for ref, v in _sheet_cells(t, sprops).items()}
 
 def _sheet_cells(table, sprops):
@@ -144,7 +149,8 @@ def _sheet_cells(table, sprops):
             for c0, crep, val, style in cells:
                 if val is None:
                     continue
-                for j in range(min(crep, 1000)):
+                if crep > MAX_COLUMNS: raise ValueError(f"a repeated cell spans {crep} columns, more than {MAX_COLUMNS}")
+                for j in range(crep):
                     out[f"{col_name(c0 + j)}{r + k + 1}"] = (val, style)
         r += rrep
     return out
