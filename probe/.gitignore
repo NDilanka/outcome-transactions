@@ -1,0 +1,7 @@
+# Runtime state for the browser probe. Never commit secrets, databases or raw logs.
+state/
+apps/*/data/
+apps/*/logs/
+apps/vikunja/bin/
+results/raw/
+__pycache__/

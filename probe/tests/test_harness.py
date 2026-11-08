@@ -1,0 +1,150 @@
+"""Unit tests for the hold policy and the release logic. No browser, no network.
+
+Run: python -m unittest discover -s probe/tests -p "test_*.py" -v
+"""
+
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "harness"))
+
+from policy import decide  # noqa: E402
+from release import Held, Token, release_unit, token_from  # noqa: E402
+
+
+class PolicyTests(unittest.TestCase):
+    def test_probe_get_passes(self):
+        self.assertEqual(decide("GET", "http://127.0.0.1:8300/projects")[0], "pass")
+        self.assertEqual(decide("GET", "http://127.0.0.1:8200/drafts")[0], "pass")
+
+    def test_options_passes(self):
+        self.assertEqual(decide("OPTIONS", "http://127.0.0.1:8300/api/v2/tasks")[0], "pass")
+
+    def test_writes_are_held(self):
+        for method in ("POST", "PUT", "PATCH", "DELETE"):
+            self.assertEqual(decide(method, "http://127.0.0.1:8200/compose/send")[0], "hold", method)
+
+    def test_webmail_state_changing_gets_are_held(self):
+        self.assertEqual(decide("GET", "http://127.0.0.1:8200/message/abc123")[0], "hold")
+        self.assertEqual(decide("GET", "http://127.0.0.1:8200/compose?reply=abc123")[0], "hold")
+
+    def test_webmail_plain_compose_and_draft_pass(self):
+        self.assertEqual(decide("GET", "http://127.0.0.1:8200/compose")[0], "pass")
+        self.assertEqual(decide("GET", "http://127.0.0.1:8200/compose?draft=2")[0], "pass")
+        self.assertEqual(decide("GET", "http://127.0.0.1:8200/?folder=sent")[0], "pass")
+
+    def test_checkout_return_is_held_and_pay_page_passes(self):
+        self.assertEqual(decide("GET", "http://127.0.0.1:8100/checkout/return?order=1&intent=pi_x")[0], "hold")
+        self.assertEqual(decide("GET", "http://127.0.0.1:8100/checkout/pay/1")[0], "pass")
+
+    def test_provider_hosted_pay_is_held_and_hosted_page_passes(self):
+        self.assertEqual(decide("POST", "http://localhost:8102/psp/hosted/pi_x/pay")[0], "hold")
+        self.assertEqual(decide("GET", "http://127.0.0.1:8102/psp/hosted/pi_x")[0], "pass")
+
+    def test_other_origins_are_blocked_not_held(self):
+        self.assertEqual(decide("POST", "https://example.com/submit")[0], "block")
+        self.assertEqual(decide("GET", "http://127.0.0.1:9999/")[0], "block")
+        self.assertEqual(decide("GET", "http://127.0.0.1:8025/")[0], "block")  # Mailpit UI is not a browser origin
+
+    def test_reason_is_given_for_hold(self):
+        verdict, reason = decide("POST", "http://127.0.0.1:8100/cart/items")
+        self.assertEqual(verdict, "hold")
+        self.assertIn("POST", reason)
+
+
+class TokenTests(unittest.TestCase):
+    def test_if_match_header_wins(self):
+        t = token_from({"If-Match": '"v3"'}, "version=9")
+        self.assertEqual(t, Token("if-match", '"v3"'))
+
+    def test_form_version_field(self):
+        t = token_from({}, "name=Desk&price=12.50&version=4&csrf=abc")
+        self.assertEqual(t, Token("form:version", "4"))
+
+    def test_cart_and_draft_fields(self):
+        self.assertEqual(token_from({}, "cart_version=5&qty=2"), Token("form:cart_version", "5"))
+        self.assertEqual(token_from({}, "draft_id=7&draft_version=2"), Token("form:draft_version", "2"))
+
+    def test_empty_version_carries_no_token(self):
+        self.assertIsNone(token_from({}, "draft_id=&draft_version=&to=bob%40example.test"))
+
+    def test_no_version_field_no_token(self):
+        self.assertIsNone(token_from({"Content-Type": "application/json"}, '{"name": "x"}'))
+        self.assertIsNone(token_from({}, "sku=LMP-1&qty=1"))
+
+
+def held(seq, token=None):
+    return Held(seq=seq, method="POST", url=f"http://127.0.0.1:8100/x/{seq}", headers={}, body="", token=token)
+
+
+class ReleaseTests(unittest.TestCase):
+    def test_refused_when_a_version_moved_and_nothing_is_sent(self):
+        sent = []
+        units = [held(1, Token("form:version", "4")), held(2)]
+        result = release_unit(units, lambda h: "5", lambda h: sent.append(h.seq) or 200)
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refused_seqs, [1])
+        self.assertEqual(sent, [])
+        self.assertEqual(result.sent, [])
+
+    def test_refused_when_current_version_cannot_be_read(self):
+        sent = []
+        result = release_unit([held(1, Token("if-match", '"v2"'))], lambda h: None, lambda h: sent.append(h.seq) or 200)
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(sent, [])
+
+    def test_released_in_seq_order_and_read_back_runs(self):
+        order = []
+        units = [held(3), held(1, Token("form:version", "2")), held(2)]
+        result = release_unit(
+            units,
+            lambda h: "2",
+            lambda h: order.append(h.seq) or 303,
+            read_back=lambda: True,
+        )
+        self.assertEqual(result.status, "released")
+        self.assertEqual(order, [1, 2, 3])
+        self.assertEqual([s for s, _ in result.sent], [1, 2, 3])
+        self.assertTrue(result.verified)
+
+    def test_read_back_mismatch_is_reported(self):
+        result = release_unit([held(1)], lambda h: None, lambda h: 200, read_back=lambda: False)
+        self.assertEqual(result.status, "released")
+        self.assertFalse(result.verified)
+
+    def test_partial_stops_at_first_rejection_and_still_reads_back(self):
+        codes = {1: 200, 2: 409, 3: 200}
+        sent = []
+        read_calls = []
+        result = release_unit(
+            [held(1), held(2), held(3)],
+            lambda h: None,
+            lambda h: sent.append(h.seq) or codes[h.seq],
+            read_back=lambda: read_calls.append(1) or False,
+        )
+        self.assertEqual(result.status, "partial")
+        self.assertEqual(sent, [1, 2])
+        self.assertEqual(result.sent, [(1, 200), (2, 409)])
+        self.assertEqual(read_calls, [1])
+        self.assertFalse(result.verified)
+
+    def test_missing_status_is_partial(self):
+        result = release_unit([held(1)], lambda h: None, lambda h: None)
+        self.assertEqual(result.status, "partial")
+
+    def test_empty_unit_is_released_with_nothing_sent(self):
+        result = release_unit([], lambda h: None, lambda h: 200, read_back=lambda: True)
+        self.assertEqual(result.status, "released")
+        self.assertEqual(result.sent, [])
+        self.assertIsNone(result.verified)
+
+    def test_as_dict_is_json_ready(self):
+        import json
+
+        result = release_unit([held(1, Token("form:cart_version", "3"))], lambda h: "3", lambda h: 303, read_back=lambda: True)
+        json.dumps(result.as_dict())
+
+
+if __name__ == "__main__":
+    unittest.main()
