@@ -59,6 +59,7 @@ class Unreadable(Exception):
 
 class Adapter(Protocol):
     capabilities: Capabilities
+    hooks: "Hooks"  # set by the harness; apply calls hooks.candidate and hooks.window
 
     def live(self) -> str: ...  # handle of the real resource
     def setup(self) -> None: ...  # reset the test state before a run
@@ -84,7 +85,9 @@ class Adapter(Protocol):
 
 
 class Verifier(Protocol):
+    spec: dict  # the frozen spec, as the report records it
     spec_hash: str
+    target: str  # the cell the spec is about, as an address the adapter can anchor
 
     def evaluate(self, base: str, view: str, noise: tuple = ()) -> tuple: ...  # (passed, reasons, changed units)
     def summary(self, base: str, view: str) -> Any: ...  # outcome-level summary, compared between forks
