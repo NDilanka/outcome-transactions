@@ -1,5 +1,5 @@
 """State readers and ODS editing for the outcome-transaction prototype."""
-import zipfile, re, io, os, hashlib, subprocess, shutil, copy, csv, tempfile
+import zipfile, re, io, os, hashlib, subprocess, shutil, copy, csv, tempfile, time
 import xml.etree.ElementTree as ET
 
 NS = {
@@ -260,6 +260,7 @@ def ods_insert_row(path, idx):
 
 LO_CSV = "csv:Text - txt - csv (StarCalc):44,34,76,1,,0,false,true,true,false,false,{n}"  # comma, quote, UTF-8, text as shown, one sheet
 _SHOWN = {}  # (file sha, sheet) -> rows: one workbook is converted once however often it is read
+CONVERSIONS = []  # every LibreOffice text export this process ran: start (monotonic), seconds, sheet, file sha prefix
 
 def _norm(text):
     """A label or header as the reader compares it: runs of whitespace are one space, and the ends are trimmed."""
@@ -279,8 +280,10 @@ def shown_sheet(path, sheet):
     try:
         src = os.path.join(tmp, "book.ods")
         shutil.copyfile(path, src)
+        t = time.monotonic()
         r = subprocess.run(["soffice", "-env:UserInstallation=file:///tmp/otx_shown", "--headless", "--convert-to",
                             LO_CSV.format(n=names.index(sheet) + 1), "--outdir", tmp, src], capture_output=True, text=True, timeout=120)
+        CONVERSIONS.append(dict(start=t, seconds=round(time.monotonic() - t, 3), sheet=sheet, sha=key[0][:8]))
         outs = [f for f in os.listdir(tmp) if f.endswith(".csv")]  # one sheet is exported as book-<sheet>.csv
         if len(outs) != 1: raise ValueError(f"LibreOffice could not show sheet {sheet!r}: {r.stderr[-200:]}")
         with open(os.path.join(tmp, outs[0]), newline="", encoding="utf-8") as f:

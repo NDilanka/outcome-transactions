@@ -18,7 +18,8 @@ INSERT = MODE in ("insert_row", "insert_row_same_b2")
 FAULT = MODE in ("fault_postcommit", "race_rollback")
 RACE = MODE in ("race_commit", "race_rollback", "race_window")
 WINDOW = MODE == "race_window"
-READ_SET = MODE == "read_set"
+READ_SET = MODE in ("read_set", "read_set_busy")
+MAX_REPLAYS = 3  # replays of the winner on a newer state before the commit refuses as busy
 T0 = time.monotonic()
 def log(msg, **kw):
     e = dict(t=round(time.monotonic() - T0, 2), msg=msg, **kw); LOG.append(e); print(json.dumps(e), flush=True)
@@ -54,6 +55,7 @@ EXPECT = {
     "dup_sheet": dict(outcome="committed", committed=True, real_b2="5000", real_b2_by_sheet={"Q3": "5000", "Q3 copy": "3"}),
     "dup_sheet_renamed": dict(outcome="anchor_mismatch", committed=False, real_b2=None, real_b2_by_sheet={"FY2026": "3"}),
     "read_set": dict(committed=False, real_b2="3"),
+    "read_set_busy": dict(outcome="document_busy", committed=False, real_b2="3", replays=3),
 }
 
 def sheet_b2s():
@@ -63,6 +65,7 @@ def sheet_b2s():
 
 def write_report(rep):
     rep["mismatches"] = {k: [v, rep.get(k)] for k, v in EXPECT.get(MODE, {}).items() if rep.get(k) != v}
+    rep["shown_conversions"] = [dict(c, start=round(c["start"] - T0, 2)) for c in R.CONVERSIONS]
     json.dump(rep, open(sys.argv[1], "w"), indent=1, default=str)
     run(f"umount {H}/views/*")
     if rep["mismatches"]:
@@ -196,9 +199,15 @@ def main():
     # The user keeps working on the real machine during the search.
     time.sleep(3); open(f"{REAL}/notes.txt", "a").write("user typed this during the search\n")
     log("user edited real notes.txt during search")
-    if READ_SET:
+    if MODE == "read_set":
         txt = open(f"{REAL}/notes.txt").read(); open(f"{REAL}/notes.txt", "w").write(txt.replace("target 5000", "target 4000", 1))
         log("user changed the target in real notes.txt from 5000 to 4000 during search; the fork read 5000 from its snapshot")
+    if MODE == "read_set_busy":
+        def typist():
+            while True:
+                time.sleep(0.5); open(f"{REAL}/notes.txt", "a").write("user typed this\n")
+        threading.Thread(target=typist, daemon=True).start()
+        log("user types into real notes.txt every 0.5 s from now on; no change to the target")
     if CONFLICT:
         cell = "B2" if MODE == "same_cell" else "C3"
         R.ods_set_cell(f"{REAL}/budget.ods", cell, 77)
@@ -269,9 +278,10 @@ def main():
     while True:
         pre = f"{H}/precommit"; shutil.rmtree(pre, ignore_errors=True); shutil.copytree(REAL, pre)
         now = R.tree_hashes(pre)
-        conflicts = [f for f in results[winner]["changed"] if now.get(f) != base_hashes.get(f)]
-        log("merge check", winner=winner, conflicts=conflicts,
-            user_changes_since_fork=[f for f in now if now.get(f) != base_hashes.get(f)])
+        # The winner read its whole snapshot, not only the files it wrote (a derived method reads notes.txt and
+        # writes budget.ods), so any user change since the snapshot makes its result stale. It replays on the current state.
+        conflicts = sorted(f for f in set(now) | set(base_hashes) if now.get(f) != base_hashes.get(f))
+        log("merge check", winner=winner, conflicts=conflicts)
         # The winner wrote the cell its row label and column header name in its own copy. If the user moved
         # either one, the transplant would write a different cell, so refuse.
         base_addr, now_addr = R.find_anchor(f"{SNAP}/budget.ods", anchor), R.find_anchor(f"{pre}/budget.ods", anchor)
@@ -286,10 +296,15 @@ def main():
         win_cells = R.changed_cells(f"{SNAP}/budget.ods", f"{v}/budget.ods")
         overlap = sorted(user_cells & win_cells)
         log("semantic merge test", user_cells=sorted(user_cells), winner_cells=sorted(win_cells), overlap=overlap)
-        if overlap or replays >= 3:
+        if overlap:
             log("true conflict: show the user both versions; nothing committed",
                 real_B2=R.all_cells(f"{REAL}/budget.ods").get(target_addr), held_effects_released=0)
             abort("true_conflict", level, overlap=overlap, forks=results)
+            return
+        if replays >= MAX_REPLAYS:
+            log("document busy: every replay lost to a newer user edit; nothing committed", replays=replays)
+            abort("document_busy", level, replays=replays, message="document busy, try again", forks=results,
+                  real_b2=R.all_cells(f"{REAL}/budget.ods").get(target_addr, (None,))[0])
             return
         # Disjoint edits: replay the winning method on a fresh fork of the current real state,
         # verify against the same frozen spec, and commit only if the real state did not move again.
@@ -304,7 +319,7 @@ def main():
         log("replay verified", fork=name, passed=ok, reasons=reasons[:3])
         if not ok:
             log("replay failed the frozen spec; nothing committed")
-            abort("replay_failed", level, forks=results); return
+            abort("replay_failed", level, forks=results, real_b2=R.all_cells(f"{REAL}/budget.ods").get(target_addr, (None,))[0]); return
         winner = name
 
     # 7. Commit by result transplant, then re-verify on the real workspace.

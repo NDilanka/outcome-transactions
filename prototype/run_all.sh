@@ -4,9 +4,9 @@
 # bug). Their failure is printed as OPEN and does not fail the run. An OPEN scenario that starts meeting
 # its outcome must leave OPEN, or the run fails.
 cd "$(dirname "$0")"
-OPEN="race_window read_set"
+OPEN="race_window"
 status=0
-for m in ${MODES:-normal conflict same_cell clear_cell fault_postcommit race_commit race_rollback race_window insert_row insert_row_same_b2 dup_label dup_cached dup_comment dup_space dup_spaces list_label merge_header dup_sheet dup_sheet_renamed read_set}; do
+for m in ${MODES:-normal conflict same_cell clear_cell fault_postcommit race_commit race_rollback race_window insert_row insert_row_same_b2 dup_label dup_cached dup_comment dup_space dup_spaces list_label merge_header dup_sheet dup_sheet_renamed read_set read_set_busy}; do
   rm -f run_report_$m.json
   timeout 600 python3 otx.py run_report_$m.json $m > run_log_$m.jsonl 2>&1
   rc=$?
