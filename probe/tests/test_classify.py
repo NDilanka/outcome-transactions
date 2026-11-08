@@ -382,6 +382,34 @@ class TimingTests(unittest.TestCase):
         self.assertIn("reset_seconds", str(ctx.exception))
 
 
+class HeldPhaseTests(unittest.TestCase):
+    """Held phase completes: the page reached its goal with everything held, before release.
+
+    It is a second number beside K1. It does not change K1: a task whose release
+    was refused still fails K1 when its read-back does not match.
+    """
+
+    def test_row_records_the_held_phase_separately_from_k1(self):
+        run = held_run("R3", "fails", goal_during_hold=True, read_back_match=False, fail_reason="release refused: no precondition available")
+        r = row(classify(TASKS, runs_for({"R3": run})), "R3")
+        self.assertTrue(r["held_phase_completes"])
+        self.assertFalse(r["counts_for_k1"])
+        self.assertIn("held_outcome is fails", r["exclusions"])
+
+    def test_a_task_whose_goal_never_showed_is_not_a_held_phase_completion(self):
+        r = row(classify(TASKS, runs_for({"R2": held_run("R2", "needs_response")})), "R2")
+        self.assertFalse(r["held_phase_completes"])
+
+    def test_k1_reports_the_held_phase_count_beside_the_numerator(self):
+        overrides = {
+            "R1": held_run("R1", goal_during_hold=True),
+            "R2": held_run("R2", "fails", goal_during_hold=True, read_back_match=False),
+        }
+        k1 = classify(TASKS, runs_for(overrides))["k1"]
+        self.assertEqual(k1["held_phase_completes"], 2)
+        self.assertEqual(k1["numerator"], 21 - 1)  # R2 fails K1; R1 still counts
+
+
 class CliTests(unittest.TestCase):
     def test_round_trip_writes_json_and_exits_zero(self):
         with tempfile.TemporaryDirectory() as tmp:

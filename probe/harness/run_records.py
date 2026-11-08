@@ -54,6 +54,7 @@ import state_snapshot  # noqa: E402
 from classify import classify, load_tasks  # noqa: E402
 from intercept import HoldWorkspace  # noqa: E402
 from policy import GET_RULES, PRIMARY  # noqa: E402
+from version_read import VersionReads, fresh_version  # noqa: E402
 
 PROBE = HERE.parent
 APP = PROBE / "apps" / "vikunja"
@@ -77,6 +78,8 @@ CONTROL = "http://127.0.0.1:8310"
 HOLD_STOP_SECONDS = 20
 USER = "alex"
 PHASES = ("baseline", "held")
+# Marks a held run whose release used the page's read and a fresh read. Older held runs lack it.
+RELEASE_CHECK = "page-read-updated+fresh-read"
 
 
 def _policy_commit():
@@ -350,6 +353,19 @@ def api_login(playwright):
     return playwright.request.new_context(base_url=BASE, extra_http_headers={"Authorization": f"Bearer {token}"})
 
 
+def api_get(api, path):
+    """(status, body text) of a GET through the adapter's own request context. Not routed by the workspace."""
+    res = api.get(path)
+    return res.status, res.text()
+
+
+def require_current_release(held_rows):
+    """Refuse held runs made before the read-compare. Their releases did not check what the new rule checks."""
+    stale = sorted({str(r.get("task", "?")) for r in held_rows if r.get("release_check") != RELEASE_CHECK})
+    if stale:
+        raise ValueError("held runs from before the read-compare are superseded, rerun them: " + ", ".join(stale))
+
+
 def kind_for(method, path):
     if method == "POST" and re.fullmatch(r"/api/v2/(projects|labels|projects/\d+/tasks|projects/\d+/tasks/bulk|tasks/\d+/comments)", path):
         return "server_id"
@@ -374,7 +390,8 @@ def run_one(playwright, task, phase, attempt, nonce):
     tag = f"{phase}-{task}-{attempt}-{nonce}"
     seconds_reset = reset()
     started = time.monotonic()
-    ws = HoldWorkspace(PRIMARY)
+    reads = VersionReads()  # the page's own single-task reads: the version each held write was built on
+    ws = HoldWorkspace(PRIMARY, page_reads=reads)
     ws.holding = False
     browser = playwright.chromium.launch(headless=True, executable_path=str(SHELL))
     record = {"task": task, "attempt": attempt, "phase": phase, "tag": tag, "reset_seconds": seconds_reset, "policy_commit": POLICY_COMMIT, "policy_dirty": POLICY_DIRTY}
@@ -382,6 +399,7 @@ def run_one(playwright, task, phase, attempt, nonce):
         context = browser.new_context()
         ws.attach(context)
         page = context.new_page()
+        page.on("response", lambda r: reads.observe(r.request.method, r.url, r.status, r.text))
         mark(f"setup-start-{tag}")
         login(page)
         mark(f"setup-end-{tag}")
@@ -425,10 +443,16 @@ def run_one(playwright, task, phase, attempt, nonce):
                 record["fail_reason"] = steps_error or f"goal not shown and no unsafe request pending: {evidence}"
             mark(f"held-end-{tag}")
             mark(f"release-start-{tag}")
-            # Vikunja writes carry no version token, so every held request is refused and nothing is sent.
-            # Any tokened request would also be refused: this lambda reports no readable version.
-            release = ws.release(current_token=lambda h: None)
+            # Each held write takes the version the page read for its task. Before the sends, the check
+            # reads that task again through the adapter's own context (not routed), and refuses on any
+            # difference, on a failed read, or when the write has no task to read.
+            check_api = api_login(playwright)
+            try:
+                release = ws.release(current_token=fresh_version(lambda path: api_get(check_api, path)))
+            finally:
+                check_api.dispose()
             record["release"] = release.as_dict()
+            record["release_check"] = RELEASE_CHECK
             mark(f"release-end-{tag}")
             time.sleep(1.0)
             record["unsafe_before_release"] = unsafe_count(arrivals_between(f"held-start-{tag}", f"release-start-{tag}"))
@@ -577,6 +601,7 @@ def summary():
         "baseline": json.loads((RAW / "baseline.json").read_text(encoding="utf-8")),
         "held": json.loads((RAW / "held.json").read_text(encoding="utf-8")),
     }
+    require_current_release(runs["held"])
     result = classify(tasks, runs)
     result["policy_commit"] = POLICY_COMMIT
     result["policy_dirty"] = POLICY_DIRTY

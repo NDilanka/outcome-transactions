@@ -196,6 +196,8 @@ def _row(task, run, base):
         "baseline_outcome": base["outcome"],
         "counts_for_k1": not exclusions,
         "exclusions": exclusions,
+        # Beside K1, not part of it: the page reached its goal with everything held, before release.
+        "held_phase_completes": bool(run.get("goal_during_hold", False)),
     }
 
 
@@ -213,6 +215,7 @@ def _k1(rows, policy, scope=None):
         "max_possible": sum(1 for r in rows if not r["native_draft_required"]),
         "counted_by_app": {a: sum(1 for r in rows if r["app"] == a and r["counts_for_k1"]) for a in apps},
         "baseline_completes": sum(1 for r in rows if r["baseline_outcome"] == "completes"),
+        "held_phase_completes": sum(1 for r in rows if r["held_phase_completes"]),
     }
     if scope is not None:
         result["sensitivity_run_tasks"] = sorted(scope)

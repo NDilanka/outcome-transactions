@@ -13,16 +13,20 @@ browser start.
 """
 
 import itertools
+import time
 from urllib.parse import parse_qs, urlsplit
 
 from policy import PRIMARY, decide_detail
 from release import Held, release_unit, token_from
+from version_read import task_id_from_url
 
 
 class HoldWorkspace:
-    def __init__(self, mode=PRIMARY, rules=None):
+    def __init__(self, mode=PRIMARY, rules=None, page_reads=None, clock=time.monotonic):
         self.mode = mode
         self.rules = rules  # None means policy.GET_RULES
+        self.page_reads = page_reads  # version_read.VersionReads of the page, or None
+        self.clock = clock
         self.gets_held = set()  # names of GET rules that held a request in this workspace
         self.held = []
         self.counts = {"pass": 0, "hold": 0, "block": 0}
@@ -62,20 +66,30 @@ class HoldWorkspace:
                     body=body,
                     token=token_from(headers, body),
                     route=route,
+                    task_id=task_id_from_url(request.url),
+                    held_at=self.clock(),
                 )
             )
             return
         route.continue_()
 
     def release(self, current_token, read_back=None):
-        """Release the held unit in order. current_token(h) reads the target's version."""
+        """Release the held unit in order. current_token(h) reads the target's version.
+
+        A held request with no token of its own takes the version the page
+        read last for its task, before the request was held.
+        """
+        if self.page_reads is not None:
+            for h in self.held:
+                if h.token is None and h.task_id is not None:
+                    h.token = self.page_reads.page_token(h.task_id, before=h.held_at)
 
         def send(h):
             h.route.continue_(headers=h.headers)
             response = h.route.request.response()
             return response.status if response is not None else None
 
-        result = release_unit(self.held, current_token, send, read_back)
+        result = release_unit(self.held, current_token, send, read_back, clock=self.clock)
         if result.status != "refused":
             sent = {seq for seq, _ in result.sent}
             self.held = [h for h in self.held if h.seq not in sent]

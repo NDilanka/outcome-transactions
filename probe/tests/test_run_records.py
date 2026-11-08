@@ -37,5 +37,24 @@ class PolicyStampTests(unittest.TestCase):
         self.assertIsInstance(run_records.POLICY_DIRTY, bool)
 
 
+class ReleaseCheckMarkTests(unittest.TestCase):
+    """Held runs from before the read-compare are superseded. The summary must not report them."""
+
+    def test_runs_with_the_current_release_check_pass(self):
+        rows = [{"task": "R3", "release_check": run_records.RELEASE_CHECK}]
+        run_records.require_current_release(rows)  # no error
+
+    def test_runs_from_before_the_read_compare_are_refused_by_name(self):
+        rows = [
+            {"task": "R1", "release_check": run_records.RELEASE_CHECK},
+            {"task": "R3"},
+            {"task": "R4", "release_check": "none"},
+        ]
+        with self.assertRaises(ValueError) as caught:
+            run_records.require_current_release(rows)
+        self.assertIn("R3, R4", str(caught.exception))
+        self.assertNotIn("R1", str(caught.exception))
+
+
 if __name__ == "__main__":
     unittest.main()

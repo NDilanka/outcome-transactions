@@ -39,6 +39,11 @@ How this probe applies it. The orchestrator fixed the counting rule before any r
 - Attempt 1 is the measured held run and the only one that counts. A retry is
   recorded in the output and never changes the numerator.
 - Baseline runs (holds off) cover all 24 tasks. They do not change the numerator.
+- Held phase completes is a second number, labelled, reported beside K1. It counts
+  the tasks whose page reached its goal with every unsafe request held, before
+  release. It separates whether holding works from whether release can be
+  verified. It does not change K1: a task whose release is refused, or whose
+  read-back does not match, still fails K1 when its held phase completes.
 
 Two K1 numbers are reported, one per GET policy (see "GET policy" below):
 
@@ -168,15 +173,23 @@ markers. That count is `unsafe_before_release`.
 
 Release (`probe/harness/release.py`, `probe/harness/intercept.py`):
 
-1. Check: each held request must carry a version token (an If-Match header or
-   a version form field), and that token is compared with the current server
-   version. A request with no token is refused ("no precondition available"),
-   so it never passes silently. A mismatch ("version moved") or an unreadable
-   version ("current version unreadable") is refused too. Any refusal refuses
-   the whole unit. Nothing is sent, and the held requests stay pending.
+1. Check: each held request must carry a version token, and that token is
+   compared with the current server version. The token is an If-Match header or
+   a version form field in the request, or else the `updated` value the page
+   itself read for the request's task (`probe/harness/version_read.py`). The
+   current version is read fresh, through the adapter's own request context (not
+   routed), just before the sends. A request with no token is refused ("no
+   precondition available"), so it never passes silently. A mismatch ("version
+   moved") or an unreadable version ("current version unreadable") is refused
+   too. Any refusal refuses the whole unit. Nothing is sent, and the held requests
+   stay pending.
 2. Send: held requests are continued in their original order. The first
    rejection (status 400 or more, or no status) stops the release. The unit is
-   then partial.
+   then partial. For each sent request the release records the read-to-apply
+   gap: `check_to_send_s`, the time from its check to the start of its send, and
+   `check_to_response_s`, the time from its check to its response. The checks of
+   a unit all run before its first send, so a later request's gap includes the
+   sends before it. Every release record has a `gaps` list, empty when refused.
 3. Read back: a GET after release compares the server state with the intended
    effect. The unit is verified only when they match. The read-back runs outside
    the hold workspace (a separate request context, not routed), so it is never held
@@ -273,11 +286,11 @@ Eligible for K1: 21 tasks. Not eligible by construction: M3, M4, S6.
 
 ### Records (Vikunja): block run
 
-Status: pre-fix. The release in this run compared nothing: a held write with no version token passed a check of None against None and was reported as "checks ok". So the release statuses below are server answers, not verified releases. The bug, the fix, and what it means for these numbers are in "Release precondition for records". The table is kept as the record of the run.
+Status: the held rows are superseded. They were released before the read-compare existed, and that release compared nothing. A held write with no version token passed a check of None against None and was reported as "checks ok". So the release statuses are server answers, not verified releases. The held rows stay in the record and are not deleted. The baseline rows stand, since a baseline run makes no release. The held runs will be rerun under the read-compare after the go-ahead. The bug and the fix are in "Release precondition for records".
 
 One reset to seed before every run. Each task has a baseline run (holds off) and a primary held run. Policy commit c393905, working copy clean, stamped in every record. The final harness was run twice and gave the same outcomes. Raw rows are in `probe/results/raw/records/` (git-ignored): `baseline.json`, `held.json`, `summary.json`, `get-measure.json`, the edge logs, and before-release screenshots.
 
-| Task | Baseline (holds off) | Held (primary, pre-fix) | Requests left pending while held | Release statuses (unchecked) | Read-back | Unsafe before release | Held left after release |
+| Task | Baseline (holds off) | Held (primary, superseded) | Requests left pending while held | Release statuses (superseded, unchecked) | Read-back | Unsafe before release | Held left after release |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | R1 create task | completes | needs_response | refresh POST, bulk create | 200, 201 | match (1 task, due 2026-11-20) | 0 | 0 |
 | R2 mark done | completes | needs_response | refresh POST, PATCH task 1 | 200, 200 | match (done) | 0 | 0 |
@@ -291,15 +304,16 @@ One reset to seed before every run. Each task has a baseline run (holds off) and
 Points to note:
 
 - Baseline: 8 of 8 complete, and every read-back matches. Each baseline run had two unsafe requests in its step window: the page-load refresh POST and the task write. That is what the page sends. It is not a held-run count.
-- Held (pre-fix): each held request was sent in order after release and got the server's own answer. No response was faked and no draft feature was used. Nothing was left held after release. But the release compared nothing, so these releases are not verified, and the read-backs above do not make them verified.
+- Held (superseded): each held request was sent in order after release and got the server's own answer. No response was faked and no draft feature was used. Nothing was left held after release. But the release compared nothing, so these releases are not verified, and the read-backs above do not make them verified.
 - The six needs_response runs ended on the 20-second no-change stop rule (about 25 s each).
 - The `needs_response` kinds in the JSON (`server_id`, `other`) come from every request left pending, including the refresh. They do not show what the page waited for. The next section does.
 - Phase counts (pass, hold, block per run) are in `held.json` under `counts_during_steps`.
 
-K1 for records only. Not valid as a K1 count after the fix:
+Records numbers. Both are superseded for K1 purposes, and both wait for the rerun:
 
-- Pre-fix run: 2 of 8 counted (R3 and R4), and 2 of 8 for sensitivity (no scope tasks, all rows copied from primary). These counts depend on releases that compared nothing. They stay as the record of that run, not as K1 evidence.
-- Under the fixed release, expected from the code and the observed token count, not run: no Vikunja held write carries a token, so every held write would be refused. R3 and R4 would then fail at read-back, and the count would be 0 of 8. This stays until an adapter-side read-compare exists and records are re-run. Re-running needs Vikunja, so it waits for the go-ahead.
+- Held phase completes, from the superseded run: 2 of 8 (R3 and R4). The page reached its goal with everything held. This does not depend on the release, so it is recorded as observed. It is not a K1 count.
+- K1, from the superseded run: 2 of 8 counted (R3 and R4), and 2 of 8 for sensitivity (no scope tasks, all rows copied from primary). These counts depend on releases that compared nothing. They stay as the record of that run, not as K1 evidence.
+- Expected under the read-compare, from the code, not run: every records unit is refused, so R3 and R4 fail at read-back and the K1 count is 0 of 8. The cause is the session refresh POST, which names no task and so has no precondition (see "Release precondition for records"). Held phase completes should stay 2 of 8, since holding does not change with the release check.
 - K1 is defined over 24 write tasks, with the trigger below 12. Records is one app of three. It does not decide K1.
 
 GET measurement (Vikunja):
@@ -349,7 +363,7 @@ Verified facts:
 - The UI sends no version token. Source: no non-generated frontend code sets If-Match, and `taskWriteBody` has no version field. Observed: none of the 16 held writes carried a token.
 - The usable token is `updated`. It is in the task's GET body and inside the ETag, `"<UnixNano of updated>-<permission>"`. The API marks `updated` read-only, so the server ignores it on write.
 
-So the only check is a read. The check the adapter needs (not built yet) reads the task's `updated` just before it sends the held write, and compares it with the value the page read when it loaded the task. If they differ, the release refuses.
+So the only check is a read. The release reads the task's `updated` just before it sends the held write, and compares it with the value the page read for that task. If they differ, the release refuses. This is built offline (see below). The live check is pending.
 
 The window. The check answers at time C, and the server applies the write at time A. A write by another client that lands between C and A is overwritten, and the release does not detect it. This is a check-then-replace race. It is the same class as the file adapter's preflight-to-replace window (see the race section of the shared windows-results document). On one machine the window is short. Over a network it grows by the round trip.
 
@@ -361,7 +375,19 @@ The fix (offline, test first). A held request with no token is refused with "no 
 
 What this changes for records. Vikunja writes carry no token, so the fixed release refuses every held Vikunja write. A records re-run under the fix would show refused releases, and R3 and R4 would fail at read-back. That follows from the code and the observed token count. It was not run. Records numbers wait for an adapter-side read-compare (see the next paragraph) and a re-run, which needs Vikunja and so waits for the go-ahead.
 
-The adapter-side read-compare is not built. The adapter would capture the `updated` value the page read, from the page's own GET, and compare it with a fresh GET before release. That would make Vikunja writes releasable. It needs a live check that the page's GET carries `updated` and that the check reads the same value.
+The read-compare, built offline (`probe/harness/version_read.py`, `release.py`, `intercept.py`, `run_records.py`; tests written first, 131 of 131 Python tests pass):
+
+- Page read. The harness watches the page's responses. A GET of one task with status 200 counts, and the body is read at release, not when it arrives. A held write's token is the `updated` of the last such read for its task that arrived before the write was held. If that read cannot be read, there is no token. The harness never falls back to an earlier read.
+- Fresh read. Before the sends, the task is read again through the adapter's own request context, which the workspace does not route. The two `updated` strings are compared as strings. A failed or unreadable fresh read refuses.
+- Gap. Each release records, per sent request, `check_to_send_s` and `check_to_response_s`. Together with the edge log's times, these bound the window from the fresh read (time C) to the server's apply (time A, between the send and the response). The exact A comes from the edge log in the live gap measurement.
+- Coverage from the records data. The page made a single-task GET of every task that a held write acted on: R2, R3, R4, R6, R7, R8. The live check must show that this GET comes before the write in each run.
+
+Not covered, and why:
+
+- R1 (bulk create) and R5 (project create) name no existing task. Their held writes are refused ("no precondition available"). A create has no version to compare, so its precondition needs a different design, such as a parent's version or a read-back key. Not decided.
+- The session refresh, `POST /api/v2/user/token/refresh`, names no task. It is pending in every held run, and it refuses the whole unit. This blocks every records release, not only the creates. It needs a decision before the rerun: (a) let the session refresh go outside the business precondition rule, which changes the release rule and needs approval; (b) let it pass the hold, which changes the hold policy; or (c) discard it at release, which changes what the page sees. None is chosen here.
+
+Live check still to do (after the go-ahead): the single-task GET carries `updated`; a fresh read returns the same string for an unchanged task; a change made after the fresh read and before the server applies the write is not detected, so the live gap measurement measures that window rather than closing it; and the gap values line up with the edge log's times.
 
 Gap measurement (method only, not run; it starts Vikunja, so it waits for the go-ahead):
 
@@ -473,21 +499,26 @@ checkout have not run.
   unsafe arrival.
 - `node --test probe/tests/vikunja-seed.test.mjs`: 6 of 6 pass. The seed runs against
   an in-process fake of the v2 routes it uses. It is not tested against Vikunja.
-- `python -m unittest discover -s probe/tests -p "test_*.py"`: 106 of 106 pass.
-  Harness (48, including 3 for the record run: kind mapping and the policy commit
-  stamp): the hold policy in both modes, version tokens, ordered release,
+- `python -m unittest discover -s probe/tests -p "test_*.py"`: 131 of 131 pass.
+  Harness (65: 45 in `test_harness.py`, 20 in `test_version_read.py`): the hold
+  policy in both modes, version tokens, the page's read and the fresh read
+  (a missing precondition, a moved version and an unreadable version are each
+  refused with their own reason), read-to-apply gaps recorded for every release,
+  ordered release,
   refusal (including a request with no token, which is refused and sends
   nothing, both at the release step and through the workspace), partial release,
   read-back, a guard that the harness never fulfils a
   route, the rule that the payment return never passes, the rule name recorded for
   each held GET, and that a held request gets no answer until release. Classifier
-  (46): the K1 and exclusion rules, the 11 and 12 thresholds, both policies, the
+  (49, including 3 for the held phase number): the K1 and exclusion rules, the 11 and 12 thresholds, both policies, the
   sensitivity scope (only scope tasks run, the others are copied and marked, a
   scope task without a run is an error, a sensitivity run outside scope is an
   error, a sensitivity run cannot hold a rule it passes), GET record checks, timing
   totals, and the command line. Snapshots (12): table hashing, exclusions, reset
   before measurement, and the rule that a GET is state-changing only when a
   business table changes. The snapshot tests use synthetic SQLite files.
+  Records runner (5): the kind mapping and the policy commit stamp, and a guard
+  that refuses to summarise a held run made before the read-compare, naming it.
 - Downloads: Vikunja and Mailpit archives match their recorded SHA-256 values, and
   the Vikunja exe matches its own `.sha256` file. Binaries are not committed.
 - Live, records only: the Vikunja seed and reset (`reset.mjs build` and
@@ -495,12 +526,12 @@ checkout have not run.
   measurement for 158 GETs, and the ETag and If-Match check. The held-run releases
   were made before the fix: they sent every held write with no comparable token,
   so they are not verified releases (see the release precondition section).
-- Not run: mail, checkout, the release gap measurement, and the release demo.
+- Not run: mail, checkout, the release gap measurement, the read-compare live check,
+  the rerun of the records held runs, and the release demo.
 
 ## Run plan after the go-ahead
 
-Done: Vikunja (the records block). Next, after the go-ahead: the Vikunja release
-gap (see the release precondition section), then Mailpit with the webmail stub,
+Done: Vikunja (the records block, its held runs superseded). Next, after the go-ahead: the Vikunja read-compare live check, the rerun of the records held runs (once the refresh decision is made), and the release gap measurement (see the release precondition section). Then Mailpit with the webmail stub,
 then the checkout store with the payment provider. Run one app at a time. Check
 free memory (at least 600 MB) before each start.
 
