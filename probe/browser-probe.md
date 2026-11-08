@@ -7,7 +7,8 @@ read-compare release, labelled amendment A1 (one refresh request, see "Amendment
 A1"), and the create precondition (see "Creates"). None of that has run live. Mail
 (Mailpit with the webmail stub) and checkout (with the payment provider) have not
 run. Nothing is running now. The K1 rule and the task list are unchanged from the
-frozen version. The live steps wait for the orchestrator's go-ahead.
+frozen version. The orchestrator confirmed R6 as a create. The live go-ahead is
+still pending, so the live steps have not started.
 
 ## Question
 
@@ -84,7 +85,8 @@ What the records numbers can reach. Records can add at most 2 to the numerator. 
 R3 and R4 finish with requests held. The other six records tasks need a server
 response before the page can finish (see "What each needs_response page waited for").
 So K1 needs at least 10 of the 13 eligible mail and checkout tasks. This is a result of
-the design, and no release check changes it.
+the design, and no release check changes it. The consequence, if K1 triggers, is
+set out in "Consequence for K1 and connector design".
 
 Calculation: `python probe/harness/classify.py --runs <runs.json>` prints the
 per-task rows, the K1 summaries (registered, amended when A1 applies, and
@@ -393,6 +395,37 @@ Sources: the held-run records (pending requests, release statuses, goal state), 
 
 What this means for adapter design. A bare pending answer with no body would not unblock R1, R2, R5, R6 or R8. R1, R5 and R6 would fail, and R2 and R8 would resolve but show the old state. Only R7 would unblock on a pending 202, and the page would then show a deletion the server had not made. The contract therefore needs the echoed object for creates, comments, done and moves. A pending state the page can show is a different design. The probe has not tested one. None of these six counts toward K1.
 
+## Consequence for K1 and connector design
+
+The number so far. Records is the only app run live. In its superseded held runs, the
+held phase completes for 2 of 8 tasks (R3 and R4). By the code, registered records K1
+is 0 of 8, and amended K1 (A1) is at most 2 of 8. Both wait for the live rerun. The
+24-task K1 cannot be computed yet, because mail and checkout have not run. Records
+already caps the numerator at 2. K1 reaches 12 only if mail and checkout together give
+at least 10 of their 13 eligible tasks.
+
+The consequence, if K1 comes in under 12 of 24. The roadmap's K1 applies as written.
+Generic held browser writes are dropped. Server writes go through per-service
+connectors: an API-level adapter for each app, using that app's real version
+semantics, and a native draft where the app has one. Reads, navigation and
+draft-based flows stay in. This is what the number implies. The probe has not tested a
+connector, so it is not a result of this probe.
+
+What the needs_response evidence means for connector design. In records, six of the
+eight write tasks (R1, R2, R5, R6, R7, R8) could not finish with requests held. The
+page needed the server's own answer to continue: the echoed object with its server id
+for the creates and the comment (R1, R5, R6), the updated object for done and move
+(R2, R8), and a status for delete (R7). A bare pending 202 would show the deletion
+before the server made it. A generic hold cannot supply these answers. It holds the
+request, does not know the object's shape or id, and cannot produce the server's echo
+before release. So a connector must return the object the server would return, with
+its server id, when the page needs it, and it must not report a change as done before
+the server has applied it. The connector also owns the version semantics a generic
+hold cannot see. In Vikunja the version is `updated`, the server does not enforce
+If-Match, and the page sends no token. The connector must therefore read `updated`
+itself before each write, and check the parent for a create. The window that check
+leaves is the one the gap measurement measures.
+
 ## Release precondition for records (Vikunja)
 
 Verified facts:
@@ -506,7 +539,7 @@ Covered requests. A POST or PUT to:
 - the project collection (R5). Parent: the project the new project goes under, if it
   has a parent. A top-level project takes the project list as its parent.
 - a task's comments (R6). Parent: the task. R6 is a create, so it is in the create
-  category. This classification is for the orchestrator to confirm.
+  category. The orchestrator confirmed this classification.
 
 Checks, all before the first send:
 
