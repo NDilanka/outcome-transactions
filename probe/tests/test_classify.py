@@ -410,6 +410,129 @@ class HeldPhaseTests(unittest.TestCase):
         self.assertEqual(k1["numerator"], 21 - 1)  # R2 fails K1; R1 still counts
 
 
+RECORDS = [t for t in TASKS if TASKS[t]["app"] == "records"]
+APPLIED = {"id": "A1", "applied": True, "reasons": []}
+
+
+def amended_row(result, task_id):
+    return next(r for r in result["tasks_amended"] if r["task"] == task_id)
+
+
+def with_amended(runs, amended_runs, amendment=APPLIED):
+    out = dict(runs)
+    out["held_amended"] = amended_runs
+    if amendment is not None:
+        out["amendment"] = amendment
+    return out
+
+
+class AmendedTests(unittest.TestCase):
+    """Amendment A1 is a labelled second policy, reported beside the registered one. It needs an applied amendment."""
+
+    def test_without_amended_runs_there_are_no_amended_numbers(self):
+        result = classify(TASKS, runs_for())
+        self.assertNotIn("k1_amended", result)
+
+    def test_registered_and_amended_are_reported_side_by_side(self):
+        runs = runs_for({t: held_run(t, "needs_response") for t in RECORDS})
+        result = classify(TASKS, with_amended(runs, [held_run(t) for t in TASKS]))
+        self.assertEqual(result["k1"]["policy"], "primary")
+        self.assertEqual(result["k1"]["numerator"], 21 - len(RECORDS))
+        self.assertEqual(result["k1_amended"]["policy"], "amended")
+        self.assertEqual(result["k1_amended"]["numerator"], 21)
+        self.assertEqual(result["amendment"]["id"], "A1")
+
+    def test_amended_runs_are_refused_unless_the_amendment_applied(self):
+        runs = with_amended(runs_for(), [held_run(t) for t in TASKS], amendment={"id": "A1", "applied": False, "reasons": ["refresh returned 401"]})
+        with self.assertRaisesRegex(ValueError, "amendment A1 is not applied.*refresh returned 401"):
+            classify(TASKS, runs)
+
+    def test_amended_runs_without_an_amendment_record_are_refused(self):
+        runs = with_amended(runs_for(), [held_run(t) for t in TASKS], amendment=None)
+        with self.assertRaisesRegex(ValueError, "amendment record"):
+            classify(TASKS, runs)
+
+    def test_amended_runs_must_cover_every_task(self):
+        runs = with_amended(runs_for(), [held_run(t) for t in TASKS if t != "R1"])
+        with self.assertRaisesRegex(ValueError, "no measured held run .*amended.*R1"):
+            classify(TASKS, runs)
+
+    def test_allowlisted_arrivals_are_reported_and_do_not_change_k1(self):
+        amended = [held_run(t, allowlisted_arrivals_before_release=1) for t in TASKS]
+        result = classify(TASKS, with_amended(runs_for(), amended))
+        self.assertEqual(amended_row(result, "R1")["allowlisted_arrivals_before_release"], 1)
+        self.assertTrue(amended_row(result, "R1")["counts_for_k1"])
+        self.assertEqual(result["k1_amended"]["numerator"], 21)
+
+    def test_an_unsafe_arrival_in_an_amended_run_still_refuses_the_task(self):
+        amended = [held_run(t) for t in TASKS]
+        amended[0] = held_run("R1", unsafe_before_release=1)
+        result = classify(TASKS, with_amended(runs_for(), amended))
+        self.assertIn("hold_leak", amended_row(result, "R1")["exclusions"])
+
+    def test_timing_of_amended_runs_is_totalled(self):
+        amended = [held_run(t, seconds=2.0, reset_seconds=1.0) for t in TASKS]
+        timing = classify(TASKS, with_amended(runs_for(), amended))["timing"]
+        self.assertEqual(timing["run_seconds_total"], 2.0 * len(TASKS))
+
+    def test_bad_allowlisted_count_is_an_error(self):
+        runs = with_amended(runs_for(), [held_run("R1", allowlisted_arrivals_before_release=-1)] + [held_run(t) for t in TASKS if t != "R1"])
+        with self.assertRaisesRegex(ValueError, "allowlisted_arrivals_before_release must be a count"):
+            classify(TASKS, runs)
+
+
+CREATING = ("R1", "R5", "R6")
+
+
+class CreateCategoryTests(unittest.TestCase):
+    """A create adds an object. It is its own category, with its own count."""
+
+    def test_a_task_that_holds_a_create_is_in_the_create_category(self):
+        r = row(classify(TASKS, runs_for({"R1": held_run("R1", creates_held=1)})), "R1")
+        self.assertEqual(r["category"], "create")
+
+    def test_other_tasks_are_writes(self):
+        self.assertEqual(row(classify(TASKS, runs_for()), "R2")["category"], "write")
+
+    def test_the_create_summary_counts_only_creates(self):
+        overrides = {
+            "R1": held_run("R1", creates_held=1),
+            "R5": held_run("R5", "needs_response", creates_held=1),
+            "R6": held_run("R6", creates_held=1),
+        }
+        creates = classify(TASKS, runs_for(overrides))["creates"]
+        self.assertEqual(creates["tasks"], sorted(CREATING))
+        self.assertEqual((creates["denominator"], creates["numerator"]), (3, 2))
+
+    def test_creates_held_must_be_a_count(self):
+        with self.assertRaisesRegex(ValueError, "creates_held must be a count"):
+            classify(TASKS, runs_for({"R1": held_run("R1", creates_held=-1)}))
+
+    def test_amended_creates_are_summarised_beside_the_registered_ones(self):
+        amended = [held_run(t, creates_held=1 if t in CREATING else 0) for t in TASKS]
+        result = classify(TASKS, with_amended(runs_for(), amended))
+        self.assertEqual(result["creates_amended"]["denominator"], 3)
+        self.assertEqual(result["creates_amended"]["numerator"], 3)
+
+
+class ReleaseStatusTests(unittest.TestCase):
+    """A completed task whose unit was not fully released does not complete. The read-back alone is not enough."""
+
+    def test_a_refused_or_partial_release_excludes_the_task(self):
+        for status in ("refused", "partial"):
+            r = row(classify(TASKS, runs_for({"R3": held_run("R3", release_status=status)})), "R3")
+            self.assertFalse(r["counts_for_k1"], status)
+            self.assertIn("release_not_released", r["exclusions"], status)
+
+    def test_a_released_unit_counts(self):
+        r = row(classify(TASKS, runs_for({"R3": held_run("R3", release_status="released")})), "R3")
+        self.assertTrue(r["counts_for_k1"])
+
+    def test_an_unknown_release_status_is_an_error(self):
+        with self.assertRaisesRegex(ValueError, "release_status"):
+            classify(TASKS, runs_for({"R3": held_run("R3", release_status="sent")}))
+
+
 class CliTests(unittest.TestCase):
     def test_round_trip_writes_json_and_exits_zero(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -90,11 +90,15 @@ def origin_of(url):
     return f"{parts.scheme}://{parts.hostname}:{parts.port}"
 
 
-def decide_detail(method, url, mode=PRIMARY, rules=None):
+AMENDED_PASS_REASON = "allowlisted by amendment A1"
+
+
+def decide_detail(method, url, mode=PRIMARY, rules=None, allowed=None):
     """Return (verdict, reason, rule_name).
 
     Verdict is "pass", "hold" or "block". rule_name is the GET rule that decided
-    a probe GET, and None otherwise.
+    a probe GET, and None otherwise. allowed(method, url) is the amendment's
+    allowlist (amendment.allows); None means the registered policy, with no exception.
     """
     if mode not in MODES:
         raise ValueError(f"unknown mode {mode!r}")
@@ -103,6 +107,8 @@ def decide_detail(method, url, mode=PRIMARY, rules=None):
     if app is None:
         return "block", "not a probe origin", None
     if method.upper() not in SAFE_METHODS:
+        if allowed is not None and allowed(method, url):
+            return "pass", AMENDED_PASS_REASON, None
         return "hold", f"{method.upper()} request", None
     parts = urlsplit(url)
     query = parse_qs(parts.query, keep_blank_values=True)
@@ -116,7 +122,7 @@ def decide_detail(method, url, mode=PRIMARY, rules=None):
     return "pass", "", None
 
 
-def decide(method, url, mode=PRIMARY, rules=None):
+def decide(method, url, mode=PRIMARY, rules=None, allowed=None):
     """Return (verdict, reason). Verdict is "pass", "hold" or "block"."""
-    verdict, reason, _ = decide_detail(method, url, mode, rules)
+    verdict, reason, _ = decide_detail(method, url, mode, rules, allowed)
     return verdict, reason

@@ -152,12 +152,13 @@ class FreshReadTests(unittest.TestCase):
         self.assertIsNone(current_updated(lambda path: (200, "not json"), "6"))
         self.assertIsNone(current_updated(broken_connection, "6"))
 
-    def test_fresh_version_reads_only_held_requests_that_name_a_task(self):
+    def test_fresh_version_reads_only_held_requests_that_name_a_target(self):
         read = fresh_version(lambda path: (200, LATER))
-        with_task = Held(seq=1, method="PATCH", url=TASK6, headers={}, body="", task_id="6")
-        no_task = Held(seq=2, method="POST", url=f"{API}/user/token/refresh", headers={}, body="")
+        token = Token("page-read:updated", EARLIER_UPDATED)
+        with_task = Held(seq=1, method="PATCH", url=TASK6, headers={}, body="", token=token, target=("task", "6"))
+        no_target = Held(seq=2, method="POST", url=f"{API}/user/token/refresh", headers={}, body="", token=token)
         self.assertEqual(read(with_task), LATER_UPDATED)
-        self.assertIsNone(read(no_task))
+        self.assertIsNone(read(no_target))
 
 
 class WorkspaceReleaseTests(unittest.TestCase):

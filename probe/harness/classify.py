@@ -53,7 +53,8 @@ RESPONSE_KINDS = (
     "held_get_content",
     "other",
 )
-TIMED_LISTS = ("held", "held_sensitivity", "baseline")
+TIMED_LISTS = ("held", "held_sensitivity", "held_amended", "baseline")
+RELEASE_STATUSES = (None, "released", "partial", "refused")
 
 # GET rule name -> the app it belongs to.
 RULE_APP = {rule.name: rule.app for rule in GET_RULES}
@@ -107,6 +108,11 @@ def _check_held(run, where):
     read_back = run.get("read_back_match")
     if read_back is not None and not isinstance(read_back, bool):
         _fail(where, "read_back_match must be true, false or null")
+    if run.get("release_status") not in RELEASE_STATUSES:
+        _fail(where, f"release_status must be one of {RELEASE_STATUSES[1:]} or absent")
+    for key in ("creates_held", "allowlisted_arrivals_before_release"):
+        if key in run and not _is_count(run[key]):
+            _fail(where, f"{key} must be a count of 0 or more")
 
 
 def _check_gets(run, task, where, sensitivity_rules):
@@ -180,11 +186,15 @@ def _row(task, run, base):
         exclusions.append("read_back_missing")
     elif not read_back:
         exclusions.append("read_back_mismatch")
+    release_status = run.get("release_status")
+    if release_status not in (None, "released"):
+        exclusions.append("release_not_released")
     return {
         "task": task["id"],
         "app": task["app"],
         "native_draft_available": task["native_draft_available"] == "yes",
         "native_draft_required": draft_required,
+        "category": "create" if run.get("creates_held", 0) > 0 else "write",
         "held_outcome": run["held_outcome"],
         "needs_response": run.get("needs_response", []),
         "fail_reason": run.get("fail_reason"),
@@ -192,6 +202,9 @@ def _row(task, run, base):
         "faked_response": run["faked_response"],
         "native_draft_used": run["native_draft_used"],
         "unsafe_before_release": run["unsafe_before_release"],
+        # Amended runs only: arrivals of the allowlisted request, reported apart from unsafe ones.
+        "allowlisted_arrivals_before_release": run.get("allowlisted_arrivals_before_release", 0),
+        "release_status": release_status,
         "read_back_match": read_back,
         "baseline_outcome": base["outcome"],
         "counts_for_k1": not exclusions,
@@ -295,10 +308,37 @@ def _timing(runs):
     return totals
 
 
+def _creates(rows):
+    """The create category: tasks whose held requests add an object. Counted like K1, reported apart."""
+    creating = [r for r in rows if r["category"] == "create"]
+    return {
+        "tasks": sorted(r["task"] for r in creating),
+        "denominator": len(creating),
+        "numerator": sum(1 for r in creating if r["counts_for_k1"]),
+        "held_phase_completes": sum(1 for r in creating if r["held_phase_completes"]),
+    }
+
+
+def _amended(tasks, runs, baseline):
+    """The amended policy (A1). Only from an applied amendment: a void one cannot be reported as a number."""
+    amendment = runs.get("amendment")
+    if not isinstance(amendment, dict) or amendment.get("id") != "A1":
+        raise ValueError("held_amended runs need an amendment record for A1 in the runs file")
+    if amendment.get("applied") is not True:
+        reasons = "; ".join(amendment.get("reasons") or ["no reason recorded"])
+        raise ValueError(f"amendment A1 is not applied, so held_amended runs cannot count: {reasons}")
+    held = _index_held(runs["held_amended"], tasks)
+    _require_first_attempts(held, tasks, "amended")
+    rows, retries, k1 = _score(tasks, held, baseline, "amended")
+    return {"k1_amended": k1, "tasks_amended": rows, "retries_amended": retries, "creates_amended": _creates(rows), "amendment": amendment}
+
+
 def classify(tasks, runs, sensitivity_rules=SENSITIVITY_RULES):
-    """Return the K1 result for the primary policy and the sensitivity policy.
+    """Return the K1 result for the registered policy, and beside it the sensitivity policy and, when given, amendment A1.
 
     sensitivity_rules is the set of GET rule names the sensitivity policy passes.
+    The registered policy is the primary result. "held_amended" runs are the
+    amended policy and need an applied amendment record ("amendment").
     """
     sensitivity_rules = frozenset(sensitivity_rules)
     unknown = sorted(sensitivity_rules - set(RULE_APP))
@@ -322,15 +362,19 @@ def classify(tasks, runs, sensitivity_rules=SENSITIVITY_RULES):
         tasks, sens_held, baseline, "sensitivity", scope=scope, primary_rows=primary_by_task
     )
 
-    return {
+    result = {
         "k1": primary_k1,
         "tasks": primary_rows,
         "retries": primary_retries,
+        "creates": _creates(primary_rows),
         "k1_sensitivity": sens_k1,
         "tasks_sensitivity": sens_rows,
         "retries_sensitivity": sens_retries,
         "timing": _timing(runs),
     }
+    if "held_amended" in runs:
+        result.update(_amended(tasks, runs, baseline))
+    return result
 
 
 def main(argv=None):

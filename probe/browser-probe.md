@@ -1,10 +1,13 @@
 # Browser feasibility probe
 
-Status: records block run. Vikunja (R1 to R8) ran in baseline and held modes, then
-was stopped and its runtime data removed. Mail (Mailpit with the webmail stub) and
-checkout (with the payment provider) have not run. Nothing is running now. The K1
-rule and the task list are unchanged from the frozen version. The next runs wait for
-the orchestrator's go-ahead.
+Status: records block run, then the release fixes built offline. Vikunja (R1 to R8)
+ran in baseline and held modes before the read-compare existed, then was stopped and
+its runtime data removed. Those held rows are superseded. Built offline since: the
+read-compare release, labelled amendment A1 (one refresh request, see "Amendment
+A1"), and the create precondition (see "Creates"). None of that has run live. Mail
+(Mailpit with the webmail stub) and checkout (with the payment provider) have not
+run. Nothing is running now. The K1 rule and the task list are unchanged from the
+frozen version. The live steps wait for the orchestrator's go-ahead.
 
 ## Question
 
@@ -45,14 +48,22 @@ How this probe applies it. The orchestrator fixed the counting rule before any r
   verified. It does not change K1: a task whose release is refused, or whose
   read-back does not match, still fails K1 when its held phase completes.
 
-Two K1 numbers are reported, one per GET policy (see "GET policy" below):
+Reported numbers. Each is labelled, and none replaces another (see "GET policy"
+below and "Amendment A1"):
 
-- Primary: every GET measured to change state is held, and so is every GET the
-  registered policy holds until it is measured. The primary number is the K1
-  reading.
-- Sensitivity: the same, except GETs whose measured effect is reversible and
-  low-stakes may pass. Reported beside the primary number and labelled. The payment
-  return never passes in either.
+- Registered K1, the K1 reading: the registered hold policy. Every GET measured to
+  change state is held, and so is every GET the registered policy holds until it is
+  measured.
+- Amended K1 (A1): the same, except that the one refresh request in Amendment A1
+  passes. It passes only in an amended run, and only when A1 applies. Reported beside
+  the registered number.
+- Sensitivity: the registered policy, except GETs whose measured effect is
+  reversible and low-stakes may pass. Reported beside the registered number. The
+  payment return never passes in either.
+- Held phase completes: the tasks whose page reached its goal with every unsafe
+  request held. It is a separate count, not K1.
+- Creates: the tasks whose held requests add an object. They are counted by the same
+  rule and reported as their own category.
 
 Sensitivity scope: the two policies differ only on GETs that the sensitivity policy
 passes. So a sensitivity held run is needed only for the tasks whose primary held
@@ -64,8 +75,20 @@ Copied rows add no time to the timing totals.
 This text replaces an earlier reading that counted tasks which completed by saving
 a draft. That reading is withdrawn.
 
+Change to the numerator rule (labelled). A task counts as `completes` only when its
+release is `released` (every held request sent, none refused or rejected) and its
+read-back matches. Before this change the release status was not part of the rule.
+Records rows made under the earlier read-compare check are superseded (see Results).
+
+What the records numbers can reach. Records can add at most 2 to the numerator. Only
+R3 and R4 finish with requests held. The other six records tasks need a server
+response before the page can finish (see "What each needs_response page waited for").
+So K1 needs at least 10 of the 13 eligible mail and checkout tasks. This is a result of
+the design, and no release check changes it.
+
 Calculation: `python probe/harness/classify.py --runs <runs.json>` prints the
-per-task rows, both K1 summaries, and the timing totals. It stops with an error on
+per-task rows, the K1 summaries (registered, amended when A1 applies, and
+sensitivity), the creates summary, and the timing totals. It stops with an error on
 incomplete input: a missing measured run, a missing baseline, a missing sensitivity
 run for a scope task, a sensitivity run for a task outside the scope, an unknown
 task, a GET rule name that is unknown or belongs to another app, or a field with a
@@ -78,8 +101,9 @@ Each task gets these fields for its measured held run.
 `held_outcome`, one of:
 
 - completes: the goal is reached on the page while every unsafe request is still
-  held and no server response has reached the page. The release read-back must
-  also match the intended effect.
+  held and no server response has reached the page. The release must then be
+  `released`, and the release read-back must match the intended effect. A refused
+  or partial release fails, even when the read-back matches.
 - needs_response: the page cannot reach the goal without a server response. The
   run records each response it needed, from this list: `server_id`,
   `csrf_rotation`, `validation_result`, `payment_redirect`, `held_get_content`,
@@ -96,6 +120,13 @@ record. Such a task cannot count for K1.
 
 `native_draft_used`: recorded per run. Yes when the run touched the draft or quote
 feature at any point. Such a run cannot count for K1.
+
+`category`: `create` when the task's held requests add an object (`creates.py`),
+otherwise `write`. Reported as its own category.
+
+`release_status`: `released`, `partial` or `refused` (none for a baseline run, which
+has no release). `creates_held` counts held requests that add an object. Both are recorded
+per held run.
 
 `gets_held`: recorded per held run. The names of the GET rules that held a request
 during that run. It sets the sensitivity scope, and the classifier checks each name
@@ -127,6 +158,9 @@ Holds (`probe/harness/policy.py`):
   `sensitivity_pass`. A held request gets no response. The page waits. Release
   relays the server's own response. Discard aborts the request, which the page
   sees as a network error.
+- One non-GET request can pass, and only in an amended run: the records session
+  refresh, `POST /api/v2/user/token/refresh`, under Amendment A1. Nothing else is
+  allowlisted.
 
 GET policy (set from measurement, not from guesses):
 
@@ -176,7 +210,9 @@ Release (`probe/harness/release.py`, `probe/harness/intercept.py`):
 1. Check: each held request must carry a version token, and that token is
    compared with the current server version. The token is an If-Match header or
    a version form field in the request, or else the `updated` value the page
-   itself read for the request's task (`probe/harness/version_read.py`). The
+   itself read for the request's task (`probe/harness/version_read.py`). For a
+   create, the check is on its parent, and a duplicate guard runs too (see
+   "Creates"). The
    current version is read fresh, through the adapter's own request context (not
    routed), just before the sends. A request with no token is refused ("no
    precondition available"), so it never passes silently. A mismatch ("version
@@ -191,7 +227,8 @@ Release (`probe/harness/release.py`, `probe/harness/intercept.py`):
    a unit all run before its first send, so a later request's gap includes the
    sends before it. Every release record has a `gaps` list, empty when refused.
 3. Read back: a GET after release compares the server state with the intended
-   effect. The unit is verified only when they match. The read-back runs outside
+   effect. The unit is verified only when they match. A create must find exactly
+   one matching object, so a duplicate that slipped past the guard fails it. The read-back runs outside
    the hold workspace (a separate request context, not routed), so it is never held
    and never appears in `gets_held`.
 
@@ -313,7 +350,8 @@ Records numbers. Both are superseded for K1 purposes, and both wait for the reru
 
 - Held phase completes, from the superseded run: 2 of 8 (R3 and R4). The page reached its goal with everything held. This does not depend on the release, so it is recorded as observed. It is not a K1 count.
 - K1, from the superseded run: 2 of 8 counted (R3 and R4), and 2 of 8 for sensitivity (no scope tasks, all rows copied from primary). These counts depend on releases that compared nothing. They stay as the record of that run, not as K1 evidence.
-- Expected under the read-compare, from the code, not run: every records unit is refused, so R3 and R4 fail at read-back and the K1 count is 0 of 8. The cause is the session refresh POST, which names no task and so has no precondition (see "Release precondition for records"). Held phase completes should stay 2 of 8, since holding does not change with the release check.
+- Expected by the code, not run. Registered K1 is 0 of 8: every records unit is refused, because the session refresh POST names no task and has no precondition (see "Release precondition for records"). Amended K1 (A1) is at most 2 of 8, R3 and R4. The other six records tasks cannot count, whatever the release does, because their held phase does not complete (see the next bullet). Held phase completes stays 2 of 8, since holding does not change with the release check.
+- What this means for K1. Records is a limit on the count, not a release result. Six of the eight records tasks need a server response before the page can finish. Release checks, and A1, cannot change that.
 - K1 is defined over 24 write tasks, with the trigger below 12. Records is one app of three. It does not decide K1.
 
 GET measurement (Vikunja):
@@ -375,19 +413,19 @@ The fix (offline, test first). A held request with no token is refused with "no 
 
 What this changes for records. Vikunja writes carry no token, so the fixed release refuses every held Vikunja write. A records re-run under the fix would show refused releases, and R3 and R4 would fail at read-back. That follows from the code and the observed token count. It was not run. Records numbers wait for an adapter-side read-compare (see the next paragraph) and a re-run, which needs Vikunja and so waits for the go-ahead.
 
-The read-compare, built offline (`probe/harness/version_read.py`, `release.py`, `intercept.py`, `run_records.py`; tests written first, 131 of 131 Python tests pass):
+The read-compare, built offline (`probe/harness/version_read.py`, `release.py`, `intercept.py`, `run_records.py`; tests written first; at commit 11369f2 the suite had 131 tests, all passing):
 
 - Page read. The harness watches the page's responses. A GET of one task with status 200 counts, and the body is read at release, not when it arrives. A held write's token is the `updated` of the last such read for its task that arrived before the write was held. If that read cannot be read, there is no token. The harness never falls back to an earlier read.
 - Fresh read. Before the sends, the task is read again through the adapter's own request context, which the workspace does not route. The two `updated` strings are compared as strings. A failed or unreadable fresh read refuses.
 - Gap. Each release records, per sent request, `check_to_send_s` and `check_to_response_s`. Together with the edge log's times, these bound the window from the fresh read (time C) to the server's apply (time A, between the send and the response). The exact A comes from the edge log in the live gap measurement.
 - Coverage from the records data. The page made a single-task GET of every task that a held write acted on: R2, R3, R4, R6, R7, R8. The live check must show that this GET comes before the write in each run.
 
-Not covered, and why:
+Not covered by the task read-compare, and how each is now handled:
 
-- R1 (bulk create) and R5 (project create) name no existing task. Their held writes are refused ("no precondition available"). A create has no version to compare, so its precondition needs a different design, such as a parent's version or a read-back key. Not decided.
-- The session refresh, `POST /api/v2/user/token/refresh`, names no task. It is pending in every held run, and it refuses the whole unit. This blocks every records release, not only the creates. It needs a decision before the rerun: (a) let the session refresh go outside the business precondition rule, which changes the release rule and needs approval; (b) let it pass the hold, which changes the hold policy; or (c) discard it at release, which changes what the page sees. None is chosen here.
+- Creates (R1 bulk create, R5 project create, R6 comment create). A create names no existing task, so the task read-compare cannot cover it. Its precondition is the parent's version plus a duplicate guard, built offline (see "Creates"). Not run live.
+- The session refresh, `POST /api/v2/user/token/refresh`, names no task. It is pending in every held run, and it refuses the whole unit, so it blocks every records release. Amendment A1 (labelled) lets only that request pass, in an amended run, and only if its two live gates pass (see "Amendment A1"). If a gate fails, A1 is void and the request stays held.
 
-Live check still to do (after the go-ahead): the single-task GET carries `updated`; a fresh read returns the same string for an unchanged task; a change made after the fresh read and before the server applies the write is not detected, so the live gap measurement measures that window rather than closing it; and the gap values line up with the edge log's times.
+Live check still to do (after the go-ahead): the single-task GET carries `updated`, and the page makes it before the held write (the order is recorded in each held run); a fresh read returns the same string for an unchanged task; a change made after the fresh read and before the server applies the write is not detected, so the live gap measurement measures that window rather than closing it; and the gap values line up with the edge log's times.
 
 Gap measurement (method only, not run; it starts Vikunja, so it waits for the go-ahead):
 
@@ -403,6 +441,108 @@ Two extra runs, labelled as beyond the brief:
 7. Injected write. After step 3, another session writes a different field of task 4 before step 4. Read that field back after release. The expected result is that the page's copy wins. Control: the same write lands before step 3. The check must refuse and send nothing.
 
 Measured values: not yet. They will go in this section after the run.
+
+## Amendment A1: the session refresh (records only, labelled)
+
+This is a labelled amendment to the registered hold rule. It was written before any
+amended run. The registered number stays the K1 reading, and the amended number is
+reported beside it.
+
+Why. The page refreshes its session on load with `POST /api/v2/user/token/refresh`.
+The registered policy holds that request. It names no task, so release has no
+version token for it, and the release refuses the whole unit. Every records release
+is refused for this reason alone.
+
+What A1 allows. One request: method POST, path `/api/v2/user/token/refresh`, on the
+records origin, with no query string. There is no pattern. `probe/harness/amendment.py`
+holds the allowlist (`ALLOWLIST`), and `allows` checks the method, the app, the path
+and the query exactly. Only the `held-amended` runs use it. The registered runs hold
+every request.
+
+Conditions. A1 applies only when both live gates pass. Both are measured from a fresh
+reset (`python probe/harness/run_records.py amend`):
+
+1. State gate. The refresh returns a 2xx status, and every table it changes is one
+   of the excluded housekeeping tables, `sessions` (`state_snapshot.EXCLUDED_TABLES`).
+   A change to any other table refuses A1.
+2. Real-user gate. A second session for the same user, logged in beside the
+   workspace session, returns 200 before the refresh and 200 after it. If the refresh
+   signs that session out, A1 is void.
+
+Procedure. The measurement resets the app, logs in the workspace session and the
+real-user session, checks the real-user session, takes a table snapshot, refreshes the
+workspace session, takes a second snapshot, then checks both sessions again. The
+snapshot excludes nothing, so the record lists every table the refresh changed. The
+verdict applies the exclusion. The result goes to
+`probe/results/raw/records/amendment.json` with `applied`, `reasons`, the status, the
+changed tables, the real-user statuses and the policy commit. `held-amended` refuses to
+run unless that file records A1 as applied.
+
+Scope. In an amended run, an arrival of the allowlisted request is reported as
+`allowlisted_arrivals_before_release`. It is not counted in `unsafe_before_release`.
+Every other unsafe arrival counts as before.
+
+What A1 does not change. Whether a task's held phase completes depends on what the
+page does while requests are held. The refresh does not decide that. A1 changes only
+whether a release is refused. So amended K1 can differ from registered K1 only for
+tasks whose held phase completes (R3 and R4 in records).
+
+Void path. If either gate fails, `amendment.json` records `applied: false` with the
+reasons. The amended phase then refuses to run, and no amended number is reported.
+The registered number is then the only K1 number for records.
+
+Status: built offline with tests (`probe/tests/test_amendment.py`, 29 tests). The live
+gates have not run.
+
+## Creates (records): parent version and duplicate guard
+
+A create adds an object, so it has no version of its own. Its release check reads two
+things before anything is sent (`probe/harness/creates.py`). Creates are a category of
+their own in the results.
+
+Covered requests. A POST or PUT to:
+
+- a project's task collection, single or bulk (R1). Parent: the project.
+- the project collection (R5). Parent: the project the new project goes under, if it
+  has a parent. A top-level project takes the project list as its parent.
+- a task's comments (R6). Parent: the task. R6 is a create, so it is in the create
+  category. This classification is for the orchestrator to confirm.
+
+Checks, all before the first send:
+
+1. Parent version. The parent's version is read the way a task's version is read
+   (`version_read.py`). A task or a project uses its `updated` value. The project
+   list uses a digest of the sorted `id:updated` pairs of the list the page read,
+   with the same query. A moved parent refuses. An unreadable parent refuses.
+2. Duplicate guard. The parent's children are read again, through the adapter's own
+   context, from one page of 100. The keys are the task title (within the project),
+   the project title (within its parent), or the comment's plain text (within the
+   task). A key already present refuses. Two creates in one unit with the same key
+   refuse the second. A listing that cannot be read refuses. So does a full page of
+   100 children, since a duplicate may sit on the next page.
+3. Fail closed. A body with no usable key (not JSON, or no title or comment text)
+   gives no key, and the create refuses.
+
+After release, the read-back must find exactly one matching object. Zero matches or
+two refuse the read-back.
+
+Not verified yet. The live check must confirm each of these:
+
+- The body shapes the parser reads: a bulk task body (a `tasks` list, a bare list, or
+  one object with a `title`), a single task body, a project body, and a comment body
+  (`comment`, as HTML). A different shape gives no key, and the create refuses. That
+  is the intended failure, but it would stop R1, R5 and R6 at the guard.
+- The children listings return done tasks. If they hide done tasks, a done duplicate
+  would pass the guard.
+- The method for each create (POST or PUT), which the code accepts either way.
+
+Limits of the guard. A task with the same title as an existing task in the same
+project refuses, including a second task the user meant to add. That is the safe
+failure. The same check-then-replace window as for writes applies to the parent and
+the children read. The gap measurement covers it. It is not closed.
+
+Status: built offline with tests (`probe/tests/test_creates.py`, 34 tests). Not run
+live.
 
 ## Release demo (planned)
 
@@ -473,6 +613,14 @@ These are expectations from the design. The run confirms or changes each one.
     and the policy holds it. A hold longer than the token lifetime (600 s in our
     config) could let the session lapse. Our holds lasted under 30 s. Longer holds
     are not measured.
+16. Requests that name no object: the session refresh adds to no task, so the
+    per-write precondition cannot cover it, and the registered policy refuses every
+    records release for it. Labelled amendment A1 allows only this request, in an
+    amended run, after two live gates (see "Amendment A1"). The contract has no rule
+    for session requests of this kind.
+17. Creates: an add has no version of its own. The contract's precondition is a
+    version of the parent, plus a duplicate guard read from the parent's children. Built
+    offline (see "Creates"). Not run live.
 
 ## Stand-ins and limits
 
@@ -499,26 +647,41 @@ checkout have not run.
   unsafe arrival.
 - `node --test probe/tests/vikunja-seed.test.mjs`: 6 of 6 pass. The seed runs against
   an in-process fake of the v2 routes it uses. It is not tested against Vikunja.
-- `python -m unittest discover -s probe/tests -p "test_*.py"`: 131 of 131 pass.
-  Harness (65: 45 in `test_harness.py`, 20 in `test_version_read.py`): the hold
-  policy in both modes, version tokens, the page's read and the fresh read
-  (a missing precondition, a moved version and an unreadable version are each
-  refused with their own reason), read-to-apply gaps recorded for every release,
-  ordered release,
-  refusal (including a request with no token, which is refused and sends
-  nothing, both at the release step and through the workspace), partial release,
-  read-back, a guard that the harness never fulfils a
-  route, the rule that the payment return never passes, the rule name recorded for
-  each held GET, and that a held request gets no answer until release. Classifier
-  (49, including 3 for the held phase number): the K1 and exclusion rules, the 11 and 12 thresholds, both policies, the
-  sensitivity scope (only scope tasks run, the others are copied and marked, a
-  scope task without a run is an error, a sensitivity run outside scope is an
-  error, a sensitivity run cannot hold a rule it passes), GET record checks, timing
-  totals, and the command line. Snapshots (12): table hashing, exclusions, reset
-  before measurement, and the rule that a GET is state-changing only when a
-  business table changes. The snapshot tests use synthetic SQLite files.
-  Records runner (5): the kind mapping and the policy commit stamp, and a guard
-  that refuses to summarise a held run made before the read-compare, naming it.
+- `python -m unittest discover -s tests -p "test_*.py"` (from `probe/`): 222 of 222
+  pass. By file:
+  - `test_harness.py` (45): the hold policy in both modes, version tokens, the page
+    read and the fresh read (a missing precondition, a moved version and an
+    unreadable version are each refused with their own reason), read-to-apply gaps
+    for every release, ordered release, refusal (including a request with no token,
+    which is refused and sends nothing, both at the release step and through the
+    workspace), partial release, read-back, a guard that the harness never fulfils
+    a route, the rule that the payment return never passes, the rule name recorded
+    for each held GET, and that a held request gets no answer until release.
+  - `test_classify.py` (66): the K1 and exclusion rules, the 11 and 12 thresholds,
+    both policies, the sensitivity scope (only scope tasks run, the others are
+    copied and marked, a scope task without a run is an error, a sensitivity run
+    outside scope is an error, a sensitivity run cannot hold a rule it passes), GET
+    record checks, timing totals, the held phase number, the create summary, the
+    refusal of amended numbers without an applied A1, and the command line.
+  - `test_version_read.py` (20): the version targets (task, project, project list)
+    and the page read and fresh read for each.
+  - `test_state_snapshot.py` (12): table hashing, exclusions, reset before
+    measurement, and the rule that a GET is state-changing only when a business
+    table changes. The snapshot tests use synthetic SQLite files.
+  - `test_run_records.py` (16): the kind mapping and the policy commit stamp, the
+    refusal to summarise a held run made before the current release check, the
+    outcome rule (`completes` needs a released unit and a matching read-back), phase
+    files, the amendment guard, and the create counts.
+  - `test_amendment.py` (29): the exact allowlist, the policy hook, the verdict gates
+    (status, excluded tables, real-user session, missing measurements), measurement
+    order with fake operations, the arrival split, and the amended workspace pass.
+  - `test_creates.py` (34): create recognition, parent, keys, fail-closed keys, the
+    children listing (including the full-page refusal), the check outcomes (moved,
+    unreadable, duplicate, repeated in a unit), and an end-to-end release through the
+    workspace with a fake adapter.
+- `python -m py_compile` passes on every harness module.
+- `node --test` (from `probe/`): `edge-log.test.mjs` 1 of 1, `smtp-client.test.mjs`
+  6 of 6, `vikunja-seed.test.mjs` 6 of 6.
 - Downloads: Vikunja and Mailpit archives match their recorded SHA-256 values, and
   the Vikunja exe matches its own `.sha256` file. Binaries are not committed.
 - Live, records only: the Vikunja seed and reset (`reset.mjs build` and
@@ -526,13 +689,35 @@ checkout have not run.
   measurement for 158 GETs, and the ETag and If-Match check. The held-run releases
   were made before the fix: they sent every held write with no comparable token,
   so they are not verified releases (see the release precondition section).
-- Not run: mail, checkout, the release gap measurement, the read-compare live check,
-  the rerun of the records held runs, and the release demo.
+- Not run: mail, checkout, the amendment measurement (A1), the held-amended runs,
+  the records held reruns under the current release check, the create checks live,
+  the read-compare live check, the release gap measurement, and the release demo.
 
 ## Run plan after the go-ahead
 
-Done: Vikunja (the records block, its held runs superseded). Next, after the go-ahead: the Vikunja read-compare live check, the rerun of the records held runs (once the refresh decision is made), and the release gap measurement (see the release precondition section). Then Mailpit with the webmail stub,
-then the checkout store with the payment provider. Run one app at a time. Check
+Done: Vikunja baseline runs, and the first held runs (superseded). Next, after the
+go-ahead, Vikunja alone, in this order:
+
+1. Start Vikunja. Check free memory (at least 600 MB) first.
+2. Amendment A1: `python probe/harness/run_records.py amend`. Read `amendment.json`.
+   If A1 does not apply, the amended runs do not run, and the doc says so.
+3. Live checks the offline code depends on, each recorded with its result:
+   - the page's single-task GET carries `updated`, and it comes before the held
+     write in each held run;
+   - a fresh read of an unchanged task returns the same `updated`;
+   - the project list digest reads the same on both sides for an unchanged list;
+   - the bulk, single and comment create bodies have the shapes the parser reads,
+     and the create method is POST or PUT as the code expects;
+   - the children listings include done tasks, and the seed does not hit the
+     full-page refusal.
+4. Registered reruns: `python probe/harness/run_records.py held --tasks R1 R2 R3 R4 R5 R6 R7 R8`.
+5. Amended reruns, only if A1 applies: `python probe/harness/run_records.py held-amended --tasks R1 R2 R3 R4 R5 R6 R7 R8`.
+6. Gap measurement (method in the release precondition section).
+7. `python probe/harness/run_records.py summary`. Stop and remove Vikunja, close the
+   browser, yield the machine, and report to the orchestrator.
+
+Then Mailpit with the webmail stub, and then the checkout store with the payment
+provider, each only after the orchestrator's go-ahead. Run one app at a time. Check
 free memory (at least 600 MB) before each start.
 
 For each app:
@@ -552,8 +737,10 @@ For each app:
 6. Run the two release demos (S8 and M4) after their held runs.
 7. Stop the app.
 
-Then classify the runs, record both K1 numbers, and report the timing totals
-separately. Pause immediately if the orchestrator says so.
+Then classify the runs. Record the registered K1 number, with the amended number,
+the sensitivity number and the held phase number beside it, each labelled. Report the
+creates category and the timing totals separately. Pause immediately if the
+orchestrator says so.
 
 The Vikunja seed and reset were tested on the live app (`reset.mjs build`, then
 `restore` before every run). A restore takes 1.0 to 1.5 s.

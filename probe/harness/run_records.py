@@ -2,10 +2,12 @@
 
 Commands (run from probe/harness or with the path to this file):
 
-  python run_records.py baseline --tasks R1 R2 ...   holds off; one run per task
-  python run_records.py held --tasks R1 R2 ...       holds on for the steps; release, then read back
-  python run_records.py measure                      GET measurement from the GETs the baseline runs made
-  python run_records.py summary                      classify the records runs (records tasks only)
+  python run_records.py baseline --tasks R1 R2 ...        holds off; one run per task
+  python run_records.py held --tasks R1 R2 ...            holds on for the steps; release, then read back
+  python run_records.py amend                             amendment A1: the two live gates (state and real user)
+  python run_records.py held-amended --tasks R1 R2 ...    as held, with A1's refresh POST allowlisted (needs an applied A1)
+  python run_records.py measure                           GET measurement from the GETs the baseline runs made
+  python run_records.py summary                           classify the records runs (records tasks only)
 
 Every run starts with a reset to the seed snapshot (timed as reset_seconds). The
 app must be running through the records edge (127.0.0.1:8300) with the edge
@@ -19,7 +21,9 @@ Held run, fixed before any run:
   - holds are on for the steps only. The page gets no response to any unsafe
     request. The held phase ends when the goal shows, or after 20 s with no
     change on the page.
-  - held_outcome completes: the goal shows and the read-back after release matches.
+  - held_outcome completes: the goal shows, the unit is released in full, and the
+    read-back after release matches. A refused or partial unit fails, even when
+    the read-back matches (a duplicate already there can match it).
   - held_outcome fails: the goal shows but the read-back differs, or the goal
     does not show and no unsafe request is pending (reason recorded).
   - held_outcome needs_response: the goal does not show and an unsafe request
@@ -29,9 +33,16 @@ Held run, fixed before any run:
     read-back is made through a separate API context that the hold workspace
     does not route. A held request with no version token is refused ("no
     precondition available"): the unit sends nothing, stays pending, and is
-    not verified.
+    not verified. Each request is checked against its target's version. A
+    create also checks its duplicate guard (creates.py), read the same way.
 
-Output: probe/results/raw/records/<phase>.json (ignored by git).
+Amendment A1 (held-amended): the refresh POST /api/v2/user/token/refresh
+passes, and only it. Its arrivals are reported apart from unsafe ones. The
+phase needs amendment.json from the amend command, with A1 applied.
+
+Output: probe/results/raw/records/<phase>.json, with "-" written as "_" in the
+file name (held_amended.json). amendment.json holds the amend verdict. All
+ignored by git.
 """
 
 import argparse
@@ -50,8 +61,10 @@ sys.path.insert(0, str(HERE))
 
 from playwright.sync_api import sync_playwright  # noqa: E402
 
+import amendment  # noqa: E402
 import state_snapshot  # noqa: E402
 from classify import classify, load_tasks  # noqa: E402
+from creates import fresh_existing  # noqa: E402
 from intercept import HoldWorkspace  # noqa: E402
 from policy import GET_RULES, PRIMARY  # noqa: E402
 from version_read import VersionReads, fresh_version  # noqa: E402
@@ -78,8 +91,13 @@ CONTROL = "http://127.0.0.1:8310"
 HOLD_STOP_SECONDS = 20
 USER = "alex"
 PHASES = ("baseline", "held")
-# Marks a held run whose release used the page's read and a fresh read. Older held runs lack it.
-RELEASE_CHECK = "page-read-updated+fresh-read"
+AMENDED_PHASE = "held-amended"
+MEASURED_PHASES = ("baseline", "held", AMENDED_PHASE)
+AMENDMENT_FILE = RAW / "amendment.json"
+# Marks a held run whose release checked each target's version (read the page's way, read again fresh)
+# and each create's duplicate guard. Older held runs lack it. The read-compare alone (the marker before
+# this one) did not check creates, so those runs are superseded too.
+RELEASE_CHECK = "page-read-target+fresh-read+create-guard"
 
 
 def _policy_commit():
@@ -363,7 +381,39 @@ def require_current_release(held_rows):
     """Refuse held runs made before the read-compare. Their releases did not check what the new rule checks."""
     stale = sorted({str(r.get("task", "?")) for r in held_rows if r.get("release_check") != RELEASE_CHECK})
     if stale:
-        raise ValueError("held runs from before the read-compare are superseded, rerun them: " + ", ".join(stale))
+        raise ValueError("held runs from before the current release check are superseded, rerun them: " + ", ".join(stale))
+
+
+def phase_file(phase):
+    return RAW / f"{phase.replace('-', '_')}.json"
+
+
+def settle_held_outcome(candidate, release_status, read_back_ok):
+    """(held_outcome, reason or None). completes needs a fully released unit and a matching read-back.
+
+    A refused or partial unit does not complete, even when the read-back matches: a duplicate
+    already present can match it, and the held requests were not sent.
+    """
+    if candidate != "completes":
+        return candidate, None
+    if release_status != "released":
+        return "fails", f"release {release_status or 'missing'}: the unit did not complete"
+    if not read_back_ok:
+        return "fails", "read-back mismatch after release"
+    return "completes", None
+
+
+def creates_held_count(held):
+    """How many held requests add an object (creates.py). Counted before release."""
+    return sum(1 for h in held if h.create is not None)
+
+
+def require_applied(verdict):
+    """Refuse an amendment that did not apply. A void A1 cannot shape a held-amended run."""
+    if not isinstance(verdict, dict) or verdict.get("id") != amendment.ID:
+        raise ValueError("no amendment A1 record: run the amend command first")
+    if verdict.get("applied") is not True:
+        raise ValueError("amendment A1 not applied, so held-amended runs cannot run: " + "; ".join(verdict.get("reasons") or ["no reason recorded"]))
 
 
 def kind_for(method, path):
@@ -390,11 +440,13 @@ def run_one(playwright, task, phase, attempt, nonce):
     tag = f"{phase}-{task}-{attempt}-{nonce}"
     seconds_reset = reset()
     started = time.monotonic()
-    reads = VersionReads()  # the page's own single-task reads: the version each held write was built on
-    ws = HoldWorkspace(PRIMARY, page_reads=reads)
+    amended = phase == AMENDED_PHASE
+    reads = VersionReads()  # the page's own reads of each target: the version each held write was built on
+    ws = HoldWorkspace(PRIMARY, page_reads=reads, allowed=amendment.allows if amended else None)
     ws.holding = False
     browser = playwright.chromium.launch(headless=True, executable_path=str(SHELL))
     record = {"task": task, "attempt": attempt, "phase": phase, "tag": tag, "reset_seconds": seconds_reset, "policy_commit": POLICY_COMMIT, "policy_dirty": POLICY_DIRTY}
+    record["amendment"] = amendment.ID if amended else None
     try:
         context = browser.new_context()
         ws.attach(context)
@@ -404,7 +456,7 @@ def run_one(playwright, task, phase, attempt, nonce):
         login(page)
         mark(f"setup-end-{tag}")
 
-        ws.holding = phase == "held"
+        ws.holding = phase != "baseline"
         mark(f"{phase}-start-{tag}")
         steps_error = None
         try:
@@ -442,20 +494,30 @@ def run_one(playwright, task, phase, attempt, nonce):
             if candidate == "fails":
                 record["fail_reason"] = steps_error or f"goal not shown and no unsafe request pending: {evidence}"
             mark(f"held-end-{tag}")
+            record["creates_held"] = creates_held_count(ws.held)
             mark(f"release-start-{tag}")
-            # Each held write takes the version the page read for its task. Before the sends, the check
-            # reads that task again through the adapter's own context (not routed), and refuses on any
-            # difference, on a failed read, or when the write has no task to read.
+            # Each held request takes the version the page read for its target. Before the sends, the check
+            # reads that target again through the adapter's own context (not routed), and refuses on any
+            # difference, on a failed read, or when the request has no target to read. A create also reads
+            # its parent's children for the duplicate guard, the same way.
             check_api = api_login(playwright)
+
+            def reader(path):
+                return api_get(check_api, path)
+
             try:
-                release = ws.release(current_token=fresh_version(lambda path: api_get(check_api, path)))
+                release = ws.release(current_token=fresh_version(reader), existing=fresh_existing(reader))
             finally:
                 check_api.dispose()
             record["release"] = release.as_dict()
+            record["release_status"] = release.status
             record["release_check"] = RELEASE_CHECK
             mark(f"release-end-{tag}")
             time.sleep(1.0)
-            record["unsafe_before_release"] = unsafe_count(arrivals_between(f"held-start-{tag}", f"release-start-{tag}"))
+            # Amended runs: the allowlisted refresh arrivals are reported apart and do not count as unsafe.
+            window = arrivals_between(f"held-start-{tag}", f"release-start-{tag}")
+            record["unsafe_before_release"], record["allowlisted_arrivals_before_release"] = amendment.split_arrivals(window, amended=amended)
+            record["amendment_passes"] = list(ws.amended_passes)
             # Held requests the page made after the unit was released; they are not part of the unit.
             record["held_left_after_release"] = len(ws.held)
             record["held_outcome"] = candidate
@@ -494,13 +556,16 @@ def run_one(playwright, task, phase, attempt, nonce):
             if record.get("release", {}).get("sent"):
                 # release_unit leaves verified empty here; the read-back above is the verification.
                 record["release"]["verified"] = bool(rb_ok)
-            if candidate == "completes" and not rb_ok:
-                record["held_outcome"] = "fails"
+            outcome, reason = settle_held_outcome(candidate, record["release_status"], rb_ok)
+            record["held_outcome"] = outcome
+            if candidate == "completes" and outcome == "fails":
                 if record["release"]["status"] == "refused":
                     reasons = sorted({c["reason"] for c in record["release"]["checks"] if not c["ok"]})
                     record["fail_reason"] = "release refused: " + "; ".join(reasons)
+                elif record["release"]["status"] == "partial":
+                    record["fail_reason"] = "release partial: a request was rejected"
                 else:
-                    record["fail_reason"] = "read-back mismatch after release"
+                    record["fail_reason"] = reason
             record["seconds"] = round(time.monotonic() - started, 2)
         record["seconds"] = round(time.monotonic() - started, 2)
         record["get_seen"] = [
@@ -513,7 +578,7 @@ def run_one(playwright, task, phase, attempt, nonce):
 
 def write_phase(phase, records):
     RAW.mkdir(parents=True, exist_ok=True)
-    out = RAW / f"{phase}.json"
+    out = phase_file(phase)
     existing = json.loads(out.read_text(encoding="utf-8")) if out.exists() else []
     keep = [r for r in existing if not any(r["task"] == n["task"] and r["attempt"] == n["attempt"] for n in records)]
     out.write_text(json.dumps(keep + records, indent=2), encoding="utf-8")
@@ -521,6 +586,9 @@ def write_phase(phase, records):
 
 
 def run_phase(phase, tasks, attempt=1):
+    if phase == AMENDED_PHASE:
+        # Refuse before any browser starts: A1 must have been measured and applied.
+        require_applied(json.loads(AMENDMENT_FILE.read_text(encoding="utf-8")) if AMENDMENT_FILE.exists() else None)
     nonce = time.strftime("%H%M%S")
     out = None
     with sync_playwright() as playwright:
@@ -532,11 +600,75 @@ def run_phase(phase, tasks, attempt=1):
     return out
 
 
+class LiveAmendmentOps:
+    """The live side of amendment.measure. The records app, through API contexts, one per session.
+
+    Each session has its own cookie jar, so the refresh POST carries that session's refresh
+    cookie. The browser is not used: the measurement is about the refresh endpoint's effects.
+    Not run yet: the live run waits for the orchestrator's go-ahead.
+    """
+
+    def __init__(self, playwright):
+        self.playwright = playwright
+        self.sessions = {}
+
+    def reset_app(self):
+        self.dispose()
+        reset()
+
+    def login(self, name):
+        ctx = self.playwright.request.new_context(base_url=BASE)
+        res = ctx.post("/api/v2/login", data={"username": USER, "password": password(), "long_token": False})
+        if not res.ok:
+            ctx.dispose()
+            raise RuntimeError(f"login for {name} failed with {res.status}")
+        self.sessions[name] = {"ctx": ctx, "token": res.json()["token"]}
+
+    def user_status(self, name):
+        session = self.sessions[name]
+        return session["ctx"].get("/api/v2/user", headers={"Authorization": f"Bearer {session['token']}"}).status
+
+    def refresh(self, name):
+        session = self.sessions[name]
+        res = session["ctx"].post("/api/v2/user/token/refresh")
+        if res.ok:
+            try:
+                session["token"] = res.json().get("token", session["token"])
+            except Exception:
+                pass  # keep the token the session had; the status is what counts
+        return res.status
+
+    def snapshot(self):
+        return state_snapshot.snapshot(DB, frozenset())
+
+    def dispose(self):
+        for session in self.sessions.values():
+            session["ctx"].dispose()
+        self.sessions = {}
+
+
+def amend():
+    """Run amendment A1's two live gates from a fresh reset, and write amendment.json (flat: id, applied, reasons)."""
+    with sync_playwright() as playwright:
+        ops = LiveAmendmentOps(playwright)
+        try:
+            result = amendment.measure(ops)
+        finally:
+            ops.dispose()
+    verdict = result.pop("verdict")
+    record = {"id": amendment.ID, "applied": verdict["applied"], "reasons": verdict["reasons"], **result}
+    record["policy_commit"] = POLICY_COMMIT
+    record["policy_dirty"] = POLICY_DIRTY
+    RAW.mkdir(parents=True, exist_ok=True)
+    AMENDMENT_FILE.write_text(json.dumps(record, indent=2), encoding="utf-8")
+    return record
+
+
 def measure():
     """Measure every distinct GET the baseline runs made, each from a fresh reset."""
     candidates = {}
-    for name in PHASES:
-        path = RAW / f"{name}.json"
+    for name in MEASURED_PHASES:
+        path = phase_file(name)
         if not path.exists():
             continue
         for run in json.loads(path.read_text(encoding="utf-8")):
@@ -598,10 +730,14 @@ def measure():
 def summary():
     tasks = {t: v for t, v in load_tasks().items() if v["app"] == "records"}
     runs = {
-        "baseline": json.loads((RAW / "baseline.json").read_text(encoding="utf-8")),
-        "held": json.loads((RAW / "held.json").read_text(encoding="utf-8")),
+        "baseline": json.loads(phase_file("baseline").read_text(encoding="utf-8")),
+        "held": json.loads(phase_file("held").read_text(encoding="utf-8")),
     }
     require_current_release(runs["held"])
+    if phase_file(AMENDED_PHASE).exists():
+        runs["held_amended"] = json.loads(phase_file(AMENDED_PHASE).read_text(encoding="utf-8"))
+        require_current_release(runs["held_amended"])
+        runs["amendment"] = json.loads(AMENDMENT_FILE.read_text(encoding="utf-8"))
     result = classify(tasks, runs)
     result["policy_commit"] = POLICY_COMMIT
     result["policy_dirty"] = POLICY_DIRTY
@@ -611,15 +747,18 @@ def summary():
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Vikunja records runs for the browser probe.")
     sub = parser.add_subparsers(dest="command", required=True)
-    for name in PHASES:
+    for name in (*PHASES, AMENDED_PHASE):
         p = sub.add_parser(name)
         p.add_argument("--tasks", nargs="+", required=True)
+    sub.add_parser("amend")
     sub.add_parser("measure")
     sub.add_parser("summary")
     args = parser.parse_args(argv)
-    if args.command in PHASES:
+    if args.command in (*PHASES, AMENDED_PHASE):
         out = run_phase(args.command, args.tasks)
         print(json.dumps({"wrote": str(out)}))
+    elif args.command == "amend":
+        print(json.dumps(amend(), indent=2))
     elif args.command == "measure":
         print(json.dumps(measure(), indent=2))
     else:

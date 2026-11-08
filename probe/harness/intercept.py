@@ -16,21 +16,23 @@ import itertools
 import time
 from urllib.parse import parse_qs, urlsplit
 
-from policy import PRIMARY, decide_detail
+from creates import request_target
+from policy import AMENDED_PASS_REASON, PRIMARY, decide_detail
 from release import Held, release_unit, token_from
-from version_read import task_id_from_url
 
 
 class HoldWorkspace:
-    def __init__(self, mode=PRIMARY, rules=None, page_reads=None, clock=time.monotonic):
+    def __init__(self, mode=PRIMARY, rules=None, page_reads=None, clock=time.monotonic, allowed=None):
         self.mode = mode
         self.rules = rules  # None means policy.GET_RULES
         self.page_reads = page_reads  # version_read.VersionReads of the page, or None
         self.clock = clock
+        self.allowed = allowed  # amendment allowlist (amendment.allows) for A1 runs; None for the registered policy
         self.gets_held = set()  # names of GET rules that held a request in this workspace
         self.held = []
         self.counts = {"pass": 0, "hold": 0, "block": 0}
         self.blocked_reasons = []
+        self.amended_passes = []  # paths of allowlisted requests passed under A1, in order
         self.holding = True  # False for setup and baseline runs: probe requests pass, other origins stay blocked
         self.get_seen = {}  # (method, path, query key names) -> first full URL seen, for the GET measurement
         self._seq = itertools.count(1)
@@ -39,9 +41,11 @@ class HoldWorkspace:
         context.route("**/*", self._on_route)
 
     def _on_route(self, route, request):
-        verdict, reason, rule = decide_detail(request.method, request.url, self.mode, self.rules)
+        verdict, reason, rule = decide_detail(request.method, request.url, self.mode, self.rules, self.allowed)
         if verdict == "hold" and not self.holding:
             verdict, reason, rule = "pass", "holds off", None
+        if verdict == "pass" and reason == AMENDED_PASS_REASON:
+            self.amended_passes.append(urlsplit(request.url).path)
         if request.method == "GET" and verdict != "block":
             parts = urlsplit(request.url)
             keys = tuple(sorted(parse_qs(parts.query, keep_blank_values=True)))
@@ -57,6 +61,7 @@ class HoldWorkspace:
             # No response: the request stays pending until release or discard.
             headers = request.all_headers()
             body = request.post_data or ""
+            target, create = request_target(request.method, request.url, body)
             self.held.append(
                 Held(
                     seq=next(self._seq),
@@ -66,30 +71,34 @@ class HoldWorkspace:
                     body=body,
                     token=token_from(headers, body),
                     route=route,
-                    task_id=task_id_from_url(request.url),
+                    target=target,
+                    create=create,
                     held_at=self.clock(),
                 )
             )
             return
         route.continue_()
 
-    def release(self, current_token, read_back=None):
-        """Release the held unit in order. current_token(h) reads the target's version.
+    def release(self, current_token, read_back=None, existing=None):
+        """Release the held unit in order.
+
+        current_token(h) reads the version of the held request's target.
+        existing(h) reads the keys already under a create's parent (creates only).
 
         A held request with no token of its own takes the version the page
-        read last for its task, before the request was held.
+        read last for its target, before the request was held.
         """
         if self.page_reads is not None:
             for h in self.held:
-                if h.token is None and h.task_id is not None:
-                    h.token = self.page_reads.page_token(h.task_id, before=h.held_at)
+                if h.token is None and h.target is not None:
+                    h.token = self.page_reads.page_version(h.target, before=h.held_at)
 
         def send(h):
             h.route.continue_(headers=h.headers)
             response = h.route.request.response()
             return response.status if response is not None else None
 
-        result = release_unit(self.held, current_token, send, read_back, clock=self.clock)
+        result = release_unit(self.held, current_token, send, read_back, clock=self.clock, existing=existing)
         if result.status != "refused":
             sent = {seq for seq, _ in result.sent}
             self.held = [h for h in self.held if h.seq not in sent]

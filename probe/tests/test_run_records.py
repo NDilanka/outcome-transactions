@@ -55,6 +55,68 @@ class ReleaseCheckMarkTests(unittest.TestCase):
         self.assertIn("R3, R4", str(caught.exception))
         self.assertNotIn("R1", str(caught.exception))
 
+    def test_runs_from_the_read_compare_without_the_create_guard_are_superseded(self):
+        """The first read-compare marker did not check creates. Those held runs are superseded too."""
+        rows = [{"task": "R5", "release_check": "page-read-updated+fresh-read"}]
+        with self.assertRaisesRegex(ValueError, "R5"):
+            run_records.require_current_release(rows)
+
+
+class SettleOutcomeTests(unittest.TestCase):
+    """completes needs a released unit and a matching read-back. The read-back alone is not enough."""
+
+    def test_completes_when_released_and_read_back_matches(self):
+        self.assertEqual(run_records.settle_held_outcome("completes", "released", True), ("completes", None))
+
+    def test_read_back_mismatch_after_release_fails(self):
+        outcome, reason = run_records.settle_held_outcome("completes", "released", False)
+        self.assertEqual(outcome, "fails")
+        self.assertEqual(reason, "read-back mismatch after release")
+
+    def test_a_refused_unit_fails_even_when_the_read_back_matches(self):
+        """A duplicate already present makes the read-back match, but the unit did not complete."""
+        outcome, reason = run_records.settle_held_outcome("completes", "refused", True)
+        self.assertEqual(outcome, "fails")
+        self.assertIn("refused", reason)
+
+    def test_a_partial_unit_fails_even_when_the_read_back_matches(self):
+        self.assertEqual(run_records.settle_held_outcome("completes", "partial", True)[0], "fails")
+
+    def test_other_candidates_are_not_changed(self):
+        self.assertEqual(run_records.settle_held_outcome("needs_response", "refused", False), ("needs_response", None))
+        self.assertEqual(run_records.settle_held_outcome("fails", "released", True), ("fails", None))
+
+
+class PhaseFileTests(unittest.TestCase):
+    def test_the_amended_phase_has_its_own_file_and_the_registered_one_keeps_its_own(self):
+        self.assertEqual(run_records.phase_file("held").name, "held.json")
+        self.assertEqual(run_records.phase_file("held-amended").name, "held_amended.json")
+        self.assertEqual(run_records.phase_file("baseline").name, "baseline.json")
+
+
+class AmendmentGuardTests(unittest.TestCase):
+    def test_an_applied_amendment_is_accepted(self):
+        run_records.require_applied({"id": "A1", "applied": True, "reasons": []})
+
+    def test_a_void_amendment_is_refused_with_its_reasons(self):
+        with self.assertRaisesRegex(ValueError, "not applied.*refresh returned 401"):
+            run_records.require_applied({"id": "A1", "applied": False, "reasons": ["refresh returned 401"]})
+
+    def test_a_missing_amendment_is_refused(self):
+        with self.assertRaises(ValueError):
+            run_records.require_applied(None)
+
+
+class CreateCountTests(unittest.TestCase):
+    def test_only_held_requests_that_add_an_object_are_counted(self):
+        from release import Held
+
+        create = Held(seq=1, method="POST", url="http://127.0.0.1:8300/api/v2/projects", headers={}, body="")
+        create.create = object()
+        update = Held(seq=2, method="PATCH", url="http://127.0.0.1:8300/api/v2/tasks/6", headers={}, body="")
+        self.assertEqual(run_records.creates_held_count([create, update]), 1)
+        self.assertEqual(run_records.creates_held_count([]), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
