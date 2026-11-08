@@ -157,6 +157,45 @@ class ReleaseTests(unittest.TestCase):
         json.dumps(result.as_dict())
 
 
+class ReleaseHookTests(unittest.TestCase):
+    """before_send runs once, after every check passes and before the first send (the injected-write window)."""
+
+    def test_runs_after_the_checks_and_before_the_first_send(self):
+        events = []
+        result = release_unit(
+            [held(1, TOKEN), held(2, TOKEN)],
+            lambda h: events.append(f"check {h.seq}") or current_matches_page(h),
+            lambda h: events.append(f"send {h.seq}") or 200,
+            before_send=lambda: events.append("hook"),
+        )
+        self.assertEqual(result.status, "released")
+        self.assertEqual(events, ["check 1", "check 2", "hook", "send 1", "send 2"])
+
+    def test_not_called_when_a_check_refuses(self):
+        called = []
+        result = release_unit(
+            [held(1, Token("updated", "old"))],
+            lambda h: "new",
+            lambda h: 200,
+            before_send=lambda: called.append(1),
+        )
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(called, [])
+
+    def test_a_write_made_by_the_hook_passes_the_check_and_is_sent_over(self):
+        # The window: the check passes, the hook changes the server, then the send goes out.
+        server = {"updated": "t1"}
+        sent = []
+        result = release_unit(
+            [held(1, TOKEN)],
+            lambda h: server["updated"],
+            lambda h: sent.append(server["updated"]) or 200,
+            before_send=lambda: server.update(updated="t2"),
+        )
+        self.assertEqual(result.status, "released")
+        self.assertEqual(sent, ["t2"])
+
+
 class UnguardedReleaseTests(unittest.TestCase):
     """A held request with no comparable token must never pass the check silently."""
 

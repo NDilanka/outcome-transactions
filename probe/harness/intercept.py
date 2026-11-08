@@ -79,11 +79,12 @@ class HoldWorkspace:
             return
         route.continue_()
 
-    def release(self, current_token, read_back=None, existing=None):
+    def release(self, current_token, read_back=None, existing=None, before_send=None):
         """Release the held unit in order.
 
         current_token(h) reads the version of the held request's target.
         existing(h) reads the keys already under a create's parent (creates only).
+        before_send() is a test hook, run after the checks pass and before the first send.
 
         A held request with no token of its own takes the version the page
         read last for its target, before the request was held.
@@ -98,7 +99,7 @@ class HoldWorkspace:
             response = h.route.request.response()
             return response.status if response is not None else None
 
-        result = release_unit(self.held, current_token, send, read_back, clock=self.clock, existing=existing)
+        result = release_unit(self.held, current_token, send, read_back, clock=self.clock, existing=existing, before_send=before_send)
         if result.status != "refused":
             sent = {seq for seq, _ in result.sent}
             self.held = [h for h in self.held if h.seq not in sent]

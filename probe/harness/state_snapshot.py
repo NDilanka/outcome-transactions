@@ -32,6 +32,20 @@ EXCLUDED_TABLES = {
 }
 
 
+# Columns whose values differ between two builds of the same seed: creation and update
+# times, password and token material, and salts. The semantic digest leaves them out.
+VOLATILE_COLUMNS = frozenset({"created", "updated"})
+VOLATILE_COLUMN_PARTS = ("password", "token", "hash", "salt", "secret")
+VOLATILE_COLUMN_SUFFIX = "_at"
+
+
+def volatile_column(name):
+    lowered = name.lower()
+    if lowered in VOLATILE_COLUMNS or lowered.endswith(VOLATILE_COLUMN_SUFFIX):
+        return True
+    return any(part in lowered for part in VOLATILE_COLUMN_PARTS)
+
+
 def _quote(name):
     return '"' + name.replace('"', '""') + '"'
 
@@ -64,6 +78,49 @@ def snapshot(db_path, exclude=frozenset()):
                 digest.update(b"\n")
             result[name] = {"rows": len(rows), "sha256": digest.hexdigest()}
         return result
+    finally:
+        conn.close()
+
+
+def semantic_digest(db_path, exclude=frozenset()):
+    """A digest of the database's contents that ignores what differs between builds of one seed.
+
+    Each table's rows are read in full, with the volatile columns removed (see volatile_column),
+    and sorted. Tables in exclude (housekeeping, such as sessions) are left out. Two builds of the
+    same seed give the same digest even though their files differ. The result names each table's
+    row count and digest, the excluded tables, and the columns left out.
+    """
+    path = Path(db_path).resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"no database at {path}")
+    conn = sqlite3.connect(f"{path.as_uri()}?mode=ro", uri=True)
+    try:
+        tables = {}
+        left_out = set()
+        for name in _table_names(conn):
+            if name in exclude:
+                continue
+            cursor = conn.execute(f"SELECT * FROM {_quote(name)}")
+            columns = [d[0] for d in cursor.description]
+            keep = [i for i, column in enumerate(columns) if not volatile_column(column)]
+            left_out.update(column for column in columns if volatile_column(column))
+            kept_names = [columns[i] for i in keep]
+            rows = sorted((tuple(row[i] for i in keep) for row in cursor.fetchall()), key=repr)
+            digest = hashlib.sha256()
+            digest.update(repr(kept_names).encode("utf-8", "surrogatepass"))
+            for row in rows:
+                digest.update(repr(row).encode("utf-8", "surrogatepass"))
+                digest.update(b"\n")
+            tables[name] = {"rows": len(rows), "sha256": digest.hexdigest()}
+        overall = hashlib.sha256()
+        for name in sorted(tables):
+            overall.update(f"{name}:{tables[name]['rows']}:{tables[name]['sha256']}\n".encode("utf-8"))
+        return {
+            "sha256": overall.hexdigest(),
+            "tables": tables,
+            "excluded_tables": sorted(exclude),
+            "left_out_columns": sorted(left_out),
+        }
     finally:
         conn.close()
 

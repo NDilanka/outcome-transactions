@@ -8,6 +8,7 @@ Commands (run from probe/harness or with the path to this file):
   python run_records.py held-amended --tasks R1 R2 ...    as held, with A1's refresh POST allowlisted (needs an applied A1)
   python run_records.py measure                           GET measurement from the GETs the baseline runs made
   python run_records.py summary                           classify the records runs (records tasks only)
+  python run_records.py injected --cases A B C            the injected-write test (cases A, B, C); needs an applied A1
 
 Every run starts with a reset to the seed snapshot (timed as reset_seconds). The
 app must be running through the records edge (127.0.0.1:8300) with the edge
@@ -40,9 +41,13 @@ Amendment A1 (held-amended): the refresh POST /api/v2/user/token/refresh
 passes, and only it. Its arrivals are reported apart from unsafe ones. The
 phase needs amendment.json from the amend command, with A1 applied.
 
+Every run record carries seed_semantic: the semantic digest of the database the reset left,
+taken before the login (state_snapshot.semantic_digest). Byte hashes differ between rebuilds,
+so the digest is what runs are compared by.
+
 Output: probe/results/raw/records/<phase>.json, with "-" written as "_" in the
-file name (held_amended.json). amendment.json holds the amend verdict. All
-ignored by git.
+file name (held_amended.json). amendment.json holds the amend verdict, and
+injected.json the injected-write cases. All ignored by git.
 """
 
 import argparse
@@ -62,12 +67,13 @@ sys.path.insert(0, str(HERE))
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 import amendment  # noqa: E402
+import injected_write  # noqa: E402
 import state_snapshot  # noqa: E402
 from classify import classify, load_tasks  # noqa: E402
 from creates import fresh_existing  # noqa: E402
 from intercept import HoldWorkspace  # noqa: E402
 from policy import GET_RULES, PRIMARY  # noqa: E402
-from version_read import VersionReads, fresh_version  # noqa: E402
+from version_read import VersionReads, fresh_version, updated_from_text  # noqa: E402
 
 PROBE = HERE.parent
 APP = PROBE / "apps" / "vikunja"
@@ -94,6 +100,8 @@ PHASES = ("baseline", "held")
 AMENDED_PHASE = "held-amended"
 MEASURED_PHASES = ("baseline", "held", AMENDED_PHASE)
 AMENDMENT_FILE = RAW / "amendment.json"
+INJECTED_FILE = RAW / "injected.json"
+TASK_ID = 4  # the task the injected-write test renames (R3's task)
 # Marks a held run whose release checked each target's version (read the page's way, read again fresh)
 # and each create's duplicate guard. Older held runs lack it. The read-compare alone (the marker before
 # this one) did not check creates, so those runs are superseded too.
@@ -127,6 +135,41 @@ def reset():
     if out.returncode != 0:
         raise RuntimeError("reset failed: " + out.stderr.strip()[-300:])
     return json.loads(out.stdout.strip().splitlines()[-1])["seconds"]
+
+
+def start_from_seed():
+    """Reset to the seed snapshot, then take the semantic digest of the database the reset left.
+
+    Returns (reset seconds, digest). The digest is taken before any login, so it describes the seed.
+    """
+    seconds = reset()
+    return seconds, state_snapshot.semantic_digest(DB, state_snapshot.EXCLUDED_TABLES["vikunja"])
+
+
+def seed_digest_summary(runs):
+    """For each phase, how many records carry each semantic seed digest, and how many carry none.
+
+    Records made before the digest existed have no digest. Runs with one digest started from the same seed content.
+    """
+    out = {}
+    for phase, rows in runs.items():
+        digests = {}
+        missing = 0
+        for row in rows:
+            digest = (row.get("seed_semantic") or {}).get("sha256")
+            if digest is None:
+                missing += 1
+            else:
+                digests[digest] = digests.get(digest, 0) + 1
+        out[phase] = {"digests": digests, "without_digest": missing}
+    return out
+
+
+def merge_injected(previous, new):
+    """The saved cases with each case in `new` replaced by its new result, in CASES order."""
+    replaced = {r["case"] for r in new}
+    kept = [r for r in previous if r["case"] not in replaced]
+    return sorted(kept + list(new), key=lambda r: injected_write.CASES.index(r["case"]))
 
 
 def edge_events():
@@ -197,13 +240,18 @@ def step_R2(page):
     page.get_by_role("button", name=re.compile(r"^mark task done", re.I)).click()
 
 
-def step_R3(page):
-    page.goto(BASE + "/tasks/4")
-    page.wait_for_load_state("domcontentloaded")
+def rename_R3(page):
+    """The rename on a task page that is already open. No navigation, so the page's read is not repeated."""
     page.locator("h1").first.click()
     page.keyboard.press("Control+A")
     page.keyboard.type("Quarterly report v2")
     page.keyboard.press("Enter")
+
+
+def step_R3(page):
+    page.goto(BASE + "/tasks/4")
+    page.wait_for_load_state("domcontentloaded")
+    rename_R3(page)
 
 
 def step_R4(page):
@@ -443,14 +491,14 @@ def wait_for_goal(page, goal):
 
 def run_one(playwright, task, phase, attempt, nonce):
     tag = f"{phase}-{task}-{attempt}-{nonce}"
-    seconds_reset = reset()
+    seconds_reset, seed_semantic = start_from_seed()
     started = time.monotonic()
     amended = phase == AMENDED_PHASE
     reads = VersionReads()  # the page's own reads of each target: the version each held write was built on
     ws = HoldWorkspace(PRIMARY, page_reads=reads, allowed=amendment.allows if amended else None)
     ws.holding = False
     browser = playwright.chromium.launch(headless=True, executable_path=str(SHELL))
-    record = {"task": task, "attempt": attempt, "phase": phase, "tag": tag, "reset_seconds": seconds_reset, "policy_commit": POLICY_COMMIT, "policy_dirty": POLICY_DIRTY}
+    record = {"task": task, "attempt": attempt, "phase": phase, "tag": tag, "reset_seconds": seconds_reset, "seed_semantic": seed_semantic, "policy_commit": POLICY_COMMIT, "policy_dirty": POLICY_DIRTY}
     record["amendment"] = amendment.ID if amended else None
     try:
         context = browser.new_context()
@@ -652,6 +700,126 @@ class LiveAmendmentOps:
         self.sessions = {}
 
 
+class LiveInjectedOps:
+    """The live side of injected_write.run_case: the records app, one browser per attempt.
+
+    The page runs in a hold workspace under amendment A1. The injector writes through its own API
+    context, which the workspace does not route. Its writes are counted apart from the page's
+    arrivals. The injector's login happens in start_page, before the window opens, so it is not
+    a window arrival. Not run yet: the live run waits for the orchestrator's go-ahead.
+    """
+
+    def __init__(self, playwright, tag):
+        self.playwright = playwright
+        self.tag = tag
+        self.start_label = start_marker("injected", tag)
+        self.reads = VersionReads()
+        self.ws = HoldWorkspace(PRIMARY, page_reads=self.reads, allowed=amendment.allows)
+        self.ws.holding = False
+        self.browser = None
+        self.page = None
+        self.api = None
+        self.released = False
+        self.injector_before_release = 0
+
+    def reset(self):
+        seconds, digest = start_from_seed()
+        return {"reset_seconds": seconds, "seed_semantic": digest}
+
+    def start_page(self):
+        self.browser = self.playwright.chromium.launch(headless=True, executable_path=str(SHELL))
+        context = self.browser.new_context()
+        self.ws.attach(context)
+        self.page = context.new_page()
+        self.page.on("response", lambda r: self.reads.observe(r.request.method, r.url, r.status, r.text))
+        self.api = api_login(self.playwright)
+        mark(f"setup-start-{self.tag}")
+        login(self.page)
+        mark(f"setup-end-{self.tag}")
+
+    def begin_hold(self):
+        self.ws.holding = True
+        mark(self.start_label)
+
+    def wait_for_new_second(self):
+        """Sleep to just after the next whole second, so a write made now gets a fresh second."""
+        time.sleep(1.0 - (time.time() % 1.0) + 0.02)
+
+    def open_task(self, on_read=None):
+        """Open the task page. Returns the `updated` in the page's own read. on_read runs as soon as that read arrives."""
+
+        def is_task_read(response):
+            return response.request.method == "GET" and urllib.parse.urlsplit(response.url).path == f"/api/v2/tasks/{TASK_ID}"
+
+        with self.page.expect_response(is_task_read, timeout=20000) as info:
+            self.page.goto(BASE + f"/tasks/{TASK_ID}", wait_until="commit")
+        token = updated_from_text(info.value.text())
+        if on_read is not None:
+            on_read()
+        self.page.wait_for_selector("h1", timeout=20000)
+        return token
+
+    def inject(self, title):
+        """A write from the injector's own context. Returns the title and the `updated` the server now stores."""
+        path = f"/api/v2/tasks/{TASK_ID}"
+        task = self.api.get(path).json()
+        task["title"] = title
+        if not self.released:
+            self.injector_before_release += 1  # counted before the write leaves
+        res = self.api.patch(path, data=task)
+        if not res.ok:
+            raise RuntimeError(f"injected write failed with {res.status}")
+        _, text = api_get(self.api, path)
+        return {"title": title, "updated": updated_from_text(text)}
+
+    def sleep(self, seconds):
+        time.sleep(seconds)
+
+    def rename_on_page(self):
+        rename_R3(self.page)
+        ok, _ = wait_for_goal(self.page, goal_R3)
+        return bool(ok)
+
+    def release(self, before_send=None):
+        self.released = True
+        mark(f"release-start-{self.tag}")
+
+        def reader(path):
+            return api_get(self.api, path)
+
+        release = self.ws.release(current_token=fresh_version(reader), existing=fresh_existing(reader), before_send=before_send)
+        mark(f"release-end-{self.tag}")
+        checks = release.checks
+        return {
+            "status": release.status,
+            "sent": len(release.sent),
+            "reasons": [c.reason for c in checks if not c.ok],
+            "token_used": checks[0].expected if checks else None,
+            "current": checks[0].current if checks else None,
+            "detail": release.as_dict(),
+        }
+
+    def window_unsafe(self):
+        time.sleep(1.0)  # the same wait run_one makes before it reads the arrival lines
+        arrivals = arrivals_between(self.start_label, f"release-start-{self.tag}")
+        unsafe, allowlisted = amendment.split_arrivals(arrivals, amended=True)
+        return {"raw": unsafe, "allowlisted": allowlisted, "injector_before_release": self.injector_before_release}
+
+    def final_title(self):
+        status, text = api_get(self.api, f"/api/v2/tasks/{TASK_ID}")
+        return json.loads(text).get("title") if status == 200 else None
+
+    def close(self):
+        try:
+            if self.browser is not None:
+                self.browser.close()
+                self.browser = None
+        finally:
+            if self.api is not None:
+                self.api.dispose()
+                self.api = None
+
+
 def amend():
     """Run amendment A1's two live gates from a fresh reset, and write amendment.json (flat: id, applied, reasons)."""
     with sync_playwright() as playwright:
@@ -749,6 +917,42 @@ def summary():
     return result
 
 
+def write_injected(records):
+    """Save the injected-write results, replacing any earlier result for the same case."""
+    RAW.mkdir(parents=True, exist_ok=True)
+    previous = json.loads(INJECTED_FILE.read_text(encoding="utf-8")) if INJECTED_FILE.exists() else []
+    INJECTED_FILE.write_text(json.dumps(merge_injected(previous, records), indent=2), encoding="utf-8")
+    return INJECTED_FILE
+
+
+def _first_seed(result):
+    for attempt in result["attempts"]:
+        seed = (attempt.get("reset") or {}).get("seed_semantic")
+        if seed is not None:
+            return seed
+    return None
+
+
+def run_injected(cases):
+    """Run the injected-write cases under an applied A1. Each case is saved as soon as it finishes."""
+    require_applied(json.loads(AMENDMENT_FILE.read_text(encoding="utf-8")) if AMENDMENT_FILE.exists() else None)
+    nonce = time.strftime("%H%M%S")
+    out = None
+    with sync_playwright() as playwright:
+        for case in cases:
+            def new_ops(attempt, case=case):
+                return LiveInjectedOps(playwright, f"injected-{case}-{attempt}-{nonce}")
+
+            result = injected_write.run_case(case, new_ops)
+            result["policy_commit"] = POLICY_COMMIT
+            result["policy_dirty"] = POLICY_DIRTY
+            result["amendment"] = amendment.ID
+            result["seed_semantic"] = _first_seed(result)
+            out = write_injected([result])
+            print(json.dumps({"case": case, "matches_prediction": result["matches_prediction"], "counted": result["counted"] is not None, "attempts": len(result["attempts"])}))
+    return out
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Vikunja records runs for the browser probe.")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -758,9 +962,14 @@ def main(argv=None):
     sub.add_parser("amend")
     sub.add_parser("measure")
     sub.add_parser("summary")
+    injected = sub.add_parser("injected")
+    injected.add_argument("--cases", nargs="+", required=True, choices=injected_write.CASES)
     args = parser.parse_args(argv)
     if args.command in (*PHASES, AMENDED_PHASE):
         out = run_phase(args.command, args.tasks)
+        print(json.dumps({"wrote": str(out)}))
+    elif args.command == "injected":
+        out = run_injected(args.cases)
         print(json.dumps({"wrote": str(out)}))
     elif args.command == "amend":
         print(json.dumps(amend(), indent=2))

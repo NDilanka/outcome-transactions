@@ -159,12 +159,20 @@ def release_unit(
     read_back: Optional[Callable[[], bool]] = None,
     clock: Callable[[], float] = time.monotonic,
     existing: Optional[Callable[[Held], Optional[set]]] = None,
+    before_send: Optional[Callable[[], None]] = None,
 ) -> Release:
+    """Check, then send, then read back. before_send is a test hook (the injected-write window).
+
+    It runs once, after every check has passed and before the first send. It never runs when a
+    check refuses. No live run passes it except the injected-write test.
+    """
     ordered = sorted(held, key=lambda h: h.seq)
     checks = check_unit(ordered, current_token, clock, existing)
     refused = [c.seq for c in checks if not c.ok]
     if refused:
         return Release("refused", checks, [], None, refused)
+    if before_send is not None:
+        before_send()
 
     checked_at = {c.seq: c.checked_at for c in checks}
     sent = []

@@ -4,7 +4,9 @@ policy stamp in each result. No browser, no network.
 Run: python -m unittest discover -s probe/tests -p "test_*.py" -v
 """
 
+import sqlite3
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -144,6 +146,67 @@ class LiveAmendmentOpsContractTests(unittest.TestCase):
 
     def test_the_live_ops_offer_every_method_the_measurement_calls(self):
         ops = run_records.LiveAmendmentOps(playwright=None)
+        for name in self.CONTRACT:
+            self.assertTrue(callable(getattr(ops, name, None)), name)
+
+
+class StartFromSeedTests(unittest.TestCase):
+    """Every run starts from the seed: reset, then a semantic digest of the database the reset left."""
+
+    def test_the_digest_is_taken_from_the_database_after_the_reset(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            db = Path(tmp) / "vikunja.db"
+            conn = sqlite3.connect(db)
+            conn.executescript(
+                "CREATE TABLE tasks (id INTEGER, title TEXT, created TEXT);"
+                "INSERT INTO tasks VALUES (1, 'Renew passport', '2026-11-08'), (2, 'Pay council tax', '2026-11-08');"
+            )
+            conn.commit()
+            conn.close()
+            calls = []
+
+            def fake_reset():
+                calls.append("reset")
+                return 0.75
+
+            original = (run_records.reset, run_records.DB)
+            run_records.reset, run_records.DB = fake_reset, db
+            try:
+                seconds, digest = run_records.start_from_seed()
+            finally:
+                run_records.reset, run_records.DB = original
+        self.assertEqual(calls, ["reset"])
+        self.assertEqual(seconds, 0.75)
+        self.assertEqual(digest["tables"]["tasks"]["rows"], 2)
+        self.assertEqual(len(digest["sha256"]), 64)
+
+
+class SeedDigestSummaryTests(unittest.TestCase):
+    def test_counts_each_digest_per_phase_and_names_records_without_one(self):
+        runs = {
+            "baseline": [{"seed_semantic": {"sha256": "a"}}, {"seed_semantic": {"sha256": "a"}}, {}],
+            "held": [{"seed_semantic": {"sha256": "b"}}],
+        }
+        out = run_records.seed_digest_summary(runs)
+        self.assertEqual(out["baseline"], {"digests": {"a": 2}, "without_digest": 1})
+        self.assertEqual(out["held"], {"digests": {"b": 1}, "without_digest": 0})
+
+
+class MergeInjectedTests(unittest.TestCase):
+    def test_a_new_result_replaces_the_same_case_and_keeps_the_others(self):
+        previous = [{"case": "A", "matches_prediction": True}, {"case": "B", "matches_prediction": False}]
+        merged = run_records.merge_injected(previous, [{"case": "B", "matches_prediction": True}])
+        self.assertEqual([m["case"] for m in merged], ["A", "B"])
+        self.assertTrue(merged[1]["matches_prediction"])
+
+
+class InjectedOpsContractTests(unittest.TestCase):
+    """injected_write.run_case calls these names on its ops. The live class must offer each one."""
+
+    CONTRACT = ("reset", "start_page", "begin_hold", "open_task", "wait_for_new_second", "inject", "sleep", "rename_on_page", "release", "window_unsafe", "final_title", "close")
+
+    def test_the_live_ops_offer_every_method_the_test_calls(self):
+        ops = run_records.LiveInjectedOps(playwright=None, tag="injected-A-1-000000")
         for name in self.CONTRACT:
             self.assertTrue(callable(getattr(ops, name, None)), name)
 
