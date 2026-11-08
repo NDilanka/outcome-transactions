@@ -168,9 +168,12 @@ markers. That count is `unsafe_before_release`.
 
 Release (`probe/harness/release.py`, `probe/harness/intercept.py`):
 
-1. Check: each held request that carries a version token (an If-Match header or
-   a version form field) is compared with the current server version. Any
-   mismatch, or an unreadable version, refuses the whole unit. Nothing is sent.
+1. Check: each held request must carry a version token (an If-Match header or
+   a version form field), and that token is compared with the current server
+   version. A request with no token is refused ("no precondition available"),
+   so it never passes silently. A mismatch ("version moved") or an unreadable
+   version ("current version unreadable") is refused too. Any refusal refuses
+   the whole unit. Nothing is sent, and the held requests stay pending.
 2. Send: held requests are continued in their original order. The first
    rejection (status 400 or more, or no status) stops the release. The unit is
    then partial.
@@ -270,9 +273,11 @@ Eligible for K1: 21 tasks. Not eligible by construction: M3, M4, S6.
 
 ### Records (Vikunja): block run
 
+Status: pre-fix. The release in this run compared nothing: a held write with no version token passed a check of None against None and was reported as "checks ok". So the release statuses below are server answers, not verified releases. The bug, the fix, and what it means for these numbers are in "Release precondition for records". The table is kept as the record of the run.
+
 One reset to seed before every run. Each task has a baseline run (holds off) and a primary held run. Policy commit c393905, working copy clean, stamped in every record. The final harness was run twice and gave the same outcomes. Raw rows are in `probe/results/raw/records/` (git-ignored): `baseline.json`, `held.json`, `summary.json`, `get-measure.json`, the edge logs, and before-release screenshots.
 
-| Task | Baseline (holds off) | Held (primary) | Requests left pending while held | Release statuses | Read-back | Unsafe before release | Held left after release |
+| Task | Baseline (holds off) | Held (primary, pre-fix) | Requests left pending while held | Release statuses (unchecked) | Read-back | Unsafe before release | Held left after release |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | R1 create task | completes | needs_response | refresh POST, bulk create | 200, 201 | match (1 task, due 2026-11-20) | 0 | 0 |
 | R2 mark done | completes | needs_response | refresh POST, PATCH task 1 | 200, 200 | match (done) | 0 | 0 |
@@ -286,16 +291,16 @@ One reset to seed before every run. Each task has a baseline run (holds off) and
 Points to note:
 
 - Baseline: 8 of 8 complete, and every read-back matches. Each baseline run had two unsafe requests in its step window: the page-load refresh POST and the task write. That is what the page sends. It is not a held-run count.
-- Held: each held request was sent in order after release and got the server's own answer. No response was faked and no draft feature was used. Nothing was left held after release.
+- Held (pre-fix): each held request was sent in order after release and got the server's own answer. No response was faked and no draft feature was used. Nothing was left held after release. But the release compared nothing, so these releases are not verified, and the read-backs above do not make them verified.
 - The six needs_response runs ended on the 20-second no-change stop rule (about 25 s each).
 - The `needs_response` kinds in the JSON (`server_id`, `other`) come from every request left pending, including the refresh. They do not show what the page waited for. The next section does.
 - Phase counts (pass, hold, block per run) are in `held.json` under `counts_during_steps`.
 
-K1 for records only (partial, not a K1 reading):
+K1 for records only. Not valid as a K1 count after the fix:
 
-- Primary: 2 of 8 counted (R3 and R4). The highest possible count here is 8, since records has no draft tasks.
-- Sensitivity: no GET that the sensitivity policy passes was held, so there are no scope tasks. All eight rows are copied from primary. Sensitivity count: 2 of 8.
-- K1 is defined over 24 write tasks, with the trigger below 12. The 2 of 8 covers one app of three. It does not decide K1.
+- Pre-fix run: 2 of 8 counted (R3 and R4), and 2 of 8 for sensitivity (no scope tasks, all rows copied from primary). These counts depend on releases that compared nothing. They stay as the record of that run, not as K1 evidence.
+- Under the fixed release, expected from the code and the observed token count, not run: no Vikunja held write carries a token, so every held write would be refused. R3 and R4 would then fail at read-back, and the count would be 0 of 8. This stays until an adapter-side read-compare exists and records are re-run. Re-running needs Vikunja, so it waits for the go-ahead.
+- K1 is defined over 24 write tasks, with the trigger below 12. Records is one app of three. It does not decide K1.
 
 GET measurement (Vikunja):
 
@@ -344,13 +349,19 @@ Verified facts:
 - The UI sends no version token. Source: no non-generated frontend code sets If-Match, and `taskWriteBody` has no version field. Observed: none of the 16 held writes carried a token.
 - The usable token is `updated`. It is in the task's GET body and inside the ETag, `"<UnixNano of updated>-<permission>"`. The API marks `updated` read-only, so the server ignores it on write.
 
-So the only check is a read. The release reads the task's `updated` just before it sends the held write, and compares it with the value the page read when it loaded the task. If they differ, the release refuses.
+So the only check is a read. The check the adapter needs (not built yet) reads the task's `updated` just before it sends the held write, and compares it with the value the page read when it loaded the task. If they differ, the release refuses.
 
 The window. The check answers at time C, and the server applies the write at time A. A write by another client that lands between C and A is overwritten, and the release does not detect it. This is a check-then-replace race. It is the same class as the file adapter's preflight-to-replace window (see the race section of the shared windows-results document). On one machine the window is short. Over a network it grows by the round trip.
 
 What the overwrite covers. The UI's PATCH carries every writable field the page loaded. `taskPatchBody` turns all of `taskWriteBody` into JSON Patch `add` operations. So a lost race reverts every writable field to the page's copy, not only the field the user changed. An adapter can send only the changed operations, which narrows the overwrite. Not tested.
 
-The release code does not do this check for records yet. Each held write got a check with expected None and current None, and that passed. So the records release reported "checks ok" with nothing compared. A request with no token should be reported as having no precondition. Not changed in this step (docs only).
+What the records release did, and the bug. The check compared a held write's token with the current version. A write with no token had nothing to compare, and the check passed it with expected None and current None. So the first records release reported "checks ok" with nothing compared. The statuses in the Results table come from that release. They are server answers, not verified releases.
+
+The fix (offline, test first). A held request with no token is refused with "no precondition available". A token that differs from the current version is refused with "version moved". A current version that cannot be read is refused with "current version unreadable". Any refusal refuses the whole unit, and nothing is sent. The held requests stay pending, so the page gets no answer. The tests were written first: five failed on the old code. The suite now has 106 Python tests, all passing, including one that drives the workspace release with a Vikunja-shaped write and checks that nothing is sent. The Node tests were not affected (13 of 13 pass).
+
+What this changes for records. Vikunja writes carry no token, so the fixed release refuses every held Vikunja write. A records re-run under the fix would show refused releases, and R3 and R4 would fail at read-back. That follows from the code and the observed token count. It was not run. Records numbers wait for an adapter-side read-compare (see the next paragraph) and a re-run, which needs Vikunja and so waits for the go-ahead.
+
+The adapter-side read-compare is not built. The adapter would capture the `updated` value the page read, from the page's own GET, and compare it with a fresh GET before release. That would make Vikunja writes releasable. It needs a live check that the page's GET carries `updated` and that the check reads the same value.
 
 Gap measurement (method only, not run; it starts Vikunja, so it waits for the go-ahead):
 
@@ -423,10 +434,11 @@ These are expectations from the design. The run confirms or changes each one.
     tasks that need an echoed object (R1, R2, R5, R6, R8). It would unblock R7 at
     the status level, but the page would then show the deletion before the server
     made it. Source-based; not run. See the needs_response section.
-13. Release check on a request with no token: the check compares None with None
-    and passes, so "checks ok" can report that nothing was compared. The release
-    step should report "no precondition" for such a request. Found in the records
-    run. The release code is not changed in this step.
+13. Release check on a request with no token: the check compared None with None
+    and passed, so the records release reported "checks ok" with nothing compared.
+    Found in the records run. Fixed offline: such a request is refused with "no
+    precondition available", and the held requests stay pending. The records
+    numbers from before the fix are pre-fix (see the Results section).
 14. Scope of an overwrite: the UI's PATCH carries every writable field the page
     loaded. A release that loses a race therefore reverts every writable field, not
     only the one the user changed. The adapter can send only the changed fields.
@@ -461,10 +473,12 @@ checkout have not run.
   unsafe arrival.
 - `node --test probe/tests/vikunja-seed.test.mjs`: 6 of 6 pass. The seed runs against
   an in-process fake of the v2 routes it uses. It is not tested against Vikunja.
-- `python -m unittest discover -s probe/tests -p "test_*.py"`: 100 of 100 pass.
-  Harness (42, including 3 for the record run: kind mapping and the policy commit
+- `python -m unittest discover -s probe/tests -p "test_*.py"`: 106 of 106 pass.
+  Harness (48, including 3 for the record run: kind mapping and the policy commit
   stamp): the hold policy in both modes, version tokens, ordered release,
-  refusal, partial release, read-back, a guard that the harness never fulfils a
+  refusal (including a request with no token, which is refused and sends
+  nothing, both at the release step and through the workspace), partial release,
+  read-back, a guard that the harness never fulfils a
   route, the rule that the payment return never passes, the rule name recorded for
   each held GET, and that a held request gets no answer until release. Classifier
   (46): the K1 and exclusion rules, the 11 and 12 thresholds, both policies, the
@@ -478,8 +492,9 @@ checkout have not run.
   the Vikunja exe matches its own `.sha256` file. Binaries are not committed.
 - Live, records only: the Vikunja seed and reset (`reset.mjs build` and
   `restore`, seed hash checked), baseline and held runs for R1 to R8, the GET
-  measurement for 158 GETs, the ETag and If-Match check, and a release for each
-  held write.
+  measurement for 158 GETs, and the ETag and If-Match check. The held-run releases
+  were made before the fix: they sent every held write with no comparable token,
+  so they are not verified releases (see the release precondition section).
 - Not run: mail, checkout, the release gap measurement, and the release demo.
 
 ## Run plan after the go-ahead

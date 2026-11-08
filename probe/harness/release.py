@@ -3,9 +3,11 @@
 A unit is every request a task held, in the order the browser sent them.
 Release runs in three steps:
 
-  1. check: each held request that carries a version token is compared with
-     the current version of its target. A mismatch, or a current version that
-     cannot be read, refuses the whole unit. Nothing is sent.
+  1. check: each held request must carry a version token, and that token is
+     compared with the current version of its target. A held request with no
+     token is refused ("no precondition available"), so it can never pass
+     silently. A mismatch, or a current version that cannot be read, is refused
+     too. Any refusal refuses the whole unit. Nothing is sent.
   2. send: the held requests are continued in their original order. The
      first request the server rejects (status 400 or more, or no status)
      stops the release, and the unit is reported as partial.
@@ -63,17 +65,27 @@ class Check:
     ok: bool
     expected: Optional[str]
     current: Optional[str]
+    reason: str
 
 
 def check_unit(held, current_token):
-    """Compare each token with the current version. current_token(h) returns str or None."""
+    """Compare each token with the current version. current_token(h) returns str or None.
+
+    A request with no token has nothing to compare, so it is never ok.
+    """
     checks = []
     for h in held:
         if h.token is None:
-            checks.append(Check(h.seq, True, None, None))
+            checks.append(Check(h.seq, False, None, None, "no precondition available"))
             continue
+        expected = h.token.value
         current = current_token(h)
-        checks.append(Check(h.seq, current == h.token.value, h.token.value, current))
+        if current is None:
+            checks.append(Check(h.seq, False, expected, None, "current version unreadable"))
+        elif current == expected:
+            checks.append(Check(h.seq, True, expected, current, "ok"))
+        else:
+            checks.append(Check(h.seq, False, expected, current, "version moved"))
     return checks
 
 

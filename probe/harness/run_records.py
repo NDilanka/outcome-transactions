@@ -27,7 +27,9 @@ Held run, fixed before any run:
     unsafe request is other.
   - Then the held requests are released in order (release.py), and the
     read-back is made through a separate API context that the hold workspace
-    does not route.
+    does not route. A held request with no version token is refused ("no
+    precondition available"): the unit sends nothing, stays pending, and is
+    not verified.
 
 Output: probe/results/raw/records/<phase>.json (ignored by git).
 """
@@ -423,6 +425,8 @@ def run_one(playwright, task, phase, attempt, nonce):
                 record["fail_reason"] = steps_error or f"goal not shown and no unsafe request pending: {evidence}"
             mark(f"held-end-{tag}")
             mark(f"release-start-{tag}")
+            # Vikunja writes carry no version token, so every held request is refused and nothing is sent.
+            # Any tokened request would also be refused: this lambda reports no readable version.
             release = ws.release(current_token=lambda h: None)
             record["release"] = release.as_dict()
             mark(f"release-end-{tag}")
@@ -468,7 +472,11 @@ def run_one(playwright, task, phase, attempt, nonce):
                 record["release"]["verified"] = bool(rb_ok)
             if candidate == "completes" and not rb_ok:
                 record["held_outcome"] = "fails"
-                record["fail_reason"] = "read-back mismatch after release"
+                if record["release"]["status"] == "refused":
+                    reasons = sorted({c["reason"] for c in record["release"]["checks"] if not c["ok"]})
+                    record["fail_reason"] = "release refused: " + "; ".join(reasons)
+                else:
+                    record["fail_reason"] = "read-back mismatch after release"
             record["seconds"] = round(time.monotonic() - started, 2)
         record["seconds"] = round(time.monotonic() - started, 2)
         record["get_seen"] = [

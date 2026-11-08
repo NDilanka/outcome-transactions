@@ -81,10 +81,18 @@ def held(seq, token=None):
     return Held(seq=seq, method="POST", url=f"http://127.0.0.1:8100/x/{seq}", headers={}, body="", token=token)
 
 
+TOKEN = Token("updated", "t1")
+
+
+def current_matches_page(h):
+    """The server still shows the version the page built on."""
+    return h.token.value
+
+
 class ReleaseTests(unittest.TestCase):
     def test_refused_when_a_version_moved_and_nothing_is_sent(self):
         sent = []
-        units = [held(1, Token("form:version", "4")), held(2)]
+        units = [held(1, Token("form:version", "4")), held(2, Token("form:version", "5"))]
         result = release_unit(units, lambda h: "5", lambda h: sent.append(h.seq) or 200)
         self.assertEqual(result.status, "refused")
         self.assertEqual(result.refused_seqs, [1])
@@ -99,7 +107,7 @@ class ReleaseTests(unittest.TestCase):
 
     def test_released_in_seq_order_and_read_back_runs(self):
         order = []
-        units = [held(3), held(1, Token("form:version", "2")), held(2)]
+        units = [held(3, Token("form:version", "2")), held(1, Token("form:version", "2")), held(2, Token("form:version", "2"))]
         result = release_unit(
             units,
             lambda h: "2",
@@ -112,7 +120,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertTrue(result.verified)
 
     def test_read_back_mismatch_is_reported(self):
-        result = release_unit([held(1)], lambda h: None, lambda h: 200, read_back=lambda: False)
+        result = release_unit([held(1, TOKEN)], current_matches_page, lambda h: 200, read_back=lambda: False)
         self.assertEqual(result.status, "released")
         self.assertFalse(result.verified)
 
@@ -121,8 +129,8 @@ class ReleaseTests(unittest.TestCase):
         sent = []
         read_calls = []
         result = release_unit(
-            [held(1), held(2), held(3)],
-            lambda h: None,
+            [held(1, TOKEN), held(2, TOKEN), held(3, TOKEN)],
+            current_matches_page,
             lambda h: sent.append(h.seq) or codes[h.seq],
             read_back=lambda: read_calls.append(1) or False,
         )
@@ -133,7 +141,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertFalse(result.verified)
 
     def test_missing_status_is_partial(self):
-        result = release_unit([held(1)], lambda h: None, lambda h: None)
+        result = release_unit([held(1, TOKEN)], current_matches_page, lambda h: None)
         self.assertEqual(result.status, "partial")
 
     def test_empty_unit_is_released_with_nothing_sent(self):
@@ -147,6 +155,43 @@ class ReleaseTests(unittest.TestCase):
 
         result = release_unit([held(1, Token("form:cart_version", "3"))], lambda h: "3", lambda h: 303, read_back=lambda: True)
         json.dumps(result.as_dict())
+
+
+class UnguardedReleaseTests(unittest.TestCase):
+    """A held request with no comparable token must never pass the check silently."""
+
+    def test_request_without_token_is_refused_and_nothing_is_sent(self):
+        sent = []
+        result = release_unit([held(1)], lambda h: None, lambda h: sent.append(h.seq) or 200)
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refused_seqs, [1])
+        self.assertEqual(sent, [])
+        self.assertFalse(result.checks[0].ok)
+        self.assertEqual(result.checks[0].reason, "no precondition available")
+
+    def test_one_unguarded_request_refuses_the_whole_unit(self):
+        sent = []
+        units = [held(1, Token("form:version", "4")), held(2)]
+        result = release_unit(units, lambda h: "4", lambda h: sent.append(h.seq) or 200)
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.refused_seqs, [2])
+        self.assertEqual(sent, [])
+
+    def test_unguarded_request_is_not_ok_even_when_the_server_reports_a_version(self):
+        result = release_unit([held(1)], lambda h: "7", lambda h: 200)
+        self.assertEqual(result.status, "refused")
+        self.assertFalse(result.checks[0].ok)
+        self.assertIsNone(result.checks[0].expected)
+
+    def test_refusal_reason_is_in_the_record(self):
+        result = release_unit([held(1)], lambda h: None, lambda h: 200)
+        self.assertEqual(result.as_dict()["checks"][0]["reason"], "no precondition available")
+
+    def test_moved_and_unreadable_versions_have_their_own_reasons(self):
+        moved = release_unit([held(1, TOKEN)], lambda h: "t2", lambda h: 200)
+        unreadable = release_unit([held(1, TOKEN)], lambda h: None, lambda h: 200)
+        self.assertEqual(moved.checks[0].reason, "version moved")
+        self.assertEqual(unreadable.checks[0].reason, "current version unreadable")
 
 
 MESSAGE = "http://127.0.0.1:8200/message/m1"
@@ -274,6 +319,20 @@ class HoldWorkspaceTests(unittest.TestCase):
         self.assertIsNone(route.aborted)
         self.assertFalse(route.continued)
         self.assertEqual(len(ws.held), 1)
+
+    def test_release_of_a_write_without_token_sends_nothing(self):
+        """A Vikunja-style write: JSON body, no If-Match, no version field. The unit is refused."""
+        ws = HoldWorkspace(PRIMARY)
+        route = FakeRoute()
+        request = FakeRequest("PATCH", "http://127.0.0.1:8300/api/v2/tasks/6")
+        request.post_data = '{"title": "Renamed"}'
+        ws._on_route(route, request)
+        self.assertEqual(len(ws.held), 1)
+        result = ws.release(current_token=lambda h: None)
+        self.assertEqual(result.status, "refused")
+        self.assertEqual(result.checks[0].reason, "no precondition available")
+        self.assertFalse(route.continued)
+        self.assertEqual(len(ws.held), 1)  # still pending: the page gets no answer
 
 
 class NoFakedResponseTests(unittest.TestCase):
