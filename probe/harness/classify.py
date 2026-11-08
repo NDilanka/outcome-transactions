@@ -1,11 +1,17 @@
 """Classify browser probe runs and compute K1.
 
-Input: the frozen task list (probe/tasks.json) and a runs file with two lists:
+Input: the frozen task list (probe/tasks.json) and a runs file with these lists:
 
-  "held":     one measured run per task (attempt 1), plus any retries
-              (attempt 2 and up). Retries are listed in the output. They never
-              change the numerator.
-  "baseline": one run per task with holds off.
+  "held":             one measured held run per task (attempt 1), plus any
+                      retries (attempt 2 and up). Primary GET policy.
+  "held_sensitivity": optional. One measured held run per task under the
+                      sensitivity GET policy. All 24 tasks are required when
+                      this list is present.
+  "baseline":         one run per task with holds off. Shared by both policies.
+
+Each run may carry "reset_seconds" (time spent resetting the app to seed state)
+and "seconds" (time for the run). Both are totalled in "timing". Neither
+affects K1.
 
 A held run counts for K1 only when every condition holds:
 
@@ -25,6 +31,7 @@ Run: python probe/harness/classify.py --runs <runs.json> [--tasks probe/tasks.js
 import argparse
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 DEFAULT_TASKS = Path(__file__).resolve().parent.parent / "tasks.json"
@@ -39,6 +46,7 @@ RESPONSE_KINDS = (
     "held_get_content",
     "other",
 )
+TIMED_LISTS = ("held", "held_sensitivity", "baseline")
 
 
 def _fail(where, message):
@@ -47,6 +55,10 @@ def _fail(where, message):
 
 def _is_count(value):
     return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+
+
+def _is_seconds(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and value >= 0
 
 
 def load_tasks(path=DEFAULT_TASKS):
@@ -159,11 +171,12 @@ def _row(task, run, base):
     }
 
 
-def _k1(rows):
+def _k1(rows, policy):
     total = len(rows)
     counted = sum(1 for r in rows if r["counts_for_k1"])
     apps = sorted({r["app"] for r in rows})
     return {
+        "policy": policy,
         "rule": "K1 triggers when the numerator is below half the denominator",
         "denominator": total,
         "numerator": counted,
@@ -175,18 +188,12 @@ def _k1(rows):
     }
 
 
-def classify(tasks, runs):
-    """Return {"k1", "tasks", "retries"} for the given task list and runs."""
-    held = _index_held(runs.get("held", []), tasks)
-    baseline = _index_baseline(runs.get("baseline", []), tasks)
-
-    missing_held = [t for t in tasks if 1 not in held.get(t, {})]
-    if missing_held:
-        raise ValueError(f"no measured held run (attempt 1) for: {', '.join(missing_held)}")
-    missing_base = [t for t in tasks if t not in baseline]
-    if missing_base:
-        raise ValueError(f"no baseline run for: {', '.join(missing_base)}")
-
+def _score(tasks, held_runs, baseline, policy):
+    """Return (rows, retries, k1) for one set of held runs against the baseline."""
+    held = _index_held(held_runs, tasks)
+    missing = [t for t in tasks if 1 not in held.get(t, {})]
+    if missing:
+        raise ValueError(f"no measured held run (attempt 1) for {policy} policy: {', '.join(missing)}")
     rows, retries = [], []
     for task_id, task in tasks.items():
         attempts = held[task_id]
@@ -200,12 +207,50 @@ def classify(tasks, runs):
                 }
             )
         rows.append(_row(task, attempts[1], baseline[task_id]))
-    return {"k1": _k1(rows), "tasks": rows, "retries": retries}
+    return rows, retries, _k1(rows, policy)
+
+
+def _timing(runs):
+    totals = {"reset_seconds_total": 0.0, "run_seconds_total": 0.0, "runs_with_reset_time": 0, "runs_with_run_time": 0}
+    for key in TIMED_LISTS:
+        for run in runs.get(key, []):
+            where = f"{key} run {run.get('task')}"
+            if "reset_seconds" in run:
+                if not _is_seconds(run["reset_seconds"]):
+                    _fail(where, "reset_seconds must be a number of 0 or more")
+                totals["reset_seconds_total"] += run["reset_seconds"]
+                totals["runs_with_reset_time"] += 1
+            if "seconds" in run:
+                if not _is_seconds(run["seconds"]):
+                    _fail(where, "seconds must be a number of 0 or more")
+                totals["run_seconds_total"] += run["seconds"]
+                totals["runs_with_run_time"] += 1
+    totals["reset_seconds_total"] = round(totals["reset_seconds_total"], 1)
+    totals["run_seconds_total"] = round(totals["run_seconds_total"], 1)
+    return totals
+
+
+def classify(tasks, runs):
+    """Return the K1 result for the primary policy, and for the sensitivity policy when given."""
+    baseline = _index_baseline(runs.get("baseline", []), tasks)
+    missing_base = [t for t in tasks if t not in baseline]
+    if missing_base:
+        raise ValueError(f"no baseline run for: {', '.join(missing_base)}")
+
+    rows, retries, k1 = _score(tasks, runs.get("held", []), baseline, "primary")
+    result = {"k1": k1, "tasks": rows, "retries": retries}
+    if "held_sensitivity" in runs:
+        s_rows, s_retries, s_k1 = _score(tasks, runs["held_sensitivity"], baseline, "sensitivity")
+        result["k1_sensitivity"] = s_k1
+        result["tasks_sensitivity"] = s_rows
+        result["retries_sensitivity"] = s_retries
+    result["timing"] = _timing(runs)
+    return result
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Classify probe runs and compute K1.")
-    parser.add_argument("--runs", required=True, help="JSON file with 'held' and 'baseline' lists")
+    parser.add_argument("--runs", required=True, help="JSON file with 'held', optional 'held_sensitivity', and 'baseline' lists")
     parser.add_argument("--tasks", default=str(DEFAULT_TASKS), help="frozen task list")
     args = parser.parse_args(argv)
     runs = json.loads(Path(args.runs).read_text(encoding="utf-8"))

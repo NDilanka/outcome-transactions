@@ -55,7 +55,9 @@ Why these values:
 
 1. Check free memory (at least 600 MB) and that no other app is running.
 2. Generate the JWT secret and merge it into `state/secrets.json` under the key
-   `records.jwt_secret`. Do not print it.
+   `records.jwt_secret`. Generate alex's password and store it under
+   `records.alex.password`. Do not print either value. The seed script reads the
+   password from there.
 3. Write `data/config.yml` as above.
 4. Run `bin/vikunja-v2.8.0-windows-4.0-amd64.exe --help`. Confirm the config-file
    flag. If the binary has none, set the same keys as `VIKUNJA_SERVICE_*`
@@ -67,10 +69,21 @@ Why these values:
 7. Start the app: `vikunja web`. It binds 127.0.0.1:3456.
 8. Start the edge logger:
    `EDGE_NAME=records EDGE_LISTEN=8300 EDGE_UPSTREAM=3456 EDGE_CONTROL=8310 EDGE_LOG=probe/apps/vikunja/logs/edge.jsonl node probe/apps/common/edge-log.mjs`
-9. Seed through the app's own API as `alex` (setup, not measured). A seed script
-   is not written yet. Write it and test it against the running app before the
-   first run.
+9. Seed through the app's own API as `alex` (setup, not measured):
+   `node probe/apps/vikunja/seed.mjs --base http://127.0.0.1:8300`. The script
+   uses the v2 routes (POST to create), refuses a database that already has the
+   seed projects, and checks every seed task after it is created. It is tested
+   against an in-process fake only. The first live run is the test.
 10. Run the records tasks and the baseline. Stop the edge and the app when done.
+
+Reset (every run starts from the seed state): stop the app, delete
+`data/vikunja.db` and `data/files`, run `vikunja migrate`, run the user create
+command, start the app, then run the seed. The reset procedure is written and
+tested on the live app at the first run.
+
+Before the GET measurement: list the live database's tables, and set the
+Vikunja entry in `probe/harness/state_snapshot.py` (`EXCLUDED_TABLES`) only to
+housekeeping tables such as sessions or tokens.
 
 Seed (frozen): user `alex`; projects Inbox (default), Work, Home; tasks "Renew
 passport" (Home), "Quarterly report draft" (Work), "Pay council tax" (Home), "Book

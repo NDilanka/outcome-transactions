@@ -2,13 +2,27 @@
 
 Only the probe's own origins are reachable from the workspace. Requests to
 any other origin are blocked. Requests to probe origins are held when they
-change state: any method other than GET, HEAD or OPTIONS, and a few GET
-routes that change state on the server. Everything else passes.
+change state: any method other than GET, HEAD or OPTIONS. GETs are held only
+through GET_RULES, which are set from measurement (see probe/harness/state_snapshot.py).
+
+Two modes:
+
+- primary: every rule with primary_hold set is held. This is the run that
+  answers K1.
+- sensitivity: the same, except rules with sensitivity_pass set may pass. Used
+  only for GETs whose measured effect is reversible and low-stakes. The
+  payment return is never passed in either mode.
 """
 
+from dataclasses import dataclass
+from typing import Callable
 from urllib.parse import parse_qs, urlsplit
 
 SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
+
+PRIMARY = "primary"
+SENSITIVITY = "sensitivity"
+MODES = (PRIMARY, SENSITIVITY)
 
 # Probe origins the browser may use. Edge ports log the traffic before it
 # reaches the app; the payment provider runs without an edge.
@@ -21,22 +35,52 @@ APP_BY_ORIGIN = {
 }
 
 
+def _is_open_message(path, query):
+    return path.startswith("/message/") and path.count("/") == 2
+
+
 def _is_compose_reply(path, query):
     return path == "/compose" and "reply" in query
 
 
-# GET routes that change server state. Each entry is a predicate on the path
-# and the parsed query string. Verify the records list against the app's
-# code before the measured run (see probe/apps/vikunja/NOTES.md).
-STATE_CHANGING_GETS = {
-    "checkout": [lambda path, query: path == "/checkout/return"],
-    "webmail": [
-        lambda path, query: path.startswith("/message/") and path.count("/") == 2,
-        _is_compose_reply,
-    ],
-    "records": [],
-    "psp": [],
-}
+def _is_payment_return(path, query):
+    return path == "/checkout/return"
+
+
+@dataclass(frozen=True)
+class GetRule:
+    name: str
+    app: str
+    match: Callable[[str, dict], bool]
+    primary_hold: bool = True  # held in the primary run
+    sensitivity_pass: bool = False  # may pass in the sensitivity run
+    evidence: str = "registered, not measured yet"
+
+
+# Rules set from measurement. Until a GET is measured, it stays held in both
+# modes. Update primary_hold and sensitivity_pass only with the measured
+# evidence written into the rule.
+GET_RULES = (
+    GetRule("webmail-open-message", "webmail", _is_open_message),
+    GetRule("webmail-reply-compose", "webmail", _is_compose_reply),
+    GetRule("checkout-payment-return", "checkout", _is_payment_return),
+)
+
+# Rules that must stay held in both modes, whatever the measurement says.
+NEVER_PASS = frozenset({"checkout-payment-return"})
+
+
+def validate_rules(rules):
+    """Raise ValueError if a rule that must stay held could pass."""
+    for rule in rules:
+        if rule.name in NEVER_PASS and (not rule.primary_hold or rule.sensitivity_pass):
+            raise ValueError(f"{rule.name} must stay held in both modes")
+    names = [rule.name for rule in rules]
+    if len(set(names)) != len(names):
+        raise ValueError("duplicate GET rule names")
+
+
+validate_rules(GET_RULES)
 
 
 def origin_of(url):
@@ -46,8 +90,10 @@ def origin_of(url):
     return f"{parts.scheme}://{parts.hostname}:{parts.port}"
 
 
-def decide(method, url):
+def decide(method, url, mode=PRIMARY, rules=None):
     """Return (verdict, reason). Verdict is "pass", "hold" or "block"."""
+    if mode not in MODES:
+        raise ValueError(f"unknown mode {mode!r}")
     origin = origin_of(url)
     app = APP_BY_ORIGIN.get(origin)
     if app is None:
@@ -56,7 +102,11 @@ def decide(method, url):
         return "hold", f"{method.upper()} request"
     parts = urlsplit(url)
     query = parse_qs(parts.query, keep_blank_values=True)
-    for predicate in STATE_CHANGING_GETS[app]:
-        if predicate(parts.path, query):
-            return "hold", "GET with a server-side effect"
+    for rule in GET_RULES if rules is None else rules:
+        if rule.app != app or not rule.match(parts.path, query):
+            continue
+        held = rule.primary_hold and (mode == PRIMARY or not rule.sensitivity_pass)
+        if held:
+            return "hold", f"GET with a server-side effect ({rule.name})"
+        return "pass", f"GET passed in {mode} mode ({rule.name})"
     return "pass", ""

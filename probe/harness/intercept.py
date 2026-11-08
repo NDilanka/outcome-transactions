@@ -14,12 +14,13 @@ browser start.
 
 import itertools
 
-from policy import decide
+from policy import PRIMARY, decide
 from release import Held, release_unit, token_from
 
 
 class HoldWorkspace:
-    def __init__(self):
+    def __init__(self, mode=PRIMARY):
+        self.mode = mode
         self.held = []
         self.counts = {"pass": 0, "hold": 0, "block": 0}
         self.blocked_reasons = []
@@ -29,7 +30,7 @@ class HoldWorkspace:
         context.route("**/*", self._on_route)
 
     def _on_route(self, route, request):
-        verdict, reason = decide(request.method, request.url)
+        verdict, reason = decide(request.method, request.url, self.mode)
         self.counts[verdict] += 1
         if verdict == "block":
             self.blocked_reasons.append(reason)

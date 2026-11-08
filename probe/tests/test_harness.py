@@ -9,7 +9,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "harness"))
 
-from policy import decide  # noqa: E402
+from dataclasses import replace  # noqa: E402
+
+from policy import GET_RULES, MODES, PRIMARY, SENSITIVITY, decide, validate_rules  # noqa: E402
 from release import Held, Token, release_unit, token_from  # noqa: E402
 
 
@@ -144,6 +146,51 @@ class ReleaseTests(unittest.TestCase):
 
         result = release_unit([held(1, Token("form:cart_version", "3"))], lambda h: "3", lambda h: 303, read_back=lambda: True)
         json.dumps(result.as_dict())
+
+
+MESSAGE = "http://127.0.0.1:8200/message/m1"
+REPLY = "http://127.0.0.1:8200/compose?reply=m1"
+PAYMENT_RETURN = "http://127.0.0.1:8100/checkout/return?order=1&intent=pi_x"
+
+
+class PolicyModeTests(unittest.TestCase):
+    def test_before_measurement_both_modes_hold_the_same_gets(self):
+        for url in (MESSAGE, REPLY, PAYMENT_RETURN):
+            for mode in MODES:
+                self.assertEqual(decide("GET", url, mode)[0], "hold", (url, mode))
+
+    def test_sensitivity_passes_only_the_rules_marked_for_it(self):
+        rules = (replace(GET_RULES[0], sensitivity_pass=True), GET_RULES[1], GET_RULES[2])
+        self.assertEqual(decide("GET", MESSAGE, PRIMARY, rules)[0], "hold")
+        self.assertEqual(decide("GET", MESSAGE, SENSITIVITY, rules)[0], "pass")
+        self.assertEqual(decide("GET", REPLY, SENSITIVITY, rules)[0], "hold")
+
+    def test_a_get_measured_unchanged_passes_in_both_modes(self):
+        rules = (GET_RULES[0], replace(GET_RULES[1], primary_hold=False), GET_RULES[2])
+        for mode in MODES:
+            self.assertEqual(decide("GET", REPLY, mode, rules)[0], "pass", mode)
+
+    def test_payment_return_is_held_in_both_modes(self):
+        for mode in MODES:
+            self.assertEqual(decide("GET", PAYMENT_RETURN, mode)[0], "hold", mode)
+
+    def test_writes_are_held_in_both_modes(self):
+        for mode in MODES:
+            self.assertEqual(decide("POST", "http://127.0.0.1:8200/compose/send", mode)[0], "hold", mode)
+
+    def test_unknown_mode_is_an_error(self):
+        with self.assertRaises(ValueError):
+            decide("GET", MESSAGE, "fast")
+
+    def test_rules_that_would_pass_the_payment_return_are_rejected(self):
+        with self.assertRaises(ValueError):
+            validate_rules((replace(GET_RULES[2], sensitivity_pass=True),))
+        with self.assertRaises(ValueError):
+            validate_rules((replace(GET_RULES[2], primary_hold=False),))
+
+    def test_duplicate_rule_names_are_rejected(self):
+        with self.assertRaises(ValueError):
+            validate_rules((GET_RULES[0], GET_RULES[0]))
 
 
 class NoFakedResponseTests(unittest.TestCase):

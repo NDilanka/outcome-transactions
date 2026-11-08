@@ -16,7 +16,7 @@ The answer decides kill criterion K1.
 Roadmap text: "If fewer than half of the probe's write tasks finish with requests
 held (no faked responses, no drafts), drop generic browser writes."
 
-How this probe applies it. The orchestrator fixed this rule before any run:
+How this probe applies it. The orchestrator fixed the counting rule before any run:
 
 - Denominator: the 24 write tasks in `probe/tasks.json`.
 - A task counts in the numerator only when its measured held run meets every
@@ -38,13 +38,22 @@ How this probe applies it. The orchestrator fixed this rule before any run:
   recorded in the output and never changes the numerator.
 - Baseline runs (holds off) cover all 24 tasks. They do not change the numerator.
 
+Two K1 numbers are reported, one per GET policy (see "GET policy" below):
+
+- Primary: every GET measured to change state is held, and so is every GET the
+  registered policy holds until it is measured. The primary number is the K1
+  reading.
+- Sensitivity: the same, except GETs whose measured effect is reversible and
+  low-stakes may pass. Reported beside the primary number and labelled. The payment
+  return never passes in either.
+
 This text replaces an earlier reading that counted tasks which completed by saving
 a draft. That reading is withdrawn.
 
 Calculation: `python probe/harness/classify.py --runs <runs.json>` prints the
-per-task rows and the K1 summary. It stops with an error on incomplete input: a
-missing measured run, a missing baseline, an unknown task, or a field with a bad
-value.
+per-task rows, both K1 summaries, and the timing totals. It stops with an error on
+incomplete input: a missing measured run, a missing baseline, a missing sensitivity
+run when one is given, an unknown task, or a field with a bad value.
 
 ## Definitions
 
@@ -93,17 +102,44 @@ Origins: the browser may reach only the probe's own origins: the checkout edge
 Holds (`probe/harness/policy.py`):
 
 - Every non-GET request to a probe origin is held. HEAD and OPTIONS pass.
-- These GET requests change server state and are held too: checkout
-  `/checkout/return`, webmail `/message/<id>`, and webmail `/compose?reply=`.
-- A held request gets no response. The page waits. Release relays the server's
-  own response. Discard aborts the request, which the page sees as a network
-  error.
+- GETs are held only through `GET_RULES`. Each rule has a name, the app it
+  applies to, a path and query predicate, and two flags: `primary_hold` and
+  `sensitivity_pass`. A held request gets no response. The page waits. Release
+  relays the server's own response. Discard aborts the request, which the page
+  sees as a network error.
 
-Consequence for the numbers: the held GETs stall the page at the points where
-the task needs them. M2 (reply) opens `/compose?reply=`, M5 (archive) opens the
-message, and S7 returns from the payment provider through `/checkout/return`.
-These tasks may come out as needs_response by construction. The run records what
-happened. The result is part of the answer, not a fault in the method.
+GET policy (set from measurement, not from guesses):
+
+- Before measurement, the three registered GETs stay held in both policies:
+  webmail opening a message (`/message/<id>`), webmail reply compose
+  (`/compose?reply=`), and the checkout payment return (`/checkout/return`).
+- Each GET that the baseline edge log shows is measured (see "GET measurement").
+  A GET that measures state-changing is held in the primary policy. A
+  registered GET that measures unchanged passes in both policies.
+- The sensitivity policy passes only GETs whose changed tables are reversible and
+  low-stakes, for example a read flag. The rule records the evidence.
+- The payment return (S7) stays held in both policies. Code enforces this, because
+  it finalises a payment.
+
+Consequence for the numbers: opening a message (M2, M5) and the reply compose page
+(M2) are held GETs under the registered policy. If they change state, the page
+stalls until release, which is the probe's test of GET side effects. If they do
+not change state, they pass in both policies and the task runs normally. The
+measurement decides which case applies.
+
+GET measurement (`probe/harness/state_snapshot.py`, `measure_get`):
+
+1. Every distinct GET in the baseline edge log is listed (path and query key names).
+2. Each GET is measured from a freshly reset database, never from the state left
+   by an earlier GET. Otherwise a GET that marks a message read would look harmless
+   on the second measurement.
+3. Snapshot: every table in the app's SQLite database is hashed (rows read in full
+   and sorted). Housekeeping tables are excluded: `sessions` for webmail and
+   checkout. The Vikunja list is set from the live database before the first
+   measurement.
+4. The GET is replayed with the baseline session. The status is recorded.
+5. Snapshot again. The GET is state-changing when any non-excluded table differs.
+   The result names the changed tables.
 
 Server-side evidence: each app sits behind a logging edge
 (`probe/apps/common/edge-log.mjs`). The edge writes an `arrival` line when a
@@ -130,13 +166,14 @@ The server still applies its own checks when a request is sent. The check in
 step 1 runs first, so a concurrent edit is refused before anything is sent. A
 small gap remains between step 1 and the server check. The run reports it.
 
-Reset between runs: baseline and held runs write to the same app. Before each
-held run and each baseline run, the app is reset to its seed state. One run does
-not change what the next one sees.
+Reset between runs: every run, baseline and held, starts from the seed state. The
+baseline writes change what a held run would see. Each run records
+`reset_seconds`, the time to reset the app and seed it. The totals are reported
+separately from run time. The adapter will pay the same reset cost.
 
 Timing: each task records wall-clock time from the first step to the goal (or
-to the stop rule). Stop rule: the held phase ends when the goal is reached or
-when 20 seconds pass with no change on the page.
+to the stop rule) as `seconds`. Stop rule: the held phase ends when the goal is
+reached or when 20 seconds pass with no change on the page.
 
 Retries: one measured run per task (attempt 1). Any retry is a separate recorded
 run and does not count.
@@ -157,7 +194,7 @@ the payment provider. These are stand-ins, not products. Start commands are in
 | Idempotency-Key | Not documented | No | On order creation and on payment and refund calls |
 | Server-generated ids | Yes | Yes (Mailpit ids) | Yes |
 | Validation errors | 422 with an `errors` list (documented) | 422 page | 422 page |
-| GET that changes state | To verify | Yes: opening a message, opening a reply | Yes: the payment return |
+| GET that changes state | To measure | Measure: opening a message, opening a reply | Yes: the payment return |
 | Payment by redirect | No | No | Yes, to the provider's hosted page |
 | Sends mail | No | Yes, by SMTP to Mailpit | No |
 
@@ -215,10 +252,14 @@ Eligible for K1: 21 tasks. Not eligible by construction: M3, M4, S6.
 
 Not measured yet. Results will fill this section after the go-ahead:
 
-- K1 numbers: numerator over 24, with the per-task rows from `classify.py`
+- K1, primary policy: numerator over 24, with the per-task rows from `classify.py`
   (`held_outcome`, `needs_response` kinds, `faked_response`, `native_draft_used`,
   `unsafe_before_release`, `read_back_match`, and the exclusion list).
+- K1, sensitivity policy: the same, from the sensitivity held runs. Labelled.
+- GET measurement: one row per GET (URL, status, state-changing, changed tables),
+  with the rule each GET ended under in each policy.
 - Baseline result for each task.
+- Timing: total reset time and total run time, reported separately.
 - Release demo for two tasks (see below).
 - Phase counts from the edge logs.
 
@@ -242,6 +283,8 @@ These are expectations from the design. The run confirms or changes each one.
    its state. Reads inside the workspace see live server state.
 2. Snapshot and diff: no private copy of server state exists, so there is no
    state diff. The held request list is the only diff, and it is not semantic.
+   The GET measurement uses table hashes outside the workspace, for measurement
+   only.
 3. Anchor and resolve: form fields are anchored by label, which can change. Records
    are anchored by server id, which exists only after a create.
 4. Read set: the page reads what it displays, but the server validates version
@@ -249,7 +292,8 @@ These are expectations from the design. The run confirms or changes each one.
 5. Apply with precondition: a precondition exists for some writes only (If-Match
    or version fields). Moves, archive, promo and sends have none.
 6. Read back: a GET after release may itself change state (webmail reads). A
-   read cannot always be used to check a write.
+   read cannot always be used to check a write. The GET measurement finds which
+   GETs do this.
 7. Revert: no revert exists for held requests before release, and discard is an
    abort, not a revert. Email cannot be recalled. A payment needs a separate
    refund write.
@@ -259,7 +303,10 @@ These are expectations from the design. The run confirms or changes each one.
    reconcile.
 10. Multi-step flows: a held response stalls the page. The contract assumes the
     agent can continue on local state, which these apps often do not allow. The
-    held GETs in M2, M5 and S7 are the first test of this.
+    held GETs in M2, M5 and S7 are the first test of this, if the measurement
+    shows they change state.
+11. Reset cost: the adapter needs a fresh state for each attempt. The run records
+    the reset time separately, so the cost is visible.
 
 ## Stand-ins and limits
 
@@ -276,20 +323,27 @@ These are expectations from the design. The run confirms or changes each one.
 
 Offline only. Nothing has been started.
 
-- `node --check` passes on the Node app files and the edge logger.
+- `node --check` passes on the Node app files, the edge logger and the Vikunja seed.
 - `node --test probe/tests/smtp-client.test.mjs`: 6 of 6 pass (SMTP client against
   an in-process fake SMTP server).
 - `node --test probe/tests/edge-log.test.mjs`: 1 of 1 passes. It runs the real edge
   logger against a small upstream. It checks arrival and done lines, that no query
   value, cookie or body is logged, and that markers split the phases and count one
   unsafe arrival.
-- `python -m unittest discover -s probe/tests -p "test_*.py"`: 49 of 49 pass. This
-  covers the hold policy, version tokens, ordered release, refusal, partial
-  release, read-back, a guard that the harness never fulfils a route, the K1 and
-  exclusion rules, and the classifier command line.
+- `node --test probe/tests/vikunja-seed.test.mjs`: 6 of 6 pass. The seed runs against
+  an in-process fake of the v2 routes it uses. It is not tested against Vikunja.
+- `python -m unittest discover -s probe/tests -p "test_*.py"`: 76 of 76 pass.
+  Harness: the hold policy in both modes, version tokens, ordered release, refusal,
+  partial release, read-back, a guard that the harness never fulfils a route, and
+  the rule that the payment return never passes. Classifier: the K1 and exclusion
+  rules, the 11 and 12 thresholds, both policies, timing totals, and the command
+  line. Snapshots: table hashing, exclusions, reset before measurement, and the
+  rule that a GET is state-changing only when a business table changes. The
+  snapshot tests use synthetic SQLite files.
 - Downloads: Vikunja and Mailpit archives match their recorded SHA-256 values, and
   the Vikunja exe matches its own `.sha256` file. Binaries are not committed.
-- Not run: any app, any browser, Playwright routing, or release against a live app.
+- Not run: any app, any browser, Playwright routing, the GET measurement, or
+  release against a live app.
 
 ## Run plan after the go-ahead
 
@@ -297,10 +351,25 @@ Run one app at a time. Check free memory (at least 600 MB) before each start. Ru
 order: Vikunja, then Mailpit with the webmail stub, then the checkout store with
 the payment provider.
 
-For each app: start it as its `NOTES.md` describes, then for each task: reset the
-app to seed state, run the setup (not measured), run the baseline with holds off,
-reset again, run the held phase with edge markers, release, read back, and record
-the row. Then stop the app. Run the two release demos (S8 and M4) after their
-held runs. Pause immediately if the orchestrator says so.
+For each app:
 
-The Vikunja seed script is not written yet. It is a step before the first run.
+1. Start it as its `NOTES.md` describes.
+2. Baseline: for each task, reset to seed state (timed as `reset_seconds`), run
+   the setup (not measured), run the baseline with holds off (timed as `seconds`).
+3. GET measurement: for each distinct GET in the baseline edge log, measure it from
+   a fresh reset as described above. Set each rule's flags from the result, with
+   the evidence written into the rule.
+4. Primary held runs: for each task, reset, setup, held phase with edge markers,
+   release, read back, record the row.
+5. Sensitivity held runs: for all 24 tasks, reset, setup, held phase under the
+   sensitivity policy, release, read back, record the row.
+6. Run the two release demos (S8 and M4) after their held runs.
+7. Stop the app.
+
+Then classify the runs, record both K1 numbers, and report the timing totals
+separately. Pause immediately if the orchestrator says so.
+
+Before the first run: the Vikunja seed script is tested only against a fake
+server, so the live check is the first step after Vikunja starts. A reset
+procedure for Vikunja (stop, delete the database, migrate, create the user, start,
+seed) is written at that point and tested on the live app.

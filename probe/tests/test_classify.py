@@ -207,6 +207,71 @@ class ValidationTests(unittest.TestCase):
         self.assertRejects(runs_for(extra_held=[held_run("R1", attempt=0)]), "attempt")
 
 
+class SensitivityTests(unittest.TestCase):
+    def _held_all(self, fails=()):
+        return [held_run(t, "fails") if t in fails else held_run(t) for t in TASKS]
+
+    def test_sensitivity_is_absent_unless_given(self):
+        result = classify(TASKS, runs_for())
+        self.assertNotIn("k1_sensitivity", result)
+
+    def test_both_policies_are_reported_separately(self):
+        # Primary: 11 eligible tasks count. Sensitivity: 12 count.
+        primary_fails = {t: held_run(t, "fails") for t in ELIGIBLE[11:]}
+        sens_fails = {t: held_run(t, "fails") for t in ELIGIBLE[12:]}
+        runs = runs_for(primary_fails)
+        runs["held_sensitivity"] = [sens_fails.get(t, held_run(t)) for t in TASKS]
+        result = classify(TASKS, runs)
+        self.assertEqual(result["k1"]["policy"], "primary")
+        self.assertEqual(result["k1"]["numerator"], 11)
+        self.assertTrue(result["k1"]["k1_triggered"])
+        self.assertEqual(result["k1_sensitivity"]["policy"], "sensitivity")
+        self.assertEqual(result["k1_sensitivity"]["numerator"], 12)
+        self.assertFalse(result["k1_sensitivity"]["k1_triggered"])
+        self.assertEqual(len(result["tasks_sensitivity"]), 24)
+
+    def test_sensitivity_run_must_cover_every_task(self):
+        runs = runs_for()
+        runs["held_sensitivity"] = [held_run(t) for t in TASKS if t != "S8"]
+        with self.assertRaises(ValueError) as ctx:
+            classify(TASKS, runs)
+        self.assertIn("S8", str(ctx.exception))
+
+    def test_sensitivity_uses_the_same_baseline(self):
+        runs = runs_for(baseline_outcome="fails")
+        runs["held_sensitivity"] = [held_run(t) for t in TASKS]
+        result = classify(TASKS, runs)
+        self.assertEqual(result["k1_sensitivity"]["baseline_completes"], 0)
+
+
+class TimingTests(unittest.TestCase):
+    def test_reset_and_run_time_are_totalled_separately_and_do_not_change_k1(self):
+        runs = runs_for()
+        for run in runs["held"]:
+            run["reset_seconds"] = 2.5
+            run["seconds"] = 10.0
+        for run in runs["baseline"]:
+            run["reset_seconds"] = 1.0
+        result = classify(TASKS, runs)
+        timing = result["timing"]
+        self.assertEqual(timing["reset_seconds_total"], 24 * 2.5 + 24 * 1.0)
+        self.assertEqual(timing["run_seconds_total"], 24 * 10.0)
+        self.assertEqual(timing["runs_with_reset_time"], 48)
+        self.assertEqual(result["k1"]["numerator"], 21)
+
+    def test_timing_is_empty_when_not_recorded(self):
+        timing = classify(TASKS, runs_for())["timing"]
+        self.assertEqual(timing["reset_seconds_total"], 0)
+        self.assertEqual(timing["runs_with_run_time"], 0)
+
+    def test_bad_seconds_are_rejected(self):
+        runs = runs_for()
+        runs["held"][0]["reset_seconds"] = -1
+        with self.assertRaises(ValueError) as ctx:
+            classify(TASKS, runs)
+        self.assertIn("reset_seconds", str(ctx.exception))
+
+
 class CliTests(unittest.TestCase):
     def test_round_trip_writes_json_and_exits_zero(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -227,7 +292,7 @@ class CliTests(unittest.TestCase):
             with contextlib.redirect_stderr(err):
                 code = main(["--runs", str(path)])
         self.assertEqual(code, 2)
-        self.assertIn("no measured held run", err.getvalue())
+        self.assertIn("no baseline run", err.getvalue())
 
 
 if __name__ == "__main__":
