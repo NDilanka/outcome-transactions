@@ -21,13 +21,14 @@ from pathlib import Path
 
 # Tables that record sessions or other per-request housekeeping. They are not
 # business state. Keep this list short: a table that holds business data must
-# not be excluded. The Vikunja list is empty until the live database is listed
-# and checked (see probe/apps/vikunja/NOTES.md).
+# not be excluded. Vikunja: the live database (migration 163) has 44 tables. Only
+# sessions holds login state; api_tokens and user_tokens are empty at seed time
+# and are not exercised by the probe, so they stay in the measurement.
 EXCLUDED_TABLES = {
     "webmail": frozenset({"sessions"}),
     "checkout": frozenset({"sessions"}),
     "psp": frozenset(),
-    "vikunja": frozenset(),
+    "vikunja": frozenset({"sessions"}),
 }
 
 

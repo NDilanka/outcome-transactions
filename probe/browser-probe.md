@@ -1,8 +1,10 @@
 # Browser feasibility probe
 
-Status: DRAFT. The method, the K1 rule and the task list are frozen. Offline
-checks pass. No app or browser has run yet. The run waits for the orchestrator's
-go-ahead.
+Status: records block run. Vikunja (R1 to R8) ran in baseline and held modes, then
+was stopped and its runtime data removed. Mail (Mailpit with the webmail stub) and
+checkout (with the payment provider) have not run. Nothing is running now. The K1
+rule and the task list are unchanged from the frozen version. The next runs wait for
+the orchestrator's go-ahead.
 
 ## Question
 
@@ -202,22 +204,23 @@ the payment provider. These are stand-ins, not products. Start commands are in
 
 | Feature | Vikunja (records) | Webmail stub (ours) | Checkout store (ours) |
 | --- | --- | --- | --- |
-| Login session | Bearer JWT, 600 s, plus rotating refresh cookie (documented) | Session id rotated at login | Session id rotated at login |
+| Login session | Bearer JWT, short token lifetime 600 s (our config); refreshed on page load | Session id rotated at login | Session id rotated at login |
 | CSRF token on unsafe forms | Not applicable: the credential is a Bearer header, not a cookie | Yes, every form | Yes, every form; the admin JSON API needs `x-csrf-token` |
 | Version field in forms | No | `draft_version`, `settings_version` (409 on stale) | `cart_version`, `address_version`, product `version` (409 on stale) |
-| ETag and If-Match | ETag on single-resource GET; If-Match documented for v2, to verify | No | Admin JSON API only (428 without If-Match, 412 on mismatch) |
-| Idempotency-Key | Not documented | No | On order creation and on payment and refund calls |
+| ETag and If-Match | ETag on single-resource GET (`"<UnixNano of updated>-<permission>"`); If-Match not enforced on PATCH (checked live) | No | Admin JSON API only (428 without If-Match, 412 on mismatch) |
+| Idempotency-Key | No handling in the v2.8.0 backend (source search) | No | On order creation and on payment and refund calls |
 | Server-generated ids | Yes | Yes (Mailpit ids) | Yes |
 | Validation errors | 422 with an `errors` list (documented) | 422 page | 422 page |
-| GET that changes state | To measure | Measure: opening a message, opening a reply | Yes: the payment return |
+| GET that changes state | None of 158 measured (Vikunja) | Measure: opening a message, opening a reply | Yes: the payment return |
 | Payment by redirect | No | No | Yes, to the provider's hosted page |
 | Sends mail | No | Yes, by SMTP to Mailpit | No |
 
 What each app lacks:
 
 - Vikunja: no version counter (the ETag and the `updated` time are the only
-  version tokens). No documented idempotency key. Session expiry, rate limits
-  and HTTPS are not exercised here.
+  version tokens). The server does not enforce If-Match on PATCH, and the UI sends
+  no token. No idempotency key. Session expiry, rate limits and HTTPS are not
+  exercised here.
 - Webmail stub: no IMAP, attachments, HTML mail, push or filters. Moves and
   archive carry no version token, so concurrent edits are not detected for
   them. Sending has no idempotency key.
@@ -265,24 +268,108 @@ Eligible for K1: 21 tasks. Not eligible by construction: M3, M4, S6.
 
 ## Results
 
-Not measured yet. Results will fill this section after the go-ahead:
+### Records (Vikunja): block run
 
-- K1, primary policy: numerator over 24, with the per-task rows from `classify.py`
-  (`held_outcome`, `needs_response` kinds, `faked_response`, `native_draft_used`,
-  `unsafe_before_release`, `read_back_match`, and the exclusion list).
-- K1, sensitivity policy: the same. Labelled. The scope tasks come from their own
-  sensitivity held runs. Every other row is copied from the primary run and marked
-  `copied_from_primary`. The output lists the scope tasks and the copied tasks.
-- GET measurement: one row per GET (URL, status, state-changing, changed tables),
-  with the rule each GET ended under in each policy.
-- Baseline result for each task.
-- Timing: total reset time and total run time, reported separately.
-- Release demo for two tasks (see below).
-- Phase counts from the edge logs.
+One reset to seed before every run. Each task has a baseline run (holds off) and a primary held run. Policy commit c393905, working copy clean, stamped in every record. The final harness was run twice and gave the same outcomes. Raw rows are in `probe/results/raw/records/` (git-ignored): `baseline.json`, `held.json`, `summary.json`, `get-measure.json`, the edge logs, and before-release screenshots.
+
+| Task | Baseline (holds off) | Held (primary) | Requests left pending while held | Release statuses | Read-back | Unsafe before release | Held left after release |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| R1 create task | completes | needs_response | refresh POST, bulk create | 200, 201 | match (1 task, due 2026-11-20) | 0 | 0 |
+| R2 mark done | completes | needs_response | refresh POST, PATCH task 1 | 200, 200 | match (done) | 0 | 0 |
+| R3 rename | completes | completes | refresh POST, PATCH task 4 | 200, 200 | match (new title) | 0 | 0 |
+| R4 add label | completes | completes | refresh POST, label POST | 200, 201 | match (urgent) | 0 | 0 |
+| R5 create project | completes | needs_response | refresh POST, project POST | 200, 201 | match (1 project) | 0 | 0 |
+| R6 comment | completes | needs_response | refresh POST, comment POST | 200, 201 | match (1 comment) | 0 | 0 |
+| R7 delete | completes | needs_response | refresh POST, DELETE task 6 | 200, 204 | match (0 left in Inbox) | 0 | 0 |
+| R8 move | completes | needs_response | refresh POST, PATCH task 5 | 200, 200 | match (project 3) | 0 | 0 |
+
+Points to note:
+
+- Baseline: 8 of 8 complete, and every read-back matches. Each baseline run had two unsafe requests in its step window: the page-load refresh POST and the task write. That is what the page sends. It is not a held-run count.
+- Held: each held request was sent in order after release and got the server's own answer. No response was faked and no draft feature was used. Nothing was left held after release.
+- The six needs_response runs ended on the 20-second no-change stop rule (about 25 s each).
+- The `needs_response` kinds in the JSON (`server_id`, `other`) come from every request left pending, including the refresh. They do not show what the page waited for. The next section does.
+- Phase counts (pass, hold, block per run) are in `held.json` under `counts_during_steps`.
+
+K1 for records only (partial, not a K1 reading):
+
+- Primary: 2 of 8 counted (R3 and R4). The highest possible count here is 8, since records has no draft tasks.
+- Sensitivity: no GET that the sensitivity policy passes was held, so there are no scope tasks. All eight rows are copied from primary. Sensitivity count: 2 of 8.
+- K1 is defined over 24 write tasks, with the trigger below 12. The 2 of 8 covers one app of three. It does not decide K1.
+
+GET measurement (Vikunja):
+
+- 158 distinct GETs in the baseline and held logs. Each was measured from a fresh reset. None changed a table or a file.
+- Control (no request): no change.
+- Positive control: one `POST /api/v2/labels` changed the `labels` table with the same detector. That check was a scratch script in `probe/state/` and is not committed.
+- No Vikunja GET rule is needed, so `GET_RULES` is unchanged.
+
+Timing (16 task runs, 8 baseline and 8 held):
+
+- Reset: 18.1 s in total, 0.97 to 1.5 s per run.
+- Run: 196.5 s in total. The run includes the held phase.
+- Reset and run times are reported separately.
+
+Harness fixes made before the final run (earlier attempts were overwritten and are not counted):
+
+- The project and label pickers open only on typed keys. The steps now type, then click the result.
+- Network-idle waits never finish while requests are held. Steps wait for `domcontentloaded`.
+- The R8 goal could pass on the sidebar Home link. It now checks the breadcrumb.
+- A read-back crashed on `labels: null`. Fixed.
+- Bulk create was counted as another request kind. Fixed.
+- The baseline unsafe window included the read-back login. Fixed.
+
+Not run yet: mail, checkout, the release demo, and the release gap measurement (below).
+
+## What each needs_response page waited for
+
+Sources: the held-run records (pending requests, release statuses, goal state), the before-release screenshots, and the Vikunja v2.8.0 frontend source (tag v2.8.0). "Observed" means the run record or a screenshot shows it. "Source" means the code shows it. No answer was faked. The consequences marked source were read from code and not run.
+
+| Task | What the page waited for | Basis | Could the harness continue without it? |
+| --- | --- | --- | --- |
+| R1 create | The created task, echoed back in a list of the same length as the request. The page adds the task from that list. | Observed: add button spinning, new task not listed. Source: the bulk create checks the list length, and the caller reads each task from it. | No. A body-less 2xx fails the length check, and the caller restores the typed title (source). |
+| R2 mark done | The updated task, echoed back. The done control reads the merged response. | Observed: no undone control while held. Source: `toggleTaskDone` calls `saveTask`, which merges the response. | No. A body-less 2xx keeps done false on screen (source). |
+| R5 create project | The created project. The page navigates to its id and adds it to the project list. | Observed: New project dialog open, spinner on Create. Source: `NewProject.vue` routes to `created.id` after the call. | No. Navigation needs the id, and the list needs the object (source). |
+| R6 comment | The created comment, echoed back. The editor clears and the comment joins the list only after the response. | Observed: "Creating comment..." with the text still in the editor. Source: `addComment` clears after the call, and the success handler reads the response. | No. A body-less success fails in the success handler, so the editor keeps the text (source). |
+| R7 delete | Success status only. The page routes away after any 2xx and does not read the body. | Observed: the URL stayed on `/tasks/6` while held. Source: `deleteTask` awaits the call, then routes. | Status only. A 202 "accepted, pending" would unblock the page, but the task would show as gone before the server removed it. |
+| R8 move | The updated task, echoed back. The project shown in the breadcrumb and page state comes from the response. | Observed: breadcrumb still "Work" while held. Source: `changeProject` calls `saveTask`, which merges the response. | No. A body-less 2xx keeps the old project on screen (source). |
+
+What this means for adapter design. A bare pending answer with no body would not unblock R1, R2, R5, R6 or R8. R1, R5 and R6 would fail, and R2 and R8 would resolve but show the old state. Only R7 would unblock on a pending 202, and the page would then show a deletion the server had not made. The contract therefore needs the echoed object for creates, comments, done and moves. A pending state the page can show is a different design. The probe has not tested one. None of these six counts toward K1.
+
+## Release precondition for records (Vikunja)
+
+Verified facts:
+
+- The server does not enforce If-Match on task writes. Live: a PATCH with a stale If-Match returned 200 and applied the change. Source: the v2.8.0 backend has no If-Match handler.
+- The UI sends no version token. Source: no non-generated frontend code sets If-Match, and `taskWriteBody` has no version field. Observed: none of the 16 held writes carried a token.
+- The usable token is `updated`. It is in the task's GET body and inside the ETag, `"<UnixNano of updated>-<permission>"`. The API marks `updated` read-only, so the server ignores it on write.
+
+So the only check is a read. The release reads the task's `updated` just before it sends the held write, and compares it with the value the page read when it loaded the task. If they differ, the release refuses.
+
+The window. The check answers at time C, and the server applies the write at time A. A write by another client that lands between C and A is overwritten, and the release does not detect it. This is a check-then-replace race. It is the same class as the file adapter's preflight-to-replace window (see the race section of the shared windows-results document). On one machine the window is short. Over a network it grows by the round trip.
+
+What the overwrite covers. The UI's PATCH carries every writable field the page loaded. `taskPatchBody` turns all of `taskWriteBody` into JSON Patch `add` operations. So a lost race reverts every writable field to the page's copy, not only the field the user changed. An adapter can send only the changed operations, which narrows the overwrite. Not tested.
+
+The release code does not do this check for records yet. Each held write got a check with expected None and current None, and that passed. So the records release reported "checks ok" with nothing compared. A request with no token should be reported as having no precondition. Not changed in this step (docs only).
+
+Gap measurement (method only, not run; it starts Vikunja, so it waits for the go-ahead):
+
+1. Restore Vikunja from the seed (`reset.mjs restore`), start the edge and the app, and log in as alex.
+2. Set up R3 (rename task 4) and run the held phase up to release. Record the `updated` value the page reads (U0) from the page's own GET response, through a response listener. Do not route the response.
+3. Release. The check is a GET of task 4 through the adapter's own request context, not held. It returns U1. Its edge `done` line gives the time C. Compare U1 with U0.
+4. Send the held PATCH. Its edge `arrival` line gives the time A1, and its `done` line gives the time A2 and the status.
+5. Report two numbers, both from the edge `ts` field on one clock: the gap (A1 minus C, from the check answer to the write's arrival) and the window (A2 minus C, an upper bound on the apply time).
+
+Two extra runs, labelled as beyond the brief:
+
+6. Resolution. Send two direct PATCHes to one task 200 ms apart and read `updated` after each. The values must differ, or the check cannot see a change within a second.
+7. Injected write. After step 3, another session writes a different field of task 4 before step 4. Read that field back after release. The expected result is that the page's copy wins. Control: the same write lands before step 3. The check must refuse and send nothing.
+
+Measured values: not yet. They will go in this section after the run.
 
 ## Release demo (planned)
 
-Two tasks, each with a version token:
+Two tasks, each with a version token (Vikunja is not one of them, see the release precondition section):
 
 - S8, admin price change. Scenario 1: release with no concurrent edit, read-back
   matches. Scenario 2: a second session changes the price before release.
@@ -306,8 +393,13 @@ These are expectations from the design. The run confirms or changes each one.
    are anchored by server id, which exists only after a create.
 4. Read set: the page reads what it displays, but the server validates version
    tokens the page may not display. The read set has to include those tokens.
+   Vikunja confirms this: the page never displays `updated`, the UI never sends
+   it, so the adapter must read it on its own.
 5. Apply with precondition: a precondition exists for some writes only (If-Match
-   or version fields). Moves, archive, promo and sends have none.
+   or version fields). Moves, archive, promo and sends have none. Vikunja has no
+   precondition that the server enforces. Its PATCH accepts a stale If-Match, so
+   the only check is a read before the send, with the window described in the
+   release precondition section.
 6. Read back: a GET after release may itself change state (webmail reads). A
    read cannot always be used to check a write. The GET measurement finds which
    GETs do this.
@@ -321,9 +413,28 @@ These are expectations from the design. The run confirms or changes each one.
 10. Multi-step flows: a held response stalls the page. The contract assumes the
     agent can continue on local state, which these apps often do not allow. The
     held GETs in M2, M5 and S7 are the first test of this, if the measurement
-    shows they change state.
+    shows they change state. Vikunja confirms the stall: six of eight records
+    tasks (R1, R2, R5, R6, R7, R8) waited for a server answer and did not finish
+    with requests held. R3 and R4 continued on local state.
 11. Reset cost: the adapter needs a fresh state for each attempt. The run records
-    the reset time separately, so the cost is visible.
+    the reset time separately, so the cost is visible. Vikunja resets in 1.0 to
+    1.5 s per run.
+12. Accepted-pending answers: a bare pending answer would not unblock the records
+    tasks that need an echoed object (R1, R2, R5, R6, R8). It would unblock R7 at
+    the status level, but the page would then show the deletion before the server
+    made it. Source-based; not run. See the needs_response section.
+13. Release check on a request with no token: the check compares None with None
+    and passes, so "checks ok" can report that nothing was compared. The release
+    step should report "no precondition" for such a request. Found in the records
+    run. The release code is not changed in this step.
+14. Scope of an overwrite: the UI's PATCH carries every writable field the page
+    loaded. A release that loses a race therefore reverts every writable field, not
+    only the one the user changed. The adapter can send only the changed fields.
+    Source-based; not run.
+15. Long holds and the session: the page-load token refresh is a non-GET request,
+    and the policy holds it. A hold longer than the token lifetime (600 s in our
+    config) could let the session lapse. Our holds lasted under 30 s. Longer holds
+    are not measured.
 
 ## Stand-ins and limits
 
@@ -338,7 +449,8 @@ These are expectations from the design. The run confirms or changes each one.
 
 ## Verification so far
 
-Offline only. Nothing has been started.
+Offline checks, plus the records block run against the live Vikunja app. Mail and
+checkout have not run.
 
 - `node --check` passes on the Node app files, the edge logger and the Vikunja seed.
 - `node --test probe/tests/smtp-client.test.mjs`: 6 of 6 pass (SMTP client against
@@ -349,8 +461,9 @@ Offline only. Nothing has been started.
   unsafe arrival.
 - `node --test probe/tests/vikunja-seed.test.mjs`: 6 of 6 pass. The seed runs against
   an in-process fake of the v2 routes it uses. It is not tested against Vikunja.
-- `python -m unittest discover -s probe/tests -p "test_*.py"`: 97 of 97 pass.
-  Harness (39): the hold policy in both modes, version tokens, ordered release,
+- `python -m unittest discover -s probe/tests -p "test_*.py"`: 100 of 100 pass.
+  Harness (42, including 3 for the record run: kind mapping and the policy commit
+  stamp): the hold policy in both modes, version tokens, ordered release,
   refusal, partial release, read-back, a guard that the harness never fulfils a
   route, the rule that the payment return never passes, the rule name recorded for
   each held GET, and that a held request gets no answer until release. Classifier
@@ -363,14 +476,18 @@ Offline only. Nothing has been started.
   business table changes. The snapshot tests use synthetic SQLite files.
 - Downloads: Vikunja and Mailpit archives match their recorded SHA-256 values, and
   the Vikunja exe matches its own `.sha256` file. Binaries are not committed.
-- Not run: any app, any browser, Playwright routing, the GET measurement, or
-  release against a live app.
+- Live, records only: the Vikunja seed and reset (`reset.mjs build` and
+  `restore`, seed hash checked), baseline and held runs for R1 to R8, the GET
+  measurement for 158 GETs, the ETag and If-Match check, and a release for each
+  held write.
+- Not run: mail, checkout, the release gap measurement, and the release demo.
 
 ## Run plan after the go-ahead
 
-Run one app at a time. Check free memory (at least 600 MB) before each start. Run
-order: Vikunja, then Mailpit with the webmail stub, then the checkout store with
-the payment provider.
+Done: Vikunja (the records block). Next, after the go-ahead: the Vikunja release
+gap (see the release precondition section), then Mailpit with the webmail stub,
+then the checkout store with the payment provider. Run one app at a time. Check
+free memory (at least 600 MB) before each start.
 
 For each app:
 
@@ -392,7 +509,5 @@ For each app:
 Then classify the runs, record both K1 numbers, and report the timing totals
 separately. Pause immediately if the orchestrator says so.
 
-Before the first run: the Vikunja seed script is tested only against a fake
-server, so the live check is the first step after Vikunja starts. A reset
-procedure for Vikunja (stop, delete the database, migrate, create the user, start,
-seed) is written at that point and tested on the live app.
+The Vikunja seed and reset were tested on the live app (`reset.mjs build`, then
+`restore` before every run). A restore takes 1.0 to 1.5 s.

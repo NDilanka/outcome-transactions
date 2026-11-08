@@ -13,6 +13,7 @@ browser start.
 """
 
 import itertools
+from urllib.parse import parse_qs, urlsplit
 
 from policy import PRIMARY, decide_detail
 from release import Held, release_unit, token_from
@@ -26,6 +27,8 @@ class HoldWorkspace:
         self.held = []
         self.counts = {"pass": 0, "hold": 0, "block": 0}
         self.blocked_reasons = []
+        self.holding = True  # False for setup and baseline runs: probe requests pass, other origins stay blocked
+        self.get_seen = {}  # (method, path, query key names) -> first full URL seen, for the GET measurement
         self._seq = itertools.count(1)
 
     def attach(self, context):
@@ -33,6 +36,12 @@ class HoldWorkspace:
 
     def _on_route(self, route, request):
         verdict, reason, rule = decide_detail(request.method, request.url, self.mode, self.rules)
+        if verdict == "hold" and not self.holding:
+            verdict, reason, rule = "pass", "holds off", None
+        if request.method == "GET" and verdict != "block":
+            parts = urlsplit(request.url)
+            keys = tuple(sorted(parse_qs(parts.query, keep_blank_values=True)))
+            self.get_seen.setdefault((request.method, parts.path, keys), request.url)
         if verdict == "hold" and rule:
             self.gets_held.add(rule)
         self.counts[verdict] += 1
