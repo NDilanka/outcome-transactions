@@ -18,6 +18,8 @@ from version_read import (  # noqa: E402
     VersionReads,
     current_updated,
     fresh_version,
+    list_version_from_text,
+    listing_items,
     task_id_from_url,
     updated_from_text,
 )
@@ -203,6 +205,60 @@ class WorkspaceReleaseTests(unittest.TestCase):
         self.assertEqual(result.refused_seqs, [2])
         self.assertFalse(self.route.continued)
         self.assertFalse(refresh.continued)
+
+
+def page(items, total=None):
+    """A listing as the server sends it: items in an object with paging fields (not a bare list)."""
+    count = len(items) if total is None else total
+    return json.dumps({"items": items, "total": count, "page": 1, "per_page": 50, "total_pages": -(-count // 50)})
+
+
+def live_project_list():
+    """The project list as the live server sent it: 'My Open Tasks' (id -2) is an item the total does not count."""
+    items = [
+        {"id": 1, "title": "Inbox", "updated": EARLIER_UPDATED},
+        {"id": 2, "title": "Work", "updated": EARLIER_UPDATED},
+        {"id": 3, "title": "Home", "updated": EARLIER_UPDATED},
+        {"id": -2, "title": "My Open Tasks", "updated": EARLIER_UPDATED},
+    ]
+    return json.dumps({"items": items, "total": 3, "page": 1, "per_page": 50, "total_pages": 1})
+
+
+class ListingTests(unittest.TestCase):
+    """The live server returns paginated objects. A listing counts only when it holds every item it reports."""
+
+    def test_a_complete_listing_gives_its_items(self):
+        self.assertEqual(listing_items(page([{"id": 1}])), [{"id": 1}])
+
+    def test_a_listing_that_reports_more_items_than_it_holds_is_incomplete(self):
+        self.assertIsNone(listing_items(page([{"id": 1}], total=60)))
+
+    def test_the_live_project_list_is_complete_although_its_total_does_not_count_one_item(self):
+        self.assertEqual(len(listing_items(live_project_list())), 4)
+        self.assertTrue(list_version_from_text(live_project_list()).startswith("list:"))
+
+    def test_a_listing_with_more_pages_on_the_server_is_incomplete(self):
+        body = json.dumps({"items": [{"id": 1}], "total": 60, "page": 1, "per_page": 50, "total_pages": 2})
+        self.assertIsNone(listing_items(body))
+
+    def test_a_bare_list_or_a_listing_without_a_total_is_unreadable(self):
+        self.assertIsNone(listing_items(json.dumps([{"id": 1}])))
+        self.assertIsNone(listing_items(json.dumps({"items": [{"id": 1}]})))
+
+    def test_the_list_digest_does_not_depend_on_item_order(self):
+        a = list_version_from_text(page([{"id": 1, "updated": EARLIER_UPDATED}, {"id": 2, "updated": EARLIER_UPDATED}]))
+        b = list_version_from_text(page([{"id": 2, "updated": EARLIER_UPDATED}, {"id": 1, "updated": EARLIER_UPDATED}]))
+        self.assertTrue(a.startswith("list:"))
+        self.assertEqual(a, b)
+
+    def test_a_change_to_any_item_changes_the_digest(self):
+        before = list_version_from_text(page([{"id": 1, "updated": EARLIER_UPDATED}, {"id": 2, "updated": EARLIER_UPDATED}]))
+        after = list_version_from_text(page([{"id": 1, "updated": EARLIER_UPDATED}, {"id": 2, "updated": "2026-11-08T11:00:00+00:00"}]))
+        self.assertNotEqual(before, after)
+
+    def test_the_list_digest_is_none_for_an_incomplete_or_bare_listing(self):
+        self.assertIsNone(list_version_from_text(page([{"id": 1, "updated": EARLIER_UPDATED}], total=60)))
+        self.assertIsNone(list_version_from_text(json.dumps([{"id": 1, "updated": EARLIER_UPDATED}])))
 
 
 class GapTests(unittest.TestCase):

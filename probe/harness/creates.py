@@ -26,10 +26,10 @@ from dataclasses import dataclass
 from typing import Optional
 from urllib.parse import urlsplit
 
-from version_read import task_id_from_url
+from version_read import listing_items, task_id_from_url
 
 CREATE_METHODS = ("POST", "PUT")
-PER_PAGE = 100  # the children listings are read in one page; a full page may hide more children
+PER_PAGE = 100  # the children listings ask for one page; the server may cap it (comments: 50), so completeness follows its paging
 PROJECTS_PATH = f"/api/v2/projects?per_page={PER_PAGE}"
 TASK_COLLECTION = re.compile(r"^/api/v2/projects/(\d+)/tasks(?:/bulk)?$")
 PROJECT_COLLECTION = re.compile(r"^/api/v2/projects$")
@@ -133,9 +133,9 @@ def request_target(method, url, body):
 
 
 def existing_keys(spec, text):
-    """The keys already present under the parent, from the children listing text. None if unreadable or possibly incomplete."""
-    data = _json(text)
-    if not isinstance(data, list) or len(data) >= PER_PAGE:
+    """The keys already present under the parent, from the children listing text. None if unreadable or incomplete."""
+    data = listing_items(text)
+    if data is None:
         return None
     keys = set()
     for item in data:

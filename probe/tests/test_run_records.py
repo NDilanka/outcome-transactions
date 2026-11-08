@@ -118,5 +118,35 @@ class CreateCountTests(unittest.TestCase):
         self.assertEqual(run_records.creates_held_count([]), 0)
 
 
+class StartMarkerTests(unittest.TestCase):
+    """The window of a held phase must start at the marker the phase wrote (a held-amended run crashed on a mismatch)."""
+
+    def test_the_held_window_reads_the_marker_the_amended_phase_wrote(self):
+        tag = "held-amended-R1-1-000001"
+        events = [
+            {"marker": run_records.start_marker("held-amended", tag)},
+            {"event": "arrival", "method": "POST", "path": "/api/v2/user/token/refresh"},
+            {"marker": f"release-start-{tag}"},
+        ]
+        original = run_records.edge_events
+        run_records.edge_events = lambda: events
+        try:
+            window = run_records.arrivals_between(run_records.start_marker("held-amended", tag), f"release-start-{tag}")
+        finally:
+            run_records.edge_events = original
+        self.assertEqual(len(window), 1)
+
+
+class LiveAmendmentOpsContractTests(unittest.TestCase):
+    """amendment.measure calls these names on its ops. The live class must offer each one (a live run found a missing name)."""
+
+    CONTRACT = ("reset", "login", "user_status", "refresh", "snapshot", "dispose")
+
+    def test_the_live_ops_offer_every_method_the_measurement_calls(self):
+        ops = run_records.LiveAmendmentOps(playwright=None)
+        for name in self.CONTRACT:
+            self.assertTrue(callable(getattr(ops, name, None)), name)
+
+
 if __name__ == "__main__":
     unittest.main()

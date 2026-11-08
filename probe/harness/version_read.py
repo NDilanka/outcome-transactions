@@ -17,9 +17,10 @@ context, which the hold workspace does not route. release.py compares the two.
     that cannot be read gives no token, never an earlier read.
   - current_version is the fresh read. Any failure gives None, which refuses.
 
-Live check still to do: the page's single-task GET must carry `updated`, the
-fresh read must return the same string for an unchanged task, and the project
-list must read the same on both sides.
+Checked live against Vikunja v2.8.0: the page's single-task GET carries `updated`,
+the fresh read returns the same string for an unchanged task, and the project
+list reads the same on both sides. `updated` has one-second precision, so a
+change inside the same second is not seen (see browser-probe.md).
 """
 
 import hashlib
@@ -59,16 +60,37 @@ def updated_from_text(text):
     return value
 
 
-def list_version_from_text(text):
-    """A digest of (id, updated) for every item of a JSON list, or None if any item lacks them.
+def listing_items(text):
+    """The items of a Vikunja listing, or None unless the server says this page is the last one.
 
-    Order does not matter: the pairs are sorted before hashing.
+    The server answers a listing as an object: items and paging fields. The
+    total does not always count every item (the project list includes "My Open
+    Tasks", which the total leaves out), so completeness is the server's own
+    paging: the page read is the last page. A bare list is not the server's
+    shape. Either way the caller gets None and refuses.
     """
     try:
         body = json.loads(text)
     except (TypeError, ValueError):
         return None
-    if not isinstance(body, list):
+    if not isinstance(body, dict) or not isinstance(body.get("items"), list):
+        return None
+    numbers = [body.get(key) for key in ("total", "page", "total_pages")]
+    if not all(isinstance(n, int) and not isinstance(n, bool) for n in numbers):
+        return None
+    _, page, pages = numbers
+    if page < pages:
+        return None
+    return body["items"]
+
+
+def list_version_from_text(text):
+    """A digest of (id, updated) for every item of a complete listing, or None if any item lacks them.
+
+    Order does not matter: the pairs are sorted before hashing.
+    """
+    body = listing_items(text)
+    if body is None:
         return None
     pairs = []
     for item in body:

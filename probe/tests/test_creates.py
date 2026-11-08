@@ -137,19 +137,19 @@ class KeyTests(unittest.TestCase):
 class ExistingTests(unittest.TestCase):
     def test_the_task_listing_of_the_parent_project_gives_its_keys(self):
         spec = creates.spec_for("POST", BULK, BULK_BODY)
-        text = json.dumps([{"title": "Buy printer paper", "project_id": 1, "done": True}, {"title": "Other", "project_id": 1}])
+        text = paged([{"title": "Buy printer paper", "project_id": 1, "done": True}, {"title": "Other", "project_id": 1}])
         self.assertEqual(creates.existing_keys(spec, text), {"task:1:Buy printer paper", "task:1:Other"})
         self.assertEqual(spec.existing_path, "/api/v2/projects/1/tasks?per_page=100")
 
     def test_the_project_listing_gives_parent_and_title_keys(self):
         spec = creates.spec_for("POST", PROJECTS_NEW, PROJECT_BODY)
-        text = json.dumps([{"title": "Hiring", "parent_project_id": 0}, {"title": "Work", "parent_project_id": 0}])
+        text = paged([{"title": "Hiring", "parent_project_id": 0}, {"title": "Work", "parent_project_id": 0}])
         self.assertEqual(creates.existing_keys(spec, text), {"project:0:Hiring", "project:0:Work"})
         self.assertEqual(spec.existing_path, "/api/v2/projects?per_page=100")
 
     def test_the_comment_listing_gives_plain_text_keys(self):
         spec = creates.spec_for("POST", COMMENTS, COMMENT_BODY)
-        text = json.dumps([{"comment": "<p>Checked with Sam</p>"}, {"comment": "<p>Other</p>"}])
+        text = paged([{"comment": "<p>Checked with Sam</p>"}, {"comment": "<p>Other</p>"}])
         self.assertEqual(creates.existing_keys(spec, text), {"comment:1:Checked with Sam", "comment:1:Other"})
         self.assertEqual(spec.existing_path, "/api/v2/tasks/1/comments?per_page=100")
 
@@ -158,13 +158,24 @@ class ExistingTests(unittest.TestCase):
         self.assertIsNone(creates.existing_keys(spec, "not json"))
         self.assertIsNone(creates.existing_keys(spec, json.dumps({"items": []})))
         self.assertIsNone(creates.existing_keys(spec, json.dumps([{"title": None}])))
+        self.assertIsNone(creates.existing_keys(spec, paged([{"title": None}])))
 
-    def test_a_full_page_of_children_gives_none_because_a_duplicate_may_be_on_the_next_page(self):
+    def test_a_bare_list_is_not_the_server_listing_shape_so_it_gives_none(self):
+        spec = creates.spec_for("POST", BULK, BULK_BODY)
+        self.assertIsNone(creates.existing_keys(spec, json.dumps([{"title": "Other", "project_id": 1}])))
+
+    def test_a_listing_that_reports_more_children_than_it_holds_gives_none(self):
         spec = creates.spec_for("POST", BULK, BULK_BODY)
         full = [{"title": f"Task {n}", "project_id": 1} for n in range(creates.PER_PAGE)]
-        self.assertIsNone(creates.existing_keys(spec, json.dumps(full)))
-        almost = full[:-1]
-        self.assertEqual(len(creates.existing_keys(spec, json.dumps(almost))), creates.PER_PAGE - 1)
+        self.assertIsNone(creates.existing_keys(spec, paged(full, total=creates.PER_PAGE + 1)))
+        one_page = json.dumps({"items": full, "total": creates.PER_PAGE, "page": 1, "per_page": creates.PER_PAGE, "total_pages": 1})
+        self.assertEqual(len(creates.existing_keys(spec, one_page)), creates.PER_PAGE)
+
+
+def paged(items, total=None):
+    """A listing as the server sends it: one page in an object with paging fields (not a bare list)."""
+    count = len(items) if total is None else total
+    return json.dumps({"items": items, "total": count, "page": 1, "per_page": 50, "total_pages": -(-count // 50)})
 
 
 def get_from(pages):
@@ -263,7 +274,7 @@ class IntegrationTests(unittest.TestCase):
 
     def test_bulk_create_in_a_project_is_released_when_project_and_listing_match(self):
         project = json.dumps({"id": 1, "title": "Inbox", "updated": UPDATED_A})
-        listing = json.dumps([{"title": "Old", "project_id": 1}])
+        listing = paged([{"title": "Old", "project_id": 1}])
         reads = self.page_reads({PROJECT1: (200, project)})
         ws = self.workspace(reads)
         route = Route()
@@ -279,13 +290,13 @@ class IntegrationTests(unittest.TestCase):
         ws = self.workspace(self.page_reads({PROJECT1: (200, page)}))
         route = Route()
         ws._on_route(route, Request("POST", BULK, BULK_BODY))
-        pages = {"/api/v2/projects/1": (200, moved), "/api/v2/projects/1/tasks?per_page=100": (200, "[]")}
+        pages = {"/api/v2/projects/1": (200, moved), "/api/v2/projects/1/tasks?per_page=100": (200, paged([]))}
         result = ws.release(current_token=_fresh(pages), existing=_fresh_existing(pages))
         self.assertEqual(result.checks[0].reason, "version moved")
         self.assertFalse(route.continued)
 
     def test_top_level_project_create_uses_the_page_read_of_the_list_with_the_same_query(self):
-        listing = json.dumps([{"id": 2, "title": "Home", "parent_project_id": 0, "updated": UPDATED_A}])
+        listing = paged([{"id": 2, "title": "Home", "parent_project_id": 0, "updated": UPDATED_A}])
         reads = self.page_reads({PROJECT_LIST: (200, listing)})
         ws = self.workspace(reads)
         route = Route()
@@ -298,8 +309,8 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(held.token.path, "/api/v2/projects?per_page=50&is_archived=false")
 
     def test_top_level_project_create_is_refused_when_another_project_was_added(self):
-        before = json.dumps([{"id": 2, "title": "Home", "parent_project_id": 0, "updated": UPDATED_A}])
-        after = json.dumps([{"id": 2, "title": "Home", "parent_project_id": 0, "updated": UPDATED_A}, {"id": 7, "title": "New", "parent_project_id": 0, "updated": UPDATED_B}])
+        before = paged([{"id": 2, "title": "Home", "parent_project_id": 0, "updated": UPDATED_A}])
+        after = paged([{"id": 2, "title": "Home", "parent_project_id": 0, "updated": UPDATED_A}, {"id": 7, "title": "New", "parent_project_id": 0, "updated": UPDATED_B}])
         ws = self.workspace(self.page_reads({PROJECT_LIST: (200, before)}))
         ws._on_route(Route(), Request("POST", PROJECTS_NEW, PROJECT_BODY))
         pages = {"/api/v2/projects?per_page=50&is_archived=false": (200, after), "/api/v2/projects?per_page=100": (200, after)}
@@ -307,7 +318,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(result.checks[0].reason, "version moved")
 
     def test_top_level_project_create_is_refused_when_the_title_already_exists(self):
-        listing = json.dumps([{"id": 9, "title": "Hiring", "parent_project_id": 0, "updated": UPDATED_A}])
+        listing = paged([{"id": 9, "title": "Hiring", "parent_project_id": 0, "updated": UPDATED_A}])
         ws = self.workspace(self.page_reads({PROJECT_LIST: (200, listing)}))
         route = Route()
         ws._on_route(route, Request("POST", PROJECTS_NEW, PROJECT_BODY))
@@ -321,7 +332,7 @@ class IntegrationTests(unittest.TestCase):
         ws = self.workspace(self.page_reads({TASK1: (200, task)}))
         route = Route()
         ws._on_route(route, Request("PUT", COMMENTS, COMMENT_BODY))
-        pages = {"/api/v2/tasks/1": (200, task), "/api/v2/tasks/1/comments?per_page=100": (200, "[]")}
+        pages = {"/api/v2/tasks/1": (200, task), "/api/v2/tasks/1/comments?per_page=100": (200, paged([]))}
         result = ws.release(current_token=_fresh(pages), existing=_fresh_existing(pages))
         self.assertEqual(result.status, "released")
         self.assertTrue(route.continued)

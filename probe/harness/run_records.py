@@ -135,6 +135,11 @@ def edge_events():
     return [json.loads(line) for line in EDGE_LOG.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def start_marker(phase, tag):
+    """The label a phase writes when its steps start. Its window must read the same label."""
+    return f"{phase}-start-{tag}"
+
+
 def arrivals_between(start, end):
     """Arrival lines between two markers. Labels are unique per run."""
     events = edge_events()
@@ -457,7 +462,7 @@ def run_one(playwright, task, phase, attempt, nonce):
         mark(f"setup-end-{tag}")
 
         ws.holding = phase != "baseline"
-        mark(f"{phase}-start-{tag}")
+        mark(start_marker(phase, tag))
         steps_error = None
         try:
             STEPS[task](page)
@@ -515,7 +520,7 @@ def run_one(playwright, task, phase, attempt, nonce):
             mark(f"release-end-{tag}")
             time.sleep(1.0)
             # Amended runs: the allowlisted refresh arrivals are reported apart and do not count as unsafe.
-            window = arrivals_between(f"held-start-{tag}", f"release-start-{tag}")
+            window = arrivals_between(start_marker(phase, tag), f"release-start-{tag}")
             record["unsafe_before_release"], record["allowlisted_arrivals_before_release"] = amendment.split_arrivals(window, amended=amended)
             record["amendment_passes"] = list(ws.amended_passes)
             # Held requests the page made after the unit was released; they are not part of the unit.
@@ -612,9 +617,9 @@ class LiveAmendmentOps:
         self.playwright = playwright
         self.sessions = {}
 
-    def reset_app(self):
+    def reset(self):
         self.dispose()
-        reset()
+        reset()  # the module-level reset of the records app, not this method
 
     def login(self, name):
         ctx = self.playwright.request.new_context(base_url=BASE)
