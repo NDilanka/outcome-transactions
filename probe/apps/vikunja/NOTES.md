@@ -65,6 +65,13 @@ User `alex`. Projects Inbox (default), Work, Home. Tasks: 1 "Renew passport"
 draft" (Work), 5 "Book venue" (Work), 6 "Old test item" (Inbox). Label "urgent".
 Build result: `seed_sha256` `bb607bdef15115e25db529df254b81df60e389d770225fa5d42db0e05a664355`,
 3 projects, 6 tasks, 1 label. Live seed test passed on the first live build.
+Second build (live block): `seed_sha256` `c1e78b51...`, same counts. The two files
+differ. A build is not byte-for-byte repeatable. The file holds the times the server
+writes on insert and update, a bcrypt hash of alex's password (bcrypt picks a new
+random salt each time), and the session rows the seed logins write. So each hash
+names one snapshot, and `restore` checks it against its own manifest. The data
+directory was removed at the yield, so the next run needs a new build. Record its
+hash here.
 
 Excluded from the GET measurement: `sessions` (login state). The other 43 tables,
 including `api_tokens` and `user_tokens` (empty at seed time), are measured.

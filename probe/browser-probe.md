@@ -1,6 +1,6 @@
 # Browser feasibility probe
 
-Status: the Vikunja (records) block ran live on the orchestrator's go-ahead. Amendment A1 applied on its live gates, and the records runs were repeated on the current code. Vikunja is stopped and its runtime data is removed. Under the registered hold policy, no records task counts: every release is refused, because the session refresh request has no precondition. Under A1, two of eight count (R3 and R4). Mail (Mailpit with the webmail stub) and checkout (with the payment provider) have not run. They wait for a go-ahead. Nothing is running now. The K1 rule and the task list are unchanged from the frozen version.
+Status: the Vikunja (records) block ran live on the orchestrator's go-ahead. Amendment A1 applied on its live gates, and the records runs were repeated on the current code. Vikunja is stopped and its runtime data is removed. Under the registered hold policy, no records task counts: every release is refused, because the session refresh request has no precondition. Under A1, two of eight count (R3 and R4). The read-compare precondition cannot detect an edit made in the same second as the task's last write (see "Same-second edits"). The injected-write test that checks this moves to the next Vikunja window, with a same-second case and predictions written in advance. Mail (Mailpit with the webmail stub) and checkout (with the payment provider) have not run. They wait for a go-ahead. Nothing is running now. The K1 rule and the task list are unchanged from the frozen version.
 
 ## Question
 
@@ -179,7 +179,9 @@ Eligible for K1: 21 tasks. Not eligible by construction: M3, M4, S6.
 
 ### Records (Vikunja): live block, current code
 
-Setup. One reset to seed before every run. Policy commit 2e6031c, working copy clean, stamped in every record. The seed was built with `reset.mjs build` and restored before each run (restore took 0.8 to 1.4 s). The build hash this time was `c1e78b51...` (3 projects, 6 tasks, 1 label). The hash recorded in `probe/apps/vikunja/NOTES.md` (`bb607...`) is from an earlier build. The row counts match. The cause of the hash change was not checked. Free memory before each app start was 882 to 1080 MB.
+Setup. One reset to seed before every run. Policy commit 2e6031c, working copy clean, stamped in every record. The seed was built with `reset.mjs build` and restored before each run (restore took 0.8 to 1.4 s). The build hash this time was `c1e78b51...` (3 projects, 6 tasks, 1 label). Free memory before each app start was 882 to 1080 MB.
+
+Seed hash. The hash in `probe/apps/vikunja/NOTES.md` (`bb607...`) came from the first build. The second build gave `c1e78b51...` with the same row counts, but the two files differ, so a build is not byte-for-byte repeatable. The build code points to the causes. The file holds the times the server writes on insert and update. It holds a bcrypt hash of alex's password, and bcrypt picks a new random salt on each hash (the binary links bcrypt's password hashing). It also holds the session rows that the seed logins write. Each hash therefore names one built snapshot. `restore` checks the snapshot against its own manifest, and the restored file against the snapshot. It does not check against the old NOTES.md value. The two files were not compared field by field. The first snapshot was overwritten by the second build, and the second was removed at the yield. The run records do not store the seed hash. Every restore in the live block used the `c1e78b51...` snapshot. The next Vikunja window needs a new build, and its hash will go into NOTES.md. Two fixes, neither done: record each build's hash with its date (now in NOTES.md), or compare logical content (row counts and row digests, leaving out times, password hashes and session rows) when two builds must be shown equal.
 
 Runs: a registered held set (primary, current code) and an amended held set (A1). Each has one run per task. The baseline set (holds off) is from the earlier session (09:22 local time, before this block). It was not repeated. A baseline makes no release, so the release changes do not affect it.
 
@@ -225,7 +227,7 @@ Live checks (after `reset.mjs restore`, in `probe/state/live_checks.py`, not com
 - The project list digest matched on a second read of an unchanged list.
 - A task marked done (task 6, sent as a full object) appears as done in its project's task listing, so the children listing includes done tasks.
 - Create body shapes: the bulk task body (R1), the project body (R5) and the comment body (R6) each gave keys, passed the duplicate guard, and read back one match. All three creates were POST and returned 201.
-- `updated` resolution (planned step 6, beyond the brief): two PATCHes 200 ms apart on one task gave the same `updated`. PATCHes 1.1 s apart gave different values. So a change inside the same second as an earlier write is not visible to the check. The planned expectation (values must differ at 200 ms) did not hold. The injected-write test (planned step 7) was not run.
+- `updated` resolution (planned step 6, beyond the brief): two PATCHes 200 ms apart on one task gave the same `updated`. PATCHes 1.1 s apart gave different values. So a change inside the same second as an earlier write is not visible to the check. The planned expectation (values must differ at 200 ms) did not hold. The injected-write test (planned step 7) was not run. It moves to the next Vikunja window (see "Same-second edits").
 
 Gap measurement. Times are from the edge log, one clock. C is the time the fresh read finished. A1 is the time the held write arrived. A2 is the time its response finished.
 
@@ -339,7 +341,7 @@ Not covered by the task read-compare, and how each is now handled:
 - Creates (R1 bulk create, R5 project create, R6 comment create). A create names no existing task, so the task read-compare cannot cover it. Its precondition is the parent's version plus a duplicate guard (see "Creates"). Checked live in the amended runs.
 - The session refresh, `POST /api/v2/user/token/refresh`, names no task. It is pending in every held run, and it refuses the whole unit, so it blocks every records release. Amendment A1 lets only that request pass, in an amended run. Its two live gates passed, and it applied (see "Amendment A1").
 
-Gap measurement (run live). Method: restore Vikunja from the seed, start the edge and the app, log in. Set up R3 (rename task 4) and run the held phase up to release, recording the `updated` the page read from its own GET. Release: the fresh read through the adapter's context (not held) gives C from its edge `done` line. The held PATCH gives A1 (arrival) and A2 (done). The results are in the live block. Two extra steps: step 6 (resolution) ran and showed the one-second limit. Step 7 (an injected write from another session) was not run.
+Gap measurement (run live). Method: restore Vikunja from the seed, start the edge and the app, log in. Set up R3 (rename task 4) and run the held phase up to release, recording the `updated` the page read from its own GET. Release: the fresh read through the adapter's context (not held) gives C from its edge `done` line. The held PATCH gives A1 (arrival) and A2 (done). The results are in the live block. Two extra steps: step 6 (resolution) ran and showed the one-second limit. Step 7 (an injected write from another session) was not run. It moves to the next Vikunja window (see "Same-second edits").
 
 ## Amendment A1: the session refresh (records only, labelled)
 
@@ -401,9 +403,50 @@ Checked live (amended runs R1, R5, R6):
 - Method: all three creates were POST (`POST /api/v2/projects/1/tasks/bulk`, `POST /api/v2/projects`, `POST /api/v2/tasks/1/comments`), each returned 201.
 - No listing hit the full-page refusal in the seed.
 
-Limits of the guard. A task with the same title as an existing task in the same project refuses, including a second task the user meant to add. That is the safe failure. The same check-then-replace window as for writes applies to the parent and the children read. `updated` has one-second resolution, so the parent's version cannot see a change inside the same second as its last write. The gap measurement covers the window. It is not closed.
+Limits of the guard. A task with the same title as an existing task in the same project refuses, including a second task the user meant to add. That is the safe failure. The same check-then-replace window as for writes applies to the parent and the children read. `updated` has one-second resolution, so the parent's version cannot see a change inside the same second as its last write (see "Same-second edits"). The gap measurement covers the window. It is not closed.
 
 Status: checked live in the amended runs (R1, R5, R6), after the listing fix. 233 Python tests pass.
+
+## Same-second edits (records)
+
+Every records version check compares `updated`, which has one-second resolution. That covers the task read-compare, the project read-compare, the project list digest (built from `id:updated` pairs) and the create parent check.
+
+What the check cannot see. A write by another client is invisible to the check when both of these hold:
+
+- it lands after the page read the task, and
+- it lands in the same second as the last write the page saw.
+
+The stored `updated` string does not change, so the token still matches. The release passes and sends the page's write, which overwrites the other client's edit. The read-back still matches, because it checks only the intended effect.
+
+Size of the blind spot. This is not the few milliseconds of the gap. It covers the rest of the second in which the task's last write landed. The resolution was measured: two PATCHes 200 ms apart gave one `updated`, and two PATCHes 1.1 s apart gave two (see the live block). The gap after the check is a separate window, and the check cannot see a write in it at any resolution.
+
+The duplicate guard reads the children at check time and does not use `updated`, so resolution does not limit it. It has the same check-then-send window.
+
+Mitigations, none tested:
+
+1. A version that changes on every write. Vikunja v2.8.0 has none. The ETag is built from `updated`, so it has the same resolution.
+2. A digest of the whole task body, taken at the page's read and again at the check. A same-second edit to any field the GET returns would change the digest. A change to a field the GET does not return would still pass, and the check-then-send window stays.
+3. Sending only the changed fields. This does not detect an edit. It narrows what an overwrite can revert, because the UI's PATCH carries every writable field.
+
+Planned test: injected writes, next Vikunja window. Not run. The predictions below were written before any run of this test. The test script is not written yet. It will be written test first and checked offline before that window.
+
+Setup: task 4 (Quarterly report draft). The page's goal is to rename it to "Renamed by page". Restore the seed, start the edge and the app, log in the workspace session through the adapter's own context, and log in a second session for the injector (not held, not routed). After release, a GET outside the workspace records `final_title`.
+
+Case A, control (different second, before the fresh read). The page reads the task. At least 2 s later, the injector renames it to "Injected A". The page's rename is then held and released.
+
+Case B, same second, after the page's read (the blind spot). The harness waits until the server's `Date` header shows a new second. In that second the injector renames the task to "Injected B" (write W0). The page loads the task, and its token is W0's `updated`. As soon as the page's GET arrives, the injector renames the task to "Injected C" (write W1). A sample counts only when W1's response `updated` equals the token, which means W1 landed in the same second as W0. Each attempt is recorded, and a missed attempt is not counted. There are up to three attempts. Then the page's rename is held and released.
+
+Case C, the window (after the check, before the send). A test-only hook in the release runs the injector after the fresh read passes and before the held write is sent. The injector renames the task to "Injected D", in a different second from the token, so the check would have refused that write had it landed before the fresh read. No run calls the hook.
+
+| Case | Injected write | Predicted release | Predicted `final_title` | What it shows |
+| --- | --- | --- | --- | --- |
+| A | different second, before the fresh read | refused ("version moved"), nothing sent, held write stays pending | Injected A | the check works when the second differs |
+| B | same second, after the page's read | released, read-back matches | Renamed by page | the same-second blind spot |
+| C | after the fresh read, before the send | released, read-back matches | Renamed by page | the window, at any resolution |
+
+If B refuses, the blind spot is not real on this build, and the resolution finding needs a closer look. If C refuses, the hook did not run after the check, and the run is not valid. Results that differ from these predictions will be reported as found, with the predictions kept beside them. Each run records the release status, the read-back, `final_title`, `unsafe_before_release` and the server seconds of each write.
+
+What a confirmed B means for records. The check cannot show that no same-second edit happened. A records adapter needs one of the mitigations above before it can claim a checked write against concurrent edits within one second.
 
 ## Release demo (planned)
 
@@ -434,7 +477,7 @@ These are expectations from the design. The run confirms or changes each one.
 16. Requests that name no object: the session refresh adds to no task, so the per-write precondition cannot cover it, and the registered policy refuses every records release for it. Labelled amendment A1 allows only this request, in an amended run. Its two live gates passed and it applied (see "Amendment A1"). The contract has no rule for session requests of this kind.
 17. Creates: an add has no version of its own. The contract's precondition is a version of the parent, plus a duplicate guard read from the parent's children. Built and checked live in the amended runs (R1, R5, R6 released with matching read-backs; see "Creates").
 18. Paginated listings: Vikunja's listings are paged objects. A complete read needs the server's own paging, and the project list total leaves out a pseudo-project. The adapter must page to completion or refuse. Found live.
-19. Version resolution: `updated` has one-second resolution. Two writes in the same second give one value, so the read-compare cannot see a change inside that second. The contract must state the resolution of each version token. Found live.
+19. Version resolution: `updated` has one-second resolution. Two writes in the same second give one value, so the read-compare cannot see a write by another client that lands in the same second as the last write the page saw. The contract must state the resolution of each version token. Found live (see "Same-second edits").
 20. Adapter logins: each release and each read-back logs in again through the adapter's own context. These logins are logged by the edge but are not held and do not affect the counts.
 
 ## Stand-ins and limits
@@ -461,11 +504,13 @@ Offline checks, plus the records block run live against Vikunja. Mail and checko
 - `node --test` (from `probe/`): `edge-log.test.mjs` 1 of 1, `smtp-client.test.mjs` 6 of 6, `vikunja-seed.test.mjs` 6 of 6 (13 of 13).
 - Downloads: Vikunja and Mailpit archives match their recorded SHA-256 values, and the Vikunja exe matches its own `.sha256` file. Binaries are not committed.
 - Live, records (done): the seed build and restore, memory checks, the A1 gates, the registered and amended runs for R1 to R8, the GET measurement (158 GETs, earlier), the live checks (`updated` presence and stability, the project list digest, done tasks in the listing, the create shapes, the resolution test), and the gap measurement.
-- Not run: mail, checkout, the release demo, and the injected-write test (planned step 7 of the gap measurement).
+- Not run: mail, checkout, the release demo, and the injected-write test (planned step 7 of the gap measurement, moved to the next Vikunja window; see "Same-second edits").
 
 ## Run plan
 
 Done: Vikunja. Baseline runs, registered held runs, amendment A1 gates, amended held runs, live checks, gap measurement and summary. Vikunja is stopped, its runtime data is removed, the edge is stopped and the browser is closed.
+
+Vikunja, next window: the injected-write test (see "Same-second edits"), then stop and remove Vikunja again. It needs the same gates as any Vikunja start: a memory check of at least 600 MB, one app at a time, and the orchestrator's go-ahead. The seed is built again first (`reset.mjs build`).
 
 Next, only on the orchestrator's go-ahead: Mailpit with the webmail stub, and then the checkout store with the payment provider. Run one app at a time. Check free memory (at least 600 MB) before each start.
 
