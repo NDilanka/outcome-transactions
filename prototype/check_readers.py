@@ -5,6 +5,7 @@ hand-built content.xml packages. Run: python3 check_readers.py (needs soffice on
 import os, sys, shutil, subprocess, tempfile, zipfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import readers as R
+import spec as SP
 
 NS = ('xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" '
       'xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" '
@@ -137,6 +138,24 @@ ods_prepend_table(ext_ok, table(CACHE, [row(sv("cached"))]))
 check("E2 a unique label on the named sheet resolves there, past an external cache table",
       R.find_anchor(ext_ok, R.anchor_of(ext_ok, "Q3!B2")) == "Q3!B2",
       f"anchor {R.anchor_of(ext_ok, 'Q3!B2')}, resolved to {R.find_anchor(ext_ok, R.anchor_of(ext_ok, 'Q3!B2'))}")
+
+# F. A workbook the reader cannot parse (a truncated save) is a refusal from the spec wrapper, whatever the exception type.
+f_before, f_after = os.path.join(WORK, "f_before"), os.path.join(WORK, "f_after")
+os.makedirs(f_before); os.makedirs(f_after)
+shutil.copy(lo_ods("f_base", table("Q3", [HDR, row(sv("item1"), fv(3))])), os.path.join(f_before, "budget.ods"))
+open(os.path.join(f_after, "budget.ods"), "wb").write(b"not a zip file")
+F_SPEC = {"must": [("ods_cell", "budget.ods", "Q3!B2", "==", 3)], "footprint": ["budget.ods"], "preserve": []}
+try:
+    ok, reasons, _ = SP.evaluate(F_SPEC, f_before, f_after)
+    check("F1 an unreadable workbook is refused by the spec wrapper", not ok and any(r.startswith("refused") for r in reasons),
+          f"ok {ok}, reasons {reasons[:2]}")
+except Exception as ex:
+    check("F1 an unreadable workbook is refused by the spec wrapper", False, f"raised {type(ex).__name__}: {ex}")
+try:
+    d = SP.semantic_diff(f_before, f_after, F_SPEC)
+    check("F2 the outcome summary of an unreadable workbook says so", "unreadable" in d, f"got {d}")
+except Exception as ex:
+    check("F2 the outcome summary of an unreadable workbook says so", False, f"raised {type(ex).__name__}: {ex}")
 
 shutil.rmtree(WORK, ignore_errors=True)
 failed = [n for n, ok in RESULTS if not ok]

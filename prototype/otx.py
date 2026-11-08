@@ -10,16 +10,24 @@ import readers as R, spec as SP
 H = "/root/otx"
 REAL, SNAP = f"{H}/real", f"{H}/snap"
 LOG = []
-TXN = {"committed": False}
+TXN = {"committed": False, "started": False}  # started: the first real write of the commit path has begun or is about to
 MODE = sys.argv[2] if len(sys.argv) > 2 else "normal"
 CONFLICT = MODE in ("conflict", "same_cell")
 CLEAR = MODE == "clear_cell"
 INSERT = MODE in ("insert_row", "insert_row_same_b2")
-FAULT = MODE in ("fault_postcommit", "race_rollback")
+# A post-commit verify failure (a wrong B2 written into the real file) is what sends the commit to rollback.
+# raise_rollback needs that failure first, so it shares the mutation with fault_postcommit.
+FAULT = MODE in ("fault_postcommit", "race_rollback", "raise_rollback", "raise_report")
 RACE = MODE in ("race_commit", "race_rollback", "race_window")
 WINDOW = MODE == "race_window"
 READ_SET = MODE in ("read_set", "read_set_busy")
 MAX_REPLAYS = 3  # replays of the winner on a newer state before the commit refuses as busy
+RAISE_AT = MODE[len("raise_"):] if MODE.startswith("raise_") else None  # the commit stage that raises, in a raise_ scenario
+CORRUPT = b"not a zip file"  # what corrupt_user writes over the real budget.ods while the search runs
+
+def inject(stage):
+    """Scenario hook: raise at one commit stage. The scenario checks that the real files and the released effects are unchanged."""
+    if RAISE_AT == stage: raise RuntimeError(f"injected at {stage}")
 T0 = time.monotonic()
 def log(msg, **kw):
     e = dict(t=round(time.monotonic() - T0, 2), msg=msg, **kw); LOG.append(e); print(json.dumps(e), flush=True)
@@ -35,8 +43,8 @@ SPEC = {
     "preserve": [("ods_cells_except", "budget.ods", [TARGET])],
 }
 EXPECT = {
-    "normal": dict(committed=True, level="verified"),
-    "conflict": dict(committed=True, level="verified"),
+    "normal": dict(outcome="committed", committed=True, level="verified"),
+    "conflict": dict(outcome="committed", committed=True, level="verified"),
     "same_cell": dict(outcome="true_conflict", committed=False),
     "clear_cell": dict(outcome="true_conflict", committed=False),
     "fault_postcommit": dict(outcome="post_commit_failed", committed=False, released=[], rolled_back=True),
@@ -54,8 +62,19 @@ EXPECT = {
     "merge_header": dict(outcome="anchor_mismatch", committed=False, real_b2="3"),
     "dup_sheet": dict(outcome="committed", committed=True, real_b2="5000", real_b2_by_sheet={"Q3": "5000", "Q3 copy": "3"}),
     "dup_sheet_renamed": dict(outcome="anchor_mismatch", committed=False, real_b2=None, real_b2_by_sheet={"FY2026": "3"}),
-    "read_set": dict(committed=False, real_b2="3"),
+    "read_set": dict(outcome="replay_failed", committed=False, real_b2="3"),
     "read_set_busy": dict(outcome="document_busy", committed=False, real_b2="3", replays=3),
+    "raise_verify": dict(outcome="refused_error", committed=False, released=[], real_b2="3"),
+    "raise_merge": dict(outcome="refused_error", committed=False, released=[], real_b2="3"),
+    "raise_replay": dict(outcome="refused_error", committed=False, released=[], real_b2="3"),
+    "raise_transplant": dict(outcome="post_commit_failed", committed=False, released=[], rolled_back=True, real_b2="3"),
+    "raise_post_verify": dict(outcome="post_commit_failed", committed=False, released=[], rolled_back=True, real_b2="3"),
+    # Every landed file fails to restore, and each failed restore is reported: the winner lands budget.ods and out/q3.pdf.
+    "raise_rollback": dict(outcome="post_commit_failed", committed=False, released=[], needs_user=["budget.ods", "out/q3.pdf"], rolled_back=False),
+    "raise_release": dict(outcome="committed_release_failed", committed=True, released=[], real_b2="5000"),
+    "corrupt_user": dict(outcome="refused_error", committed=False, released=[], real_budget_sha=hashlib.sha256(CORRUPT).hexdigest()),
+    # After a rollback that succeeded, an error must still say that the rollback happened and that nothing needs the user.
+    "raise_report": dict(outcome="error", committed=False, released=[], rolled_back=True, needs_user=[], real_b2="3"),
 }
 
 def sheet_b2s():
@@ -63,13 +82,33 @@ def sheet_b2s():
     p = f"{REAL}/budget.ods"
     return {n: R.ods_cells(p, n).get("B2", (None,))[0] for n in R.sheet_names(p)}
 
+# The exit status comes from what the outcome says happened, never from the scenario's expectation; run_all.sh
+# compares the two. 0 committed; 2 refused or busy, nothing committed; 3 failed after the commit started and every
+# landed file was put back; 4 a file needs the user; 5 the commit stands but a release or a later step failed; 1 other.
+EXIT_CODE = 1
+REFUSED = ("refused_error", "true_conflict", "aborted_user_edit", "anchor_mismatch", "document_busy", "replay_failed")
+
+def exit_code(rep):
+    o = rep.get("outcome")
+    if o == "committed": return 0
+    if o == "committed_release_failed" or (o == "error" and rep.get("committed") is True): return 5
+    if rep.get("needs_user"): return 4
+    if o in REFUSED: return 2
+    if o in ("post_commit_failed", "error") and rep.get("rolled_back") is True: return 3
+    return 1
+
 def write_report(rep):
+    global EXIT_CODE
+    rep.setdefault("real_budget_sha", fsha(f"{REAL}/budget.ods"))
+    rep["outcome_expected"] = EXPECT.get(MODE, {}).get("outcome")  # run_all.sh accepts an error only when the scenario expects one
+    rep["exit_code"] = EXIT_CODE = exit_code(rep)
+    rep["exit_expected"] = exit_code(EXPECT.get(MODE, {}))
     rep["mismatches"] = {k: [v, rep.get(k)] for k, v in EXPECT.get(MODE, {}).items() if rep.get(k) != v}
     rep["shown_conversions"] = [dict(c, start=round(c["start"] - T0, 2)) for c in R.CONVERSIONS]
     json.dump(rep, open(sys.argv[1], "w"), indent=1, default=str)
     run(f"umount {H}/views/*")
     if rep["mismatches"]:
-        print("expectation failed", json.dumps(rep["mismatches"]), flush=True); sys.exit(1)
+        print("expectation failed", json.dumps(rep["mismatches"]), flush=True)
 
 def abort(outcome, level, **kw):
     write_report(dict(mode=MODE, outcome=outcome, committed=False, released=[], level=level, rolled_back=False, needs_user=[], log=LOG, **kw))
@@ -98,6 +137,20 @@ def sync_file(f, src_root, expect, landed, mutate=None, between=None):
         return True
     finally:
         if os.path.exists(tmp): os.remove(tmp)
+
+def restore(pre, landed, moved):
+    """Put back, from the precommit copy, every file this commit landed. A file already as it was before the commit
+    needs nothing. Returns (the files the user must fix, whether the real state now matches the precommit state)."""
+    needs_user = []
+    for f in landed:
+        if fsha(f"{REAL}/{f}") == fsha(f"{pre}/{f}"): continue
+        try:
+            inject("rollback")
+            restored = sync_file(f, pre, landed[f], {})
+        except Exception as ex:
+            restored = False; log("restore failed", file=f, error=f"{type(ex).__name__}: {ex}")
+        if not restored: needs_user.append(f)
+    return needs_user, not needs_user and all(fsha(f"{REAL}/{f}") == fsha(f"{pre}/{f}") for f in moved)
 
 def pdf_of(ws):
     prof = f"file:///tmp/lo_mut_{hashlib.md5(ws.encode()).hexdigest()[:8]}"
@@ -240,6 +293,8 @@ def main():
     if MODE == "list_label":
         R.ods_replace_cell(f"{REAL}/budget.ods", "A2", '<table:table-cell office:value-type="string"><text:list text:style-name="L"><text:list-item><text:p>item0</text:p></text:list-item></text:list></table:table-cell>')
         log("user turned the target row label 'item0' into a list item during search")
+    if MODE == "corrupt_user":
+        open(f"{REAL}/budget.ods", "wb").write(CORRUPT); log("user's real budget.ods replaced by unreadable bytes during search (a save caught mid-write)")
     if MODE == "merge_header":
         R.ods_replace_cell(f"{REAL}/budget.ods", "B1", '<table:table-cell table:number-columns-spanned="2" office:value-type="string"><text:p>Q1</text:p></table:table-cell>')
         R.ods_replace_cell(f"{REAL}/budget.ods", "C1", '<table:covered-table-cell/>')
@@ -254,6 +309,7 @@ def main():
     # 4. Verify each fork against the frozen spec.
     passing = []
     for name in sorted(results, key=lambda n: results[n]["finished_at"]):
+        inject("verify")
         v = view_of(name)
         ok, reasons, changed = SP.evaluate(SPEC, SNAP, v, noise)
         results[name].update(passed=ok, reasons=reasons[:4], changed=changed,
@@ -276,6 +332,7 @@ def main():
     v = f"{H}/views/{winner}"
     replays = 0
     while True:
+        inject("merge")
         pre = f"{H}/precommit"; shutil.rmtree(pre, ignore_errors=True); shutil.copytree(REAL, pre)
         now = R.tree_hashes(pre)
         # The winner read its whole snapshot, not only the files it wrote (a derived method reads notes.txt and
@@ -313,6 +370,7 @@ def main():
         shutil.rmtree(SNAP); shutil.copytree(pre, SNAP); base_hashes = R.tree_hashes(SNAP)
         name = f"{winner}_replay{replays}"
         fork_and_run(name, 20 + replays, results[winner]["method"], results)
+        inject("replay")
         v = view_of(name)
         ok, reasons, changed = SP.evaluate(SPEC, SNAP, v, noise)
         results[name].update(passed=ok, reasons=reasons[:4], changed=changed)
@@ -330,10 +388,13 @@ def main():
     moved = results[winner]["changed"]
     mutate = {"budget.ods": lambda p: R.ods_set_cell(p, "B2", 4999)} if FAULT else {}
     landed, edited = {}, None
+    TXN.update(started=True, pre=pre, moved=moved, landed=landed)  # the top-level handler puts back what landed from these
     try:
         for f in moved:
             if not sync_file(f, v, fsha(f"{pre}/{f}"), landed, mutate.get(f), between=user_in_window if WINDOW and f == "budget.ods" else None):
                 edited = f; break
+            inject("transplant")
+        inject("post_verify")
         ok, reasons, changed = (False, [f"user edited {edited} during the transplant"], []) if edited else SP.evaluate(SPEC, pre, REAL)
     except Exception as ex:
         ok, reasons, changed = False, [f"{type(ex).__name__}: {ex}"], []
@@ -346,21 +407,17 @@ def main():
     if not committed:
         if MODE == "race_rollback":
             R.ods_set_cell(f"{REAL}/budget.ods", "C3", 77); log("user edited real budget.ods C3 before the rollback")
-        for f in landed:
-            try:
-                restored = sync_file(f, pre, landed[f], {})
-            except Exception as ex:
-                restored = False; log("restore failed", file=f, error=f"{type(ex).__name__}: {ex}")
-            if not restored: needs_user.append(f)
-        rolled_back = not needs_user and all(fsha(f"{REAL}/{f}") == fsha(f"{pre}/{f}") for f in moved)
+        needs_user, rolled_back = restore(pre, landed, moved)
     effects = results[winner]["held_effects"] if committed else []
     try:
+        inject("release")
         for e in effects:
             urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:9900/release", data=e["body"].encode(), method="POST"))
     except Exception as ex:
         outcome = "committed_release_failed"; log("effect release failed", error=f"{type(ex).__name__}: {ex}")
     discarded = sum(len(r["held_effects"]) for r in results.values()) - len(effects)
     log("effects released", released=list(Sink.received), discarded=discarded, rolled_back=rolled_back)
+    inject("report")  # outside every try: an error here comes after the commit has started
 
     report = dict(spec=SPEC, spec_hash=spec_hash, mutation_tests=mt, forks=results, null_control=dict(control, noise=sorted(noise)), winner=winner, level=level,
                   committed=committed, outcome=outcome, released=list(Sink.received), rolled_back=rolled_back, needs_user=needs_user,
@@ -379,5 +436,23 @@ if __name__ == "__main__":
         main()
     except Exception as ex:
         traceback.print_exc()
-        write_report(dict(mode=MODE, outcome="error", error=f"{type(ex).__name__}: {ex}", committed=TXN["committed"], released=list(Sink.received), rolled_back=False, needs_user=[], log=LOG))
-        sys.exit(1)
+        rep = dict(mode=MODE, error=f"{type(ex).__name__}: {ex}", committed=TXN["committed"], commit_started=TXN["started"],
+                   released=list(Sink.received), log=LOG)
+        if not TXN["started"]:
+            # The real workbook has not been written: a refusal, with the real files untouched.
+            rep.update(outcome="refused_error", rolled_back=False, needs_user=[])
+        elif TXN["committed"]:
+            # The commit stands: nothing is rolled back, and no file needs the user.
+            rep.update(outcome="error", rolled_back=False, needs_user=[])
+        else:
+            # The commit started and did not stand: put back what landed, and report what could not be put back.
+            try:
+                needs_user, rolled_back = restore(TXN["pre"], TXN["landed"], TXN["moved"])
+            except Exception as ex2:
+                needs_user, rolled_back = sorted(TXN["landed"]), False
+                log("restore failed in the error handler", error=f"{type(ex2).__name__}: {ex2}")
+            rep.update(outcome="error", rolled_back=rolled_back, needs_user=needs_user)
+        try: rep["real_b2"] = sheet_b2s().get(TARGET.split("!")[0])
+        except Exception: rep["real_b2"] = None  # the real workbook may be unreadable; report that as None, not as a crash
+        write_report(rep)
+    sys.exit(EXIT_CODE)

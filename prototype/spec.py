@@ -48,17 +48,18 @@ def _evaluate(spec, before, after, noise=()):
     return (len(reasons) == 0), reasons, sorted(changed)
 
 def evaluate(spec, before, after, noise=()):
-    """A workbook the reader cannot read faithfully (duplicate sheet names, an oversized repeat) is refused."""
+    """A workbook the reader cannot read faithfully is refused: duplicate sheet names, an oversized repeat, or any
+    failure to parse it (a truncated save, a missing part, a conversion that failed). The reason names the failure."""
     try:
         return _evaluate(spec, before, after, noise)
-    except ValueError as ex:
-        return False, [f"refused: {ex}"], []
+    except Exception as ex:
+        return False, [f"refused: unreadable workbook: {type(ex).__name__}: {ex}"], []
 
 def semantic_diff(before, after, spec):
     try:
         return _semantic_diff(before, after, spec)
-    except ValueError as ex:
-        return {"unreadable": str(ex)}
+    except Exception as ex:
+        return {"unreadable": f"{type(ex).__name__}: {ex}"}
 
 def _semantic_diff(before, after, spec):
     """Outcome-level summary used for agreement between forks."""
