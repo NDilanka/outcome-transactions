@@ -1,5 +1,25 @@
 # Browser feasibility probe
 
+Paused. The user paused the research at the orchestrator's request. Nothing is running, and no app or edge was left up.
+
+Done: the Vikunja (records) block, run live with amendment A1 applied on its gates. The injected-write test and the semantic seed digest, built and tested offline (commit 62dbd37, 268 Python tests and 13 Node tests passing). The checkout block has not started.
+
+Not done: no mail run. The mail driver (`probe/harness/run_mail.py`) is not written, and Mailpit and the webmail stub have not been started. So there are no partial mail results. No checkout run. The injected-write window in Vikunja has not run.
+
+Next, when resumed, in this order:
+1. Write the mail driver test first, then the driver. Reset is a Mailpit delete-all plus `node probe/apps/mail/webmail.mjs --seed`. Each release check reads the draft or settings version from the form page (M4 and M8). Goals are read through a second page in the same browser context, so the held page is not navigated away from.
+2. Start the mail app one piece at a time: Mailpit (127.0.0.1:8025, SMTP 1025), the webmail seed, the webmail server (8201), the webmail edge (8200, control 8210). Check free memory first (600 MB floor).
+3. Run the GET measurement, then update the webmail GET rules with the evidence written into each rule, and commit that before the held runs.
+4. Run baseline, then held, then the sensitivity runs for scope tasks, then the M4 release demo. Stop and remove the mail app.
+5. Checkout block.
+6. Vikunja injected window: rebuild the seed (`reset.mjs build`), run `run_records.py amend` again, then `run_records.py injected --cases A B C`. Stop and remove Vikunja.
+
+State needed to resume:
+- Vikunja runtime data is removed. The next Vikunja window needs `reset.mjs build` first. The amendment record (`results/raw/records/amendment.json`, applied) is still on disk, but rerun amend on the rebuilt seed.
+- `state/secrets.json` holds the records password. The mail password goes under the `mail` key, which the webmail seed writes. `probe/apps/mail/NOTES.md` says `webmail`. That is a mismatch to fix before the mail run.
+- The Mailpit exe is checked against the zip hash only, not a separate published hash.
+- The webmail stub's GET open-message and reply-compose rules are unmeasured, so both stay held in both policies until the measurement.
+
 Status: the Vikunja (records) block ran live on the orchestrator's go-ahead. Amendment A1 applied on its live gates, and the records runs were repeated on the current code. Vikunja is stopped and its runtime data is removed. Under the registered hold policy, no records task counts: every release is refused, because the session refresh request has no precondition. Under A1, two of eight count (R3 and R4). The read-compare precondition cannot detect an edit made in the same second as the task's last write (see "Same-second edits"). The injected-write test that checks this is built and checked offline, test first (see "Same-second edits"). It runs live in its own Vikunja window after checkout, on the orchestrator's go-ahead. Mail (Mailpit with the webmail stub) and checkout (with the payment provider) have not run. They wait for a go-ahead. Nothing is running now. The K1 rule and the task list are unchanged from the frozen version.
 
 ## Question
