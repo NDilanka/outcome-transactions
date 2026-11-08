@@ -1,11 +1,14 @@
 // Logging reverse proxy in front of a browser-facing app. Node 24, no dependencies.
 //
-// Every request is forwarded unchanged and one JSON line is appended to the
-// log: time, edge name, sequence number, method, path, status, duration and
-// whether the method is unsafe. The query string is logged as key names only,
-// and cookie, authorization and body values are never logged. This gives the
-// probe a server-side count of unsafe requests that reached the app, which
-// does not depend on the browser's own view.
+// Every request is forwarded unchanged. Two JSON lines are appended to the log:
+// an "arrival" line when the request reaches the edge, and a "done" line with
+// the status and duration once the app has answered. Each line carries the time,
+// edge name, sequence number, method, path and whether the method is unsafe. The
+// query string is logged as key names only, and cookie, authorization and body
+// values are never logged. A held request never reaches the edge, so every unsafe
+// arrival is a request the browser policy let through. Unsafe arrivals between
+// the held and release markers are the hold-leak count, and they do not depend
+// on the browser's own view.
 //
 // A control port accepts GET /mark?label=... and writes a marker line, so the
 // runner can split the log into phases (setup, held run, release) by marker
@@ -53,20 +56,21 @@ const server = http.createServer((req, res) => {
   const started = process.hrtime.bigint();
   const { path: pathOnly, query_keys } = describe(req.url);
   const base = { id, method: req.method, path: pathOnly, query_keys, unsafe: !SAFE.has(req.method) };
+  write({ event: 'arrival', ...base });
   const upstream = http.request(
     { host: '127.0.0.1', port: UPSTREAM, method: req.method, path: req.url, headers: req.headers },
     (ures) => {
       res.writeHead(ures.statusCode, ures.headers);
       ures.pipe(res);
       ures.on('end', () => {
-        write({ ...base, status: ures.statusCode, ms: Number(process.hrtime.bigint() - started) / 1e6 });
+        write({ event: 'done', ...base, status: ures.statusCode, ms: Number(process.hrtime.bigint() - started) / 1e6 });
       });
     },
   );
   upstream.on('error', () => {
     if (!res.headersSent) res.writeHead(502, { 'content-type': 'text/plain' });
     res.end('upstream unavailable');
-    write({ ...base, status: 502, ms: Number(process.hrtime.bigint() - started) / 1e6 });
+    write({ event: 'done', ...base, status: 502, ms: Number(process.hrtime.bigint() - started) / 1e6 });
   });
   req.pipe(upstream);
 });

@@ -2,6 +2,6 @@
 state/
 apps/*/data/
 apps/*/logs/
-apps/vikunja/bin/
+apps/*/bin/
 results/raw/
 __pycache__/

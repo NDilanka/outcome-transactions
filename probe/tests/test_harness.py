@@ -146,5 +146,23 @@ class ReleaseTests(unittest.TestCase):
         json.dumps(result.as_dict())
 
 
+class NoFakedResponseTests(unittest.TestCase):
+    """The harness never answers a page itself. Only the server's own answer reaches the page."""
+
+    def test_harness_never_calls_route_fulfill(self):
+        import ast
+
+        harness = Path(__file__).resolve().parent.parent / "harness"
+        files = sorted(harness.glob("*.py"))
+        self.assertTrue(files)
+        for path in files:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Attribute) and "fulfill" in node.attr:
+                    self.fail(f"{path.name}:{node.lineno} uses .{node.attr}")
+                if isinstance(node, ast.Name) and "fulfill" in node.id:
+                    self.fail(f"{path.name}:{node.lineno} uses {node.id}")
+
+
 if __name__ == "__main__":
     unittest.main()
