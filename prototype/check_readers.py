@@ -116,6 +116,28 @@ R.ods_replace_cell(footnote, "A3", '<table:table-cell office:value-type="string"
 check("C4 labels that differ only in a footnote body are a duplicate as shown", R.find_anchor(footnote, R.anchor_of(footnote, "Note!B2")) is None,
       f"resolved to {R.find_anchor(footnote, R.anchor_of(footnote, 'Note!B2'))}")
 
+# E. An external-reference cache table in the file is not a sheet to LibreOffice, so it must not shift which sheet is read.
+def ods_prepend_table(path, table_xml):
+    """Put a table ahead of the first sheet in content.xml, where a file with external references keeps its cache tables."""
+    items, root = R._load_content(path)
+    first = next(root.iter(R.T + "table"))
+    parent = {c: p for p in root.iter() for c in p}[first]
+    parent.insert(list(parent).index(first), R._fragment(table_xml)[0])
+    R._save_content(path, items, root)
+CACHE = "'file:///tmp/e.ods'#S"
+ext_dup = lo_ods("ext_dup", table("Q3", [HDR, row(sv("x"), fv(3)), row(sv("y"), fv(4))]) + table("Other", [HDR, row(sv("1.0"), fv(3)), row(sv("1"), fv(4))]))
+R.ods_replace_cell(ext_dup, "A2", '<table:table-cell office:value-type="float" office:value="1.0"><text:p>1</text:p></table:table-cell>')
+R.ods_replace_cell(ext_dup, "A3", '<table:table-cell office:value-type="float" office:value="1"><text:p>1</text:p></table:table-cell>')
+ods_prepend_table(ext_dup, table(CACHE, [row(sv("cached"))]))
+check("E1 a label shown twice on the named sheet is a duplicate, whatever another sheet holds",
+      R.anchor_of(ext_dup, "Q3!B2") == ("Q3", "1", "Q1") and R.find_anchor(ext_dup, R.anchor_of(ext_dup, "Q3!B2")) is None,
+      f"anchor {R.anchor_of(ext_dup, 'Q3!B2')}, resolved to {R.find_anchor(ext_dup, R.anchor_of(ext_dup, 'Q3!B2'))}")
+ext_ok = lo_ods("ext_ok", table("Q3", [HDR, row(sv("p"), fv(3)), row(sv("q"), fv(4))]) + table("Other", [HDR, row(sv("x"), fv(3)), row(sv("y"), fv(4))]))
+ods_prepend_table(ext_ok, table(CACHE, [row(sv("cached"))]))
+check("E2 a unique label on the named sheet resolves there, past an external cache table",
+      R.find_anchor(ext_ok, R.anchor_of(ext_ok, "Q3!B2")) == "Q3!B2",
+      f"anchor {R.anchor_of(ext_ok, 'Q3!B2')}, resolved to {R.find_anchor(ext_ok, R.anchor_of(ext_ok, 'Q3!B2'))}")
+
 shutil.rmtree(WORK, ignore_errors=True)
 failed = [n for n, ok in RESULTS if not ok]
 print(f"{len(RESULTS) - len(failed)} passed, {len(failed)} failed")

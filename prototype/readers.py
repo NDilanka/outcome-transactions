@@ -258,8 +258,9 @@ def ods_insert_row(path, idx):
         raise ValueError(f"row {idx} is past the end of the sheet")
     _save_content(path, items, root)
 
-LO_CSV = "csv:Text - txt - csv (StarCalc):44,34,76,1,,0,false,true,true,false,false,{n}"  # comma, quote, UTF-8, text as shown, one sheet
-_SHOWN = {}  # (file sha, sheet) -> rows: one workbook is converted once however often it is read
+LO_CSV = "csv:Text - txt - csv (StarCalc):44,34,76,1,,0,false,true,true,false,false,-1"  # comma, quote, UTF-8, text as shown, every sheet
+_SHOWN = {}  # file sha -> {sheet name: rows}: one workbook is converted once however often it is read
+EXT_CACHE = re.compile(r"^'.*'#")  # an external-reference cache table: kept in the file, never a sheet to LibreOffice
 CONVERSIONS = []  # every LibreOffice text export this process ran: start (monotonic), seconds, sheet, file sha prefix
 
 def _norm(text):
@@ -269,12 +270,12 @@ def _norm(text):
 def _shown_at(rows, r, c):
     return _norm(rows[r][c]) if r < len(rows) and c < len(rows[r]) else None
 
-def shown_sheet(path, sheet):
-    """The rows of one sheet as LibreOffice shows each cell (its displayed text, not its stored value), first row
-    first. The workbook is converted from a copy, so no lock file lands beside it."""
-    names = sheet_names(path)
-    if names.count(sheet) != 1: raise ValueError(f"sheet {sheet!r} occurs {names.count(sheet)} times")
-    key = (sha(path), sheet)
+def _shown_book(path):
+    """Every sheet of the workbook as LibreOffice shows it, keyed by the sheet name LibreOffice gives it. Sheets are
+    found by name, never by their position in the file: a file with external references also holds cache tables,
+    which LibreOffice does not show as sheets. The file's sheets (its tables less the cache tables) must be exactly
+    LibreOffice's, or the workbook is refused. The workbook is converted from a copy, so no lock file lands beside it."""
+    key = sha(path)
     if key in _SHOWN: return _SHOWN[key]
     tmp = tempfile.mkdtemp(prefix="otx_shown_")
     try:
@@ -282,15 +283,26 @@ def shown_sheet(path, sheet):
         shutil.copyfile(path, src)
         t = time.monotonic()
         r = subprocess.run(["soffice", "-env:UserInstallation=file:///tmp/otx_shown", "--headless", "--convert-to",
-                            LO_CSV.format(n=names.index(sheet) + 1), "--outdir", tmp, src], capture_output=True, text=True, timeout=120)
-        CONVERSIONS.append(dict(start=t, seconds=round(time.monotonic() - t, 3), sheet=sheet, sha=key[0][:8]))
-        outs = [f for f in os.listdir(tmp) if f.endswith(".csv")]  # one sheet is exported as book-<sheet>.csv
-        if len(outs) != 1: raise ValueError(f"LibreOffice could not show sheet {sheet!r}: {r.stderr[-200:]}")
-        with open(os.path.join(tmp, outs[0]), newline="", encoding="utf-8") as f:
-            _SHOWN[key] = list(csv.reader(f))
+                            LO_CSV, "--outdir", tmp, src], capture_output=True, text=True, timeout=120)
+        CONVERSIONS.append(dict(start=t, seconds=round(time.monotonic() - t, 3), sheet="all", sha=key[:8]))
+        books = {}
+        for f in os.listdir(tmp):  # every sheet is exported as book-<sheet>.csv
+            if f.startswith("book-") and f.endswith(".csv"):
+                with open(os.path.join(tmp, f), newline="", encoding="utf-8") as fh:
+                    books[f[len("book-"):-len(".csv")]] = list(csv.reader(fh))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
-    return _SHOWN[key]
+    names = [n for n in sheet_names(path) if not EXT_CACHE.match(n)]
+    if sorted(books) != sorted(names):
+        raise ValueError(f"LibreOffice shows sheets {sorted(books)}, the file holds {sorted(names)}: {r.stderr[-200:]}")
+    _SHOWN[key] = books
+    return books
+
+def shown_sheet(path, sheet):
+    """The rows of one sheet as LibreOffice shows each cell (its displayed text, not its stored value), first row first."""
+    books = _shown_book(path)
+    if sheet not in books: raise ValueError(f"sheet {sheet!r} is not in the workbook")
+    return books[sheet]
 
 def anchor_of(path, ref):
     """Name a cell by its sheet, its row label (column A of its row) and its column header (row 1 of its column),
