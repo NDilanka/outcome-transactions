@@ -17,6 +17,11 @@ from classify import DEFAULT_TASKS, classify, load_tasks, main  # noqa: E402
 
 TASKS = load_tasks(DEFAULT_TASKS)
 ELIGIBLE = [t for t in TASKS if TASKS[t]["native_draft_required"] == "no"]
+# M5 is a webmail task. Its primary run holds the open-message GET, which the
+# sensitivity policy passes in these tests.
+SCOPE_TASK = "M5"
+SCOPE_RULE = "webmail-open-message"
+SCOPE_RULES = frozenset({SCOPE_RULE})
 
 
 def held_run(task_id, outcome="completes", attempt=1, **changes):
@@ -29,6 +34,7 @@ def held_run(task_id, outcome="completes", attempt=1, **changes):
         "native_draft_used": False,
         "unsafe_before_release": 0,
         "read_back_match": True if outcome == "completes" else None,
+        "gets_held": [],
     }
     if outcome == "fails":
         run["fail_reason"] = "selector not found"
@@ -50,6 +56,10 @@ def runs_for(overrides=None, extra_held=(), baseline_outcome="completes"):
 
 def row(result, task_id):
     return next(r for r in result["tasks"] if r["task"] == task_id)
+
+
+def sens_row(result, task_id):
+    return next(r for r in result["tasks_sensitivity"] if r["task"] == task_id)
 
 
 class FrozenTaskListTests(unittest.TestCase):
@@ -207,21 +217,89 @@ class ValidationTests(unittest.TestCase):
         self.assertRejects(runs_for(extra_held=[held_run("R1", attempt=0)]), "attempt")
 
 
-class SensitivityTests(unittest.TestCase):
-    def _held_all(self, fails=()):
-        return [held_run(t, "fails") if t in fails else held_run(t) for t in TASKS]
+class GetRecordTests(unittest.TestCase):
+    """gets_held: every held run names the GET rules that held a request in it."""
 
-    def test_sensitivity_is_absent_unless_given(self):
-        result = classify(TASKS, runs_for())
-        self.assertNotIn("k1_sensitivity", result)
+    def assertRejects(self, runs, fragment):
+        with self.assertRaises(ValueError) as ctx:
+            classify(TASKS, runs, SCOPE_RULES)
+        self.assertIn(fragment, str(ctx.exception))
+
+    def test_gets_held_is_required(self):
+        run = held_run("R1")
+        del run["gets_held"]
+        self.assertRejects(runs_for({"R1": run}), "gets_held")
+
+    def test_gets_held_must_be_a_list_of_names(self):
+        self.assertRejects(runs_for({"M5": held_run("M5", gets_held=SCOPE_RULE)}), "gets_held")
+        self.assertRejects(runs_for({"M5": held_run("M5", gets_held=[{"name": SCOPE_RULE}])}), "gets_held")
+
+    def test_gets_held_names_each_rule_once(self):
+        self.assertRejects(runs_for({"M5": held_run("M5", gets_held=[SCOPE_RULE, SCOPE_RULE])}), "gets_held")
+
+    def test_unknown_rule_name_is_an_error(self):
+        self.assertRejects(runs_for({"M5": held_run("M5", gets_held=["made-up-rule"])}), "made-up-rule")
+
+    def test_rule_must_belong_to_the_task_app(self):
+        self.assertRejects(runs_for({"R1": held_run("R1", gets_held=[SCOPE_RULE])}), "belongs to webmail")
+
+    def test_unknown_sensitivity_rule_is_an_error(self):
+        with self.assertRaises(ValueError) as ctx:
+            classify(TASKS, runs_for(), frozenset({"no-such-rule"}))
+        self.assertIn("no-such-rule", str(ctx.exception))
+
+
+class SensitivityTests(unittest.TestCase):
+    def _scope_runs(self, primary_outcome="completes", baseline_outcome="completes"):
+        """M5 touches the passable GET in its primary run. Every other task is clean."""
+        overrides = {SCOPE_TASK: held_run(SCOPE_TASK, primary_outcome, gets_held=[SCOPE_RULE])}
+        return runs_for(overrides, baseline_outcome=baseline_outcome)
+
+    def test_no_passable_gets_means_every_row_is_copied(self):
+        result = classify(TASKS, runs_for(), frozenset())
+        self.assertEqual(result["k1_sensitivity"]["numerator"], result["k1"]["numerator"])
+        self.assertEqual(result["k1_sensitivity"]["sensitivity_run_tasks"], [])
+        self.assertEqual(result["k1_sensitivity"]["copied_from_primary"], sorted(TASKS))
+        self.assertTrue(all(r["copied_from_primary"] for r in result["tasks_sensitivity"]))
+
+    def test_scope_is_the_tasks_whose_primary_run_held_a_passable_get(self):
+        runs = self._scope_runs("fails")
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK)]
+        result = classify(TASKS, runs, SCOPE_RULES)
+        self.assertEqual(result["k1_sensitivity"]["sensitivity_run_tasks"], [SCOPE_TASK])
+        self.assertEqual(
+            result["k1_sensitivity"]["copied_from_primary"],
+            sorted(t for t in TASKS if t != SCOPE_TASK),
+        )
+        self.assertFalse(sens_row(result, SCOPE_TASK)["copied_from_primary"])
+        self.assertTrue(sens_row(result, "R1")["copied_from_primary"])
+
+    def test_only_the_scope_task_changes_between_policies(self):
+        # M5 fails under the primary policy and completes under the sensitivity policy.
+        runs = self._scope_runs("fails")
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK)]
+        result = classify(TASKS, runs, SCOPE_RULES)
+        self.assertEqual(result["k1"]["numerator"], 20)
+        self.assertEqual(result["k1_sensitivity"]["numerator"], 21)
+        for task_id in TASKS:
+            if task_id != SCOPE_TASK:
+                self.assertEqual(sens_row(result, task_id)["counts_for_k1"], row(result, task_id)["counts_for_k1"], task_id)
+
+    def test_copied_row_is_the_primary_row(self):
+        runs = self._scope_runs("fails")
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK)]
+        result = classify(TASKS, runs, SCOPE_RULES)
+        copied = sens_row(result, "R1")
+        self.assertEqual(copied, {**row(result, "R1"), "copied_from_primary": True})
 
     def test_both_policies_are_reported_separately(self):
-        # Primary: 11 eligible tasks count. Sensitivity: 12 count.
-        primary_fails = {t: held_run(t, "fails") for t in ELIGIBLE[11:]}
-        sens_fails = {t: held_run(t, "fails") for t in ELIGIBLE[12:]}
-        runs = runs_for(primary_fails)
-        runs["held_sensitivity"] = [sens_fails.get(t, held_run(t)) for t in TASKS]
-        result = classify(TASKS, runs)
+        # Primary: 11 eligible tasks count. M5 is one of the 10 failures. Sensitivity: M5 completes, so 12 count.
+        keep = [t for t in ELIGIBLE if t != SCOPE_TASK][:11]
+        overrides = {t: held_run(t, "fails") for t in ELIGIBLE if t not in keep}
+        overrides[SCOPE_TASK] = held_run(SCOPE_TASK, "fails", gets_held=[SCOPE_RULE])
+        runs = runs_for(overrides)
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK)]
+        result = classify(TASKS, runs, SCOPE_RULES)
         self.assertEqual(result["k1"]["policy"], "primary")
         self.assertEqual(result["k1"]["numerator"], 11)
         self.assertTrue(result["k1"]["k1_triggered"])
@@ -230,18 +308,50 @@ class SensitivityTests(unittest.TestCase):
         self.assertFalse(result["k1_sensitivity"]["k1_triggered"])
         self.assertEqual(len(result["tasks_sensitivity"]), 24)
 
-    def test_sensitivity_run_must_cover_every_task(self):
-        runs = runs_for()
-        runs["held_sensitivity"] = [held_run(t) for t in TASKS if t != "S8"]
+    def test_scope_task_without_a_sensitivity_run_is_an_error(self):
         with self.assertRaises(ValueError) as ctx:
-            classify(TASKS, runs)
-        self.assertIn("S8", str(ctx.exception))
+            classify(TASKS, self._scope_runs("fails"), SCOPE_RULES)
+        self.assertIn(SCOPE_TASK, str(ctx.exception))
+
+    def test_sensitivity_run_for_a_task_outside_scope_is_an_error(self):
+        runs = self._scope_runs("fails")
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK), held_run("R1")]
+        with self.assertRaises(ValueError) as ctx:
+            classify(TASKS, runs, SCOPE_RULES)
+        self.assertIn("R1", str(ctx.exception))
+
+    def test_sensitivity_run_cannot_hold_a_rule_it_passes(self):
+        runs = self._scope_runs("fails")
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK, gets_held=[SCOPE_RULE])]
+        with self.assertRaises(ValueError) as ctx:
+            classify(TASKS, runs, SCOPE_RULES)
+        self.assertIn("sensitivity", str(ctx.exception))
+
+    def test_sensitivity_retry_is_listed_and_does_not_change_the_numerator(self):
+        runs = self._scope_runs("fails")
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK), held_run(SCOPE_TASK, "fails", attempt=2)]
+        result = classify(TASKS, runs, SCOPE_RULES)
+        self.assertEqual(result["k1_sensitivity"]["numerator"], 21)
+        self.assertEqual(
+            result["retries_sensitivity"],
+            [{"task": SCOPE_TASK, "attempt": 2, "held_outcome": "fails", "counts_for_k1": False}],
+        )
 
     def test_sensitivity_uses_the_same_baseline(self):
-        runs = runs_for(baseline_outcome="fails")
-        runs["held_sensitivity"] = [held_run(t) for t in TASKS]
-        result = classify(TASKS, runs)
+        runs = self._scope_runs("completes", baseline_outcome="fails")
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK)]
+        result = classify(TASKS, runs, SCOPE_RULES)
         self.assertEqual(result["k1_sensitivity"]["baseline_completes"], 0)
+        self.assertEqual(sens_row(result, SCOPE_TASK)["baseline_outcome"], "fails")
+
+    def test_copied_rows_add_no_time(self):
+        runs = self._scope_runs("fails")
+        for run in runs["held"]:
+            run["seconds"] = 10.0
+        runs["held_sensitivity"] = [held_run(SCOPE_TASK, seconds=4.0)]
+        timing = classify(TASKS, runs, SCOPE_RULES)["timing"]
+        self.assertEqual(timing["run_seconds_total"], 24 * 10.0 + 4.0)
+        self.assertEqual(timing["runs_with_run_time"], 25)
 
 
 class TimingTests(unittest.TestCase):

@@ -11,7 +11,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "harness"))
 
 from dataclasses import replace  # noqa: E402
 
-from policy import GET_RULES, MODES, PRIMARY, SENSITIVITY, decide, validate_rules  # noqa: E402
+from intercept import HoldWorkspace  # noqa: E402
+from policy import GET_RULES, MODES, PRIMARY, SENSITIVITY, decide, decide_detail, validate_rules  # noqa: E402
 from release import Held, Token, release_unit, token_from  # noqa: E402
 
 
@@ -191,6 +192,88 @@ class PolicyModeTests(unittest.TestCase):
     def test_duplicate_rule_names_are_rejected(self):
         with self.assertRaises(ValueError):
             validate_rules((GET_RULES[0], GET_RULES[0]))
+
+
+class DecideDetailTests(unittest.TestCase):
+    def test_held_get_names_its_rule(self):
+        self.assertEqual(decide_detail("GET", MESSAGE, PRIMARY)[2], "webmail-open-message")
+        self.assertEqual(decide_detail("GET", REPLY, PRIMARY)[2], "webmail-reply-compose")
+
+    def test_writes_and_plain_gets_name_no_rule(self):
+        self.assertIsNone(decide_detail("POST", "http://127.0.0.1:8200/compose/send", PRIMARY)[2])
+        self.assertEqual(decide_detail("GET", "http://127.0.0.1:8200/compose", PRIMARY), ("pass", "", None))
+
+    def test_passed_get_in_sensitivity_still_names_its_rule(self):
+        rules = (replace(GET_RULES[0], sensitivity_pass=True), GET_RULES[1], GET_RULES[2])
+        verdict, _, rule = decide_detail("GET", MESSAGE, SENSITIVITY, rules)
+        self.assertEqual((verdict, rule), ("pass", "webmail-open-message"))
+
+
+class FakeRoute:
+    def __init__(self):
+        self.aborted = None
+        self.continued = False
+
+    def abort(self, reason):
+        self.aborted = reason
+
+    def continue_(self, **_):
+        self.continued = True
+
+
+class FakeRequest:
+    def __init__(self, method, url):
+        self.method = method
+        self.url = url
+        self.post_data = None
+
+    def all_headers(self):
+        return {}
+
+
+def _send(ws, method, url):
+    route = FakeRoute()
+    ws._on_route(route, FakeRequest(method, url))
+    return route
+
+
+class HoldWorkspaceTests(unittest.TestCase):
+    def test_held_get_is_recorded_by_rule_name(self):
+        ws = HoldWorkspace(PRIMARY)
+        _send(ws, "GET", MESSAGE)
+        self.assertEqual(ws.gets_held, {"webmail-open-message"})
+        self.assertEqual(ws.counts["hold"], 1)
+
+    def test_passed_get_and_held_write_record_no_rule(self):
+        ws = HoldWorkspace(PRIMARY)
+        passed = _send(ws, "GET", "http://127.0.0.1:8200/compose")
+        held = _send(ws, "POST", "http://127.0.0.1:8200/compose/send")
+        self.assertTrue(passed.continued)
+        self.assertIsNone(held.aborted)
+        self.assertFalse(held.continued)
+        self.assertEqual(ws.gets_held, set())
+        self.assertEqual(ws.counts, {"pass": 1, "hold": 1, "block": 0})
+
+    def test_other_origin_is_blocked_not_held(self):
+        ws = HoldWorkspace(PRIMARY)
+        route = _send(ws, "GET", "https://example.com/")
+        self.assertEqual(route.aborted, "blockedbyclient")
+        self.assertEqual(ws.held, [])
+        self.assertEqual(ws.counts["block"], 1)
+
+    def test_sensitivity_workspace_passes_a_rule_marked_for_it(self):
+        rules = (replace(GET_RULES[0], sensitivity_pass=True), GET_RULES[1], GET_RULES[2])
+        ws = HoldWorkspace(SENSITIVITY, rules)
+        route = _send(ws, "GET", MESSAGE)
+        self.assertTrue(route.continued)
+        self.assertEqual(ws.gets_held, set())
+
+    def test_held_request_gets_no_answer_until_release(self):
+        ws = HoldWorkspace(PRIMARY)
+        route = _send(ws, "POST", "http://127.0.0.1:8200/compose/send")
+        self.assertIsNone(route.aborted)
+        self.assertFalse(route.continued)
+        self.assertEqual(len(ws.held), 1)
 
 
 class NoFakedResponseTests(unittest.TestCase):

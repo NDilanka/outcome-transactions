@@ -90,16 +90,20 @@ def origin_of(url):
     return f"{parts.scheme}://{parts.hostname}:{parts.port}"
 
 
-def decide(method, url, mode=PRIMARY, rules=None):
-    """Return (verdict, reason). Verdict is "pass", "hold" or "block"."""
+def decide_detail(method, url, mode=PRIMARY, rules=None):
+    """Return (verdict, reason, rule_name).
+
+    Verdict is "pass", "hold" or "block". rule_name is the GET rule that decided
+    a probe GET, and None otherwise.
+    """
     if mode not in MODES:
         raise ValueError(f"unknown mode {mode!r}")
     origin = origin_of(url)
     app = APP_BY_ORIGIN.get(origin)
     if app is None:
-        return "block", "not a probe origin"
+        return "block", "not a probe origin", None
     if method.upper() not in SAFE_METHODS:
-        return "hold", f"{method.upper()} request"
+        return "hold", f"{method.upper()} request", None
     parts = urlsplit(url)
     query = parse_qs(parts.query, keep_blank_values=True)
     for rule in GET_RULES if rules is None else rules:
@@ -107,6 +111,12 @@ def decide(method, url, mode=PRIMARY, rules=None):
             continue
         held = rule.primary_hold and (mode == PRIMARY or not rule.sensitivity_pass)
         if held:
-            return "hold", f"GET with a server-side effect ({rule.name})"
-        return "pass", f"GET passed in {mode} mode ({rule.name})"
-    return "pass", ""
+            return "hold", f"GET with a server-side effect ({rule.name})", rule.name
+        return "pass", f"GET passed in {mode} mode ({rule.name})", rule.name
+    return "pass", "", None
+
+
+def decide(method, url, mode=PRIMARY, rules=None):
+    """Return (verdict, reason). Verdict is "pass", "hold" or "block"."""
+    verdict, reason, _ = decide_detail(method, url, mode, rules)
+    return verdict, reason

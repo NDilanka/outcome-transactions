@@ -47,13 +47,22 @@ Two K1 numbers are reported, one per GET policy (see "GET policy" below):
   low-stakes may pass. Reported beside the primary number and labelled. The payment
   return never passes in either.
 
+Sensitivity scope: the two policies differ only on GETs that the sensitivity policy
+passes. So a sensitivity held run is needed only for the tasks whose primary held
+run recorded such a GET in `gets_held`. Those are the scope tasks. Every other task
+copies its primary row into the sensitivity table, marked `copied_from_primary`.
+Its counted result is therefore the primary result, not a second measurement.
+Copied rows add no time to the timing totals.
+
 This text replaces an earlier reading that counted tasks which completed by saving
 a draft. That reading is withdrawn.
 
 Calculation: `python probe/harness/classify.py --runs <runs.json>` prints the
 per-task rows, both K1 summaries, and the timing totals. It stops with an error on
 incomplete input: a missing measured run, a missing baseline, a missing sensitivity
-run when one is given, an unknown task, or a field with a bad value.
+run for a scope task, a sensitivity run for a task outside the scope, an unknown
+task, a GET rule name that is unknown or belongs to another app, or a field with a
+bad value.
 
 ## Definitions
 
@@ -80,6 +89,10 @@ record. Such a task cannot count for K1.
 
 `native_draft_used`: recorded per run. Yes when the run touched the draft or quote
 feature at any point. Such a run cannot count for K1.
+
+`gets_held`: recorded per held run. The names of the GET rules that held a request
+during that run. It sets the sensitivity scope, and the classifier checks each name
+against the rule's app.
 
 `faked_response`: yes when the harness answered a page with a response the server
 did not send. The harness never does this. No code in `probe/harness` calls
@@ -160,7 +173,9 @@ Release (`probe/harness/release.py`, `probe/harness/intercept.py`):
    rejection (status 400 or more, or no status) stops the release. The unit is
    then partial.
 3. Read back: a GET after release compares the server state with the intended
-   effect. The unit is verified only when they match.
+   effect. The unit is verified only when they match. The read-back runs outside
+   the hold workspace (a separate request context, not routed), so it is never held
+   and never appears in `gets_held`.
 
 The server still applies its own checks when a request is sent. The check in
 step 1 runs first, so a concurrent edit is refused before anything is sent. A
@@ -255,7 +270,9 @@ Not measured yet. Results will fill this section after the go-ahead:
 - K1, primary policy: numerator over 24, with the per-task rows from `classify.py`
   (`held_outcome`, `needs_response` kinds, `faked_response`, `native_draft_used`,
   `unsafe_before_release`, `read_back_match`, and the exclusion list).
-- K1, sensitivity policy: the same, from the sensitivity held runs. Labelled.
+- K1, sensitivity policy: the same. Labelled. The scope tasks come from their own
+  sensitivity held runs. Every other row is copied from the primary run and marked
+  `copied_from_primary`. The output lists the scope tasks and the copied tasks.
 - GET measurement: one row per GET (URL, status, state-changing, changed tables),
   with the rule each GET ended under in each policy.
 - Baseline result for each task.
@@ -332,14 +349,18 @@ Offline only. Nothing has been started.
   unsafe arrival.
 - `node --test probe/tests/vikunja-seed.test.mjs`: 6 of 6 pass. The seed runs against
   an in-process fake of the v2 routes it uses. It is not tested against Vikunja.
-- `python -m unittest discover -s probe/tests -p "test_*.py"`: 76 of 76 pass.
-  Harness: the hold policy in both modes, version tokens, ordered release, refusal,
-  partial release, read-back, a guard that the harness never fulfils a route, and
-  the rule that the payment return never passes. Classifier: the K1 and exclusion
-  rules, the 11 and 12 thresholds, both policies, timing totals, and the command
-  line. Snapshots: table hashing, exclusions, reset before measurement, and the
-  rule that a GET is state-changing only when a business table changes. The
-  snapshot tests use synthetic SQLite files.
+- `python -m unittest discover -s probe/tests -p "test_*.py"`: 97 of 97 pass.
+  Harness (39): the hold policy in both modes, version tokens, ordered release,
+  refusal, partial release, read-back, a guard that the harness never fulfils a
+  route, the rule that the payment return never passes, the rule name recorded for
+  each held GET, and that a held request gets no answer until release. Classifier
+  (46): the K1 and exclusion rules, the 11 and 12 thresholds, both policies, the
+  sensitivity scope (only scope tasks run, the others are copied and marked, a
+  scope task without a run is an error, a sensitivity run outside scope is an
+  error, a sensitivity run cannot hold a rule it passes), GET record checks, timing
+  totals, and the command line. Snapshots (12): table hashing, exclusions, reset
+  before measurement, and the rule that a GET is state-changing only when a
+  business table changes. The snapshot tests use synthetic SQLite files.
 - Downloads: Vikunja and Mailpit archives match their recorded SHA-256 values, and
   the Vikunja exe matches its own `.sha256` file. Binaries are not committed.
 - Not run: any app, any browser, Playwright routing, the GET measurement, or
@@ -361,8 +382,10 @@ For each app:
    the evidence written into the rule.
 4. Primary held runs: for each task, reset, setup, held phase with edge markers,
    release, read back, record the row.
-5. Sensitivity held runs: for all 24 tasks, reset, setup, held phase under the
-   sensitivity policy, release, read back, record the row.
+5. Sensitivity held runs: for the scope tasks only (those whose primary held run
+   recorded a GET the sensitivity policy passes), reset, setup, held phase under
+   the sensitivity policy, release, read back, record the row. Every other task
+   copies its primary row, marked `copied_from_primary`.
 6. Run the two release demos (S8 and M4) after their held runs.
 7. Stop the app.
 
